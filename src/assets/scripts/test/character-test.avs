@@ -6,7 +6,7 @@ api.showText("澳门最大赌场上线啦！性格荷官[s=22][c=red]在线发�
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-2.png`,
+    file: `demo-char-2.png`,
     scale: 0.5
   },
   1
@@ -16,7 +16,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-3.jpg`
+    file: `demo-char-3.jpg`
   },
   3
 );
@@ -25,7 +25,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-5.jpg`
+    file: `demo-char-5.jpg`
   },
   4
 );
@@ -34,7 +34,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-4.jpg`
+    file: `demo-char-4.jpg`
   },
   0
 );
@@ -43,7 +43,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-1.png`
+    file: `demo-char-1.png`
   },
   1
 );
@@ -52,7 +52,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-girl.png`
+    file: `demo-girl.png`
   },
   2
 );

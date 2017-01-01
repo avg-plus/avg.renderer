@@ -91,8 +91,6 @@ export class WidgetLayerService extends AVGService {
         textWidgetComponent
       );
       WidgetLayerService.textWidgets.push(model);
-
-      console.log("addtext::", WidgetLayerService.textWidgets);
     } else if (widgetType === avg.ScreenWidgetType.Image) {
       const imageWidgetComponent = <ComponentRef<
         ImageWidgetComponent

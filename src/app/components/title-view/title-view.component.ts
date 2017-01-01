@@ -45,7 +45,8 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
           avg.api.stopBGM(null);
           TransitionLayerService.fadeTo(1, 1000, () => {
             const entryScript =
-              avg.Resource.getPath(avg.ResourcePath.Scripts) + "/tutorial/tutorial.avs";
+              avg.Resource.getPath(avg.ResourcePath.Scripts) +
+              "/tutorial/tutorial.avs";
             this.router
               .navigate(["main-scene", { script: entryScript }])
               .then(result => {
@@ -58,9 +59,8 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    avg.api.playBGM("assets/audio/bgm/title.mp3", null);
+    avg.api.playBGM("title.mp3", undefined);
 
-    // AnimationUtils.fadeTo("#avg-title-menu-layer", 3000, 1);
     AnimationUtils.to("[Animate Title Menu]", "#avg-title-menu-layer", 3000, {
       opacity: 1,
       y: 30
@@ -68,7 +68,8 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
 
     const titleScene = new avg.APIScene();
     titleScene.data.file = avg.ResourceData.from(
-      "assets/graphics/backgrounds/forest-2.jpg"
+      "forest-2.jpg",
+      avg.ResourcePath.Backgrounds
     );
     titleScene.index = 0;
     this.titleViewBackgroundCanvas.setBackground(titleScene);

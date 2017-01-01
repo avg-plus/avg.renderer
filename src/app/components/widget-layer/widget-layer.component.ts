@@ -64,7 +64,10 @@ export class WidgetLayerComponent implements OnInit {
                 avg.ScreenWidgetType.Text
               );
 
-              value.resolver();
+              const result = new avg.ScreenSubtitleResult();
+              result.id = subtitle.id;
+
+              value.resolver(result);
               break;
             case avg.OP.UpdateSubtitle:
               WidgetLayerService.updateSubtitle(subtitle.id, subtitle.text);
@@ -93,16 +96,22 @@ export class WidgetLayerComponent implements OnInit {
                 ),
                 avg.ScreenWidgetType.Image
               );
+
+              const result = new avg.ScreenImageResult();
+              result.id = image.id;
+
+              value.resolver(result);
+
               break;
             case avg.OP.RemoveImage:
               WidgetLayerService.removeWidget(
                 image,
                 avg.ScreenWidgetType.Image
               );
+
+              value.resolver();
               break;
           }
-
-          value.resolver();
         }
       }
     );

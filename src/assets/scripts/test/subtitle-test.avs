@@ -97,7 +97,7 @@ api.hideText();
 //     }
 // });
 
-// api.playBGM("assets/audio/bgm/subtitle-screen.mp3");
+// api.playBGM("subtitle-screen.mp3");
 // api.wait(200);
 
 // let g1 = [

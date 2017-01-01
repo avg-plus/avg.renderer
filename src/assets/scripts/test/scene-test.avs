@@ -1,4 +1,4 @@
-let handle = api.loadScene(0, "assets/graphics/backgrounds/large-scene.jpg", {
+let handle = api.loadScene(0, "large-scene.jpg", {
   block: true,
   transform: {
     stretch: false,
@@ -15,7 +15,7 @@ let handle = api.loadScene(0, "assets/graphics/backgrounds/large-scene.jpg", {
   }
 });
 
-let handle2 = api.loadScene(1, "assets/graphics/backgrounds/aircraft.png", {
+let handle2 = api.loadScene(1, "aircraft.png", {
   block: true,
   transform: {
     stretch: false,
@@ -45,7 +45,7 @@ api.sceneEffect(0, "moveTo", {
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-2.png`,
+    file: `/demo-char-2.png`,
     scale: 0.5
   },
   1

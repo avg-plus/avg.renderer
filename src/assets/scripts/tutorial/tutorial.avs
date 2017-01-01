@@ -29,9 +29,9 @@
 
 // api.wait(500);
 
-// // api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1.bmp");
+// // api.loadScene(0, "tutorial/bedroom-1.bmp");
 // // api.wait(2500);
-// api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1-day.bmp");
+// api.loadScene(0, "tutorial/bedroom-1-day.bmp");
 // api.wait(3000);
 
 // api.playSE("assets/audio/se/tutorial/footstep.mp3");
@@ -39,11 +39,11 @@
 // api.playSE("assets/audio/se/tutorial/bedroom-door.mp3");
 // api.wait(1500);
 
-// api.playBGM("assets/audio/bgm/tutorial/BeautifulHawaii.mp3");
+api.playBGM("tutorial/BeautifulHawaii.mp3");
 
 // api.showCharacter(
 //   {
-//     file: "assets/graphics/characters/tutorial/girl-angry.png"
+//     file: "/tutorial/girl-angry.png"
 //   },
 //   2
 // );
@@ -61,7 +61,7 @@
 
 // api.showCharacter(
 //   {
-//     file: "assets/graphics/characters/tutorial/girl-sad.png"
+//     file: "/tutorial/girl-sad.png"
 //   },
 //   2
 // );
@@ -91,7 +91,7 @@
 
 // api.showCharacter(
 //   {
-//     file: "assets/graphics/characters/tutorial/girl-surprise.png"
+//     file: "/tutorial/girl-surprise.png"
 //   },
 //   2
 // );
@@ -112,7 +112,7 @@
 
 // api.showCharacter(
 //   {
-//     file: "assets/graphics/characters/tutorial/girl-ask.png"
+//     file: "/tutorial/girl-ask.png"
 //   },
 //   2
 // );
@@ -121,7 +121,7 @@
 //   character: {
 //     name: "风见",
 //     avatar: {
-//       file: "assets/graphics/characters/tutorial/girl-ask.png"
+//       file: "/tutorial/girl-ask.png"
 //     }
 //   }
 // });
@@ -136,7 +136,9 @@
 
 // api.hideCharacter();
 
-api.showSubtitle("tips", "", {
+// console.log("titleResult", titleResult);
+
+const titleResult = api.showSubtitle("", {
   position: "Top",
   animation: {
     name: "FlyIn",
@@ -146,28 +148,21 @@ api.showSubtitle("tips", "", {
     }
   }
 });
-
 while (true) {
-  api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1-day.bmp", {
+  api.loadScene(0, "tutorial/bedroom-1-day.bmp", {
     block: true
   });
   api.wait(1600);
-  api.showCharacter(
-    {
-      file: "assets/graphics/characters/tutorial/girl-ask.png"
-    },
-    2
-  );
+  api.showCharacter(4, "tutorial/girl-ask.png");
 
   api.showText("那么，你还有什么想要了解的呢？", {
     name: "风见",
     character: {
       avatar: {
-        file: "assets/graphics/characters/tutorial/girl-ask.png"
+        file: "tutorial/girl-ask.png"
       }
     }
   });
-
 
   const choice = api.showChoices(
     [
@@ -180,7 +175,8 @@ while (true) {
       "游戏流程和延时控制",
       "插件机制说明"
     ],
-    index => {  // onEnter
+    index => {
+      // onEnter
       const tips = [
         "介绍剧本对白、对话样式；立绘显示与隐藏、立绘效果以及变量输入处理。",
         "场景加载、过渡效果、场景粒子特效、多层场景以及景深效果演示。",
@@ -192,14 +188,14 @@ while (true) {
         "自定义游戏插件说明（高级）"
       ];
 
-      api.updateSubtitle("tips", tips[index]);
+      api.updateSubtitle(titleResult.id, tips[index]);
     },
     index => {
-      api.updateSubtitle("tips", "");
+      api.updateSubtitle(titleResult.id, "");
     }
   );
 
-  api.updateSubtitle("tips", "");
+  api.updateSubtitle(titleResult.id, "");
   api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
 }
 

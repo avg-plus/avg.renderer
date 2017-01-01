@@ -1,17 +1,17 @@
 
-// api.playSound('assets/audio/bgm/title.mp3');
-// api.loadScene('assets/graphics/backgrounds/demo-moon.jpg', {duration : 0, block : false});
+// api.playSound('title.mp3');
+// api.loadScene('demo-moon.jpg', {duration : 0, block : false});
 
 api.setVariable('test_v', '233333');
 
-api.playBGM('assets/audio/bgm/dark-forest.mp3');
-api.loadScene('assets/graphics/backgrounds/demo-moon.jpg', { duration: 400, block: true });
+api.playBGM('dark-forest.mp3');
+api.loadScene('demo-moon.jpg', { duration: 400, block: true });
 
 let exampleChar = {
     character: {
         name: '月夜桥',
         avatar: {
-            file: 'assets/graphics/characters/demo-char-3.jpg',
+            file: '/demo-char-3.jpg',
             scale: 0.5
         }
     }
@@ -48,9 +48,9 @@ api.showText('…………');
 api.showText('………………');
 api.hideText();
 api.stopBGM();
-api.playBGM('assets/audio/bgm/battle.mp3');
+api.playBGM('battle.mp3');
 api.wait(2000);
-api.loadScene('assets/graphics/backgrounds/battle.jpg', { duration: 1000, block: false });
+api.loadScene('battle.jpg', { duration: 1000, block: false });
 api.showText('统帅，请你下令撤退！', { name: '军师' });
 api.showText('我们已经无法撤退，继续前进！', { name: '统帅' });
 api.showText('报告统帅，我方部队损失惨重，对面盟军全部集结开始了一轮新的进攻！', { name: '士兵' });
@@ -79,7 +79,7 @@ api.showText('统帅：士兵们！冲锋！', { name: '统帅' });
 
 // api.showText('江主席，你覺得董先生連任好不好啊？');
 // api.showText('好啊。');
-// api.loadScene('assets/graphics/backgrounds/demo-tree.png');
+// api.loadScene('demo-tree.png');
 // api.showText('中央也支持他嗎？');
 // api.showText('對啊，當然啦。');
 // api.showText('那為什麼這麼早就提出了，有沒有別的人選呢？');

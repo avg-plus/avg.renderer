@@ -6,10 +6,10 @@ export class APIScreenImageImpl extends Impl {
   @Impl.printAPIDetail
   public static op_show_image(
     scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  ): Promise<avg.ScreenImageResult> {
     const script = <avg.APIScreenImage>scriptUnit;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<avg.ScreenImageResult>((resolve, reject) => {
       ScriptingDispatcher.dispatch(avg.OP.ShowImage, script, resolve);
     });
   }

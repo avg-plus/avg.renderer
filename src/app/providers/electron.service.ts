@@ -5,8 +5,9 @@ import { Injectable } from "@angular/core";
 
 import * as childProcess from "child_process";
 import { DebugingService } from "app/common/debuging-service";
+// import { dialog } from "electron";
 
-const { app } = require("electron");
+const { app, dialog } = require("electron");
 const remote = require("electron").remote;
 const ipcRenderer = require("electron").ipcRenderer;
 
@@ -14,6 +15,10 @@ const ipcRenderer = require("electron").ipcRenderer;
 export class ElectronService {
   ipcRenderer: typeof ipcRenderer;
   childProcess: typeof childProcess;
+
+  public static showErrorDialog(title: string, text: string) {
+    dialog.showErrorBox(title, text);
+  }
 
   constructor() {
     // Conditional imports

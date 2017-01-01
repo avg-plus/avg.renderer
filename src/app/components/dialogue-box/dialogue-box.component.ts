@@ -324,8 +324,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           control_value: undefined
         };
 
-        console.log(match[0]);
-
         const waitMatch = /<wait( time="(\d+)")? ?\/>/g.exec(match[0]);
         if (waitMatch !== null) {
           block.control_type = "wait";

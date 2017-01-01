@@ -1,5 +1,4 @@
-api.showSubtitle(
-  "test_id",
+let testSubtitleResult = api.showSubtitle(
   "我能吞下玻璃而[c=yellow][rt=bushangshenti]不伤身体[/rt][/c]",
   {
     postion: "center",
@@ -13,22 +12,24 @@ api.showSubtitle(
   }
 );
 
-const img = api.showImage("img1", "assets/graphics/images/小黄图.png", {
-  postion: "bottom",
+const imgResult = api.showImage("assets/graphics/images/小黄图.png", {
+  position: "(10,10)",
   size: "30%",
   animation: {
     name: "FlyIn",
     options: {
       direction: "Up",
-      duration: 3000,
+      duration: 2000,
       offset: 300
     }
   }
 });
 
-api.wait(3500);
+console.log("Result:", testSubtitleResult, imgResult);
 
-api.removeImage("img1", {
+api.wait(2400);
+
+api.removeImage(imgResult.id, {
   animation: {
     name: "FlyOut",
     options: {
@@ -39,7 +40,7 @@ api.removeImage("img1", {
   }
 });
 
-api.removeSubtitle("test_id", {
+api.removeSubtitle(testSubtitleResult.id, {
   animation: {
     name: "FlyOut",
     options: {

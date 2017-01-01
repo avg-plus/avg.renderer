@@ -42,8 +42,10 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
     super.initShowAnimation();
   }
 
-  private onClicked() {
+  onclicked() {
     const imageData = <avg.ScreenImage>this.data;
+
+    console.log(imageData);
   }
 
   public update() {
@@ -53,7 +55,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
     AnimationUtils.to("Init Image", this.WidgetElementID + " .main-img", 0, {
       width: imageData.width,
       height: imageData.height,
-      zoom: imageData.zoom
+      zoom: imageData.scale
     });
 
     this.changeDetectorRef.detectChanges();

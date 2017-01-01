@@ -11,7 +11,7 @@ api.hideSubtitle("main_title", {
   }
 });
 
-api.loadScene(0, "assets/graphics/backgrounds/nogame/bedroom-1.bmp", {
+api.loadScene(0, "nogame/bedroom-1.bmp", {
   block: true
 });
 
@@ -19,7 +19,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: "assets/graphics/characters/nogame/postman.png"
+    file: "/nogame/postman.png"
   },
   2
 );
@@ -103,7 +103,7 @@ api.hideCharacter();
 //   duration: 0
 // });
 
-// api.playBGM("assets/audio/bgm/BeautifulHawaii.mp3");
+// api.playBGM("BeautifulHawaii.mp3");
 
 // // api.sceneEffect(0, "transparent", {
 // //   strength: 1,
@@ -111,7 +111,7 @@ api.hideCharacter();
 // // });
 
 // api.wait(1000);
-// api.loadScene(0, "assets/graphics/backgrounds/nogame/bedroom-1-day.bmp", {
+// api.loadScene(0, "nogame/bedroom-1-day.bmp", {
 //   block: false,
 //   animation: {
 //     name: "FadeIn",

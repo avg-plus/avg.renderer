@@ -1,6 +1,6 @@
 api.showCharacter(
   {
-    file: `assets/graphics/characters/cat-normal.png`
+    file: `/cat-normal.png`
   },
   2
 );

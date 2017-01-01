@@ -2,7 +2,7 @@ let main = {
   character: {
     name: "主角",
     avatar: {
-      file: "assets/graphics/characters/cat-normal.png",
+      file: "/cat-normal.png",
       scale: 0.5
     }
   }
@@ -12,7 +12,7 @@ let dragon = {
   character: {
     name: "龙人",
     avatar: {
-      file: "assets/graphics/characters/cat-normal.png",
+      file: "/cat-normal.png",
       scale: 0.5
     }
   }
@@ -23,7 +23,7 @@ function mainChar(emotion, scale = 0.2) {
     character: {
       name: "主角",
       avatar: {
-        file: `assets/graphics/characters/boy-${emotion}.png`,
+        file: `/boy-${emotion}.png`,
         scale: scale
       }
     }
@@ -35,7 +35,7 @@ function dragonChar(emotion, scale = 0.5) {
     character: {
       name: "龙人",
       avatar: {
-        file: `assets/graphics/characters/cat-${emotion}.png`,
+        file: `/cat-${emotion}.png`,
         scale: 0.5
       }
     }
@@ -61,7 +61,7 @@ api.showText(
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-2.png`,
+    file: `/demo-char-2.png`,
     scale: 0.5
   },
   1
@@ -71,7 +71,7 @@ api.showCharacter(
 
 // api.showCharacter(
 //   {
-//     file: `assets/graphics/characters/demo-char-1.png`,
+//     file: `/demo-char-1.png`,
 //     scale: 0.5
 //   },
 //   1
@@ -81,7 +81,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-3.jpg`
+    file: `/demo-char-3.jpg`
   },
   3
 );
@@ -90,7 +90,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-5.jpg`
+    file: `/demo-char-5.jpg`
   },
   4
 );
@@ -99,7 +99,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-4.jpg`
+    file: `/demo-char-4.jpg`
   },
   0
 );
@@ -108,7 +108,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/cat-normal.png`
+    file: `/cat-normal.png`
   },
   1
 );
@@ -117,7 +117,7 @@ api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/boy-normal.png`
+    file: `/boy-normal.png`
   },
   2
 );
@@ -133,7 +133,7 @@ api.hideCharacter(4);
 
 // api.showCharacter(
 //   {
-//     file: `assets/graphics/characters/cat-normal.png`,
+//     file: `/cat-normal.png`,
 //     scale: 0.5
 //   },
 //   3
@@ -141,7 +141,7 @@ api.hideCharacter(4);
 
 // api.showCharacter(
 //   {
-//     file: `assets/graphics/characters/boy-think.png`,
+//     file: `/boy-think.png`,
 //     scale: 0.5
 //   },
 //   4
@@ -149,7 +149,7 @@ api.hideCharacter(4);
 
 // api.hideText();
 // api.wait(1500);
-// api.playBGM("assets/audio/bgm/cave-theme.mp3");
+// api.playBGM("cave-theme.mp3");
 // api.wait(500);
 
 // api.showText("……恩？", mainChar("think"));
@@ -169,7 +169,7 @@ api.hideCharacter(4);
 // api.showText("说起来这是哪来着。", mainChar("angry"));
 // api.showText("说你无防备还真是有够令人担忧的！", dragonChar("sad"));
 // api.hideText();
-// api.loadScene("assets/graphics/backgrounds/cave.jpg", {
+// api.loadScene("cave.jpg", {
 //   duration: 0,
 //   block: true
 // });

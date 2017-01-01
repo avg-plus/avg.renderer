@@ -6,10 +6,10 @@ export class APIScreenSubtitleImpl extends Impl {
   @Impl.printAPIDetail
   public static op_show_subtitle(
     scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  ): Promise<avg.ScreenSubtitleResult> {
     const script = <avg.APIScreenSubtitle>scriptUnit;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<avg.ScreenSubtitleResult>((resolve, reject) => {
       ScriptingDispatcher.dispatch(avg.OP.ShowSubtitle, script, resolve);
     });
   }
