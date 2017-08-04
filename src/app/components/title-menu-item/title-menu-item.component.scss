@@ -1,0 +1,11 @@
+.menu-item {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  padding: 5px;
+  color: white;
+  text-align: center;
+  &.highlight {
+    background: rgba(200, 0, 0, 0.6);
+    transition: 0.2s all ease-out;
+  }
+}
