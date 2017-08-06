@@ -2,6 +2,7 @@ import { Component, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectronService } from './providers/electron.service';
 import { transition } from 'app/common/manager/transition';
+import { APIImplManager } from 'app/common/api/api-impl-manger';
 
 
 @Component({
@@ -29,8 +30,10 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     const element = this.elementRef.nativeElement.querySelector('#avg-transition');
     transition.init(element);
+    APIImplManager.init();
 
     this.router.navigate(['title-view']);
+    // this.router.navigate(['main-scene']);
   }
 
 }

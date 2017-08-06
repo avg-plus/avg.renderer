@@ -24,11 +24,6 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    const audio = new Audio();
-    audio.src = 'assets/audio/bgm/title.mp3';
-    // audio.load();
-    // audio.play();
-
     // Init transition
     transition.fadeLeave(0x0, 1500);
 
@@ -40,6 +35,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
 
           transition.fadeEnter(0, 1000, () => {
             this.router.navigate(['main-scene']);
+            this.service.startGame();
           })
           break;
       }
@@ -48,7 +44,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.backgroundCanvas.loadImageToViewport('assets/graphics/backgrounds/title.png');
+    this.backgroundCanvas.loadImageToViewport('assets/graphics/backgrounds/demo-tree.png');
     this.backgroundCanvas.loadParticleEffect();
   }
 

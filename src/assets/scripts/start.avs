@@ -1,9 +1,10 @@
+
 let dialogue = 'Hello World';
 let willSay = true;
 
-api.playSound('assets/music.mp3');
-api.text({ text: dialogue });
+// api.playSound('assets/audio/bgm/music.mp3');
+api.showText(dialogue);
 
 if (willSay) {
-    api.text({ text: 'I am saying something.' });
+  api.showText('I am saying something.');
 }

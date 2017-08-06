@@ -22,6 +22,10 @@ body,
   position: absolute;
 }
 
+#avg-character-viewport {
+  z-index: 999;
+}
+
 #avg-transition {
   position: absolute;
   z-index: 1000;

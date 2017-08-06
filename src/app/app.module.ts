@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { TitleViewComponent } from './components/title-view/title-view.component';
@@ -20,6 +21,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { ElectronService } from './providers/electron.service';
 import { BackgroundCanvasComponent } from './components/background-canvas/background-canvas.component';
 import { DialogueBoxComponent } from './components/dialogue-box/dialogue-box.component';
+import { CharacterBoxComponent } from './components/character-box/character-box.component';
+import { MainSceneService } from './components/main-scene/main-scene.service';
 
 @NgModule({
   declarations: [
@@ -30,18 +33,21 @@ import { DialogueBoxComponent } from './components/dialogue-box/dialogue-box.com
     TransitionCanvasComponent,
     MainSceneComponent,
     BackgroundCanvasComponent,
-    DialogueBoxComponent
+    DialogueBoxComponent,
+    CharacterBoxComponent
     // HomeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [
     ElectronService,
-    TitleViewService
+    TitleViewService,
+    MainSceneService
   ],
   bootstrap: [AppComponent]
 })

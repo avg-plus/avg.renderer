@@ -254,7 +254,7 @@ module.exports = {
         "loader": "file-loader?name=[name].[hash:20].[ext]"
       },
       {
-        "test": /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani)$/,
+        "test": /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani|svg)$/,
         "loader": "url-loader?name=[name].[hash:20].[ext]&limit=10000"
       },
       {

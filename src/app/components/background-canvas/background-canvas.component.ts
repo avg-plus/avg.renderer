@@ -16,9 +16,6 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.loadImageToViewport('assets/graphics/backgrounds/title.png');
-    // this.loadParticleEffect();
-
   }
 
   loadImageToViewport(file: string) {
