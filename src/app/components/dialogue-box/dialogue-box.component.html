@@ -1,3 +1,5 @@
-<p>
-  dialogue-box works!
-</p>
+<div id="dialogux-box" [@dialogueBoxState]="dialogueBoxState" (@dialogueBoxState.done)="animationDone($event)">
+  <div class="content">
+    {{animatedText}}
+  </div>
+</div>
