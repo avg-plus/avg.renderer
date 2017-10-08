@@ -1,6 +1,17 @@
 {
-  "window": {
+  "screen": {
     "width": 1366,
-    "heigth": 768
+    "height": 768,
+    "fullscreen": false
+  },
+  "game": {
+    "text_speed": 80,
+    "auto_play": false,
+    "sound": {
+      "bgm": 40,
+      "bgs": 100,
+      "se": 100,
+      "voice": 100
+    }
   }
 }

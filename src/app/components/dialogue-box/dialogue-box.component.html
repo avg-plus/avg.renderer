@@ -1,5 +1,24 @@
-<div id="dialogux-box" [@dialogueBoxState]="dialogueBoxState" (@dialogueBoxState.done)="animationDone($event)">
-  <div class="content">
-    {{animatedText}}
+<div id="dialogue-container" (click)="onBoxClicked()" #dialogueBox>
+
+  <div class="character-box">
+    <div *ngFor="let i of [0,1,2,3,4]" class="character char-index-{{i}}" [ngStyle]="character_slot[i]">
+      <!-- <div *ngFor="let char of characters"> -->
+        <!-- <img *ngIf="char && char.avatar" src="{{char.avatar.file}}" [@characterState]="char.state" /> -->
+        <img src="{{characters[i] && characters[i].avatar ? characters[i].avatar.file : ''}}" 
+          [@characterState]="characters[i] ? characters[i].state : ''" />
+        
+      <!-- </div> -->
+    </div>
+
+  </div>
+
+  <div class="name-box" *ngIf="currentCharacter && currentCharacter.name" [@dialogueBoxState]="dialogueBoxState">
+    <div class="name" [@textState]="textState">{{currentCharacter.name}}</div>
+  </div>
+
+  <div class="dialogue-box" [@dialogueBoxState]="dialogueBoxState" (@dialogueBoxState.done)="animationDone($event)">
+    <div class="content" [@textState]="textState" [innerHTML]="animatedText">
+
+    </div>
   </div>
 </div>

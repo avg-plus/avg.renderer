@@ -1,8 +1,15 @@
+import * as path from 'path';
+import * as fs from 'fs';
+
 import { Component, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectronService } from './providers/electron.service';
 import { transition } from 'app/common/manager/transition';
 import { APIImplManager } from 'app/common/api/api-impl-manger';
+
+import * as avg from 'avg-engine/engine';
+
+import { app, BrowserWindow, screen, remote } from 'electron';
 
 
 @Component({
@@ -22,12 +29,40 @@ export class AppComponent implements AfterViewInit {
     } else {
       console.log('Mode web');
     }
-
-    // setTimeout(() => {
-    // }, 10000);
   }
 
   ngAfterViewInit() {
+
+    // Init Resources
+    avg.Resource.init(__dirname + '/assets/');
+
+
+
+    // Init settings
+    let settings = fs.readFileSync(path.join(avg.Resource.getRoot(), 'game.json'), { encoding: 'utf8', flag: 'r' });
+    avg.Setting.parseFromSettings(settings);
+
+    let win = remote.getCurrentWindow();
+
+    if (avg.Setting.FullScreen) {
+      console.log(screen.getPrimaryDisplay())
+      win.setBounds({
+        width: screen.getPrimaryDisplay().bounds.width,
+        height: screen.getPrimaryDisplay().bounds.height,
+        x: 0, y: 0
+      });
+      win.setFullScreen(avg.Setting.FullScreen);
+
+    } else {
+      win.setBounds({
+        width: avg.Setting.WindowWidth,
+        height: avg.Setting.WindowHeight, x: 0, y: 0
+      });
+    }
+
+    console.log(win)
+
+    // Init transition
     const element = this.elementRef.nativeElement.querySelector('#avg-transition');
     transition.init(element);
     APIImplManager.init();

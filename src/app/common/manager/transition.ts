@@ -45,7 +45,7 @@ export class Transition implements avg.Transition {
         this._graphics.drawRect(0, 0, screen.width, screen.height);
 
         let fade = new FPSCtrl(duration, (frame: Frame) => {
-            console.log(frame);
+            // console.log(frame);
             if (this._graphics.alpha >= 1) {
                 fade.pause();
 

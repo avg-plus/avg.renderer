@@ -1,27 +1,21 @@
 import * as avg from 'avg-engine/engine';
+import { ScriptingDispatcher } from 'app/common/manager/scripting-dispatcher';
+import { Impl } from 'app/common/api/impl';
 
-export class APIDialogueImpl {
+export class APIDialogueImpl extends Impl {
     public static op_show(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
-        const script = <avg.APIShowDialogue>scriptUnit;
-        console.log(`API '${avg.APIShowDialogue.name}' Called:`, script);
+        const script = <avg.APIDialogue>scriptUnit;
 
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // console.log(`API '${avg.APIShowDialogue.name}::${this.op_show.name}' Finished:`, script);
-                resolve();
-            }, 4000);
+            ScriptingDispatcher.dispatch(avg.OP.ShowText, script, resolve);
         });
     }
 
     public static op_hide(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
-        const script = <avg.APIShowDialogue>scriptUnit;
-        console.log(`API '${avg.APIShowDialogue.name}::${this.op_hide.name}' Called:`, script);
+        const script = <avg.APIDialogue>scriptUnit;
 
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // console.log(`API '${avg.APIShowDialogue.name}::${this.op_hide.name}' Finished:`, script);
-                resolve();
-            }, 4000);
+            ScriptingDispatcher.dispatch(avg.OP.HideText, script, resolve);
         });
     }
 }

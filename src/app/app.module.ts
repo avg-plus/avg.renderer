@@ -14,15 +14,15 @@ import { TitleMenuComponent } from './components/title-menu/title-menu.component
 import { TitleViewService } from './components/title-view/title-view.service';
 import { TitleMenuItemComponent } from './components/title-menu-item/title-menu-item.component';
 import { TransitionCanvasComponent } from './components/transition-canvas/transition-canvas.component';
-import { MainSceneComponent } from './components/main-scene/main-scene.component';
-
 import { AppRoutingModule } from './app-routing.module';
 
-import { ElectronService } from './providers/electron.service';
+import { MainSceneComponent } from './components/main-scene/main-scene.component';
 import { BackgroundCanvasComponent } from './components/background-canvas/background-canvas.component';
 import { DialogueBoxComponent } from './components/dialogue-box/dialogue-box.component';
-import { CharacterBoxComponent } from './components/character-box/character-box.component';
+
+import { ElectronService } from './providers/electron.service';
 import { MainSceneService } from './components/main-scene/main-scene.service';
+import { DialogueBoxService } from './components/dialogue-box/dialogue-box.service';
 
 @NgModule({
   declarations: [
@@ -34,8 +34,7 @@ import { MainSceneService } from './components/main-scene/main-scene.service';
     MainSceneComponent,
     BackgroundCanvasComponent,
     DialogueBoxComponent,
-    CharacterBoxComponent
-    // HomeComponent
+
   ],
   imports: [
     BrowserModule,
@@ -47,7 +46,8 @@ import { MainSceneService } from './components/main-scene/main-scene.service';
   providers: [
     ElectronService,
     TitleViewService,
-    MainSceneService
+    MainSceneService,
+    DialogueBoxService
   ],
   bootstrap: [AppComponent]
 })

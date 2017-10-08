@@ -1,0 +1,102 @@
+
+// api.playSound('assets/audio/bgm/title.mp3');
+// api.loadScene('assets/graphics/backgrounds/demo-moon.jpg', {duration : 0, block : false});
+
+api.setVariable('test_v', '233333');
+
+api.playBGM('assets/audio/bgm/dark-forest.mp3');
+api.loadScene('assets/graphics/backgrounds/demo-moon.jpg', { duration: 400, block: true });
+
+let exampleChar = {
+    character: {
+        name: '月夜桥',
+        avatar: {
+            file: 'assets/graphics/characters/demo-char-3.jpg',
+            scale: 0.5
+        }
+    }
+};
+
+
+api.playVoice('assets/audio/voice/voice_3.mp3');
+api.showText('阵法抵御不了太久，我们一起应敌！', exampleChar);
+
+
+api.playVoice('assets/audio/voice/voice_2.mp3');
+api.showText('师兄对我有救命之恩，我想尽我所能帮助他。', exampleChar);
+
+api.playVoice('assets/audio/voice/voice_1.mp3');
+api.showText('真假对错，我心不悔！', exampleChar);
+
+api.showText('啊……对了，我被她重伤残废了……这个伤势，看样子，是好不了了', exampleChar);
+
+api.showText('那个女人……她为什么要出手对我。', exampleChar);
+
+api.showText('我们明明……', exampleChar);
+api.showText('哈哈哈哈哈……', exampleChar);
+api.stopBGM();
+
+api.showText('只是我一厢情愿罢了。', exampleChar);
+
+api.showText('可是那种关头，她没有对我出手的理由，而且这是要了我的命……');
+api.showText('算了，不想了。这里是哪里，怎么离开……');
+api.hideText();
+api.wait(1000);
+api.showText('……好累，好冷，眼睛……要睁不开了……');
+api.showText('……');
+api.showText('…………');
+api.showText('………………');
+api.hideText();
+api.stopBGM();
+api.playBGM('assets/audio/bgm/battle.mp3');
+api.wait(2000);
+api.loadScene('assets/graphics/backgrounds/battle.jpg', { duration: 1000, block: false });
+api.showText('统帅，请你下令撤退！', { name: '军师' });
+api.showText('我们已经无法撤退，继续前进！', { name: '统帅' });
+api.showText('报告统帅，我方部队损失惨重，对面盟军全部集结开始了一轮新的进攻！', { name: '士兵' });
+api.showText('前进！', { name: '统帅' });
+api.showText('统帅请你三思，这是我们最后的防线。再这样下去，我们帝国军都会死在战场上。', { name: '军师' });
+api.showText('那就死在战场上！苍狼帝国，没有懦夫！', { name: '统帅' });
+api.showText('大陆战乱多年，苍狼被蚕食在意料之中，只是没想到战火覆盖的那么快。', { name: '统帅' });
+api.showText('国王和王子殿下英勇善战，牺牲了自己的性命。', { name: '统帅' });
+api.showText('苍狼只是个小国家，但是我们有自己的信仰，我们以苍狼为图腾，我们英勇，苍狼帝国热爱和平，也从来不惧怕侵略者。', { name: '统帅' });
+api.showText('为了给国民一个交代，这一战用我们的生命献祭给伟大的苍狼之魂。', { name: '统帅' });
+api.showText('所谓的统一，都只不过是邪恶势力的野心与贪婪。', { name: '统帅' });
+api.showText('下令，前进！', { name: '军师' });
+api.showText('苍狼的荣耀，我们用鲜血去守护！', { name: '统帅' });
+api.showText('为了苍狼的荣耀！');
+api.showText('为了苍狼的荣耀！！');
+api.showText('为了苍狼的荣耀！！');
+api.wait(2000);
+api.showText('欧文！你的王国也已经完了！还那么拼命干什么！', { name: '索莫费尔德' });
+api.showText('统帅背负的是王国兴亡的使命，除非我今天死在战场上，否则，来一个，杀一个。', { name: '统帅' });
+api.showText('棘手的家伙。只要你现在投降，带领你的士兵投降，你的士兵不会死，你的国民也不会死，你也可以归顺我们，为我们效力，这难道不是个更好的出路？偏要赌上无辜的性命？', { name: '索莫费尔德' });
+api.showText('哈哈哈哈哈哈哈无辜？这种无辜就是你们带来的。我们各为其主，要想我们投降，先问问我们的刀刃！', { name: '统帅' });
+api.showText('统帅：士兵们！冲锋！', { name: '统帅' });
+
+// api.stopBGM();
+
+
+// api.showText('江主席，你覺得董先生連任好不好啊？');
+// api.showText('好啊。');
+// api.loadScene('assets/graphics/backgrounds/demo-tree.png');
+// api.showText('中央也支持他嗎？');
+// api.showText('對啊，當然啦。');
+// api.showText('那為什麼這麼早就提出了，有沒有別的人選呢？');
+// api.showText('歐盟呢最近發表了一個報告說呢……呃……北京會透過一些渠道去影響、干預香港的法治，你對這個看法有什麼回應呢？');
+// api.showText('沒聽過這個事。');
+// api.showText('是彭定康說的。');
+// api.showText('彭定康說的就是真的啦？你們媒體千萬要注意啊，不要「見着風，是得雨」啊。接到這些消息，你媒體本身也要判斷，明白意思嗎？假使這些完全……無中生有的東西，你再幫他說一遍，你等於……你也等於……你也有責任吧？');
+// api.showText('現在呢那麼早呢你們就是說支持董先生呢，會不會給人一種感覺就是內定了、欽點了董先生呢？');
+// api.showText('沒有任何（內定、欽點）的意思。還是按照香港的……按照基本法、按照選舉的法——去產生……');
+// api.showText('但是你們那麼……');
+// api.showText('你……剛才你問我啊，我可以回答你一句「無可奉告」，那你們又不高興，那怎麼辦？');
+// api.showText('那董先生……');
+// api.showText('我講的意思不是我是欽點他當下一任。你問我不支……支持不支持，我是支持的。我就明確地給你告訴這一點。');
+// api.showText('江主席……');
+// api.showText('我覺得你們啊，你們……我感覺你們新聞界還要學習一個，你們非常熟悉西方的這一套 value。你們畢竟還 too young（太年輕），明白這意思吧。');
+// api.showText('我告訴你們我是身經百戰了，見得多了！啊，西方的哪一個國家我沒去過？媒體他們——你……你們要知道，美國的華萊士，那比你們不知道高到哪裏去了。啊，我跟他談笑風生！');
+// api.showText('所以說媒體啊，要……還是要提高自己的知識水平！懂我的意思——識得唔識得啊？（懂不懂啊？）');
+// api.showText('唉，我也給你們着急啊，真的。');
+
+api.hideText();

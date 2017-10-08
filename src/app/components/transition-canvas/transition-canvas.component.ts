@@ -15,6 +15,4 @@ export class TransitionCanvasComponent implements OnInit {
 
   ngOnInit() {
   }
-
-
 }

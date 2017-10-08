@@ -53,10 +53,7 @@ export class TitleViewService extends AVGService {
   }
 
   public async startGame(): Promise<any> {
-    const resource = new avg.Resource(__dirname + '/assets/');
-    const entryScript = resource.getPath(avg.ResourcePath.Scripts) + '/start.avs';
 
-    avg.game.start(entryScript);
   }
 
   public menuEvent() {

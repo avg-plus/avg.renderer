@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
+  "name": "avg-plus",
   "version": "1.6.1",
   "description": "Angular 4 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "homepage": "http://powman.org",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "AngryPowman",
+    "email": "138001655@qq.com"
   },
   "keywords": [
     "angular",
@@ -49,6 +49,7 @@
     "enhanced-resolve": "3.3.0",
     "nconf": "^0.8.4",
     "node-sass": "^4.5.3",
+    "pixi-particles": "^2.1.5",
     "pixi.js": "^4.5.4",
     "rxjs": "5.4.2",
     "shelljs": "^0.7.8",

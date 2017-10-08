@@ -19,7 +19,7 @@ import { BackgroundCanvasComponent } from 'app/components/background-canvas/back
 export class TitleViewComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent) backgroundCanvas: BackgroundCanvasComponent;
 
-  constructor(private service: TitleViewService, private router: Router, private elementRef: ElementRef) {
+  constructor(public service: TitleViewService, private router: Router, private elementRef: ElementRef) {
 
   }
 
@@ -35,7 +35,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
 
           transition.fadeEnter(0, 1000, () => {
             this.router.navigate(['main-scene']);
-            this.service.startGame();
+            // this.service.startGame();
           })
           break;
       }
@@ -44,8 +44,8 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.backgroundCanvas.loadImageToViewport('assets/graphics/backgrounds/demo-tree.png');
-    this.backgroundCanvas.loadParticleEffect();
+    this.backgroundCanvas.setBackground('assets/graphics/backgrounds/demo-tree.png', 100);
+    this.backgroundCanvas.snow();
   }
 
 

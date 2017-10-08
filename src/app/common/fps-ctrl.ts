@@ -17,10 +17,11 @@ export class FPSCtrl {
     // play status
     private _isPlaying = false;
     constructor(duration: number, callback?: FrameCallback) {
-        this._delay = 1000 / 24; // this._fps;
+        this._delay = 1000 / this._fps;
         this._callback = callback;
 
         this._loop = (timestamp) => {
+
             if (this._time === null) {
                 this._time = timestamp;
             }
@@ -33,7 +34,7 @@ export class FPSCtrl {
                     this._callback({
                         time: timestamp,
                         frame: this._frame
-                    })
+                    });
                 }
 
             }
