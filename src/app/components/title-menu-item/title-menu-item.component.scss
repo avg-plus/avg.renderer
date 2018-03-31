@@ -5,7 +5,8 @@
   color: white;
   text-align: center;
   &.highlight {
+    color: yellow;
     background: rgba(200, 0, 0, 0.6);
-    transition: 0.2s all ease-out;
+    transition: 0.1s all ease-in-out;
   }
 }

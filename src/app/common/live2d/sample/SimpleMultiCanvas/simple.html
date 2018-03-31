@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+            <title>Live2D Simple</title>
+        </meta>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=4.0">
+        </meta>
+
+        <style>
+            p {
+                width: 128px;
+                background-color: #33BFDB;
+                border-radius: 3px;
+                color: #ffffff;
+                display: block;
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+                margin: 15px 0px 5px 0px;
+                padding: 10px 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <button onclick="button_click()">キャンバス作成</button>
+        <button onclick="live2d_dispose()">全て破棄</button>
+        <div id="can"></div>
+
+        <div id="myconsole" style="color:#BBB">---- Log ----</div>
+        <!-- Live2D Library -->
+        <script src="../../lib/live2d.min.js"></script>
+
+        <!-- User's Script -->
+        <script src="src/Simple.js"></script>
+        <script src="src/Main.js"></script>
+        
+    </body>
+</html>

@@ -1,0 +1,73 @@
+{
+	"type":"Live2D Model Setting",
+	"name":"shizuku",
+	"model":"assets/graphics/characters/live2d/shizuku/shizuku.moc",
+	"textures":
+	[
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_00.png",
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_01.png",
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_02.png",
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_03.png",
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_04.png",
+		"assets/graphics/characters/live2d/shizuku/shizuku.1024/texture_05.png"
+	],
+	"physics":"assets/graphics/characters/live2d/shizuku/shizuku.physics.json",
+	"pose":"assets/graphics/characters/live2d/shizuku/shizuku.pose.json",
+	"expressions":
+	[
+	 {"name":"f01","file":"assets/graphics/characters/live2d/shizuku/expressions/f01.exp.json"},
+	 {"name":"f02","file":"assets/graphics/characters/live2d/shizuku/expressions/f02.exp.json"},
+	 {"name":"f03","file":"assets/graphics/characters/live2d/shizuku/expressions/f03.exp.json"},
+	 {"name":"f04","file":"assets/graphics/characters/live2d/shizuku/expressions/f04.exp.json"}
+	],
+	"layout":
+	{
+		"center_x":0,
+		"y":1.2,
+		"width":2.4
+	},
+	"hit_areas":
+	[
+		{"name":"head", "id":"D_REF.HEAD"},
+		{"name":"body", "id":"D_REF.BODY"}
+	],
+	"motions":
+	{
+		"idle":
+		[
+			{"file":"assets/graphics/characters/live2d/shizuku/motions/idle_00.mtn" ,"fade_in":2000, "fade_out":2000},
+			{"file":"assets/graphics/characters/live2d/shizuku/motions/idle_01.mtn" ,"fade_in":2000, "fade_out":2000},
+			{"file":"assets/graphics/characters/live2d/shizuku/motions/idle_02.mtn" ,"fade_in":2000, "fade_out":2000}
+		],
+		"tap_body":
+		[
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/tapBody_00.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/tapBody_00.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/tapBody_01.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/tapBody_01.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/tapBody_02.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/tapBody_02.mp3" }
+		],
+		"pinch_in":
+		[
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchIn_00.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchIn_00.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchIn_01.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchIn_01.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchIn_02.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchIn_02.mp3" }
+		],
+		"pinch_out":
+		[
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchOut_00.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchOut_00.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchOut_01.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchOut_01.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/pinchOut_02.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/pinchOut_02.mp3" }
+		],
+		"shake":
+		[
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/shake_00.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/shake_00.mp3","fade_in":500 },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/shake_01.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/shake_01.mp3","fade_in":500 },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/shake_02.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/shake_02.mp3","fade_in":500 }
+		],
+		"flick_head":
+		[
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/flickHead_00.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/flickHead_00.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/flickHead_01.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/flickHead_01.mp3" },
+			{ "file":"assets/graphics/characters/live2d/shizuku/motions/flickHead_02.mtn", "sound":"assets/graphics/characters/live2d/shizuku/sounds/flickHead_02.mp3" }
+		]
+	}
+}

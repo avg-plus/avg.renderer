@@ -1,19 +1,35 @@
-
 import {
-  Component, OnInit, OnChanges, SimpleChange, SimpleChanges,
-  AfterViewInit, AnimationTransitionEvent, ViewChild
-} from '@angular/core';
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges,
+  AfterViewInit,
+  AnimationTransitionEvent,
+  ViewChild
+} from "@angular/core";
+
 import {
   trigger,
   state,
   style,
   animate,
   transition
-} from '@angular/animations';
+} from "@angular/animations";
 
-import * as avg from 'avg-engine/engine';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import * as avg from "avg-engine/engine";
+import { Subject } from "rxjs/Subject";
+import { Observable } from "rxjs/Observable";
+
+import "app/common/live2d/lib/live2d.min.js";
+import "pixi-live2d";
+
+// import * as gsap from 'gsap';
+import "gsap";
+
+// let TimelineLite = new gsap.TimelineLite();
+
+import { UIAnimation } from "../../common/animations/ui-animation";
 
 export enum DialogueBoxStatus {
   None,
@@ -24,62 +40,32 @@ export enum DialogueBoxStatus {
 }
 
 @Component({
-  selector: 'dialogue-box',
-  templateUrl: './dialogue-box.component.html',
-  styleUrls: ['./dialogue-box.component.scss'],
+  selector: "dialogue-box",
+  templateUrl: "./dialogue-box.component.html",
+  styleUrls: ["./dialogue-box.component.scss"],
   animations: [
-    trigger('dialogueBoxState', [
-      state('inactive', style({
-        backgroundColor: 'rgba(255,255,255,0)',
-      })),
-      state('active', style({
-        backgroundColor: 'rgba(255,255,255,0.5)',
-      })),
-      transition('inactive => active', animate('300ms ease-in')),
-      transition('active => inactive', animate('300ms ease-out'))
-    ]),
-    trigger('textState', [
-      state('inactive', style({
-        opacity: '0',
-      })),
-      state('active', style({
-        opacity: '1'
-      })),
-      transition('inactive => active', animate('300ms ease-in')),
-      transition('active => inactive', animate('300ms ease-out'))
-    ]),
-    trigger('characterState', [
-      state('inactive', style({
-        opacity: '0',
-        transform: 'translateX(-20px)'
-
-      })),
-      state('active', style({
-        opacity: '1',
-        transform: 'translateX(20px)'
-      })),
-      transition('inactive => active', animate('500ms ease')),
-      transition('active => inactive', animate('500ms ease'))
-    ])
+    UIAnimation.AVGColorFade("dialogueBoxState", "255,255,255", 0, 0.5, 200),
+    UIAnimation.AVGOpacityFade("textState", 0, 1, 200),
+    UIAnimation.AVGCharacterShow("characterState", 500)
   ]
 })
-export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
-  private dialogueData: avg.Dialogue;
-  private dialogueBoxState = 'inactive';
-  private textState = 'inactive';
-  private characterState = 'inactive';
+export class DialogueBoxComponent implements OnInit, AfterViewInit {
+  public dialogueData: avg.Dialogue;
+  public dialogueBoxState = "inactive";
+  public textState = "inactive";
+  public characterState = "inactive";
 
-  private animatedText = '';
-  private currentStatus = DialogueBoxStatus.None;
-  private typewriterHandle = null;
-  private autoPlayDelayHandle = null;
-  private subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
+  public animatedText = "";
+  public currentStatus = DialogueBoxStatus.None;
+  public typewriterHandle = null;
+  public autoPlayDelayHandle = null;
+  public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
 
   // private charIndexes: Array<{styles: any, avatar: any}> = new Array<any>(5);
 
-  private character_slot: Array<any>;
-  private characters: Array<any>;
-  private currentCharacter: avg.Character;
+  public character_slot: Array<any>;
+  public characters: Array<any>;
+  public currentCharacter: avg.Character;
 
   constructor() {
     this.character_slot = new Array<any>(5);
@@ -89,45 +75,77 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
     for (let i = 0; i < 5; ++i) {
       this.character_slot[i] = {
-        width: width + 'px',
-        left: width * i + 'px',
-        bottom: '100px'
+        width: width + "px",
+        left: width * i + "px",
+        bottom: "100px"
       };
     }
-
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
+    // const renderer = new PIXI.WebGLRenderer(800, 600);
+    // document.getElementById("#character-box").appendChild(renderer.view);
+    // const stage = new PIXI.Container();
+
+    // const modelHaru = require("app/common/live2d/sample/sampleApp1/assets/live2d/shizuku/shizuku.model.json");
+
+    // const sprite = new PIXI.Sprite(); // PIXI.Sprite.fromImage('assets/graphics/characters/live2d/7_room2_a.jpg');
+    // stage.addChild(sprite);
+
+    // const live2dSprite = new PIXI["Live2DSprite"](modelHaru, {
+    //   debugLog: true,
+    //   randomMotion: true,
+    //   eyeBlink: true
+    //   // audioPlayer: (...args) => console.log(...args)
+    // });
+    // stage.addChild(live2dSprite);
+
+    // live2dSprite.x = -105;
+    // // live2dSprite.y = -150;
+    // live2dSprite.adjustScale(0, 0, 0.7);
+    // live2dSprite.adjustTranslate(0.4, 0);
+    // live2dSprite.startRandomMotion("idle");
+
+    // live2dSprite.on("click", evt => {
+    //   const point = evt.data.global;
+    //   if (live2dSprite.hitTest("body", point.x, point.y)) {
+    //     live2dSprite.startRandomMotionOnce("tap_body");
+    //   }
+    //   if (live2dSprite.hitTest("head", point.x, point.y)) {
+    //     live2dSprite.playSound("星のカケラ.mp3", "sound/");
+    //   }
+    // });
+    // live2dSprite.on("mousemove", evt => {
+    //   const point = evt.data.global;
+    //   live2dSprite.setViewPoint(point.x, point.y);
+    // });
+
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   renderer.render(stage);
+    // }
+    // animate();
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-
-  }
-
 
   public showBox() {
-    this.dialogueBoxState = 'active';
-    this.textState = 'active';
-    this.characterState = 'inactive';
+    this.dialogueBoxState = "active";
+    this.textState = "active";
+    this.characterState = "inactive";
   }
 
   public hideBox() {
-    this.dialogueBoxState = 'inactive';
-    this.textState = 'inactive';
-    this.characterState = 'inactive';
+    this.dialogueBoxState = "inactive";
+    this.textState = "inactive";
+    this.characterState = "inactive";
     this.currentStatus = DialogueBoxStatus.Hidden;
     this.subject.next(DialogueBoxStatus.Hidden);
   }
 
   public updateData(data: avg.Dialogue) {
-
-
     this.dialogueData = data;
-    this.animatedText = '';
+    this.animatedText = "";
 
     this.characters = [];
 
@@ -141,7 +159,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
     if (this.currentCharacter) {
       this.loadCharacterToViewport(this.currentCharacter, 2);
-      // this.loadCharacterToViewport(this.currentCharacter, Math.floor((Math.random() * 4) + 1));
     }
 
     if (data) {
@@ -152,24 +169,30 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   public loadCharacterToViewport(character: avg.Character, index: number = 1) {
-    // this.characters[0] = character;
-    // this.characters[1] = character;
-    // this.characters[2] = character;
-    // this.characters[3] = character;
-    // this.characters[4] = character;
+    if (this.characters[index] === null) {
+      this.characters[index] = character;
+    } else {
+      if (
+        this.characters[index] &&
+        this.characters[index].avatar !== character.avatar
+      ) {
+        this.characters[index] = character;
+      } else {
+        this.characters[index] = character;
+        console.log("Same avatar");
+        return;
+      }
+    }
 
-    this.characters[index] = character;
+    console.log(this.characters[index].avatar, character.avatar);
 
-    // let char = this.characters[index];
-
-
-    this.characters[index].state = 'inactive';
+    this.characters[index].state = "inactive";
     setTimeout(() => {
-      this.characters[index].state = 'inactive';
+      this.characters[index].state = "inactive";
     }, 1);
 
     setTimeout(() => {
-      this.characters[index].state = 'active';
+      this.characters[index].state = "active";
     }, 200);
   }
 
@@ -179,23 +202,21 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
   private startTypewriter(speed: number = 30) {
     let count = 0;
-    this.animatedText = '';
+    this.animatedText = "";
     this.currentStatus = DialogueBoxStatus.Typing;
 
-    let parsingBuffer = '';
-    let resultBuffer = '';
+    let parsingBuffer = "";
+    let resultBuffer = "";
     let blockRanges = [];
     const spanTrimRegex = /<font [a-z]+=[a-zA-Z0-9#]+\>|<\/font>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>/g;
 
     if (avg.Setting.TextSpeed > 0) {
-
       let match = null;
       while ((match = spanTrimRegex.exec(this.dialogueData.text)) !== null) {
-        blockRanges.push({ index: match.index, block: match[0] })
+        blockRanges.push({ index: match.index, block: match[0] });
       }
 
       this.typewriterHandle = setInterval(() => {
-
         let inSpan = false;
         let inSpanStartPos = -1;
         parsingBuffer = this.dialogueData.text.substr(0, count);
@@ -228,19 +249,15 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
       this.onAutoPlay();
     }
-
   }
 
-  animationDone($event: AnimationTransitionEvent) {
-
-  }
+  animationDone($event: AnimationTransitionEvent) {}
 
   onBoxClicked($event) {
     this.updateDialogueStatus();
   }
 
   updateDialogueStatus() {
-
     if (this.currentStatus === DialogueBoxStatus.Complete) {
       this.subject.next(DialogueBoxStatus.End);
     } else if (this.currentStatus === DialogueBoxStatus.Typing) {
@@ -250,7 +267,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
       this.onAutoPlay();
     }
-
   }
 
   private onAutoPlay() {
@@ -266,8 +282,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnChanges {
 
   private updateAnimation(state: string, active: boolean) {
     setTimeout(() => {
-      this.characterState = active ? 'active' : 'inactive';
+      this.characterState = active ? "active" : "inactive";
     }, 1);
   }
-
 }

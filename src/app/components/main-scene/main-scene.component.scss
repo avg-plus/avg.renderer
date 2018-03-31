@@ -3,6 +3,10 @@
     position: absolute;
     bottom: 3%;
     width: 100%;
-    // left: 6%;
+    z-index: 200;
+  }
+
+  .background {
+    z-index: 100
   }
 }

@@ -8,7 +8,7 @@
     "text_speed": 80,
     "auto_play": false,
     "sound": {
-      "bgm": 40,
+      "bgm": 100,
       "bgs": 100,
       "se": 100,
       "voice": 100

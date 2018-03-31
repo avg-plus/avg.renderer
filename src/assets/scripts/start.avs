@@ -1,6 +1,6 @@
 let main = {
   character: {
-    name: "主角",
+    name: '主角',
     avatar: {
       file: 'assets/graphics/characters/cat-normal.png',
       scale: 0.5
@@ -10,7 +10,7 @@ let main = {
 
 let dragon = {
   character: {
-    name: "龙人",
+    name: '龙人',
     avatar: {
       file: 'assets/graphics/characters/cat-normal.png',
       scale: 0.5
@@ -21,7 +21,7 @@ let dragon = {
 function mainChar(emotion, scale = 0.2) {
   return {
     character: {
-      name: "主角",
+      name: '主角',
       avatar: {
         file: `assets/graphics/characters/boy-${emotion}.png`,
         scale: scale
@@ -33,7 +33,7 @@ function mainChar(emotion, scale = 0.2) {
 function dragonChar(emotion, scale = 0.5) {
   return {
     character: {
-      name: "龙人",
+      name: '龙人',
       avatar: {
         file: `assets/graphics/characters/cat-${emotion}.png`,
         scale: 0.5
@@ -42,7 +42,7 @@ function dragonChar(emotion, scale = 0.5) {
   };
 }
 
-api.setVariable('主角名字', '李文超');
+api.setVariable('主角名字', 'Variables');
 
 api.playSE('assets/audio/bgs/snow.mp3');
 
@@ -54,6 +54,7 @@ api.playBGM('assets/audio/bgm/cave-theme.mp3');
 api.wait(500);
 
 api.showText('……恩？', mainChar('think'));
+api.showText('……这是？', mainChar('think'));
 api.showText('哇！！！等……', mainChar('surprise'));
 api.showText('你是鸵鸟吗！！！', dragonChar('angry'));
 api.showText('~~咦？活过来了啊。', dragonChar('normal'));

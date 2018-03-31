@@ -1,4 +1,6 @@
 <div class="avg-viewport-layer">
   <canvas id="avg-particle-viewport"></canvas>
-  <div id="avg-viewport"></div>
+  <div id="avg-viewport">
+    <img class="background-image layer-{{i}}" *ngFor="let img of backgroundImages; index as i" src="{{img}}">
+  </div>
 </div>
