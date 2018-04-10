@@ -11,7 +11,7 @@ And make it to a local package for dependency with `yarn`:
 $ cd avg.engine
 $ yarn link
 ```
-The console shows `success Registered "react”` if link well.
+The console shows `success Registered "avg-engine` if link well.
 
 ## Development
 Get renderer source and run the following shell in `avg.renderer` folder:
