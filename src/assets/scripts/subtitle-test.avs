@@ -10,41 +10,49 @@
 
 let subtitle = '"Birth certificate, Death certificate. One pen."';
 
-// ";
-
-// function typewriter(str, api) {}
-
 api.showSubtitle(
   "TestTitle",
   "冷静，缜密，萧凉，孤独，看似不悲不喜，更如一曲悲歌，循而往复，却再也无法回头",
   {
-    position: 8
+    position: "Center",
+    animation: {
+      name: "FlyIn",
+      options: {
+        offset: 50,
+        direction: "Down",
+        duration: 3
+      }
+    }
   }
 );
 
-api.showSubtitle("MainTitle", "");
+api.wait(4000);
 
-let showText = "";
+api.hideSubtitle("TestTitle", {
+  animation: {
+    name: "FlyOut",
+    options: {
+      offset: 50,
+      direction: "Left",
+      duration: 3
+    }
+  }
+});
 
-api.playBGS("assets/audio/se/type-writer-15s.mp3");
-for (let i = 0; i < subtitle.length; ++i) {
-  api.wait((Math.random() + 0.2) * 200);
-  showText += subtitle[i];
-  api.updateSubtitle("MainTitle", showText + "_");
-}
+// api.showSubtitle("MainTitle", "", { position: "Center" });
+
+// let showText = "";
+
+// api.playBGS("assets/audio/se/type-writer-15s.mp3");
+// for (let i = 0; i < subtitle.length; ++i) {
+//   api.wait((Math.random() + 0.2) * 200);
+//   showText += subtitle[i];
+//   api.updateSubtitle("MainTitle", showText + "_");
+// }
 
 // api.stopBGS();
 
-// api.wait(5000);
-
-// api.hideSubtitle("MainTitle", {
-//   animation: {
-//     name: "FlyOut",
-//     options: {
-//       duration: 3000
-//     }
-//   }
-// });
+// api.wait(1000);
 
 // typewriter(subtitle, api);
 

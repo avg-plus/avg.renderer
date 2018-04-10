@@ -25,21 +25,16 @@ import * as avg from "avg-engine/engine";
   entryComponents: [TextWidgetComponent],
   styleUrls: ["./widget-layer.component.scss"]
 })
-export class WidgetLayerComponent implements OnInit, DoCheck {
-  // private differ: any;
-  @ViewChild("widgetContainer", {read: ViewContainerRef}) container;
-  // componentRef: ComponentRef<TextWidgetComponent>;
-  // @HostBinding("class.widget-center") center = true;
+export class WidgetLayerComponent implements OnInit {
+  @ViewChild("widgetContainer", { read: ViewContainerRef })
+  container;
 
   constructor(
     private service: WidgetLayerService,
     private resolver: ComponentFactoryResolver
-  ) {
-    // this.differ = differs.find([]).create();
-  }
+  ) {}
 
-  createComponent(subtitle: avg.Subtitle) {
-    // this.container.clear();
+  createTextWidgetComponent() {
     const factory: ComponentFactory<
       TextWidgetComponent
     > = this.resolver.resolveComponentFactory(TextWidgetComponent);
@@ -47,15 +42,8 @@ export class WidgetLayerComponent implements OnInit, DoCheck {
     let widget: ComponentRef<
       TextWidgetComponent
     > = this.container.createComponent(factory);
-    // widget.location.nativeElement.class = "widget-center";
-    widget.instance.data = subtitle;
-    // widget.instance.showWidget();
 
-    // this.componentRef.location.nativeElement;
-    // this.componentRef.instance.showWidget();
-
-    // this.componentRef.instance.type = type;
-    // this.componentRef.instance.output.subscribe(event => console.log(event));
+    return widget;
   }
 
   ngOnInit() {
@@ -66,8 +54,10 @@ export class WidgetLayerComponent implements OnInit, DoCheck {
 
           switch (value.op) {
             case avg.OP.ShowSubtitle:
-              this.service.addSubtitle(subtitle);
-              this.createComponent(subtitle);
+              this.service.addSubtitle(
+                subtitle,
+                this.createTextWidgetComponent()
+              );
 
               value.resolver();
               break;
@@ -78,7 +68,7 @@ export class WidgetLayerComponent implements OnInit, DoCheck {
             case avg.OP.AnimateSubtitle:
               break;
             case avg.OP.HideSubtitle:
-              this.service.removeSubtitle(subtitle.id);
+              this.service.removeSubtitle(subtitle);
               value.resolver();
               break;
           }
@@ -91,13 +81,5 @@ export class WidgetLayerComponent implements OnInit, DoCheck {
     console.log("OnWidgetChanged: ", index, item);
 
     return index;
-  }
-
-  ngDoCheck() {
-    // let changes = this.differ.diff(this.service.textWidgets);
-    // if (changes) {
-    //   this.differ._applyChanges(changes);
-    // console.log("Changes detected!", changes.length);
-    // }
   }
 }
