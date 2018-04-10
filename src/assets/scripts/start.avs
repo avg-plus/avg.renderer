@@ -42,6 +42,8 @@ function dragonChar(emotion, scale = 0.5) {
   };
 }
 
+api.showSubtitle('这是一个关于孤独与成长的故事')
+
 api.setVariable('主角名字', 'Variables');
 
 api.playSE('assets/audio/bgs/snow.mp3');

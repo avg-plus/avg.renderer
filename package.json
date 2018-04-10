@@ -1,8 +1,8 @@
 {
   "name": "avg-plus",
   "version": "1.6.1",
-  "description": "Angular 4 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "http://powman.org",
+  "description": "Powerful AVG Engine",
+  "homepage": "http://avg-engine.com",
   "author": {
     "name": "AngryPowman",
     "email": "138001655@qq.com"

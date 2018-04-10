@@ -1,7 +1,8 @@
 @mixin TextEffect {
   font-size: 23px;
   color: white;
-  font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif, "宋体";
+  font-family: "Shanghei";
+  // font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif, "宋体";
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 

@@ -9,21 +9,24 @@ import { RouterModule, Routes } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from "./app.component";
+import { AppRoutingModule } from "./app-routing.module";
+
 import { TitleViewComponent } from "./components/title-view/title-view.component";
 import { TitleMenuComponent } from "./components/title-menu/title-menu.component";
 import { TitleViewService } from "./components/title-view/title-view.service";
 import { TitleMenuItemComponent } from "./components/title-menu-item/title-menu-item.component";
-import { TransitionCanvasComponent } from "./components/transition-canvas/transition-canvas.component";
-import { AppRoutingModule } from "./app-routing.module";
-
+import { TransitionLayerComponent } from "./components/transition-layer/transition-layer.component";
 import { MainSceneComponent } from "./components/main-scene/main-scene.component";
 import { BackgroundCanvasComponent } from "./components/background-canvas/background-canvas.component";
 import { DialogueBoxComponent } from "./components/dialogue-box/dialogue-box.component";
+import { WidgetLayerComponent } from "./components/widget-layer/widget-layer.component";
+import { TextWidgetComponent } from "./components/widget-layer/widget-component/text-widget.component";
 
 import { ElectronService } from "./providers/electron.service";
 import { MainSceneService } from "./components/main-scene/main-scene.service";
 import { DialogueBoxService } from "./components/dialogue-box/dialogue-box.service";
-import { TransitionCanvasService } from "./components/transition-canvas/transition-canvas.service";
+import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
+import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
 
 @NgModule({
   declarations: [
@@ -31,10 +34,12 @@ import { TransitionCanvasService } from "./components/transition-canvas/transiti
     TitleViewComponent,
     TitleMenuComponent,
     TitleMenuItemComponent,
-    TransitionCanvasComponent,
+    TransitionLayerComponent,
     MainSceneComponent,
     BackgroundCanvasComponent,
-    DialogueBoxComponent
+    DialogueBoxComponent,
+    WidgetLayerComponent,
+    TextWidgetComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +53,8 @@ import { TransitionCanvasService } from "./components/transition-canvas/transiti
     TitleViewService,
     MainSceneService,
     DialogueBoxService,
-    TransitionCanvasService
+    TransitionLayerService,
+    WidgetLayerService
   ],
   bootstrap: [AppComponent]
 })

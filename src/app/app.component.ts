@@ -10,6 +10,7 @@ import { APIImplManager } from "app/common/api/api-impl-manger";
 import * as avg from "avg-engine/engine";
 
 import { app, BrowserWindow, screen, remote } from "electron";
+import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 
 @Component({
   selector: "app-root",
@@ -71,7 +72,15 @@ export class AppComponent implements AfterViewInit {
     // transition.init(element);
     APIImplManager.init();
 
-    this.router.navigate(["title-view"]);
-    // this.router.navigate(['main-scene']);
+    // this.router.navigate(["title-view"]).then(result => {
+    //   if (result) {
+    //     TransitionLayerService.fadeTo(0, 3000);
+    //   }
+    // });
+    this.router.navigate(["main-scene"]).then(result => {
+      if (result) {
+        TransitionLayerService.fadeTo(0, 0);
+      }
+    });
   }
 }

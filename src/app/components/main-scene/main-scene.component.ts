@@ -37,7 +37,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     // start game for test
     // const entryScript = avg.Resource.getPath(avg.ResourcePath.Scripts) + '/api-test.avs';
     const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/start.avs";
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
     avg.game.start(entryScript);
     // =======
 

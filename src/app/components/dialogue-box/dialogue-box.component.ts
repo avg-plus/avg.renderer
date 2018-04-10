@@ -88,12 +88,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     // const renderer = new PIXI.WebGLRenderer(800, 600);
     // document.getElementById("#character-box").appendChild(renderer.view);
     // const stage = new PIXI.Container();
-
     // const modelHaru = require("app/common/live2d/sample/sampleApp1/assets/live2d/shizuku/shizuku.model.json");
-
     // const sprite = new PIXI.Sprite(); // PIXI.Sprite.fromImage('assets/graphics/characters/live2d/7_room2_a.jpg');
     // stage.addChild(sprite);
-
     // const live2dSprite = new PIXI["Live2DSprite"](modelHaru, {
     //   debugLog: true,
     //   randomMotion: true,
@@ -101,13 +98,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     //   // audioPlayer: (...args) => console.log(...args)
     // });
     // stage.addChild(live2dSprite);
-
     // live2dSprite.x = -105;
     // // live2dSprite.y = -150;
     // live2dSprite.adjustScale(0, 0, 0.7);
     // live2dSprite.adjustTranslate(0.4, 0);
     // live2dSprite.startRandomMotion("idle");
-
     // live2dSprite.on("click", evt => {
     //   const point = evt.data.global;
     //   if (live2dSprite.hitTest("body", point.x, point.y)) {
@@ -121,7 +116,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     //   const point = evt.data.global;
     //   live2dSprite.setViewPoint(point.x, point.y);
     // });
-
     // function animate() {
     //   requestAnimationFrame(animate);
     //   renderer.render(stage);

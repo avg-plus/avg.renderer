@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { TitleMenuModel } from '../../common/models/title-menu-model';
-import * as avg from 'avg-engine/engine';
-import * as fs from 'fs';
-import { transition } from 'app/common/manager/transition';
-import { AVGService } from '../../common/avg-service';
+import { Injectable } from "@angular/core";
+import { TitleMenuModel } from "../../common/models/title-menu-model";
+import * as avg from "avg-engine/engine";
+import * as fs from "fs";
+import { transition } from "app/common/manager/transition";
+import { AVGService } from "../../common/avg-service";
 
 export enum TitleMenuEvent {
   Start,
@@ -13,11 +13,10 @@ export enum TitleMenuEvent {
 
 @Injectable()
 export class TitleViewService extends AVGService {
-
   public menuItems: Array<TitleMenuModel> = [
-    { text: '开始游戏' },
-    { text: '继续游戏' },
-    { text: '辣鸡不玩了' },
+    { text: "开始游戏" },
+    { text: "继续游戏" },
+    { text: "辣鸡不玩了" }
   ];
 
   public currentMenuIndex: number;
@@ -47,14 +46,10 @@ export class TitleViewService extends AVGService {
       this.subject.next(currentIndex);
 
       return;
-
     }
-
   }
 
-  public async startGame(): Promise<any> {
-
-  }
+  public async startGame(): Promise<any> {}
 
   public menuEvent() {
     return this.subject;
@@ -79,6 +74,4 @@ export class TitleViewService extends AVGService {
     console.log(`Set menu index: ${index}`);
     this.menuItems[index].highlight = true;
   }
-
-
 }
