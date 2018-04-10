@@ -21,8 +21,8 @@ import * as avg from "avg-engine/engine";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
-import "app/common/live2d/lib/live2d.min.js";
-import "pixi-live2d";
+// import "app/common/live2d/lib/live2d.min.js";
+// import "pixi-live2d";
 
 // import * as gsap from 'gsap';
 import "gsap";

@@ -72,15 +72,15 @@ export class AppComponent implements AfterViewInit {
     // transition.init(element);
     APIImplManager.init();
 
-    // this.router.navigate(["title-view"]).then(result => {
-    //   if (result) {
-    //     TransitionLayerService.fadeTo(0, 3000);
-    //   }
-    // });
-    this.router.navigate(["main-scene"]).then(result => {
+    this.router.navigate(["title-view"]).then(result => {
       if (result) {
-        TransitionLayerService.fadeTo(0, 0);
+        TransitionLayerService.fadeTo(0, 3000);
       }
     });
+    // this.router.navigate(["main-scene"]).then(result => {
+    //   if (result) {
+    //     TransitionLayerService.fadeTo(0, 0);
+    //   }
+    // });
   }
 }

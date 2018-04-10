@@ -20,10 +20,7 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
 
   constructor(private service: TransitionLayerService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngAfterViewInit() {
-
-  }
+  ngAfterViewInit() {}
 }

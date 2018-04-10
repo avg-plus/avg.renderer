@@ -54,7 +54,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
           avg.api.stopBGM(null);
           TransitionLayerService.fadeTo(1, 1000, () => {
             this.router.navigate(["main-scene"]).then((result) => {
-              // TransitionLayerService.fadeTo(0, 1000);
+              TransitionLayerService.fadeTo(0, 1000);
             });
           });
           break;
@@ -81,8 +81,8 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
     // { 'bottom': '-400', repeat: -1, 'opacity': 1, yoyo: true, ease: gsap.Linear.easeInOut });
     // this.backgroundCanvas.setBackground('assets/graphics/backgrounds/m2.png', 10000, 2);
     setTimeout(() => {
-      // this.backgroundCanvas.snow();
-      ParticleEffect.snow();
+      this.backgroundCanvas.snow();
+      // ParticleEffect.snow();
     }, 1);
   }
 }

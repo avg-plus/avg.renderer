@@ -6,6 +6,7 @@ import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
 
 import * as path from "path";
+import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
 import * as gsap from "gsap";
