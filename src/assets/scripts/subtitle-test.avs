@@ -12,7 +12,7 @@ let subtitle = '"Birth certificate, Death certificate. One pen."';
 
 api.showSubtitle(
   "TestTitle",
-  "冷静，缜密，萧凉，孤独，看似不悲不喜，更如一曲悲歌，循而往复，却再也无法回头",
+  "冷静，缜密，萧凉，孤独，看似不悲不喜，更如一曲悲歌[br]循而往复，却再也[s=22]无法回头",
   {
     position: "Center",
     animation: {
@@ -38,6 +38,12 @@ api.hideSubtitle("TestTitle", {
     }
   }
 });
+
+api.showText("……恩？");
+api.showText("……这是？");
+api.showText("哇！！！等……");
+api.showText("你是鸵鸟吗！！！");
+api.hideText();
 
 // api.showSubtitle("MainTitle", "", { position: "Center" });
 

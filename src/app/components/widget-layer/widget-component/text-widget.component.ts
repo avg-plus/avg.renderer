@@ -50,6 +50,10 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   public showWidget() {
+    this.data.text = avg.DialogueParserPlugin.parseContent(this.data.text);
+
+    console.log("Parsed text: %s", this.data.text);
+
     switch (this.data.animation.name) {
       case avg.ScreenWidgetAnimation.Enter_FadeIn:
         this.fadeIn(this.data.animation.options);
@@ -65,6 +69,8 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   }
 
   public hideWidget(data: avg.Subtitle) {
+    // this.data.text = avg.DialogueParserPlugin.parseContent(this.data.text);
+
     switch (data.animation.name) {
       case avg.ScreenWidgetAnimation.Leave_FadeOut:
         this.fadeOut(data.animation.options);
