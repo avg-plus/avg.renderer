@@ -7,10 +7,11 @@ import {
   HostBinding
 } from "@angular/core";
 import { NgForOf } from "@angular/common";
-import { Subtitle } from "avg-engine/engine";
+import { Subtitle, Setting } from "avg-engine/engine";
 
 import * as gsap from "gsap";
 import * as avg from "avg-engine/engine";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "text-widget",
@@ -32,10 +33,22 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
 
   private readonly WidgetElementID = "#text-widget-container";
   private finishedCallback: () => void;
+  private customPositionStyle: any;
 
-  constructor() {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
+    if (this.data.x || this.data.y) {
+      gsap.TweenLite.to(this.WidgetElementID, 0, {
+        opacity: 0,
+        position: "fixed",
+        left: this.data.x,
+        top: this.data.y
+      });
+
+      return;
+    }
+
     this.isTopLeft = this.data.position === avg.ScreenPosition.TopLeft;
     this.isTopRight = this.data.position === avg.ScreenPosition.TopRight;
     this.isBottomLeft = this.data.position === avg.ScreenPosition.BottomLeft;
