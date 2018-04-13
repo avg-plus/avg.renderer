@@ -18,6 +18,8 @@ import {
 } from "@angular/animations";
 
 import * as avg from "avg-engine/engine";
+import * as gsap from "gsap";
+
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
@@ -64,12 +66,12 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   // private charIndexes: Array<{styles: any, avatar: any}> = new Array<any>(5);
 
   public character_slot: Array<any>;
-  public characters: Array<any>;
+  public characters: Array<avg.APICharacter>;
   public currentCharacter: avg.Character;
 
   constructor() {
     this.character_slot = new Array<any>(5);
-    this.characters = new Array<any>(5);
+    this.characters = new Array<avg.APICharacter>(5);
 
     let width = avg.Setting.WindowWidth / 5;
 
@@ -129,6 +131,38 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     this.characterState = "inactive";
   }
 
+  public showCharacter(character: avg.APICharacter) {
+    let elementID = "#character-index-" + character.index;
+    let duration = 0.5;
+    let offset = -30;
+
+    let showAnimation = () => {
+      this.characters[character.index] = character;
+      gsap.TweenLite.to(elementID, duration, {
+        opacity: 1,
+        x: 0
+      });
+    };
+
+    if (
+      this.characters[character.index] === null ||
+      this.characters[character.index] === undefined
+    ) {
+      gsap.TweenLite.to(elementID, 0, {
+        opacity: 0,
+        x: offset
+      });
+      showAnimation();
+    } else {
+      gsap.TweenLite.to(elementID, duration, {
+        opacity: 0,
+        x: offset
+      }).eventCallback("onComplete", () => {
+        showAnimation();
+      });
+    }
+  }
+
   public hideBox() {
     this.dialogueBoxState = "inactive";
     this.textState = "inactive";
@@ -163,31 +197,28 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   public loadCharacterToViewport(character: avg.Character, index: number = 1) {
-    if (this.characters[index] === null) {
-      this.characters[index] = character;
-    } else {
-      if (
-        this.characters[index] &&
-        this.characters[index].avatar !== character.avatar
-      ) {
-        this.characters[index] = character;
-      } else {
-        this.characters[index] = character;
-        console.log("Same avatar");
-        return;
-      }
-    }
-
-    console.log(this.characters[index].avatar, character.avatar);
-
-    this.characters[index].state = "inactive";
-    setTimeout(() => {
-      this.characters[index].state = "inactive";
-    }, 1);
-
-    setTimeout(() => {
-      this.characters[index].state = "active";
-    }, 200);
+    // if (this.characters[index] === null) {
+    //   this.characters[index] = character;
+    // } else {
+    //   if (
+    //     this.characters[index] &&
+    //     this.characters[index].avatar !== character.avatar
+    //   ) {
+    //     this.characters[index] = character;
+    //   } else {
+    //     this.characters[index] = character;
+    //     console.log("Same avatar");
+    //     return;
+    //   }
+    // }
+    // console.log(this.characters[index].avatar, character.avatar);
+    // this.characters[index].state = "inactive";
+    // setTimeout(() => {
+    //   this.characters[index].state = "inactive";
+    // }, 1);
+    // setTimeout(() => {
+    //   this.characters[index].state = "active";
+    // }, 200);
   }
 
   public state(): Observable<DialogueBoxStatus> {

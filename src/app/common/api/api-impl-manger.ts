@@ -6,6 +6,7 @@ import { APITimerImpl } from "./api-timer-impl";
 import { APIEffectImpl } from "./api-effect-impl";
 import { APIGotoTitleViewImpl } from "./api-goto-titleview-impl";
 import { APISubtitleImpl } from "./api-subtitle-impl";
+import { APICharacterImpl } from "./api-character-impl";
 
 export class APIImplManager {
   public static init() {
@@ -22,6 +23,16 @@ export class APIImplManager {
       avg.APIDialogue.name,
       OP.HideText,
       APIDialogueImpl.op_hide
+    );
+    avg.APIManager.extendImpl(
+      avg.APICharacter.name,
+      OP.ShowCharacter,
+      APICharacterImpl.op_show
+    );
+    avg.APIManager.extendImpl(
+      avg.APICharacter.name,
+      OP.HideCharacter,
+      APICharacterImpl.op_show
     );
     avg.APIManager.extendImpl(
       avg.APISound.name,

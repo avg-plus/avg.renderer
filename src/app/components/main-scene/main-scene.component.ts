@@ -35,9 +35,10 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
 
   private async enterGameProcess() {
     // start game for test
-    // const entryScript = avg.Resource.getPath(avg.ResourcePath.Scripts) + '/api-test.avs';
     const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/start.avs";
+    // const entryScript =
+    // avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
     avg.game.start(entryScript);
     // =======
 
@@ -60,6 +61,9 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             this.dialogueBox.updateData(null);
             this.dialogueBox.hideBox();
           }
+        } else if (value.api instanceof avg.APICharacter) {
+          this.dialogueBox.showCharacter(value.api);
+          value.resolver();
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
             if (value.api.data.block) {

@@ -64,7 +64,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.backgroundCanvas.setBackground(
-      "assets/graphics/backgrounds/demo-tree.png",
+      "assets/graphics/backgrounds/forest-2.jpg",
       1000,
       0
     );
