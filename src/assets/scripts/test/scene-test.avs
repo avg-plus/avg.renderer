@@ -1,12 +1,47 @@
-let handle = api.loadScene("assets/graphics/backgrounds/demo-bg-1.jpg", {
-  index: 0,
-  duration: 10,
-  block: true
+let handle = api.loadScene(0, "assets/graphics/backgrounds/large-scene.jpg", {
+  block: true,
+  transform: {
+    stretch: false,
+    // width: "100%",
+    height: "100%"
+    // x: "30%",
+    // y: "100px"
+  },
+  animation: {
+    name: "FadeIn",
+    options: {
+      duration: 10
+    }
+  }
 });
 
-// api.sceneEffect(handle.index, "snow", {
-//   strength: 10
+let handle2 = api.loadScene(1, "assets/graphics/backgrounds/aircraft.png", {
+  block: true,
+  transform: {
+    stretch: false,
+    // width: "100%",
+    // height: "100%",
+    x: "10%",
+    y: "200px"
+  },
+  animation: {
+    name: "FadeIn",
+    options: {
+      duration: 10
+    }
+  }
+});
+
+api.wait(3000);
+
+// api.sceneEffect(0, "transparent", {
+//   strength: 0.4,
+//   duration: 5000
 // });
+
+api.sceneEffect(0, "moveTo", {
+  x: -10000
+});
 
 api.showCharacter(
   {
@@ -18,10 +53,10 @@ api.showCharacter(
 
 api.showText("我能吞下玻璃而不伤身体");
 
-api.sceneEffect(handle.index, "blur", {
-  strength: 4,
-  duration: 5000
-});
+// api.sceneEffect(1, "transparent", {
+//   strength: 0.6,
+//   duration: 1000
+// });
 
 api.showText("泡面是不是世界上最帅的男人？");
 

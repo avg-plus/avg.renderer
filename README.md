@@ -22,6 +22,7 @@ git clone https://github.com/AngryPowman/avg.renderer
 cd avg.renderer
 yarn
 yarn link "avg-engine"
+yarn run build
 yarn start
 yarn run electron:test
 ```

@@ -100,7 +100,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           }
         } else if (value.api instanceof avg.APIEffect) {
           if (value.op === avg.OP.PlayEffect) {
-            let effect = value.api.data;
+            const effect = value.api.data;
 
             console.log("current effect:", effect);
             if (effect.effectName === "shake") {
@@ -110,7 +110,15 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             } else if (effect.effectName === "snow") {
               this.backgroundCanvas.snow();
             } else if (effect.effectName === "blur") {
-              this.backgroundCanvas.blur(effect.strength, effect.duration);
+              this.backgroundCanvas.blur(value.api.index, effect);
+            } else if (effect.effectName === "transparent") {
+              this.backgroundCanvas.transparent(
+                value.api.index,
+                effect.strength,
+                effect.duration
+              );
+            } else if (effect.effectName === "moveTo") {
+              this.backgroundCanvas.moveTo(value.api.index, 10000, -10000);
             }
             value.resolver();
           }

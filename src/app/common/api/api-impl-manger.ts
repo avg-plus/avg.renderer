@@ -8,6 +8,7 @@ import { APIGotoTitleViewImpl } from "./api-goto-titleview-impl";
 import { APISubtitleImpl } from "./api-subtitle-impl";
 import { APICharacterImpl } from "./api-character-impl";
 import { APIDialogueChoicesImpl } from "./api-dialogue-choices-impl";
+import { APIAnimateSceneImpl } from "./api-animate-scene-impl";
 
 export class APIImplManager {
   public static init() {
@@ -79,6 +80,11 @@ export class APIImplManager {
       avg.APIScene.name,
       OP.LoadScene,
       APISceneImpl.op_load_scene
+    );
+    avg.APIManager.extendImpl(
+      avg.APIAnimateScene.name,
+      OP.AnimateScene,
+      APIAnimateSceneImpl.op_animate
     );
     avg.APIManager.extendImpl(avg.APITimer.name, OP.Wait, APITimerImpl.op_wait);
     avg.APIManager.extendImpl(

@@ -27,12 +27,12 @@ import { Observable } from "rxjs/Observable";
 // import "pixi-live2d";
 
 // import * as gsap from 'gsap';
-import "gsap";
 
 // let TimelineLite = new gsap.TimelineLite();
 
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
+import { AnimationUtils } from "../../common/animations/animation-utils";
 
 export enum DialogueBoxStatus {
   None,
@@ -132,14 +132,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   public showBox() {
-    gsap.TweenLite.to(".dialogue-box", 1, {
-      opacity: 1
-    });
+    AnimationUtils.fadeTo(".dialogue-box", 200, 1);
 
     if (this.currentName && this.currentName.length > 0) {
-      gsap.TweenLite.to(".name-box", 1, {
-        opacity: 1
-      });
+      AnimationUtils.fadeTo(".name-box", 200, 1);
     }
   }
 
@@ -202,17 +198,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   public hideBox() {
-    // this.dialogueBoxState = "inactive";
-    // this.textState = "inactive";
-    // this.characterState = "inactive";
-
-    gsap.TweenLite.to(".dialogue-box", 1, {
-      opacity: 0
-    });
-
-    gsap.TweenLite.to(".name-box", 1, {
-      opacity: 0
-    });
+    AnimationUtils.fadeTo(".dialogue-box", 200, 0);
+    AnimationUtils.fadeTo(".name-box", 200, 0);
 
     this.currentStatus = DialogueBoxStatus.Hidden;
     this.subject.next(DialogueBoxStatus.Hidden);

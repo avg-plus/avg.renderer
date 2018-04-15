@@ -11,6 +11,11 @@ import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
 import * as gsap from "gsap";
 
+class SceneModel {
+  public scene: avg.Scene;
+  public styles: any;
+}
+
 @Component({
   selector: "background-canvas",
   templateUrl: "./background-canvas.component.html",
@@ -18,10 +23,9 @@ import * as gsap from "gsap";
 })
 export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
   private readonly _duration = 500;
-
   private readonly ViewportElement = "#avg-viewport";
 
-  public backgroundImages: Array<string> = new Array<string>(
+  public scenes: Array<SceneModel> = new Array<SceneModel>(
     GameDef.MaxBackgroundLayers
   );
 
@@ -32,20 +36,42 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   public async setBackground(scene: avg.APIScene): Promise<any> {
-    let data = scene.data;
-
-    let file = data.file.filename;
+    const data = scene.data;
+    const transform = data.transform;
+    const file = data.file.filename;
+    const index = scene.index;
     let duration = data.duration;
-    let layerIndex = scene.index;
 
-    if (layerIndex >= GameDef.MaxBackgroundLayers) {
+    if (index >= GameDef.MaxBackgroundLayers) {
+      console.error(
+        "Index is greater than MaxBackgroundLayers. Index = " + index
+      );
       return;
     }
 
     duration = duration || this._duration;
 
+    const model = new SceneModel();
+    model.scene = data;
+
+    if (transform.stretch) {
+      transform.width = "100%";
+      transform.height = "100%";
+    }
+
+    model.styles =
+      transform === undefined
+        ? {}
+        : {
+            width: transform.width,
+            height: transform.height,
+            left: transform.x,
+            top: transform.y
+          };
+
     return new Promise((resolve, reject) => {
-      this.backgroundImages[layerIndex] = file;
+      console.log(model);
+      this.scenes[index] = model;
       resolve();
     });
   }
@@ -64,19 +90,24 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
 
   loadParticleEffect() {}
 
-  public blur(strength: number, duration: number = 1000) {
-    let blur = strength * 1 + "px";
+  public blur(index: number, effect: avg.Effect) {
+    const blur = effect.strength * 1 + "px";
 
     console.log("blur strength = " + blur);
-    gsap.TweenLite.to(this.ViewportElement, 10, {
+    gsap.TweenLite.to(".layer-" + index, 10, {
       css: { filter: "blur(" + blur + ")" }
     });
   }
 
-  public transparent(duration: number) {
-    gsap.TweenLite.to("target", duration, {
-
+  public moveTo(index: number, duration: number, x: number) {
+    AnimationUtils.to("MoveTo", ".layer-" + index, duration, {
+      x: x
     });
+  }
+
+  public transparent(index: number, to: number, duration: number) {
+    console.log("transparent " + index);
+    AnimationUtils.fadeTo(".layer-" + index, duration, to);
   }
 
   rain() {

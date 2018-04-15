@@ -1,9 +1,9 @@
 <div class="avg-viewport-layer">
   <!--  -->
   <div id="avg-viewport">
-    <div *ngFor="let img of backgroundImages; index as i">
+    <div *ngFor="let model of scenes; index as i">
       <canvas id="avg-particle-viewport"></canvas>
-      <img class="background-image layer-{{i}}" src="{{img}}">
+      <img class="background-image layer-{{i}}" *ngIf="model" [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
     </div>
 
   </div>

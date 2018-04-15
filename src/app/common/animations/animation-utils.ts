@@ -1,44 +1,40 @@
-import { FPSCtrl } from "../fps-ctrl";
+import * as gsap from "gsap";
 
 export class AnimationUtils {
-  public static fadeOut(
-    sprite: PIXI.Sprite,
-    duration: number = 300,
-    callback?: () => void
+  public static fadeTo(
+    target: string,
+    duration: number = 200,
+    to: number = 1,
+    complete?: () => void
   ) {
-    let fade = new FPSCtrl(duration, frame => {
-      if (sprite.alpha <= 0) {
-        fade.pause();
-
-        if (callback !== null) {
-          callback();
-        }
-        return;
-      }
-
-      sprite.alpha -= 1 / (duration / fade.frameRate());
-    });
-
-    fade.start();
+    AnimationUtils.to("fadeTo", target, duration, { opacity: to }, complete);
   }
 
-  public static fadeIn(
-    sprite: PIXI.Sprite,
-    duration: number = 300,
-    callback?: () => void
+  public static moveTo(
+    target: string,
+    duration: number = 200,
+    x: number,
+    y: number,
+    complete?: () => void
   ) {
-    let fade = new FPSCtrl(duration, frame => {
-      if (sprite.alpha >= 1) {
-        fade.pause();
-        if (callback !== null) {
-          callback();
+    AnimationUtils.to("MoveTo", target, duration, { x: x, y: y }, complete);
+  }
+
+  public static to(
+    name: string,
+    target: string,
+    duration: number = 200,
+    vars: any,
+    complete?: () => void
+  ) {
+    gsap.TweenLite.to(target, duration / 1000, vars).eventCallback(
+      "onComplete",
+      () => {
+        if (complete) {
+          complete();
         }
-        return;
+        console.log("[Animation] %s animation completed.", name);
       }
-
-      sprite.alpha += 1 / (duration / fade.frameRate());
-    });
-
-    fade.start();
+    );
   }
 }
