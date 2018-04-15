@@ -33,6 +33,7 @@ export class WidgetLayerService extends AVGService {
   ) {
     component.instance.data = data;
     component.instance.showWidget();
+    component.changeDetectorRef.detectChanges();
 
     this.textWidgets.push(new TextWidgetModel(data, component));
   }

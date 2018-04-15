@@ -5,6 +5,7 @@ import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "./transition-layer.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SceneAnimation } from "app/common/animations/scene-animation";
+import { Subject } from "rxjs/Subject";
 
 @Component({
   selector: "transition-layer",
@@ -15,12 +16,16 @@ import { SceneAnimation } from "app/common/animations/scene-animation";
   ]
 })
 export class TransitionLayerComponent implements OnInit, AfterViewInit {
-  public transitionState = "inactive";
   private animations: any[];
-
-  constructor(private service: TransitionLayerService) {}
+  constructor() {}
 
   ngOnInit() {}
 
   ngAfterViewInit() {}
+
+  onTransitionLayerClicked() {
+    if (!TransitionLayerService.isLockPointerEvents()) {
+      TransitionLayerService.FullScreenClickListener.next();
+    }
+  }
 }

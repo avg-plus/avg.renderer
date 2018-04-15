@@ -31,13 +31,22 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   @HostBinding("class.widget-bottom") isBottom = false;
   @HostBinding("class.widget-center") isCentered = false;
 
-  private readonly WidgetElementID = "#text-widget-container";
+  private ElementID = "";
+  private WidgetElementID = "";
   private finishedCallback: () => void;
   private customPositionStyle: any;
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
+    this.ElementID = this.data.id;
+    this.WidgetElementID = "#" + this.ElementID;
+  }
+
+  ngAfterViewInit() {
+  }
+
+  public showWidget() {
     if (this.data.x || this.data.y) {
       gsap.TweenLite.to(this.WidgetElementID, 0, {
         opacity: 0,
@@ -49,6 +58,7 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    // Initialize positions
     this.isTopLeft = this.data.position === avg.ScreenPosition.TopLeft;
     this.isTopRight = this.data.position === avg.ScreenPosition.TopRight;
     this.isBottomLeft = this.data.position === avg.ScreenPosition.BottomLeft;
@@ -58,27 +68,26 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
     this.isRight = this.data.position === avg.ScreenPosition.Right;
     this.isBottom = this.data.position === avg.ScreenPosition.Bottom;
     this.isCentered = this.data.position === avg.ScreenPosition.Center;
-  }
 
-  ngAfterViewInit() {}
-
-  public showWidget() {
+    // Update and parse content
     this.data.text = avg.DialogueParserPlugin.parseContent(this.data.text);
 
     console.log("Parsed text: %s", this.data.text);
 
-    switch (this.data.animation.name) {
-      case avg.ScreenWidgetAnimation.Enter_FadeIn:
-        this.fadeIn(this.data.animation.options);
-        break;
-      case avg.ScreenWidgetAnimation.Enter_FlyIn:
-        this.flyIn(<avg.WidgetAnimation_FlyInOptions>this.data.animation
-          .options);
-        break;
-      case avg.ScreenWidgetAnimation.Enter_Appear:
-        this.appear();
-        break;
-    }
+    setTimeout(() => {
+      switch (this.data.animation.name) {
+        case avg.ScreenWidgetAnimation.Enter_FadeIn:
+          this.fadeIn(this.data.animation.options);
+          break;
+        case avg.ScreenWidgetAnimation.Enter_FlyIn:
+          this.flyIn(<avg.WidgetAnimation_FlyInOptions>this.data.animation
+            .options);
+          break;
+        case avg.ScreenWidgetAnimation.Enter_Appear:
+          this.appear();
+          break;
+      }
+    }, 1);
   }
 
   public hideWidget(data: avg.Subtitle) {
@@ -106,7 +115,9 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   }
 
   private appear() {
-    gsap.TweenLite.to(this.WidgetElementID, 0, {
+    console.log("appear");
+
+    gsap.TweenLite.to(this.WidgetElementID, 1, {
       opacity: 1
     }).eventCallback("onComplete", () => {
       this.onShowAnimationComplete();

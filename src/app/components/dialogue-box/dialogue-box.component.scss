@@ -3,7 +3,8 @@
   color: white;
   font-family: "Shanghei";
   // font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif, "宋体";
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 #dialogue-container {
@@ -15,6 +16,7 @@
     height: 30px;
     left: 10%;
     bottom: 102%;
+    opacity: 0;
     .name {
       @include TextEffect;
       text-align: center;
@@ -28,10 +30,40 @@
     bottom: -35%;
     width: 1200px;
     height: 200px;
+    opacity: 0;
+    
     .content {
       height: 100%;
       padding: 24px;
       @include TextEffect;
+    }
+  }
+
+  .choices-box {
+    @include TextEffect;
+
+    z-index: 900;
+    position: fixed;
+    left: 50%;
+    top: 35%;
+    // width: 60%;
+    // height: 80%;
+    transform: translate(-50%, -35%);
+
+    .dialogue-choice {
+      text-align: center;
+      background-color: steelblue;
+      padding: 6px;
+      margin: 10px;
+      border-width: 2px;
+      border-color: transparent;
+      border-style: solid;
+
+      &:hover {
+        border-style: solid;
+        border-color: white;
+        border-width: 2px;
+      }
     }
   }
 }

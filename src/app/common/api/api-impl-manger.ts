@@ -7,6 +7,7 @@ import { APIEffectImpl } from "./api-effect-impl";
 import { APIGotoTitleViewImpl } from "./api-goto-titleview-impl";
 import { APISubtitleImpl } from "./api-subtitle-impl";
 import { APICharacterImpl } from "./api-character-impl";
+import { APIDialogueChoicesImpl } from "./api-dialogue-choices-impl";
 
 export class APIImplManager {
   public static init() {
@@ -32,7 +33,12 @@ export class APIImplManager {
     avg.APIManager.extendImpl(
       avg.APICharacter.name,
       OP.HideCharacter,
-      APICharacterImpl.op_show
+      APICharacterImpl.op_hide
+    );
+    avg.APIManager.extendImpl(
+      avg.APIDialogueChoice.name,
+      OP.ShowChioce,
+      APIDialogueChoicesImpl.op_show
     );
     avg.APIManager.extendImpl(
       avg.APISound.name,

@@ -17,12 +17,9 @@ import * as gsap from "gsap";
   styleUrls: ["./background-canvas.component.scss"]
 })
 export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
-  private _background: PIXI.Sprite = new PIXI.Sprite();
-  private _mask: PIXI.Sprite = new PIXI.Sprite();
-  private _effectContainer: PIXI.particles.ParticleContainer = new PIXI.particles.ParticleContainer();
-
-  private _app: PIXI.Application = null;
   private readonly _duration = 500;
+
+  private readonly ViewportElement = "#avg-viewport";
 
   public backgroundImages: Array<string> = new Array<string>(
     GameDef.MaxBackgroundLayers
@@ -32,43 +29,15 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
-  ngAfterViewInit() {
-    // const element = this.elementRef.nativeElement.querySelector('#avg-viewport');
-    // if (this._app !== null) {
-    //   this._app.destroy(true);
-    // }
-    // this._app = new PIXI.Application(1366, 768, {
-    //   backgroundColor: 0x000000
-    // });
-    // element.appendChild(this._app.view);
-    // this._background.interactive = true;
-    // this._background.width = this._app.renderer.width;
-    // this._background.height = this._app.renderer.height;
-    // this._background.alpha = 1;
-    // this._app.stage.addChild(this._background);
-    // let maskImage = path.join(avg.Resource.getPath(avg.ResourcePath.Masks), '/circle-transition.bak.png');
-    // this._mask = PIXI.Sprite.fromImage(maskImage);
-    // this._mask.alpha = 255;
-    // this._mask.width = this._app.renderer.width;
-    // this._mask.height = this._app.renderer.width;
-    // this._mask.scale = new PIXI.Point(1.5, 1.5);
-    // this._mask = new PIXI.Graphics();
-    // this._mask.beginFill(0x105050, 0.4);
-    // this._mask.drawCircle(this._app.renderer.width * 0.25, this._app.renderer.height * 0.25, 200);
-    // this._mask.drawRect(this._app.renderer.width * 0.25, this._app.renderer.height * 0.25,
-    // this._app.renderer.width / 2, this._app.renderer.height / 2);
-    // this._mask.endFill();
-    // this._app.stage.addChild(this._mask);
-    // this._mask = this._background;
-    // this._background.mask = this._mask;
-  }
+  ngAfterViewInit() {}
 
-  public async setBackground(
-    file: string,
-    duration?: number,
-    layerIndex: number = 0,
-    to?: any
-  ): Promise<any> {
+  public async setBackground(scene: avg.APIScene): Promise<any> {
+    let data = scene.data;
+
+    let file = data.file.filename;
+    let duration = data.duration;
+    let layerIndex = scene.index;
+
     if (layerIndex >= GameDef.MaxBackgroundLayers) {
       return;
     }
@@ -76,29 +45,8 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
     duration = duration || this._duration;
 
     return new Promise((resolve, reject) => {
-      // if (this._background.texture) {
-
-      console.log(layerIndex);
       this.backgroundImages[layerIndex] = file;
       resolve();
-
-      // gsap.TweenLite.to('#background-image', 10, { 'opacity': 1 });
-
-      // let fadeOut = AnimationUtils.fadeIn(this._background, duration, () => {
-
-      //   const newTexture = PIXI.Texture.fromImage(file);
-      //   this._background.texture = newTexture;
-
-      // AnimationUtils.fadeIn(this._background, duration, resolve);
-      // });
-      // } else {
-      // const newTexture = PIXI.Texture.fromImage(file);
-      // this._background.texture = newTexture;
-
-      // gsap.TweenLite.to('#avg-viewport', 1, { 'opacity': 1 });
-
-      // AnimationUtils.fadeIn(this._background, duration, resolve);
-      // }
     });
   }
 
@@ -115,6 +63,21 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
   }
 
   loadParticleEffect() {}
+
+  public blur(strength: number, duration: number = 1000) {
+    let blur = strength * 1 + "px";
+
+    console.log("blur strength = " + blur);
+    gsap.TweenLite.to(this.ViewportElement, 10, {
+      css: { filter: "blur(" + blur + ")" }
+    });
+  }
+
+  public transparent(duration: number) {
+    gsap.TweenLite.to("target", duration, {
+
+    });
+  }
 
   rain() {
     const canvas = this.elementRef.nativeElement.querySelector(

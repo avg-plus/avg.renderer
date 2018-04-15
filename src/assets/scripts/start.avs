@@ -46,7 +46,7 @@ function dragonChar(emotion, scale = 0.5) {
 
 api.setVariable("主角名字", "Variables");
 
-api.playSE("assets/audio/bgs/snow.mp3");
+// api.playSE("assets/audio/bgs/snow.mp3");
 
 api.showText(
   "[c=orange]${主角名字}！[/c][c=yellow][del]快起来[/del][/c]！[i]现在[/i]不是[color=red]装死[/color]的时候了！",
@@ -57,6 +57,8 @@ api.showText(
   mainChar("laugh")
 );
 
+// api.hideText();
+
 api.showCharacter(
   {
     file: `assets/graphics/characters/demo-char-2.png`,
@@ -65,15 +67,69 @@ api.showCharacter(
   1
 );
 
-api.wait(4500);
+// api.wait(4500);
+
+// api.showCharacter(
+//   {
+//     file: `assets/graphics/characters/demo-char-1.png`,
+//     scale: 0.5
+//   },
+//   1
+// );
+
+api.wait(1000);
 
 api.showCharacter(
   {
-    file: `assets/graphics/characters/demo-char-1.png`,
-    scale: 0.5
+    file: `assets/graphics/characters/demo-char-3.jpg`
+  },
+  3
+);
+
+api.wait(1000);
+
+api.showCharacter(
+  {
+    file: `assets/graphics/characters/demo-char-5.jpg`
+  },
+  4
+);
+
+api.wait(1000);
+
+api.showCharacter(
+  {
+    file: `assets/graphics/characters/demo-char-4.jpg`
+  },
+  0
+);
+
+api.wait(1000);
+
+api.showCharacter(
+  {
+    file: `assets/graphics/characters/cat-normal.png`
   },
   1
 );
+
+api.wait(1000);
+
+api.showCharacter(
+  {
+    file: `assets/graphics/characters/boy-normal.png`
+  },
+  2
+);
+
+api.wait(2000);
+api.hideCharacter(0);
+api.hideCharacter(1);
+api.hideCharacter(3);
+api.hideCharacter(4);
+
+
+// api.hideCharacter(1);
 
 // api.showCharacter(
 //   {
@@ -90,9 +146,6 @@ api.showCharacter(
 //   },
 //   4
 // );
-
-
-
 
 // api.hideText();
 // api.wait(1500);

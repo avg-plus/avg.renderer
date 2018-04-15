@@ -1,7 +1,8 @@
 <div id="dialogue-container" (click)="onBoxClicked($event)" #dialogueBox>
 
 
-  <div class="choices-box">
+  <div class="choices-box" *ngIf="dialogueChoices">
+    <div class="dialogue-choice" *ngFor="let choice of dialogueChoices.choices; let i = index" (click)="onChoiceClicked(i, choice)">{{choice.title}}</div>
   </div>
 
   <div class="character-box">
@@ -11,7 +12,7 @@
     </div>
 
     <div class="character char-index-1" [ngStyle]="character_slot[1]">
-      <img id="character-index-1"  src="{{characters[1] && characters[1].data ? characters[1].data.file : ''}}" />
+      <img id="character-index-1" src="{{characters[1] && characters[1].data ? characters[1].data.file : ''}}" />
     </div>
 
     <div class="character char-index-2" [ngStyle]="character_slot[2]">
@@ -35,12 +36,12 @@
 
   </div>
 
-  <div class="name-box" *ngIf="currentCharacter && currentCharacter.name" [@dialogueBoxState]="dialogueBoxState">
-    <div class="name" [@textState]="textState">{{currentCharacter.name}}</div>
+  <div class="name-box">
+    <div class="name">{{currentName}}</div>
   </div>
 
-  <div class="dialogue-box" [@dialogueBoxState]="dialogueBoxState">
-    <div class="content" [@textState]="textState" [innerHTML]="animatedText">
+  <div class="dialogue-box">
+    <div class="content" [innerHTML]="animatedText">
 
     </div>
   </div>

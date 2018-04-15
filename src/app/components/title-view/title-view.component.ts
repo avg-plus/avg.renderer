@@ -53,7 +53,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
         case TitleMenuEvent.Start:
           avg.api.stopBGM(null);
           TransitionLayerService.fadeTo(1, 1000, () => {
-            this.router.navigate(["main-scene"]).then((result) => {
+            this.router.navigate(["main-scene"]).then(result => {
               TransitionLayerService.fadeTo(0, 1000);
             });
           });
@@ -63,11 +63,22 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.backgroundCanvas.setBackground(
-      "assets/graphics/backgrounds/forest-2.jpg",
-      1000,
-      0
+    let titleScene = new avg.APIScene();
+    titleScene.data.file = avg.ResourceData.from(
+      "assets/graphics/backgrounds/forest-1.jpg"
     );
+    titleScene.index = 0;
+
+    this.backgroundCanvas.setBackground(titleScene);
+
+
+    titleScene.data.file = avg.ResourceData.from(
+      "assets/graphics/backgrounds/forest-2.jpg"
+    );
+    titleScene.index = 1;
+    this.backgroundCanvas.setBackground(titleScene);
+
+
     // this.backgroundCanvas.setBackground('assets/graphics/backgrounds/m0.png', 10000, 0);
     this.backgroundCanvas.setBackgroundAnimation(0, 5000, {
       top: "-100",

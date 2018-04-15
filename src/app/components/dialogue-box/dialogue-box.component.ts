@@ -32,42 +32,44 @@ import "gsap";
 // let TimelineLite = new gsap.TimelineLite();
 
 import { UIAnimation } from "../../common/animations/ui-animation";
+import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 
 export enum DialogueBoxStatus {
   None,
   Typing,
   Complete,
   End,
-  Hidden
+  Hidden,
+
+  ChoiceCallback
 }
 
 @Component({
   selector: "dialogue-box",
   templateUrl: "./dialogue-box.component.html",
-  styleUrls: ["./dialogue-box.component.scss"],
-  animations: [
-    UIAnimation.AVGColorFade("dialogueBoxState", "255,255,255", 0, 0.5, 200),
-    UIAnimation.AVGOpacityFade("textState", 0, 1, 200),
-    UIAnimation.AVGCharacterShow("characterState", 500)
-  ]
+  styleUrls: ["./dialogue-box.component.scss"]
 })
 export class DialogueBoxComponent implements OnInit, AfterViewInit {
   public dialogueData: avg.Dialogue;
-  public dialogueBoxState = "inactive";
-  public textState = "inactive";
-  public characterState = "inactive";
 
   public animatedText = "";
   public currentStatus = DialogueBoxStatus.None;
+  public currentName = "";
   public typewriterHandle = null;
   public autoPlayDelayHandle = null;
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
+  public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<
+    avg.SelectedDialogueChoice
+  >();
 
-  // private charIndexes: Array<{styles: any, avatar: any}> = new Array<any>(5);
+  public dialogueChoices: avg.APIDialogueChoice;
+
+  // Animation constant
+  private readonly CHAR_ANIMATION_DURATION = 0.5;
+  private readonly CHAR_ANIMATION_OFFSET = -30;
 
   public character_slot: Array<any>;
   public characters: Array<avg.APICharacter>;
-  public currentCharacter: avg.Character;
 
   constructor() {
     this.character_slot = new Array<any>(5);
@@ -84,7 +86,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    TransitionLayerService.FullScreenClickListener.subscribe(_ => {
+      this.updateDialogueStatus();
+    });
+  }
 
   ngAfterViewInit() {
     // const renderer = new PIXI.WebGLRenderer(800, 600);
@@ -126,47 +132,88 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   public showBox() {
-    this.dialogueBoxState = "active";
-    this.textState = "active";
-    this.characterState = "inactive";
-  }
+    gsap.TweenLite.to(".dialogue-box", 1, {
+      opacity: 1
+    });
 
-  public showCharacter(character: avg.APICharacter) {
-    let elementID = "#character-index-" + character.index;
-    let duration = 0.5;
-    let offset = -30;
-
-    let showAnimation = () => {
-      this.characters[character.index] = character;
-      gsap.TweenLite.to(elementID, duration, {
-        opacity: 1,
-        x: 0
-      });
-    };
-
-    if (
-      this.characters[character.index] === null ||
-      this.characters[character.index] === undefined
-    ) {
-      gsap.TweenLite.to(elementID, 0, {
-        opacity: 0,
-        x: offset
-      });
-      showAnimation();
-    } else {
-      gsap.TweenLite.to(elementID, duration, {
-        opacity: 0,
-        x: offset
-      }).eventCallback("onComplete", () => {
-        showAnimation();
+    if (this.currentName && this.currentName.length > 0) {
+      gsap.TweenLite.to(".name-box", 1, {
+        opacity: 1
       });
     }
   }
 
+  private initOpacity(index: number): gsap.TweenLite {
+    let elementID = "#character-index-" + index;
+
+    return gsap.TweenLite.to(elementID, 0, {
+      opacity: 0,
+      x: this.CHAR_ANIMATION_OFFSET
+    });
+  }
+
+  private onCharacterEnter(
+    index: number,
+    character: avg.APICharacter
+  ): gsap.TweenLite {
+    let elementID = "#character-index-" + character.index;
+
+    console.log(index, character);
+
+    return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
+      opacity: 1,
+      x: 0
+    });
+  }
+
+  private onCharacterLeave(index: number): gsap.TweenLite {
+    let elementID = "#character-index-" + index;
+
+    return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
+      opacity: 0,
+      x: this.CHAR_ANIMATION_OFFSET
+    });
+  }
+
+  public showCharacter(character: avg.APICharacter) {
+    if (
+      this.characters[character.index] === null ||
+      this.characters[character.index] === undefined
+    ) {
+      this.initOpacity(character.index);
+      this.characters[character.index] = character;
+      this.onCharacterEnter(character.index, character);
+    } else {
+      this.onCharacterLeave(character.index).eventCallback("onComplete", () => {
+        this.characters[character.index] = character;
+        this.onCharacterEnter(character.index, character);
+      });
+    }
+  }
+
+  public hideCharacter(character: avg.APICharacter) {
+    if (character.index === -1) {
+      for (let i = 0; i < this.characters.length; ++i) {
+        this.onCharacterLeave(i);
+      }
+    } else {
+      this.onCharacterLeave(character.index);
+    }
+  }
+
   public hideBox() {
-    this.dialogueBoxState = "inactive";
-    this.textState = "inactive";
-    this.characterState = "inactive";
+    // this.dialogueBoxState = "inactive";
+    // this.textState = "inactive";
+    // this.characterState = "inactive";
+
+    gsap.TweenLite.to(".dialogue-box", 1, {
+      opacity: 0
+    });
+
+    gsap.TweenLite.to(".name-box", 1, {
+      opacity: 0
+    });
+
     this.currentStatus = DialogueBoxStatus.Hidden;
     this.subject.next(DialogueBoxStatus.Hidden);
   }
@@ -175,50 +222,36 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     this.dialogueData = data;
     this.animatedText = "";
 
-    this.characters = [];
-
     if (!this.dialogueData) {
       return;
     }
 
-    avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
-
-    this.currentCharacter = this.dialogueData.character;
-
-    if (this.currentCharacter) {
-      this.loadCharacterToViewport(this.currentCharacter, 2);
+    if (data.character && data.character.name) {
+      this.currentName = data.character.name;
     }
+
+    avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
 
     if (data) {
       this.startTypewriter();
     }
-
     console.log(`Update dialogue data:`, data);
   }
 
-  public loadCharacterToViewport(character: avg.Character, index: number = 1) {
-    // if (this.characters[index] === null) {
-    //   this.characters[index] = character;
-    // } else {
-    //   if (
-    //     this.characters[index] &&
-    //     this.characters[index].avatar !== character.avatar
-    //   ) {
-    //     this.characters[index] = character;
-    //   } else {
-    //     this.characters[index] = character;
-    //     console.log("Same avatar");
-    //     return;
-    //   }
-    // }
-    // console.log(this.characters[index].avatar, character.avatar);
-    // this.characters[index].state = "inactive";
-    // setTimeout(() => {
-    //   this.characters[index].state = "inactive";
-    // }, 1);
-    // setTimeout(() => {
-    //   this.characters[index].state = "active";
-    // }, 200);
+  public showChoices(data: avg.APIDialogueChoice) {
+    TransitionLayerService.lockPointerEvents();
+    this.dialogueChoices = data;
+  }
+
+  public onChoiceClicked(index: number, choice: avg.DialogueChoice) {
+    let result = new avg.SelectedDialogueChoice();
+    result.selectedIndex = index;
+    result.selectedTitle = choice.title;
+    this.choicesSubject.next(result);
+
+    this.dialogueChoices = null;
+
+    TransitionLayerService.releasePointerEvents();
   }
 
   public state(): Observable<DialogueBoxStatus> {
@@ -303,11 +336,5 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
         this.updateDialogueStatus();
       }, (100 - avg.Setting.AutoPlaySpeed) * 30 || 1);
     }
-  }
-
-  private updateAnimation(state: string, active: boolean) {
-    setTimeout(() => {
-      this.characterState = active ? "active" : "inactive";
-    }, 1);
   }
 }

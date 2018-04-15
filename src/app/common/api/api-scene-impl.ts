@@ -6,10 +6,10 @@ export class APISceneImpl extends Impl {
   @Impl.printAPIDetail
   public static op_load_scene(
     scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  ): Promise<avg.SceneHandle> {
     const script = <avg.APIScene>scriptUnit;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<avg.SceneHandle>((resolve, reject) => {
       ScriptingDispatcher.dispatch(avg.OP.LoadScene, script, resolve);
     });
   }

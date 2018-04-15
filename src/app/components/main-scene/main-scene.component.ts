@@ -14,6 +14,7 @@ import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
 import { Router } from "@angular/router";
+import { SceneHandle } from "avg-engine/engine";
 
 @Component({
   selector: "app-main-scene",
@@ -36,7 +37,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   private async enterGameProcess() {
     // start game for test
     const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/start.avs";
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/test/scene-test.avs";
     // const entryScript =
     // avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
     avg.game.start(entryScript);
@@ -55,44 +56,61 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           });
 
           if (value.op === avg.OP.ShowText) {
-            this.dialogueBox.showBox();
             this.dialogueBox.updateData(value.api.data);
+            this.dialogueBox.showBox();
           } else if (value.op === avg.OP.HideText) {
             this.dialogueBox.updateData(null);
             this.dialogueBox.hideBox();
           }
+        } else if (value.api instanceof avg.APIDialogueChoice) {
+          if (value.op === avg.OP.ShowChioce) {
+            this.dialogueBox.showChoices(value.api);
+            this.dialogueBox.choicesSubject.subscribe(result => {
+              value.resolver(result);
+            });
+          }
         } else if (value.api instanceof avg.APICharacter) {
-          this.dialogueBox.showCharacter(value.api);
+          if (value.op === avg.OP.ShowCharacter) {
+            this.dialogueBox.showCharacter(value.api);
+          } else if (value.op === avg.OP.HideCharacter) {
+            this.dialogueBox.hideCharacter(value.api);
+          }
+
           value.resolver();
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
             if (value.api.data.block) {
-              this.backgroundCanvas
-                .setBackground(
-                  value.api.data.file.filename,
-                  value.api.data.duration
-                )
-                .then(value.resolver, _ => {});
-
-              this.backgroundCanvas.loadParticleEffect();
-            } else {
-              this.backgroundCanvas.setBackground(
-                value.api.data.file.filename,
-                value.api.data.duration
+              this.backgroundCanvas.setBackground(value.api).then(
+                () => {
+                  let scenHandle = new avg.SceneHandle();
+                  scenHandle.index = 0;
+                  value.resolver(scenHandle);
+                },
+                _ => {}
               );
-              value.resolver();
+
+              // this.backgroundCanvas.loadParticleEffect();
+            } else {
+              this.backgroundCanvas.setBackground(value.api);
+
+              let scenHandle = new avg.SceneHandle();
+              scenHandle.index = 0;
+              value.resolver(scenHandle);
             }
           }
         } else if (value.api instanceof avg.APIEffect) {
           if (value.op === avg.OP.PlayEffect) {
-            console.log(value.api.data);
+            let effect = value.api.data;
 
-            if (value.api.data.effectName === "shake") {
+            console.log("current effect:", effect);
+            if (effect.effectName === "shake") {
               this.backgroundCanvas.shake();
-            } else if (value.api.data.effectName === "rain") {
+            } else if (effect.effectName === "rain") {
               this.backgroundCanvas.rain();
-            } else if (value.api.data.effectName === "snow") {
+            } else if (effect.effectName === "snow") {
               this.backgroundCanvas.snow();
+            } else if (effect.effectName === "blur") {
+              this.backgroundCanvas.blur(effect.strength, effect.duration);
             }
             value.resolver();
           }

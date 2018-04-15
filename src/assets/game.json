@@ -9,7 +9,7 @@
     "auto_play": false,
     "sound": {
       "bgm": 0,
-      "bgs": 100,
+      "bgs": 0,
       "se": 100,
       "voice": 100
     }
