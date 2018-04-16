@@ -215,6 +215,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
 
     if (data.character && data.character.name) {
       this.currentName = data.character.name;
+    } else {
+      this.currentName = "";
     }
 
     avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);

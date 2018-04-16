@@ -37,7 +37,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   private async enterGameProcess() {
     // start game for test
     const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/test/scene-test.avs";
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/story.avs";
     // const entryScript =
     // avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
     avg.game.start(entryScript);
@@ -82,7 +82,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             if (value.api.data.block) {
               this.backgroundCanvas.setBackground(value.api).then(
                 () => {
-                  let scenHandle = new avg.SceneHandle();
+                  const scenHandle = new avg.SceneHandle();
                   scenHandle.index = 0;
                   value.resolver(scenHandle);
                 },

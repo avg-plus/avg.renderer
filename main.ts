@@ -24,6 +24,7 @@ function createWindow() {
 
   // and load the index.html of the app.
   win.loadURL("file://" + __dirname + "/index.html");
+  // win.loadURL("http://0.0.0.0:4200");
 
   // Open the DevTools.
   if (serve) {

@@ -12,6 +12,7 @@ import { Subtitle, Setting } from "avg-engine/engine";
 import * as gsap from "gsap";
 import * as avg from "avg-engine/engine";
 import { DomSanitizer } from "@angular/platform-browser";
+import { AnimationUtils } from "../../../common/animations/animation-utils";
 
 @Component({
   selector: "text-widget",
@@ -43,12 +44,11 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
     this.WidgetElementID = "#" + this.ElementID;
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   public showWidget() {
     if (this.data.x || this.data.y) {
-      gsap.TweenLite.to(this.WidgetElementID, 0, {
+      AnimationUtils.to("showWidget Initialize", this.WidgetElementID, 0, {
         opacity: 0,
         position: "fixed",
         left: this.data.x,
@@ -87,11 +87,14 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
           this.appear();
           break;
       }
-    }, 1);
+    }, 0);
   }
 
   public hideWidget(data: avg.Subtitle) {
-    // this.data.text = avg.DialogueParserPlugin.parseContent(this.data.text);
+    if (!data.animation) {
+      this.hide();
+      return;
+    }
 
     switch (data.animation.name) {
       case avg.ScreenWidgetAnimation.Leave_FadeOut:
@@ -115,19 +118,13 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   }
 
   private appear() {
-    console.log("appear");
-
-    gsap.TweenLite.to(this.WidgetElementID, 1, {
-      opacity: 1
-    }).eventCallback("onComplete", () => {
+    AnimationUtils.fadeTo(this.WidgetElementID, 0, 1, () => {
       this.onShowAnimationComplete();
     });
   }
 
   private hide() {
-    gsap.TweenLite.to(this.WidgetElementID, 0, {
-      opacity: 0
-    }).eventCallback("onComplete", () => {
+    AnimationUtils.fadeTo(this.WidgetElementID, 0, 0, () => {
       this.onHideAnimationComplete();
     });
   }
@@ -166,59 +163,67 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
   }
 
   private flyIn(options: avg.WidgetAnimation_FlyInOptions) {
-    let calcData = this.flyAnimation_calc(options);
+    const calcData = this.flyAnimation_calc(options);
 
-    let offsetX = calcData.offsetX,
+    const offsetX = calcData.offsetX,
       offsetY = calcData.offsetY;
     options = calcData.options;
 
-    gsap.TweenLite.to(this.WidgetElementID, 0, {
+    AnimationUtils.to("FlyIn::Initialize()", this.WidgetElementID, 0, {
       x: offsetX,
       y: offsetY
     });
 
-    gsap.TweenLite.to(this.WidgetElementID, options.duration, {
-      opacity: 1,
-      x: 0,
-      y: 0
-    }).eventCallback("onComplete", () => {
-      this.onShowAnimationComplete();
-    });
+    AnimationUtils.to(
+      "FlyIn::Animate()",
+      this.WidgetElementID,
+      options.duration,
+      {
+        opacity: 1,
+        x: 0,
+        y: 0
+      },
+      () => {
+        this.onShowAnimationComplete();
+      }
+    );
   }
 
   private flyOut(options: avg.WidgetAnimation_FlyOutOptions) {
-    let calcData = this.flyAnimation_calc(options);
+    const calcData = this.flyAnimation_calc(options);
 
-    let offsetX = calcData.offsetX,
+    const offsetX = calcData.offsetX,
       offsetY = calcData.offsetY;
     options = calcData.options;
 
-    gsap.TweenLite.to(this.WidgetElementID, 0, {
+    AnimationUtils.to("flyOut", this.WidgetElementID, 0, {
       x: 0,
       y: 0
     });
 
-    gsap.TweenLite.to(this.WidgetElementID, options.duration, {
-      opacity: 0,
-      x: offsetX,
-      y: offsetY
-    }).eventCallback("onComplete", () => {
-      this.onHideAnimationComplete();
-    });
+    AnimationUtils.to(
+      "flyOut",
+      this.WidgetElementID,
+      options.duration,
+      {
+        opacity: 0,
+        x: offsetX,
+        y: offsetY
+      },
+      () => {
+        this.onHideAnimationComplete();
+      }
+    );
   }
 
   private fadeIn(options: avg.WidgetAnimation_FadeInOptions) {
-    gsap.TweenLite.to(this.WidgetElementID, options.duration, {
-      opacity: 1
-    }).eventCallback("onComplete", () => {
+    AnimationUtils.fadeTo(this.WidgetElementID, options.duration, 1, () => {
       this.onShowAnimationComplete();
     });
   }
 
   private fadeOut(options: avg.WidgetAnimation_FadeOutOptions) {
-    gsap.TweenLite.to(this.WidgetElementID, options.duration, {
-      opacity: 0
-    }).eventCallback("onComplete", () => {
+    AnimationUtils.fadeTo(this.WidgetElementID, options.duration, 0, () => {
       this.onHideAnimationComplete();
     });
   }
