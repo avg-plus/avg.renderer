@@ -1,7 +1,13 @@
 import * as path from "path";
 import * as fs from "fs";
 
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef
+} from "@angular/core";
 import { transition } from "app/common/manager/transition";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
@@ -13,35 +19,63 @@ import {
 import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
-import { Router } from "@angular/router";
+import {
+  Router,
+  ActivatedRoute,
+  NavigationEnd,
+  RouteReuseStrategy
+} from "@angular/router";
 import { SceneHandle } from "avg-engine/engine";
+import { DebugingService } from "app/common/debuging-service";
+import { WidgetLayerService } from "../widget-layer/widget-layer.service";
+import { TransitionLayerService } from "../transition-layer/transition-layer.service";
+import { AARouteReuseStrategy } from "../../common/route-reuse-strategy";
 
 @Component({
   selector: "app-main-scene",
   templateUrl: "./main-scene.component.html",
-  styleUrls: ["./main-scene.component.scss"]
+  styleUrls: ["./main-scene.component.scss"],
+  providers: [
+    {
+      provide: RouteReuseStrategy,
+      useClass: AARouteReuseStrategy
+    }
+  ]
 })
 export class MainSceneComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)
   backgroundCanvas: BackgroundCanvasComponent;
   @ViewChild(DialogueBoxComponent) dialogueBox: DialogueBoxComponent;
 
-  constructor(private service: MainSceneService, private router: Router) {}
+  private currentScript: string;
+  constructor(
+    private service: MainSceneService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Init
+    WidgetLayerService.clearAllSubtitle();
+
+    this.dialogueBox.reset();
+    this.backgroundCanvas.reset();
+
+    this.activatedRoute.params.subscribe(params => {
+      console.log("Received Params:", params);
+      this.currentScript = params["script"];
+    });
+  }
 
   ngAfterViewInit() {
     this.enterGameProcess();
   }
 
   private async enterGameProcess() {
-    // start game for test
-    const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/story.avs";
-    // const entryScript =
-    // avg.Resource.getPath(avg.ResourcePath.Scripts) + "/subtitle-test.avs";
-    avg.game.start(entryScript);
-    // =======
+    const game = new avg.AVGGame();
+    game.start(this.currentScript);
+    // avg.game.start(this.currentScript);
 
     ScriptingDispatcher.watch().subscribe(
       (value: { api: avg.AVGScriptUnit; op: string; resolver: any }) => {
@@ -88,12 +122,10 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
                 },
                 _ => {}
               );
-
-              // this.backgroundCanvas.loadParticleEffect();
             } else {
               this.backgroundCanvas.setBackground(value.api);
 
-              let scenHandle = new avg.SceneHandle();
+              const scenHandle = new avg.SceneHandle();
               scenHandle.index = 0;
               value.resolver(scenHandle);
             }
@@ -102,7 +134,6 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           if (value.op === avg.OP.PlayEffect) {
             const effect = value.api.data;
 
-            console.log("current effect:", effect);
             if (effect.effectName === "shake") {
               this.backgroundCanvas.shake();
             } else if (effect.effectName === "rain") {
@@ -111,6 +142,8 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
               this.backgroundCanvas.snow();
             } else if (effect.effectName === "blur") {
               this.backgroundCanvas.blur(value.api.index, effect);
+            } else if (effect.effectName === "hue") {
+              this.backgroundCanvas.hueRotate(value.api.index, effect);
             } else if (effect.effectName === "transparent") {
               this.backgroundCanvas.transparent(
                 value.api.index,

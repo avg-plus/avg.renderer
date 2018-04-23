@@ -5,6 +5,7 @@ import { SceneAnimation } from "app/common/animations/scene-animation";
 import { Subject } from "rxjs/Subject";
 
 import * as gsap from "gsap";
+import { AnimationUtils } from "../../common/animations/animation-utils";
 
 @Injectable()
 export class TransitionLayerService extends AVGService {
@@ -36,7 +37,7 @@ export class TransitionLayerService extends AVGService {
     duration: number = 500,
     complete?: () => void
   ) {
-    SceneAnimation.fadeTo("#transition-container", to, duration, complete);
+    AnimationUtils.fadeTo("#transition-container", duration, to, complete);
   }
 
   public static flashScreen(
@@ -49,7 +50,7 @@ export class TransitionLayerService extends AVGService {
       return;
     }
 
-    let play = () => {
+    const play = () => {
       return new Promise((resolve, reject) => {
         gsap.TweenLite.to("#transition-container", duration, {
           backgroundColor: color,
@@ -67,7 +68,7 @@ export class TransitionLayerService extends AVGService {
       });
     };
 
-    let f = async () => {
+    const f = async () => {
       await play().then(
         () => {
           if (count === -1) {

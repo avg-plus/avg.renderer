@@ -11,6 +11,7 @@ import * as avg from "avg-engine/engine";
 
 import { app, BrowserWindow, screen, remote } from "electron";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
+import { DebugingService } from "./common/debuging-service";
 
 @Component({
   selector: "app-root",
@@ -39,13 +40,13 @@ export class AppComponent implements AfterViewInit {
     avg.Resource.init(__dirname + "/assets/");
 
     // Init settings
-    let settings = fs.readFileSync(
+    const settings = fs.readFileSync(
       path.join(avg.Resource.getRoot(), "game.json"),
       { encoding: "utf8", flag: "r" }
     );
     avg.Setting.parseFromSettings(settings);
 
-    let win = remote.getCurrentWindow();
+    const win = remote.getCurrentWindow();
 
     if (avg.Setting.FullScreen) {
       console.log(screen.getPrimaryDisplay());
@@ -65,22 +66,43 @@ export class AppComponent implements AfterViewInit {
       });
     }
 
-    console.log(win);
+    this.electronService.initDebugging();
 
     // Init transition
     // const element = this.elementRef.nativeElement.querySelector('#avg-transition');
     // transition.init(element);
     APIImplManager.init();
 
+    const entryScript =
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/story.avs";
+
     this.router.navigate(["title-view"]).then(result => {
       if (result) {
         TransitionLayerService.fadeTo(0, 3000);
       }
     });
-    // this.router.navigate(["main-scene"]).then(result => {
-    //   if (result) {
-    //     TransitionLayerService.fadeTo(0, 0);
-    //   }
-    // });
+
+    DebugingService.DebugMessager.asObservable().subscribe((message: any) => {
+      console.log("Received Debug Message:", message);
+
+      const script =
+        avg.Resource.getPath(avg.ResourcePath.Scripts) + "/" + message.data;
+
+      this.router.routeReuseStrategy.shouldReuseRoute = () => {
+        return false;
+      };
+
+      this.router.navigate(["reload-view"]).then(result => {
+        this.router.navigate(["main-scene", { script: script }], {});
+      });
+    });
+
+    // this.router
+    //   .navigate(["main-scene", { script: entryScript }])
+    //   .then(result => {
+    //     if (result) {
+    //       TransitionLayerService.fadeTo(0, 3000);
+    //     }
+    //   });
   }
 }

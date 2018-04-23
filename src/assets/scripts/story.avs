@@ -1,8 +1,10 @@
+
+
 api.setVariable("主角名字", "？？？");
 
 api.showSubtitle("time", "09:20 AM");
 
-api.wait(3000);
+api.wait(1000);
 api.hideSubtitle("time", {
   animation: {
     name: "FadeOut",
@@ -15,11 +17,11 @@ api.hideSubtitle("time", {
 api.loadScene(0, "assets/graphics/backgrounds/nogame/bedroom-1.bmp", {
   block: true
 });
-api.wait(1);
+api.wait(3000);
 
-api.sceneEffect(0, "transparent", {
-  strength: 0.4,
-  duration: 0
+api.sceneEffect(0, "hue", {
+  strength: 200,
+  duration: 3000
 });
 
 api.wait(3000);
@@ -36,21 +38,39 @@ api.showText(
 );
 api.hideText();
 
-api.wait(3000);
+// api.wait(3000);
 api.showText("嗯……");
 api.hideText();
 
 api.wait(2000);
-api.playBGM("assets/audio/bgm/BeautifulHawaii.mp3");
 
-api.sceneEffect(0, "transparent", {
-  strength: 1,
-  duration: 1000
+api.showSubtitle("place", "主角的卧室", {
+  position: "TopRight",
+  animation: {
+    name: "FlyIn",
+    options: {
+      direction: "Left",
+      offset: 30,
+      duration: 2400
+    }
+  }
 });
 
+api.sceneEffect(0, "hue", {
+  strength: 0,
+  duration: 0
+});
+
+api.playBGM("assets/audio/bgm/BeautifulHawaii.mp3");
+
+// api.sceneEffect(0, "transparent", {
+//   strength: 1,
+//   duration: 1000
+// });
+
 api.wait(1000);
-api.loadScene(1, "assets/graphics/backgrounds/nogame/bedroom-1-day.bmp", {
-  block: true,
+api.loadScene(0, "assets/graphics/backgrounds/nogame/bedroom-1-day.bmp", {
+  block: false,
   animation: {
     name: "FadeIn",
     options: {
@@ -59,7 +79,7 @@ api.loadScene(1, "assets/graphics/backgrounds/nogame/bedroom-1-day.bmp", {
   }
 });
 
-api.wait(2000);
+// api.wait(2000);
 
 api.showText(
   "说起来，一周前我回到这个被我称之为乌托邦的世界，这种平凡的日子比想象中更容易适应。"
@@ -136,7 +156,11 @@ api.showText("「我的重要信件？谁会给我寄这种东西。」", {
     name: name
   }
 });
-api.showText("在这里我可没有任何认识的人，更别说知道我的联系方式了。");
+api.showText("在这里我可没有任何认识的人，更别说知道我的联系方式了。", {
+  character: {
+    name: name
+  }
+});
 api.showText(
   "「416号是不是你这里？是的话就没错了。为了核对一下身份，麻烦说一下你的名字。」",
   {

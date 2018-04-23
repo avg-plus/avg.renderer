@@ -25,9 +25,17 @@ export class TextWidgetModel extends WidgetModel {
 
 @Injectable()
 export class WidgetLayerService extends AVGService {
-  public textWidgets: TextWidgetModel[] = [];
+  public static textWidgets: TextWidgetModel[] = [];
 
-  public addSubtitle(
+  public static clearAllSubtitle() {
+    this.textWidgets.forEach(widget => {
+      widget.component.destroy();
+    });
+
+    this.textWidgets = [];
+  }
+
+  public static addSubtitle(
     data: avg.Subtitle,
     component: ComponentRef<TextWidgetComponent>
   ) {
@@ -38,7 +46,7 @@ export class WidgetLayerService extends AVGService {
     this.textWidgets.push(new TextWidgetModel(data, component));
   }
 
-  public updateSubtitle(id: string, text: string) {
+  public static updateSubtitle(id: string, text: string) {
     for (let i = 0; i < this.textWidgets.length; ++i) {
       if (this.textWidgets[i].data.id === id) {
         this.textWidgets[i].data.text = text;
@@ -46,7 +54,7 @@ export class WidgetLayerService extends AVGService {
     }
   }
 
-  public removeSubtitle(data: avg.Subtitle) {
+  public static removeSubtitle(data: avg.Subtitle) {
     console.log("Remove subtitle %s", data.id);
     for (let i = 0; i < this.textWidgets.length; ++i) {
       if (this.textWidgets[i].data.id === data.id) {

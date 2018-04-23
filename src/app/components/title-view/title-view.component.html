@@ -1,7 +1,7 @@
 <div id="title-view-container">
-  <background-canvas #backgroundCanvas></background-canvas>
+  <background-canvas #titleViewBackgroundCanvas></background-canvas>
 
-  <title-menu [@delayShowMenunState]="delayShowMenunState" class="menu-container" [items]="service.menuItems" [currentIndex]="service.currentMenuIndex">
+  <title-menu id="avg-title-menu-layer" class="menu-container" [items]="service.menuItems" [currentIndex]="service.currentMenuIndex">
   </title-menu>
 
 </div>

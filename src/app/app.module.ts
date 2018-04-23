@@ -27,6 +27,8 @@ import { MainSceneService } from "./components/main-scene/main-scene.service";
 import { DialogueBoxService } from "./components/dialogue-box/dialogue-box.service";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
+import { ReloadViewComponent } from "./components/reload-view/reload-view.component";
+import { VariableInputComponent } from "./components/variable-input-box/variable-input-box.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { WidgetLayerService } from "./components/widget-layer/widget-layer.servi
     BackgroundCanvasComponent,
     DialogueBoxComponent,
     WidgetLayerComponent,
-    TextWidgetComponent
+    TextWidgetComponent,
+    ReloadViewComponent,
+    VariableInputComponent
   ],
   imports: [
     BrowserModule,

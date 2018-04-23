@@ -30,7 +30,7 @@ export class WidgetLayerComponent implements OnInit {
   container;
 
   constructor(
-    private service: WidgetLayerService,
+    // private service: WidgetLayerService,
     private resolver: ComponentFactoryResolver
   ) {}
 
@@ -39,7 +39,7 @@ export class WidgetLayerComponent implements OnInit {
       TextWidgetComponent
     > = this.resolver.resolveComponentFactory(TextWidgetComponent);
 
-    let widget: ComponentRef<
+    const widget: ComponentRef<
       TextWidgetComponent
     > = this.container.createComponent(factory);
 
@@ -50,11 +50,11 @@ export class WidgetLayerComponent implements OnInit {
     ScriptingDispatcher.watch().subscribe(
       (value: { api: avg.AVGScriptUnit; op: string; resolver: any }) => {
         if (value.api instanceof avg.APISubtitle) {
-          let subtitle = (<avg.APISubtitle>value.api).data;
+          const subtitle = (<avg.APISubtitle>value.api).data;
 
           switch (value.op) {
             case avg.OP.ShowSubtitle:
-              this.service.addSubtitle(
+              WidgetLayerService.addSubtitle(
                 subtitle,
                 this.createTextWidgetComponent()
               );
@@ -62,13 +62,13 @@ export class WidgetLayerComponent implements OnInit {
               value.resolver();
               break;
             case avg.OP.UpdateSubtitle:
-              this.service.updateSubtitle(subtitle.id, subtitle.text);
+              WidgetLayerService.updateSubtitle(subtitle.id, subtitle.text);
               value.resolver();
               break;
             case avg.OP.AnimateSubtitle:
               break;
             case avg.OP.HideSubtitle:
-              this.service.removeSubtitle(subtitle);
+              WidgetLayerService.removeSubtitle(subtitle);
               value.resolver();
               break;
           }

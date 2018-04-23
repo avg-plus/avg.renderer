@@ -2,11 +2,13 @@ import {
   Component,
   OnInit,
   OnChanges,
+  OnDestroy,
   SimpleChange,
   SimpleChanges,
   AfterViewInit,
   AnimationTransitionEvent,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef
 } from "@angular/core";
 
 import {
@@ -49,7 +51,7 @@ export enum DialogueBoxStatus {
   templateUrl: "./dialogue-box.component.html",
   styleUrls: ["./dialogue-box.component.scss"]
 })
-export class DialogueBoxComponent implements OnInit, AfterViewInit {
+export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public dialogueData: avg.Dialogue;
 
   public animatedText = "";
@@ -71,11 +73,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   public character_slot: Array<any>;
   public characters: Array<avg.APICharacter>;
 
-  constructor() {
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.APICharacter>(5);
 
-    let width = avg.Setting.WindowWidth / 5;
+    const width = avg.Setting.WindowWidth / 5;
 
     for (let i = 0; i < 5; ++i) {
       this.character_slot[i] = {
@@ -84,6 +86,27 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
         bottom: "100px"
       };
     }
+  }
+
+  public reset() {
+    this.dialogueData = null;
+
+    this.animatedText = "";
+    this.currentStatus = DialogueBoxStatus.None;
+    this.currentName = "";
+    clearInterval(this.typewriterHandle);
+    clearInterval(this.autoPlayDelayHandle);
+    this.typewriterHandle = null;
+    this.autoPlayDelayHandle = null;
+
+    this.subject = new Subject<DialogueBoxStatus>();
+    this.choicesSubject = new Subject<avg.SelectedDialogueChoice>();
+
+    this.dialogueChoices = new avg.APIDialogueChoice();
+
+    // Reset these array cause a postion wrong
+    // this.character_slot = [];
+    // this.characters = [];
   }
 
   ngOnInit() {
@@ -131,6 +154,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     // animate();
   }
 
+  ngOnDestroy() {
+    this.reset();
+  }
+
   public showBox() {
     AnimationUtils.fadeTo(".dialogue-box", 200, 1);
 
@@ -140,7 +167,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   private initOpacity(index: number): gsap.TweenLite {
-    let elementID = "#character-index-" + index;
+    const elementID = "#character-index-" + index;
 
     return gsap.TweenLite.to(elementID, 0, {
       opacity: 0,
@@ -152,7 +179,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     index: number,
     character: avg.APICharacter
   ): gsap.TweenLite {
-    let elementID = "#character-index-" + character.index;
+    const elementID = "#character-index-" + character.index;
 
     console.log(index, character);
 
@@ -163,7 +190,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   private onCharacterLeave(index: number): gsap.TweenLite {
-    let elementID = "#character-index-" + index;
+    const elementID = "#character-index-" + index;
 
     return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
       opacity: 0,
@@ -228,12 +255,12 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
   }
 
   public showChoices(data: avg.APIDialogueChoice) {
-    TransitionLayerService.lockPointerEvents();
     this.dialogueChoices = data;
+    TransitionLayerService.lockPointerEvents();
   }
 
   public onChoiceClicked(index: number, choice: avg.DialogueChoice) {
-    let result = new avg.SelectedDialogueChoice();
+    const result = new avg.SelectedDialogueChoice();
     result.selectedIndex = index;
     result.selectedTitle = choice.title;
     this.choicesSubject.next(result);
@@ -253,8 +280,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
     this.currentStatus = DialogueBoxStatus.Typing;
 
     let parsingBuffer = "";
-    let resultBuffer = "";
-    let blockRanges = [];
+    const resultBuffer = "";
+    const blockRanges = [];
     const spanTrimRegex = /<font [a-z]+=[a-zA-Z0-9#]+\>|<\/font>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>/g;
 
     if (avg.Setting.TextSpeed > 0) {
@@ -264,8 +291,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
       }
 
       this.typewriterHandle = setInterval(() => {
-        let inSpan = false;
-        let inSpanStartPos = -1;
+        const inSpan = false;
+        const inSpanStartPos = -1;
         parsingBuffer = this.dialogueData.text.substr(0, count);
 
         blockRanges.forEach((value: any) => {
@@ -279,29 +306,25 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
         this.animatedText = parsingBuffer;
         count++;
 
+        this.changeDetectorRef.detectChanges();
+
         if (count === this.dialogueData.text.length + 1) {
           this.currentStatus = DialogueBoxStatus.Complete;
           this.animatedText = this.dialogueData.text;
+          this.changeDetectorRef.detectChanges();
 
           clearInterval(this.typewriterHandle);
 
           this.onAutoPlay();
-
-          return;
         }
       }, (100 - avg.Setting.TextSpeed) * 2 || 1);
     } else {
       this.currentStatus = DialogueBoxStatus.Complete;
       this.animatedText = this.dialogueData.text;
+      this.changeDetectorRef.detectChanges();
 
       this.onAutoPlay();
     }
-  }
-
-  animationDone($event: AnimationTransitionEvent) {}
-
-  onBoxClicked($event) {
-    this.updateDialogueStatus();
   }
 
   updateDialogueStatus() {
@@ -314,6 +337,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit {
 
       this.onAutoPlay();
     }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   private onAutoPlay() {

@@ -382,5 +382,6 @@ module.exports = {
     setImmediate: false,
     __dirname: false,
     __filename: false
-  }
+  },
+  target: "web"
 };

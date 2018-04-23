@@ -1,13 +1,14 @@
-#avg-particle-viewport {
-  z-index: 200;
-}
-
-#avg-viewport {
-  z-index: 100;
-}
+@import "../../../styles/_layers.scss";
+@import "node_modules/csshake/dist/csshake-slow.min";
 
 .background-image {
   position: absolute;
-  // height: 100%;
-  // width: 100%;
+
+  &.front {
+    z-index: $_LAYER_INDEX_VIEWPORT + 2;
+  }
+
+  &.back {
+    z-index: $_LAYER_INDEX_VIEWPORT + 1;
+  }
 }

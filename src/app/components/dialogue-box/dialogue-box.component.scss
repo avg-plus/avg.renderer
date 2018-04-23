@@ -1,8 +1,9 @@
+@import "../../../styles/_layers.scss";
+
 @mixin TextEffect {
   font-size: 23px;
   color: white;
   font-family: "Shanghei";
-  // font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif, "宋体";
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }
@@ -31,7 +32,7 @@
     width: 1200px;
     height: 200px;
     opacity: 0;
-    
+
     .content {
       height: 100%;
       padding: 24px;
@@ -42,7 +43,8 @@
   .choices-box {
     @include TextEffect;
 
-    z-index: 900;
+    // z-index: 900;
+    z-index: $_LAYER_INDEX_DIALOGUE_BOX + 1;
     position: fixed;
     left: 50%;
     top: 35%;
@@ -92,8 +94,5 @@
     left: -9999px;
     right: -9999px;
     margin: auto;
-
-    // width: 80%;
-    // height: 80%;
   }
 }

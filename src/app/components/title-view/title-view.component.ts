@@ -17,6 +17,7 @@ import { BackgroundCanvasComponent } from "app/components/background-canvas/back
 import * as gsap from "gsap";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { ParticleEffect } from "../../common/effects/effect-snow";
+import { AnimationUtils } from "../../common/animations/animation-utils";
 
 @Component({
   selector: "title-view",
@@ -25,37 +26,31 @@ import { ParticleEffect } from "../../common/effects/effect-snow";
   // tslint:disable-next-line:use-host-property-decorator
   host: {
     "(document:keydown)": "service.handleKeyboardEvents($event)"
-  },
-  animations: [UIAnimation.AVGOpacityFade("delayShowMenunState", 0, 1, 4000)]
+  }
 })
 export class TitleViewComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)
-  backgroundCanvas: BackgroundCanvasComponent;
-
-  public delayShowMenunState = "inactive";
+  titleViewBackgroundCanvas: BackgroundCanvasComponent;
   constructor(
     public service: TitleViewService,
     private router: Router,
     private elementRef: ElementRef
-  ) {
-    avg.api.playBGM("assets/audio/bgm/title.mp3", null);
-  }
+  ) {}
 
   ngOnInit() {
-    this.delayShowMenunState = "active";
-
-    // Init transition
-    // transition.fadeLeave(0x0, 0);
-
     // Start listen
     this.service.menuEvent().subscribe(index => {
       switch (index) {
         case TitleMenuEvent.Start:
           avg.api.stopBGM(null);
           TransitionLayerService.fadeTo(1, 1000, () => {
-            this.router.navigate(["main-scene"]).then(result => {
-              TransitionLayerService.fadeTo(0, 1000);
-            });
+            const entryScript =
+              avg.Resource.getPath(avg.ResourcePath.Scripts) + "/story.avs";
+            this.router
+              .navigate(["main-scene", { script: entryScript }])
+              .then(result => {
+                TransitionLayerService.fadeTo(0, 1000);
+              });
           });
           break;
       }
@@ -63,37 +58,21 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    let titleScene = new avg.APIScene();
-    titleScene.data.file = avg.ResourceData.from(
-      "assets/graphics/backgrounds/forest-1.jpg"
-    );
-    titleScene.index = 0;
+    avg.api.playBGM("assets/audio/bgm/title.mp3", null);
 
-    this.backgroundCanvas.setBackground(titleScene);
+    // AnimationUtils.fadeTo("#avg-title-menu-layer", 3000, 1);
+    AnimationUtils.to("[Animate Title Menu]", "#avg-title-menu-layer", 3000, {
+      opacity: 1,
+      y: 30
+    });
 
-
+    const titleScene = new avg.APIScene();
     titleScene.data.file = avg.ResourceData.from(
       "assets/graphics/backgrounds/forest-2.jpg"
     );
     titleScene.index = 1;
-    this.backgroundCanvas.setBackground(titleScene);
+    this.titleViewBackgroundCanvas.setBackground(titleScene);
 
-
-    // this.backgroundCanvas.setBackground('assets/graphics/backgrounds/m0.png', 10000, 0);
-    this.backgroundCanvas.setBackgroundAnimation(0, 5000, {
-      top: "-100",
-      repeat: -1,
-      opacity: 1,
-      yoyo: true,
-      ease: gsap.Linear.easeInOut
-    });
-
-    // this.backgroundCanvas.setBackground('assets/graphics/backgrounds/m1.png', 12000, 1,
-    // { 'bottom': '-400', repeat: -1, 'opacity': 1, yoyo: true, ease: gsap.Linear.easeInOut });
-    // this.backgroundCanvas.setBackground('assets/graphics/backgrounds/m2.png', 10000, 2);
-    setTimeout(() => {
-      this.backgroundCanvas.snow();
-      // ParticleEffect.snow();
-    }, 1);
+    this.titleViewBackgroundCanvas.snow();
   }
 }

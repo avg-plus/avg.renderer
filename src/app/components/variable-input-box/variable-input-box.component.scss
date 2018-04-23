@@ -1,0 +1,66 @@
+.input-box-container {
+  width: 480px;
+  height: 220px;
+  background-color: rgba(119, 143, 197, 0.6);
+  text-align: center;
+
+  .input-box {
+    position: absolute;
+    width: 60%;
+    height: 30px;
+    left: 50%;
+    top: 45%;
+    text-align: center;
+    font-weight: 200;
+    font-size: 22px;
+    border: 2px solid cadetblue;
+    transform: translate(-50%, -50%);
+  }
+
+  .button-container {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 60%;
+    text-align: center;
+    display: inline-flex;
+
+    $BUTTON_HEIGHT: 32px;
+    .button {
+      position: absolute;
+
+      width: 70px;
+      height: $BUTTON_HEIGHT;
+
+      color: white;
+      border: 1px solid white;
+      background-color: rgba(119, 174, 232, 0.6);
+      text-align: center;
+      line-height: $BUTTON_HEIGHT;
+
+      &:hover {
+        transition: all 0.1s ease-in-out;
+        background: rgba(119, 174, 232, 1);
+      }
+      
+      &:active {
+        transition: all 0s ease-in-out;
+        background: rgb(35, 74, 133);
+      }
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+      }
+    }
+    .ok-button {
+      left: 0%;
+    }
+
+    .cancel-button {
+      right: 0%;
+    }
+  }
+}

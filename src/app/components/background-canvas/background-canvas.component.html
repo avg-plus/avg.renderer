@@ -1,9 +1,10 @@
-<div class="avg-viewport-layer">
+<div class="avg-viewport-layer shake-trigger">
   <!--  -->
   <div id="avg-viewport">
     <div *ngFor="let model of scenes; index as i">
       <canvas id="avg-particle-viewport"></canvas>
-      <img class="background-image layer-{{i}}" *ngIf="model" [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
+      <img class="shake background-image front layer-{{i}}" *ngIf="model && model.scene" [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
+      <img class="shake background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene" [ngStyle]="model.styles" src="{{model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename}}">
     </div>
 
   </div>

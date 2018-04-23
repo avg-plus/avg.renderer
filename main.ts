@@ -1,7 +1,8 @@
-import { app, BrowserWindow, screen } from "electron";
+import { app, BrowserWindow, screen, Menu, MenuItem } from "electron";
 import * as path from "path";
 
 let win, serve;
+
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
@@ -24,7 +25,6 @@ function createWindow() {
 
   // and load the index.html of the app.
   win.loadURL("file://" + __dirname + "/index.html");
-  // win.loadURL("http://0.0.0.0:4200");
 
   // Open the DevTools.
   if (serve) {
@@ -48,6 +48,7 @@ try {
   app.on("ready", () => {
     setTimeout(function() {
       createWindow();
+
     }, 1000);
   });
 
