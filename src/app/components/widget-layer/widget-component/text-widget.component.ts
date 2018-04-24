@@ -236,6 +236,7 @@ export class TextWidgetComponent implements OnInit, AfterViewInit {
     console.log("[TextWidget: Show Animation] completed.");
 
     // Notify manager to destroy
+
     this.finishedCallback();
   }
 }

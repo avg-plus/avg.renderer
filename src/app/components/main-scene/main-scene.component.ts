@@ -1,4 +1,3 @@
-import * as path from "path";
 import * as fs from "fs";
 
 import {
@@ -30,6 +29,7 @@ import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AARouteReuseStrategy } from "../../common/route-reuse-strategy";
+import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 
 @Component({
   selector: "app-main-scene",
@@ -45,7 +45,9 @@ import { AARouteReuseStrategy } from "../../common/route-reuse-strategy";
 export class MainSceneComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)
   backgroundCanvas: BackgroundCanvasComponent;
+
   @ViewChild(DialogueBoxComponent) dialogueBox: DialogueBoxComponent;
+  @ViewChild(VariableInputComponent) inputBox: VariableInputComponent;
 
   private currentScript: string;
   constructor(
@@ -158,6 +160,16 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         } else if (value.api instanceof avg.APIGotoTitleView) {
           this.router.navigate(["title-view"]);
           value.resolver();
+        } else if (value.api instanceof avg.APIInputBox) {
+          this.inputBox.show(value.api.data, (isOk, inputValue) => {
+            console.log(isOk, inputValue);
+
+            const result = new avg.InputBoxResult();
+            result.isOK = isOk;
+            result.value = inputValue;
+
+            value.resolver(result);
+          });
         }
       }
     );

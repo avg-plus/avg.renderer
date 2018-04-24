@@ -1,0 +1,30 @@
+$MAIN_COLOR: rgba(54, 54, 61, 0.6);
+$BORDER_COLOR: #170f22;
+$HIGHLIGHT_COLOR: rgb(181, 99, 50);
+$COLOR_MAIN_COLOR: rgb(86, 86, 86);
+
+@mixin UIPanel {
+  border: 1px solid $BORDER_COLOR;
+  background-color: $MAIN_COLOR;
+  opacity: 0.7;
+}
+
+@mixin UIButton {
+  border: 1px solid $BORDER_COLOR;
+  background-color: $COLOR_MAIN_COLOR;
+
+  &:hover {
+    transition: all 0.1s ease-in-out;
+    background: $HIGHLIGHT_COLOR;
+  }
+
+  &:active {
+    transition: all 0s ease-in-out;
+    background: $HIGHLIGHT_COLOR + 1;
+  }
+}
+
+@mixin UIRhombusButton {
+  @include UIButton;
+  transform: skew(-10deg);
+}

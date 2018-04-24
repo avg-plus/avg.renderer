@@ -1,12 +1,20 @@
-<div class="input-box-container">
-    <input type="text" class="input-box" />
+<div id="input-box-container" *ngIf="inputData !== undefined">
 
-    <div class="button-container">
-        <div class="button ok-button">
-            <span>OK</span>
+    <div class="box-title">{{inputData.title}}</div>
+    <input [attr.type]="inputData.inputType === 0 ? 'text' : 'number'" [attr.minlength]="inputData.minLength" [attr.maxlength]="inputData.maxLength" class="input-box" [(ngModel)]="inputValue" />
+
+    <div class="button-container" *ngIf="inputData.allowCancel">
+        <div class="button ok-button float-left" (click)="onOk()">
+            <span>{{inputData.okButtonText}}</span>
         </div>
-        <div class="button cancel-button">
-            <span>Cancel</span>
+        <div class="button cancel-button float-right" (click)="onCancel()">
+            <span>{{inputData.cancelButtonText}}</span>
+        </div>
+    </div>
+
+    <div class="button-container" *ngIf="!inputData.allowCancel">
+        <div class="button ok-button center" (click)="onOk()">
+            <span>{{inputData.okButtonText}}</span>
         </div>
     </div>
 </div>

@@ -27,14 +27,16 @@ export class AnimationUtils {
     vars: any,
     complete?: () => void
   ) {
-    gsap.TweenLite.to(target, duration / 1000, vars).eventCallback(
-      "onComplete",
-      () => {
-        if (complete) {
-          complete();
+    setTimeout(() => {  // Be sure DOM was created
+      gsap.TweenLite.to(target, duration / 1000, vars).eventCallback(
+        "onComplete",
+        () => {
+          if (complete) {
+            complete();
+          }
+          console.log("[Animation] %s animation completed.", name);
         }
-        console.log("[Animation] %s animation completed.", name);
-      }
-    );
+      );
+    }, 0);
   }
 }

@@ -9,6 +9,7 @@ import { APISubtitleImpl } from "./api-subtitle-impl";
 import { APICharacterImpl } from "./api-character-impl";
 import { APIDialogueChoicesImpl } from "./api-dialogue-choices-impl";
 import { APIAnimateSceneImpl } from "./api-animate-scene-impl";
+import { APIInputBoxImpl } from "./api-input-box-impl";
 
 export class APIImplManager {
   public static init() {
@@ -118,6 +119,11 @@ export class APIImplManager {
       avg.APISubtitle.name,
       OP.HideSubtitle,
       APISubtitleImpl.op_hide_subtitle
+    );
+    avg.APIManager.extendImpl(
+      avg.APIInputBox.name,
+      OP.ShowInputBox,
+      APIInputBoxImpl.op_show
     );
   }
 }

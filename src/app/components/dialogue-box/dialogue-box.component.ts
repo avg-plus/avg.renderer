@@ -65,6 +65,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   >();
 
   public dialogueChoices: avg.APIDialogueChoice;
+  private isWaitingInput = false;
+  private waitingInputTimeoutHandle = undefined;
 
   // Animation constant
   private readonly CHAR_ANIMATION_DURATION = 0.5;
@@ -282,21 +284,54 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     let parsingBuffer = "";
     const resultBuffer = "";
     const blockRanges = [];
-    const spanTrimRegex = /<font [a-z]+=[a-zA-Z0-9#]+\>|<\/font>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>/g;
+    const spanTrimRegex = /<font [a-z]+=[a-zA-Z0-9#]+\>|<\/font>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
     if (avg.Setting.TextSpeed > 0) {
       let match = null;
       while ((match = spanTrimRegex.exec(this.dialogueData.text)) !== null) {
-        blockRanges.push({ index: match.index, block: match[0] });
+        const block = {
+          index: match.index,
+          block: match[0],
+          control_type: "",
+          control_value: undefined
+        };
+
+        const waitMatch = /<wait( time="(\d+)")? ?\/>/g.exec(match[0]);
+        if (waitMatch !== null) {
+          block.control_type = "wait";
+          block.control_value = 0; // 0 means wait util next input
+
+          // Get wait time
+          if (waitMatch[2]) {
+            block.control_value = +waitMatch[2];
+          }
+        }
+
+        console.log(waitMatch)
+
+        blockRanges.push(block);
       }
 
       this.typewriterHandle = setInterval(() => {
+        if (this.isWaitingInput) {
+          return;
+        }
+
         const inSpan = false;
         const inSpanStartPos = -1;
         parsingBuffer = this.dialogueData.text.substr(0, count);
 
         blockRanges.forEach((value: any) => {
           if (value.index === count) {
+            if (value.control_type === "wait") {
+              this.isWaitingInput = true;
+              if (value.control_value !== 0) {
+                this.waitingInputTimeoutHandle = setTimeout(() => {
+                  this.isWaitingInput = false;
+                }, value.control_value);
+              }
+            }
+
             parsingBuffer += value.block;
             count += value.block.length;
             return;
@@ -331,6 +366,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.currentStatus === DialogueBoxStatus.Complete) {
       this.subject.next(DialogueBoxStatus.End);
     } else if (this.currentStatus === DialogueBoxStatus.Typing) {
+      clearTimeout(this.waitingInputTimeoutHandle);
+      if (this.isWaitingInput) {
+        this.isWaitingInput = false;
+        return;
+      }
       this.currentStatus = DialogueBoxStatus.Complete;
       clearInterval(this.typewriterHandle);
       this.animatedText = this.dialogueData.text;

@@ -1,8 +1,30 @@
-.input-box-container {
+@import "../../../styles/_common.scss";
+@import "../../../styles/_default-ui.scss";
+
+#input-box-container {
   width: 480px;
   height: 220px;
-  background-color: rgba(119, 143, 197, 0.6);
   text-align: center;
+  opacity: 0;
+  //   box-shadow: 2px 2px black;
+
+  @include UIPanel;
+
+  // No arrow for input with number type
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  .box-title {
+    @include TextStrokeNormal;
+    @include H2;
+    padding: 22px;
+  }
 
   .input-box {
     position: absolute;
@@ -15,6 +37,8 @@
     font-size: 22px;
     border: 2px solid cadetblue;
     transform: translate(-50%, -50%);
+
+    @include H4;
   }
 
   .button-container {
@@ -22,32 +46,27 @@
     top: 70%;
     left: 50%;
     transform: translate(-50%, 0);
+
     width: 60%;
     text-align: center;
-    display: inline-flex;
+    // display: inline-flex;
 
     $BUTTON_HEIGHT: 32px;
     .button {
+      @include TextStrokeNormal;
+      @include H4;
+      @include UIButton;
+
       position: absolute;
 
-      width: 70px;
+      width: auto;
+      padding-left: 12px;
+      padding-right: 12px;
       height: $BUTTON_HEIGHT;
 
-      color: white;
-      border: 1px solid white;
-      background-color: rgba(119, 174, 232, 0.6);
       text-align: center;
       line-height: $BUTTON_HEIGHT;
 
-      &:hover {
-        transition: all 0.1s ease-in-out;
-        background: rgba(119, 174, 232, 1);
-      }
-      
-      &:active {
-        transition: all 0s ease-in-out;
-        background: rgb(35, 74, 133);
-      }
 
       span {
         display: inline-block;
@@ -55,12 +74,27 @@
         line-height: normal;
       }
     }
-    .ok-button {
+
+    .float-left {
       left: 0%;
     }
 
-    .cancel-button {
+    .float-right {
       right: 0%;
+    }
+
+    .center {
+      position: absolute;
+      left: 50%;
+      width: 100%;
+      padding: 0;
+      transform: translate(-50%, 0);
+    }
+
+    .ok-button {
+    }
+
+    .cancel-button {
     }
   }
 }

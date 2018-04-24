@@ -1,12 +1,5 @@
 @import "../../../styles/_layers.scss";
-
-@mixin TextEffect {
-  font-size: 23px;
-  color: white;
-  font-family: "Shanghei";
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
+@import "../../../styles/_common.scss";
 
 #dialogue-container {
   width: 100%;
@@ -19,7 +12,8 @@
     bottom: 102%;
     opacity: 0;
     .name {
-      @include TextEffect;
+      @include TextStrokeNormal;
+      @include H2;
       text-align: center;
       color: yellow;
     }
@@ -36,12 +30,14 @@
     .content {
       height: 100%;
       padding: 24px;
-      @include TextEffect;
+      @include TextStrokeNormal;
+      @include H2;
     }
   }
 
   .choices-box {
-    @include TextEffect;
+    @include TextStrokeNormal;
+    @include H2;
 
     // z-index: 900;
     z-index: $_LAYER_INDEX_DIALOGUE_BOX + 1;
