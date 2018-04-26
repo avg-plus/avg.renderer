@@ -1,3 +1,4 @@
+
 api.setVariable("主角名字", "？？？");
 
 api.showSubtitle("main_title", "09:20 AM");
@@ -24,7 +25,11 @@ api.showCharacter(
 );
 
 //api.showText("那么……你[wait=4000]的名字[wait]你的[wait]名字[wait][br]你的名字你的名字你的名字你的名字你的名字你的名字你的名字[br][wait]是？");
-api.showText("英雄，你到底是……[wait=600]谁？");
+api.showText("英雄，你到底是……[wait=600]谁？", {
+  character: {
+    name: "长者"
+  }
+});
 let result = api.showChoices(["告诉他", "不告诉他"]);
 console.log(result);
 
@@ -51,7 +56,6 @@ if (result.selectedIndex === 0) {
   api.showText("我的名字叫做[c=red]${my_name}[/c]");
 } else {
   api.showText("不愿意说就算了，像你这样的英雄，做好事都是不留名的。");
-  
 }
 
 api.hideText();
