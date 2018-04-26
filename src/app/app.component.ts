@@ -61,8 +61,12 @@ export class AppComponent implements AfterViewInit {
       win.setBounds({
         width: avg.Setting.WindowWidth,
         height: avg.Setting.WindowHeight,
-        x: 0,
-        y: 0
+        x:
+          screen.getPrimaryDisplay().bounds.width / 2 -
+          avg.Setting.WindowWidth / 2,
+        y:
+          screen.getPrimaryDisplay().bounds.height / 2 -
+          avg.Setting.WindowHeight / 2
       });
     }
 

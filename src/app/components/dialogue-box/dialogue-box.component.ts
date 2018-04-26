@@ -35,6 +35,7 @@ import { Observable } from "rxjs/Observable";
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
+import { DomSanitizer } from "@angular/platform-browser";
 
 export enum DialogueBoxStatus {
   None,
@@ -69,13 +70,16 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private waitingInputTimeoutHandle = undefined;
 
   // Animation constant
-  private readonly CHAR_ANIMATION_DURATION = 0.5;
+  private readonly CHAR_ANIMATION_DURATION = 0.2;
   private readonly CHAR_ANIMATION_OFFSET = -30;
 
   public character_slot: Array<any>;
   public characters: Array<avg.APICharacter>;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private sanitized: DomSanitizer
+  ) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.APICharacter>(5);
 
@@ -165,6 +169,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.currentName && this.currentName.length > 0) {
       AnimationUtils.fadeTo(".name-box", 200, 1);
+    } else {
+      AnimationUtils.fadeTo(".name-box", 0, 0);
     }
   }
 
@@ -226,6 +232,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  public getTrustedAnimatedText() {
+    return this.sanitized.bypassSecurityTrustHtml(this.animatedText);
+  }
+
   public hideBox() {
     AnimationUtils.fadeTo(".dialogue-box", 200, 0);
     AnimationUtils.fadeTo(".name-box", 200, 0);
@@ -242,8 +252,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (data.character && data.character.name) {
-      this.currentName = data.character.name;
+    if (data.character && data.name) {
+      this.currentName = data.name;
     } else {
       this.currentName = "";
     }
@@ -284,7 +294,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     let parsingBuffer = "";
     const resultBuffer = "";
     const blockRanges = [];
-    const spanTrimRegex = /<font [a-z]+=[a-zA-Z0-9#]+\>|<\/font>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
+    const spanTrimRegex = /<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
     if (avg.Setting.TextSpeed > 0) {
       let match = null;
@@ -295,6 +305,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           control_type: "",
           control_value: undefined
         };
+
+        console.log(match[0]);
 
         const waitMatch = /<wait( time="(\d+)")? ?\/>/g.exec(match[0]);
         if (waitMatch !== null) {
@@ -307,7 +319,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
 
-        console.log(waitMatch)
+        console.log(waitMatch);
 
         blockRanges.push(block);
       }
