@@ -294,7 +294,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     let parsingBuffer = "";
     const resultBuffer = "";
     const blockRanges = [];
-    const spanTrimRegex = /<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
+    const spanTrimRegex = /<ruby>(.*)?<\/ruby>|<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
     if (avg.Setting.TextSpeed > 0) {
       let match = null;
