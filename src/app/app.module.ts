@@ -21,6 +21,7 @@ import { BackgroundCanvasComponent } from "./components/background-canvas/backgr
 import { DialogueBoxComponent } from "./components/dialogue-box/dialogue-box.component";
 import { WidgetLayerComponent } from "./components/widget-layer/widget-layer.component";
 import { TextWidgetComponent } from "./components/widget-layer/widget-component/text-widget.component";
+import { ImageWidgetComponent } from "./components/widget-layer/widget-component/image-widget.component";
 
 import { ElectronService } from "./providers/electron.service";
 import { MainSceneService } from "./components/main-scene/main-scene.service";
@@ -42,11 +43,12 @@ import { VariableInputComponent } from "./components/variable-input-box/variable
     DialogueBoxComponent,
     WidgetLayerComponent,
     TextWidgetComponent,
+    ImageWidgetComponent,
     ReloadViewComponent,
     VariableInputComponent
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
