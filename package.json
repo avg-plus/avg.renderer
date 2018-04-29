@@ -52,6 +52,7 @@
     "gsap": "^1.20.3",
     "nconf": "^0.8.4",
     "node-sass": "^4.5.3",
+    "parallax-js": "^3.1.0",
     "particles.js": "^2.0.0",
     "pixi-live2d": "^1.2.1",
     "pixi-particles": "^2.1.5",
