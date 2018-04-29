@@ -9,7 +9,8 @@ import {
   ComponentFactoryResolver,
   ComponentFactory,
   HostBinding,
-  ViewContainerRef
+  ViewContainerRef,
+  Type
 } from "@angular/core";
 import { NgForOf } from "@angular/common";
 
@@ -18,11 +19,12 @@ import { TextWidgetComponent } from "./widget-component/text-widget.component";
 import { WidgetLayerService } from "./widget-layer.service";
 
 import * as avg from "avg-engine/engine";
+import { ImageWidgetComponent } from "./widget-component/image-widget.component";
 
 @Component({
   selector: "widget-layer",
   templateUrl: "./widget-layer.component.html",
-  entryComponents: [TextWidgetComponent],
+  entryComponents: [TextWidgetComponent, ImageWidgetComponent],
   styleUrls: ["./widget-layer.component.scss"]
 })
 export class WidgetLayerComponent implements OnInit {
@@ -34,14 +36,12 @@ export class WidgetLayerComponent implements OnInit {
     private resolver: ComponentFactoryResolver
   ) {}
 
-  createTextWidgetComponent() {
-    const factory: ComponentFactory<
-      TextWidgetComponent
-    > = this.resolver.resolveComponentFactory(TextWidgetComponent);
+  createTextWidgetComponent<T>(type: Type<T>) {
+    const factory: ComponentFactory<T> = this.resolver.resolveComponentFactory(
+      type
+    );
 
-    const widget: ComponentRef<
-      TextWidgetComponent
-    > = this.container.createComponent(factory);
+    const widget: ComponentRef<T> = this.container.createComponent(factory);
 
     return widget;
   }
@@ -49,14 +49,16 @@ export class WidgetLayerComponent implements OnInit {
   ngOnInit() {
     ScriptingDispatcher.watch().subscribe(
       (value: { api: avg.AVGScriptUnit; op: string; resolver: any }) => {
-        if (value.api instanceof avg.APISubtitle) {
-          const subtitle = (<avg.APISubtitle>value.api).data;
+        if (value.api instanceof avg.APIScreenSubtitle) {
+          const subtitle = (<avg.APIScreenSubtitle>value.api).data;
 
           switch (value.op) {
             case avg.OP.ShowSubtitle:
               WidgetLayerService.addSubtitle(
                 subtitle,
-                this.createTextWidgetComponent()
+                this.createTextWidgetComponent<TextWidgetComponent>(
+                  TextWidgetComponent
+                )
               );
 
               value.resolver();
@@ -70,6 +72,19 @@ export class WidgetLayerComponent implements OnInit {
             case avg.OP.HideSubtitle:
               WidgetLayerService.removeSubtitle(subtitle);
               value.resolver();
+              break;
+          }
+        } else if (value.api instanceof avg.APIScreenImage) {
+          const image = (<avg.APIScreenImage>value.api).data;
+
+          switch (value.op) {
+            case avg.OP.ShowImage:
+              WidgetLayerService.addImageWidget(
+                image,
+                this.createTextWidgetComponent<ImageWidgetComponent>(
+                  ImageWidgetComponent
+                )
+              );
               break;
           }
         }

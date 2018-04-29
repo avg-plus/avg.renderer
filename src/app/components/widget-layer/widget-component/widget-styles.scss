@@ -1,0 +1,74 @@
+@mixin initHostStlyes() {
+  :host {
+    &.widget-center {
+      position: fixed;
+      padding: 10px;
+      top: 50%;
+      left: 50%;
+      /* bring your own prefixes */
+      transform: translate(-50%, -50%);
+    }
+
+    &.widget-top-left {
+      position: fixed;
+      padding: 10px;
+      transform: translate(0%, 0%);
+    }
+
+    &.widget-top-right {
+      position: fixed;
+      padding: 10px;
+      top: 0%;
+      right: 0%;
+      transform: translate(0%, 0%);
+    }
+
+    &.widget-bottom-left {
+      position: fixed;
+      padding: 10px;
+      bottom: 0%;
+      left: 0%;
+      transform: translate(0%, 0%);
+    }
+
+    &.widget-bottom-right {
+      position: fixed;
+      padding: 10px;
+      bottom: 0%;
+      right: 0%;
+      transform: translate(0%, 0%);
+    }
+
+    &.widget-top {
+      position: fixed;
+      padding: 10px;
+      top: 0%;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+
+    &.widget-left {
+      position: fixed;
+      padding: 10px;
+      top: 50%;
+      left: 0%;
+      transform: translate(0%, -50%);
+    }
+
+    &.widget-right {
+      position: fixed;
+      padding: 10px;
+      top: 50%;
+      right: 0%;
+      transform: translate(0%, -50%);
+    }
+
+    &.widget-bottom {
+      position: fixed;
+      padding: 10px;
+      bottom: 0%;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+  }
+}

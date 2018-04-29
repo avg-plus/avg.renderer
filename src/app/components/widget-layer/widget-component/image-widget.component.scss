@@ -1,0 +1,7 @@
+@import "./widget-styles";
+
+.image-widget {
+  opacity: 0;
+}
+
+@include initHostStlyes();
