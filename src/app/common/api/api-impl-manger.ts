@@ -5,17 +5,18 @@ import { APISceneImpl } from "./api-scene-impl";
 import { APITimerImpl } from "./api-timer-impl";
 import { APIEffectImpl } from "./api-effect-impl";
 import { APIGotoTitleViewImpl } from "./api-goto-titleview-impl";
-import { APISubtitleImpl } from "./api-subtitle-impl";
+import { APIScreenSubtitleImpl } from "./api-screen-subtitle-impl";
 import { APICharacterImpl } from "./api-character-impl";
 import { APIDialogueChoicesImpl } from "./api-dialogue-choices-impl";
 import { APIAnimateSceneImpl } from "./api-animate-scene-impl";
 import { APIInputBoxImpl } from "./api-input-box-impl";
+import { APIScreenImageImpl } from "./api-screen-image-impl";
 
 export class APIImplManager {
   public static init() {
     console.log(`Register API extend implemention ...`);
 
-    let OP = avg.OP;
+    const OP = avg.OP;
 
     avg.APIManager.extendImpl(
       avg.APIDialogue.name,
@@ -99,31 +100,36 @@ export class APIImplManager {
       APIGotoTitleViewImpl.op_go_to_title_view
     );
     avg.APIManager.extendImpl(
-      avg.APISubtitle.name,
+      avg.APIScreenSubtitle.name,
       OP.ShowSubtitle,
-      APISubtitleImpl.op_show_subtitle
+      APIScreenSubtitleImpl.op_show_subtitle
     );
 
     avg.APIManager.extendImpl(
-      avg.APISubtitle.name,
+      avg.APIScreenSubtitle.name,
       OP.UpdateSubtitle,
-      APISubtitleImpl.op_update_subtitle
+      APIScreenSubtitleImpl.op_update_subtitle
     );
 
     avg.APIManager.extendImpl(
-      avg.APISubtitle.name,
+      avg.APIScreenSubtitle.name,
       OP.AnimateSubtitle,
-      APISubtitleImpl.op_animate_subtitle
+      APIScreenSubtitleImpl.op_animate_subtitle
     );
     avg.APIManager.extendImpl(
-      avg.APISubtitle.name,
+      avg.APIScreenSubtitle.name,
       OP.HideSubtitle,
-      APISubtitleImpl.op_hide_subtitle
+      APIScreenSubtitleImpl.op_hide_subtitle
     );
     avg.APIManager.extendImpl(
       avg.APIInputBox.name,
       OP.ShowInputBox,
       APIInputBoxImpl.op_show
+    );
+    avg.APIManager.extendImpl(
+      avg.APIScreenImage.name,
+      OP.ShowImage,
+      APIScreenImageImpl.op_show_image
     );
   }
 }
