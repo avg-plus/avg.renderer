@@ -37,13 +37,13 @@ export class APIScreenImageImpl extends Impl {
   }
 
   @Impl.printAPIDetail
-  public static op_hide_image(
+  public static op_remove_image(
     scriptUnit: avg.AVGScriptUnit
   ): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIScreenImage>scriptUnit;
 
     return new Promise((resolve, reject) => {
-      ScriptingDispatcher.dispatch(avg.OP.HideImage, script, resolve);
+      ScriptingDispatcher.dispatch(avg.OP.RemoveImage, script, resolve);
     });
   }
 }

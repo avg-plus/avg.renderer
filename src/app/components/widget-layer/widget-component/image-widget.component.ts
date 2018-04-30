@@ -38,6 +38,15 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
   protected showWidget() {
     super.showWidget();
 
+    this.update();
+    super.initShowAnimation();
+  }
+
+  private onClicked() {
+    const imageData = <avg.ScreenImage>this.data;
+  }
+
+  public update() {
     const imageData = <avg.ScreenImage>this.data;
     this.bindingImageFile = imageData.file.filename;
 
@@ -47,19 +56,6 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
       zoom: imageData.zoom
     });
 
-    // this.bindingStyle = this.sanitized.bypassSecurityTrustStyle(
-    //   JSON.stringify({
-    //     width: imageData.width,
-    //     height: imageData.height,
-    //     zoom: imageData.zoom
-    //   })
-    // );
-
-    // Update and parse content
-    // this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-    //   subtitleData.text
-    // );
-
-    super.initShowAnimation();
+    this.changeDetectorRef.detectChanges();
   }
 }

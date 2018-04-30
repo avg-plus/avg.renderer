@@ -268,6 +268,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showChoices(data: avg.APIDialogueChoice) {
     this.dialogueChoices = data;
+    this.changeDetectorRef.detectChanges();
     TransitionLayerService.lockPointerEvents();
   }
 
@@ -278,8 +279,25 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.choicesSubject.next(result);
 
     this.dialogueChoices = null;
-
+    this.changeDetectorRef.detectChanges();
     TransitionLayerService.releasePointerEvents();
+  }
+
+  public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
+    if (this.dialogueChoices.onEnter) {
+      setTimeout(
+        function() {
+          this.dialogueChoices.onEnter(index);
+        }.bind(this),
+        0
+      );
+    }
+  }
+
+  public onChoiceLeave(index: number, choice: avg.DialogueChoice) {
+    if (this.dialogueChoices.onLeave) {
+      this.dialogueChoices.onLeave(index);
+    }
   }
 
   public state(): Observable<DialogueBoxStatus> {
@@ -311,15 +329,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         const waitMatch = /<wait( time="(\d+)")? ?\/>/g.exec(match[0]);
         if (waitMatch !== null) {
           block.control_type = "wait";
-          block.control_value = 0; // 0 means wait util next input
+          block.control_value = 0; // 0 means wait until next input
 
           // Get wait time
           if (waitMatch[2]) {
             block.control_value = +waitMatch[2];
           }
         }
-
-        console.log(waitMatch);
 
         blockRanges.push(block);
       }

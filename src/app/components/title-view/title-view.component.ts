@@ -70,7 +70,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
     titleScene.data.file = avg.ResourceData.from(
       "assets/graphics/backgrounds/forest-2.jpg"
     );
-    titleScene.index = 1;
+    titleScene.index = 0;
     this.titleViewBackgroundCanvas.setBackground(titleScene);
 
     this.titleViewBackgroundCanvas.snow();

@@ -7,3 +7,14 @@ api.wait(1000);
 api.loadScene(1, "assets/graphics/backgrounds/tutorial/s2.png");
 api.wait(1000);
 api.loadScene(2, "assets/graphics/backgrounds/tutorial/s1.png");
+
+api.wait(3000);
+
+api.removeScene(0);
+api.wait(1000);
+
+api.removeScene(1);
+api.wait(1000);
+
+api.removeScene(2);
+

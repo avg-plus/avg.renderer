@@ -32,7 +32,7 @@
 // // api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1.bmp");
 // // api.wait(2500);
 // api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1-day.bmp");
-// // api.wait(3000);
+// api.wait(3000);
 
 // api.playSE("assets/audio/se/tutorial/footstep.mp3");
 // api.wait(2000);
@@ -126,9 +126,39 @@
 //   }
 // });
 
-api.hideCharacter();
+// console.log(api);
+
+// +(async() => {
+// await api.hideCharacter();//CallExpression
+
+//  api.hideCharacter();
+// });
+
+// api.hideCharacter();
+
+api.showSubtitle("tips", "", {
+  position: "Top",
+  animation: {
+    name: "FlyIn",
+    options: {
+      direction: "Left",
+      duration: 300
+    }
+  }
+});
 
 while (true) {
+  api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1-day.bmp", {
+    block: true
+  });
+  api.wait(1600);
+  api.showCharacter(
+    {
+      file: "assets/graphics/characters/tutorial/girl-ask.png"
+    },
+    2
+  );
+
   api.showText("那么，你还有什么想要了解的呢？", {
     name: "风见",
     character: {
@@ -138,33 +168,54 @@ while (true) {
     }
   });
 
-  const choice = api.showChoices([
-    "对话和立绘",
-    "场景操作与特效",
-    "镜头效果",
-    "音效/音乐",
-    "变量操作",
-    "字幕和图片显示",
-    "流程和延时控制",
-    "插件机制说明"
-  ]);
 
+  const choice = api.showChoices(
+    [
+      "对话/立绘/文本输入处理",
+      "场景操作/特效",
+      "镜头效果",
+      "音效/音乐",
+      "存档变量操作",
+      "字幕和图片显示",
+      "游戏流程和延时控制",
+      "插件机制说明"
+    ],
+    index => {  // onEnter
+      const tips = [
+        "介绍剧本对白、对话样式；立绘显示与隐藏、立绘效果以及变量输入处理。",
+        "场景加载、过渡效果、场景粒子特效、多层场景以及景深效果演示。",
+        "介绍镜头效果，包括全屏色调变化、全屏过渡以及镜头震动等特效。",
+        "背景音乐、背景音效、音效的播放和停止。",
+        "存档变量的设置与读取。",
+        "字幕、图片的显示与动画介绍。",
+        "介绍标题菜单、读/存档界面呼出、语言级流程控制语法、跳转到另一个脚本文件以及定时器处理。",
+        "自定义游戏插件说明（高级）"
+      ];
+
+      api.updateSubtitle("tips", tips[index]);
+    },
+    index => {
+      api.updateSubtitle("tips", "");
+    }
+  );
+
+  api.updateSubtitle("tips", "");
   api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
 }
 
-// if (choice.selectedIndex === 0) {
-//   api.call("tutorial/introduce-1.avs");
-// }
+// // if (choice.selectedIndex === 0) {
+// //   api.call("tutorial/introduce-1.avs");
+// // }
 
-// api.showText("Text after call ...");
-// const choice2 = api.showChoices([
-//   "对话和立绘",
-//   "场景操作与特效",
-//   "镜头效果",
-//   "音效/音乐",
-//   "变量操作",
-//   "字幕和图片显示",
-//   "流程和延时控制",
-//   "插件机制说明"
-// ]);
-// api.call("test/call-test.avs");
+// // api.showText("Text after call ...");
+// // const choice2 = api.showChoices([
+// //   "对话和立绘",
+// //   "场景操作与特效",
+// //   "镜头效果",
+// //   "音效/音乐",
+// //   "变量操作",
+// //   "字幕和图片显示",
+// //   "流程和延时控制",
+// //   "插件机制说明"
+// // ]);
+// // api.call("test/call-test.avs");

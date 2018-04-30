@@ -87,7 +87,6 @@ export class AppComponent implements AfterViewInit {
     });
 
     DebugingService.DebugMessager.asObservable().subscribe((message: any) => {
-      console.log("Received Debug Message:", message);
 
       const script =
         avg.Resource.getPath(avg.ResourcePath.Scripts) + "/" + message.data;

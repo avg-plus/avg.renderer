@@ -20,13 +20,14 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
   @HostBinding("class.widget-bottom") isBottom = false;
   @HostBinding("class.widget-center") isCentered = false;
 
+  public api: avg.APIScreenImage;
   public data: avg.ScreenWidget;
   private finishedCallback: () => void;
 
   protected ElementID = "";
   protected WidgetElementID = "";
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(protected changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.ElementID = this.data.id;
@@ -35,8 +36,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   protected showWidget() {
     if (this.data.x || this.data.y) {
@@ -79,7 +79,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  public hideWidget(data: avg.Subtitle) {
+  public hideWidget(data: avg.ScreenWidget) {
     if (!data.animation) {
       this.hide();
       return;
@@ -230,7 +230,6 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
     console.log("[TextWidget: Show Animation] completed.");
 
     // Notify manager to destroy
-
     this.finishedCallback();
   }
 }

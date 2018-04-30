@@ -115,7 +115,13 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           value.resolver();
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
-            if (value.api.data.block) {
+            if (value.api.isAsync) {
+              this.backgroundCanvas.setBackground(value.api);
+
+              const scenHandle = new avg.SceneHandle();
+              scenHandle.index = 0;
+              value.resolver(scenHandle);
+            } else {
               this.backgroundCanvas.setBackground(value.api).then(
                 () => {
                   const scenHandle = new avg.SceneHandle();
@@ -124,13 +130,12 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
                 },
                 _ => {}
               );
-            } else {
-              this.backgroundCanvas.setBackground(value.api);
-
-              const scenHandle = new avg.SceneHandle();
-              scenHandle.index = 0;
-              value.resolver(scenHandle);
             }
+          } else if (value.op === avg.OP.RemoveScene) {
+            const index = value.api.index;
+            this.backgroundCanvas.removeBackground(index);
+
+            value.resolver();
           }
         } else if (value.api instanceof avg.APIEffect) {
           if (value.op === avg.OP.PlayEffect) {

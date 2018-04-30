@@ -13,4 +13,15 @@ export class APISceneImpl extends Impl {
       ScriptingDispatcher.dispatch(avg.OP.LoadScene, script, resolve);
     });
   }
+
+  @Impl.printAPIDetail
+  public static op_remove_scene(
+    scriptUnit: avg.AVGScriptUnit
+  ): Promise<avg.AVGScriptUnit> {
+    const script = <avg.APIScene>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(avg.OP.RemoveScene, script, resolve);
+    });
+  }
 }

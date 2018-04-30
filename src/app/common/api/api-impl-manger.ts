@@ -83,6 +83,13 @@ export class APIImplManager {
       OP.LoadScene,
       APISceneImpl.op_load_scene
     );
+
+    avg.APIManager.extendImpl(
+      avg.APIScene.name,
+      OP.RemoveScene,
+      APISceneImpl.op_remove_scene
+    );
+
     avg.APIManager.extendImpl(
       avg.APIAnimateScene.name,
       OP.AnimateScene,
@@ -130,6 +137,11 @@ export class APIImplManager {
       avg.APIScreenImage.name,
       OP.ShowImage,
       APIScreenImageImpl.op_show_image
+    );
+    avg.APIManager.extendImpl(
+      avg.APIScreenImage.name,
+      OP.RemoveImage,
+      APIScreenImageImpl.op_remove_image
     );
   }
 }

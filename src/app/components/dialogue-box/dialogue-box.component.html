@@ -2,7 +2,7 @@
 
 
   <div class="choices-box" *ngIf="dialogueChoices">
-    <div class="dialogue-choice" *ngFor="let choice of dialogueChoices.choices; let i = index" (click)="onChoiceClicked(i, choice)">{{choice.title}}</div>
+    <div class="dialogue-choice" *ngFor="let choice of dialogueChoices.choices; let i = index" (mouseenter)="onChoiceEnter(i, choice)" (mouseleave)="onChoiceLeave(i, choice)" (click)="onChoiceClicked(i, choice)">{{choice.title}}</div>
   </div>
 
   <div class="character-box">
@@ -42,7 +42,6 @@
 
   <div class="dialogue-box">
     <div class="content" [innerHTML]="getTrustedAnimatedText()">
-
     </div>
   </div>
 </div>

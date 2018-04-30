@@ -3,10 +3,11 @@ import {
   OnInit,
   AfterViewInit,
   ElementRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterContentInit,
+  Input
 } from "@angular/core";
 import { FPSCtrl } from "app/common/fps-ctrl";
-import { AnimationUtils } from "app/common/animations/animation-utils";
 import { SceneAnimation } from "app/common/animations/scene-animation";
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
@@ -15,7 +16,9 @@ import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
 import * as gsap from "gsap";
+import * as Parallax from "parallax-js";
 import { element } from "protractor";
+import { AnimationUtils } from "../../common/animations/animation-utils";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -28,7 +31,8 @@ class SceneModel {
   templateUrl: "./background-canvas.component.html",
   styleUrls: ["./background-canvas.component.scss"]
 })
-export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
+export class BackgroundCanvasComponent
+  implements OnInit, AfterViewInit, AfterContentInit {
   private readonly _duration = 500;
   private readonly ViewportElement = "#avg-viewport";
 
@@ -45,9 +49,30 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {}
 
+  ngAfterContentInit() {}
+
   public reset() {
     this.scenes = [];
     this.scenes = new Array<SceneModel>(GameDef.MaxBackgroundLayers);
+  }
+
+  public async removeBackground(index: number): Promise<any> {
+    const model = this.scenes[index];
+    if (!model || model === undefined) {
+      console.log("Remove failed, model is undefined.");
+      return;
+    }
+
+    const duration = this._duration;
+    const frontLayerElement = ".layer-" + index;
+
+    return new Promise((resolve, reject) => {
+      AnimationUtils.fadeTo(frontLayerElement, duration, 0, () => {
+        this.scenes[index] = undefined;
+        this.changeDetectorRef.detectChanges();
+        resolve();
+      });
+    });
   }
 
   public async setBackground(scene: avg.APIScene): Promise<any> {
@@ -130,6 +155,18 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit {
           this.changeDetectorRef.detectChanges();
         });
       }
+
+      // setTimeout(() => {
+      //   const parallarScene = document.getElementById("avg-viewport");
+      //   const parallaxInstance = new Parallax(parallarScene, {
+      //     relativeInput: true,
+      //     hoverOnly: true
+      //   });
+      // }, 2000);
+
+      // parallaxInstance.friction(0.2, 0.2);
+
+      // console.log(parallarScene);
 
       resolve();
     });

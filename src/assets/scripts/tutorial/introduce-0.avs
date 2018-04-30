@@ -2,7 +2,7 @@
 
 api.hideText();
 api.hideCharacter();
-api.hideSubtitle();
+api.removeSubtitle();
 
 api.loadScene(0, "assets/graphics/backgrounds/tutorial/bedroom-1-day.bmp");
 api.wait(1000);
@@ -26,13 +26,10 @@ api.showCharacter(
   },
   2
 );
-api.showText(
-  "如你所见，文本对白是AVG的核心功能，因此我们也支持了大量样式，丰富演出效果~"
-);
-
-api.showText(
+api.showText([
+  "如你所见，文本对白是AVG的核心功能，因此我们也支持了大量样式，丰富演出效果~",
   "这里是基本的对话演示，可以通过以下 API 显示一段文本：[br][br][c=red] api.showText(text, [options]) [/c]"
-);
+]);
 
 api.wait(100);
 api.updateSubtitle("title", "[c=yellow]字体样式[/c]");
@@ -52,26 +49,23 @@ api.showText(
 );
 
 api.updateSubtitle("title", "[c=yellow]emoji/图片混排支持[/c]");
-api.showText(
-  "在一些场合，我们可能也希望在文本里插入表情以及图片，其实也很简单啦~😌😌😌😌"
-);
-api.showText("不仅仅可以显示静态的图片…… [emoji=xixi.jpg]");
-api.showText("还可以插入动态的 Gif 作为表情包 [emoji=dance.gif]");
+api.showText([
+  "在一些场合，我们可能也希望在文本里插入表情以及图片，其实也很简单啦~😌😌😌😌",
+  "不仅仅可以显示静态的图片…… [emoji=xixi.jpg]",
+  "还可以插入动态的 Gif 作为表情包 [emoji=dance.gif]"
+]);
 
 api.hideText();
 api.wait(1000);
 
 api.updateSubtitle("title", "[c=yellow]注音[/c]");
 
-api.showText(
-  "如果上面的特性都只是常规操作，那我还做了一个可能比较少用到，但非常有用的功能。那就是[c=red]注音[/c]。"
-);
-
-api.showText(
+api.showText([
+  "如果上面的特性都只是常规操作，那我还做了一个可能比较少用到，但非常有用的功能。那就是[c=red]注音[/c]。",
   "在一些场合，如果我们需要对某个名词进行注解的话，我们可以用到[c=red]注音[/c]，比如这样：[br][br]" +
     "[c=red][rt=阿鲁斯]巨神兽[/rt][/c]是世界上可怕的生物之一。" +
     "[br]这一切都是[c=yellow][rt=Steins;Gate]命运石之门[/rt][/c]的选择。"
-);
+]);
 
 api.updateSubtitle("title", "[c=yellow]文本延迟[/c]");
 
@@ -81,6 +75,12 @@ api.showText(
 );
 
 api.hideText();
+api.wait(1400);
+api.showText(
+  "好了，对话相关介绍就到这里了，其实还有很多特性尚未一一演示，可以参考我们的文档了解更多。"
+);
 api.hideCharacter();
-api.hideSubtitle();
-api.loadScene(0, "");
+api.removeSubtitle("title");
+api.removeScene(0);
+// api.loadScene(1, "");
+// api.loadScene(2, "");

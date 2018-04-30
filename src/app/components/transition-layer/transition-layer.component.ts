@@ -21,9 +21,36 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    const times = [];
+    let fps;
+
+    function refreshLoop() {
+      window.requestAnimationFrame(function() {
+        const now = performance.now();
+        while (times.length > 0 && times[0] <= now - 1000) {
+          times.shift();
+        }
+        times.push(now);
+        fps = times.length;
+        refreshLoop();
+      });
+    }
+    const fpsOut = document.getElementById("fps");
+
+    // setInterval(() => {
+    // refreshLoop();
+    // fpsOut.innerHTML = fps + " fps";
+    // }, 1);
+    // refreshLoop();
+  }
 
   onTransitionLayerClicked() {
+    console.log(
+      "Transition Layer Clicked: ",
+      TransitionLayerService.isLockPointerEvents()
+    );
+
     if (!TransitionLayerService.isLockPointerEvents()) {
       TransitionLayerService.FullScreenClickListener.next();
     }

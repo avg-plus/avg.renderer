@@ -10,7 +10,8 @@ import {
   ComponentFactory,
   HostBinding,
   ViewContainerRef,
-  Type
+  Type,
+  ChangeDetectorRef
 } from "@angular/core";
 import { NgForOf } from "@angular/common";
 
@@ -20,6 +21,7 @@ import { WidgetLayerService } from "./widget-layer.service";
 
 import * as avg from "avg-engine/engine";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
+import { ScreenWidgetType } from "avg-engine/engine";
 
 @Component({
   selector: "widget-layer",
@@ -32,7 +34,7 @@ export class WidgetLayerComponent implements OnInit {
   container;
 
   constructor(
-    // private service: WidgetLayerService,
+    private changeDetectorRef: ChangeDetectorRef,
     private resolver: ComponentFactoryResolver
   ) {}
 
@@ -54,11 +56,12 @@ export class WidgetLayerComponent implements OnInit {
 
           switch (value.op) {
             case avg.OP.ShowSubtitle:
-              WidgetLayerService.addSubtitle(
+              WidgetLayerService.addWidget(
                 subtitle,
                 this.createTextWidgetComponent<TextWidgetComponent>(
                   TextWidgetComponent
-                )
+                ),
+                avg.ScreenWidgetType.Text
               );
 
               value.resolver();
@@ -70,7 +73,11 @@ export class WidgetLayerComponent implements OnInit {
             case avg.OP.AnimateSubtitle:
               break;
             case avg.OP.HideSubtitle:
-              WidgetLayerService.removeSubtitle(subtitle);
+              WidgetLayerService.removeWidget(
+                subtitle,
+                avg.ScreenWidgetType.Text
+              );
+
               value.resolver();
               break;
           }
@@ -79,14 +86,23 @@ export class WidgetLayerComponent implements OnInit {
 
           switch (value.op) {
             case avg.OP.ShowImage:
-              WidgetLayerService.addImageWidget(
+              WidgetLayerService.addWidget(
                 image,
                 this.createTextWidgetComponent<ImageWidgetComponent>(
                   ImageWidgetComponent
-                )
+                ),
+                avg.ScreenWidgetType.Image
+              );
+              break;
+            case avg.OP.RemoveImage:
+              WidgetLayerService.removeWidget(
+                image,
+                avg.ScreenWidgetType.Image
               );
               break;
           }
+
+          value.resolver();
         }
       }
     );
