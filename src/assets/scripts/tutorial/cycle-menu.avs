@@ -1,0 +1,67 @@
+while (true) {
+    api.hideCharacter();
+    api.hideText();
+    // api.loadScene(0, "");
+
+    const titleResult = api.showSubtitle("", {
+        position: "Top",
+        animation: {
+            options: {
+                direction: "Left",
+            }
+        }
+    }, false);
+
+    api.loadScene(0, "tutorial/bedroom-1-day.bmp");
+
+    //api.wait(1600);
+    // api.showCharacter(4, "tutorial/girl-ask.png");
+
+    api.showText("那么，你还有什么想要了解的呢？", {
+        name: "风见",
+        character: {
+            index: 4,
+            avatar: {
+                file: "tutorial/girl-ask.png"
+            }
+        }
+    });
+
+    const choice = api.showChoices(
+        [
+            "对话/立绘/文本输入处理",
+            "场景操作/特效",
+            "镜头效果",
+            "音效/音乐",
+            "存档变量操作",
+            "字幕和图片显示",
+            "游戏流程和延时控制",
+            "高级功能"
+        ],
+        index => {
+            // onEnter
+            const tips = [
+                "介绍剧本对白、对话样式；立绘显示与隐藏、立绘效果以及变量输入处理。",
+                "场景加载、过渡效果、场景粒子特效、多层场景以及景深效果演示。",
+                "介绍镜头效果，包括全屏色调变化、全屏过渡以及镜头震动等特效。",
+                "背景音乐、背景音效、音效的播放和停止。",
+                "存档变量的设置与读取。",
+                "字幕、图片的显示与动画介绍。",
+                "介绍标题菜单、读/存档界面呼出、语言级流程控制语法、跳转到另一个脚本文件以及定时器处理。",
+                "自定义游戏插件说明（高级）"
+            ];
+
+            api.updateSubtitle(titleResult.id, tips[index]);
+        },
+        index => {
+            api.updateSubtitle(titleResult.id, "");
+        }
+    );
+
+    api.hideCharacter();
+    api.hideText();
+    api.loadScene(0, "");
+    api.removeSubtitle(titleResult.id);
+
+    api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
+}
