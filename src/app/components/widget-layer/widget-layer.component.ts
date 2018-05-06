@@ -56,18 +56,20 @@ export class WidgetLayerComponent implements OnInit {
 
           switch (value.op) {
             case avg.OP.ShowSubtitle:
-              WidgetLayerService.addWidget(
+              const promise = WidgetLayerService.addWidget(
                 subtitle,
                 this.createTextWidgetComponent<TextWidgetComponent>(
                   TextWidgetComponent
                 ),
-                avg.ScreenWidgetType.Text
+                avg.ScreenWidgetType.Text,
+                value.api.isAsync
               );
 
               const result = new avg.ScreenSubtitleResult();
               result.id = subtitle.id;
 
-              value.resolver(result);
+              this.onAsyncResolveHandler(value, promise, result);
+
               break;
             case avg.OP.UpdateSubtitle:
               WidgetLayerService.updateSubtitle(subtitle.id, subtitle.text);
@@ -76,12 +78,15 @@ export class WidgetLayerComponent implements OnInit {
             case avg.OP.AnimateSubtitle:
               break;
             case avg.OP.HideSubtitle:
-              WidgetLayerService.removeWidget(
-                subtitle,
-                avg.ScreenWidgetType.Text
-              );
+              {
+                const promise = WidgetLayerService.removeWidget(
+                  subtitle,
+                  avg.ScreenWidgetType.Text,
+                  value.api.isAsync
+                );
 
-              value.resolver();
+                this.onAsyncResolveHandler(value, promise);
+              }
               break;
           }
         } else if (value.api instanceof avg.APIScreenImage) {
@@ -89,32 +94,51 @@ export class WidgetLayerComponent implements OnInit {
 
           switch (value.op) {
             case avg.OP.ShowImage:
-              WidgetLayerService.addWidget(
-                image,
-                this.createTextWidgetComponent<ImageWidgetComponent>(
-                  ImageWidgetComponent
-                ),
-                avg.ScreenWidgetType.Image
-              );
+              {
+                const promise = WidgetLayerService.addWidget(
+                  image,
+                  this.createTextWidgetComponent<ImageWidgetComponent>(
+                    ImageWidgetComponent
+                  ),
+                  avg.ScreenWidgetType.Image,
+                  value.api.isAsync
+                );
 
-              const result = new avg.ScreenImageResult();
-              result.id = image.id;
+                const result = new avg.ScreenImageResult();
+                result.id = image.id;
 
-              value.resolver(result);
-
+                this.onAsyncResolveHandler(value, promise, result);
+              }
               break;
             case avg.OP.RemoveImage:
-              WidgetLayerService.removeWidget(
+              const promise = WidgetLayerService.removeWidget(
                 image,
-                avg.ScreenWidgetType.Image
+                avg.ScreenWidgetType.Image,
+                value.api.isAsync
               );
-
-              value.resolver();
+              this.onAsyncResolveHandler(value, promise);
               break;
           }
         }
       }
     );
+  }
+
+  private onAsyncResolveHandler(
+    value: { api: avg.AVGScriptUnit; op: string; resolver: any },
+    promise: Promise<any>,
+    returnedResult?: any
+  ) {
+    if (value.api.isAsync) {
+      value.resolver(returnedResult);
+    } else {
+      promise.then(
+        () => {
+          value.resolver(returnedResult);
+        },
+        _ => {}
+      );
+    }
   }
 
   onWidgetChanged(index, item) {

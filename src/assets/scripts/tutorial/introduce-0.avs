@@ -1,13 +1,10 @@
-/* 文本以及立绘相关剧情 */
+// /* 文本以及立绘相关剧情 */
 
-api.hideText();
-api.hideCharacter();
-api.removeSubtitle();
 
 api.loadScene(0, "tutorial/bedroom-1-day.bmp");
-api.wait(1000);
+// api.wait(1000);
 api.playBGM("tutorial/text-theme.mp3");
-api.wait(1000);
+// api.wait(1000);
 
 const titleResult = api.showSubtitle("[c=yellow]普通文本对话[/c]", {
   position: "Top",
@@ -18,7 +15,7 @@ const titleResult = api.showSubtitle("[c=yellow]普通文本对话[/c]", {
       duration: 1000
     }
   }
-});
+}, true);
 
 api.showCharacter(2, "tutorial/boy-normal.png");
 
@@ -80,3 +77,4 @@ api.removeSubtitle(titleResult.id);
 api.removeScene(0);
 // api.loadScene(1, "");
 // api.loadScene(2, "");
+

@@ -107,9 +107,9 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           }
         } else if (value.api instanceof avg.APICharacter) {
           if (value.op === avg.OP.ShowCharacter) {
-            this.dialogueBox.showCharacter(value.api);
+            this.dialogueBox.showCharacter(value.api.data);
           } else if (value.op === avg.OP.HideCharacter) {
-            this.dialogueBox.hideCharacter(value.api);
+            this.dialogueBox.hideCharacter(value.api.data);
           }
 
           value.resolver();

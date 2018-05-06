@@ -63,7 +63,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
   public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<
     avg.SelectedDialogueChoice
-  >();
+    >();
 
   public dialogueChoices: avg.APIDialogueChoice;
   private isWaitingInput = false;
@@ -74,14 +74,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly CHAR_ANIMATION_OFFSET = -30;
 
   public character_slot: Array<any>;
-  public characters: Array<avg.APICharacter>;
+  public characters: Array<avg.Character>;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sanitized: DomSanitizer
   ) {
     this.character_slot = new Array<any>(5);
-    this.characters = new Array<avg.APICharacter>(5);
+    this.characters = new Array<avg.Character>(5);
 
     const width = avg.Setting.WindowWidth / 5;
 
@@ -109,10 +109,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.choicesSubject = new Subject<avg.SelectedDialogueChoice>();
 
     this.dialogueChoices = new avg.APIDialogueChoice();
-
-    // Reset these array cause a postion wrong
-    // this.character_slot = [];
-    // this.characters = [];
   }
 
   ngOnInit() {
@@ -172,6 +168,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       AnimationUtils.fadeTo(".name-box", 0, 0);
     }
+
+    if (!this.dialogueData.character.index) {
+      this.dialogueData.character.index = 0;
+    }
+
+    if (this.dialogueData.character && this.dialogueData.character.avatar) {
+      this.showCharacter(this.dialogueData.character);
+    }
   }
 
   private initOpacity(index: number): gsap.TweenLite {
@@ -185,11 +189,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private onCharacterEnter(
     index: number,
-    character: avg.APICharacter
+    character: avg.Character
   ): gsap.TweenLite {
     const elementID = "#character-index-" + character.index;
-
-    console.log(index, character);
 
     return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
       opacity: 1,
@@ -206,29 +208,34 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  public showCharacter(character: avg.APICharacter) {
+  public showCharacter(character: avg.Character) {
+
+    const index = character.index;
+
     if (
-      this.characters[character.index] === null ||
-      this.characters[character.index] === undefined
+      this.characters[index] === null ||
+      this.characters[index] === undefined
     ) {
-      this.initOpacity(character.index);
-      this.characters[character.index] = character;
-      this.onCharacterEnter(character.index, character);
+      this.initOpacity(index);
+      this.characters[index] = character;
+      this.onCharacterEnter(index, character);
     } else {
-      this.onCharacterLeave(character.index).eventCallback("onComplete", () => {
-        this.characters[character.index] = character;
-        this.onCharacterEnter(character.index, character);
+      this.onCharacterLeave(index).eventCallback("onComplete", () => {
+        this.characters[index] = character;
+        this.onCharacterEnter(index, character);
       });
     }
   }
 
-  public hideCharacter(character: avg.APICharacter) {
-    if (character.index === -1) {
+  public hideCharacter(character: avg.Character) {
+    const index = character.index;
+
+    if (index === -1) {
       for (let i = 0; i < this.characters.length; ++i) {
         this.onCharacterLeave(i);
       }
     } else {
-      this.onCharacterLeave(character.index);
+      this.onCharacterLeave(index);
     }
   }
 
@@ -286,7 +293,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
     if (this.dialogueChoices.onEnter) {
       setTimeout(
-        function() {
+        function () {
           this.dialogueChoices.onEnter(index);
         }.bind(this),
         0

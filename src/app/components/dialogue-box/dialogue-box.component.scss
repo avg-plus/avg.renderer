@@ -2,19 +2,22 @@
 @import "../../../styles/_common.scss";
 @import "../../../styles/_default-ui.scss";
 
+
 #dialogue-container {
   width: 100%;
+  
   .name-box {
     @include UIPanel;
 
     position: absolute;
     width: auto;
     height: 30px;
-    left: 10%;
+    left: 7%;
     bottom: 102%;
     padding-left: 10px;
     padding-right: 10px;
     opacity: 0;
+
     .name {
       @include TextStrokeNormal;
       @include H2;
@@ -27,7 +30,7 @@
 
     position: relative;
     // background: rgba(255, 255, 255, 0.4);
-    left: 10%;
+    left: 7%;
     bottom: -35%;
     width: 1200px;
     height: 200px;

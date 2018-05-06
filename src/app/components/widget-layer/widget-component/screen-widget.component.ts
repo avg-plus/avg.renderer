@@ -4,41 +4,92 @@ import {
   HostBinding,
   Input,
   Injector,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewChecked,
+  Renderer2,
+  ElementRef
 } from "@angular/core";
 import * as avg from "avg-engine/engine";
 import { AnimationUtils } from "../../../common/animations/animation-utils";
+import { WidgetModel } from "../widget-layer.service";
+import { Subject } from "rxjs/Subject";
 
-export class ScreenWidgetComponent implements OnInit, AfterViewInit {
-  @HostBinding("class.widget-top-left") isTopLeft = false;
-  @HostBinding("class.widget-top-right") isTopRight = false;
-  @HostBinding("class.widget-bottom-left") isBottomLeft = false;
-  @HostBinding("class.widget-bottom-right") isBottomRight = false;
-  @HostBinding("class.widget-top") isTop = false;
-  @HostBinding("class.widget-left") isLeft = false;
-  @HostBinding("class.widget-right") isRight = false;
-  @HostBinding("class.widget-bottom") isBottom = false;
-  @HostBinding("class.widget-center") isCentered = false;
+export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
+  // @HostBinding("class.widget-top-left") isTopLeft = false;
+  // @HostBinding("class.widget-top-right") isTopRight = false;
+  // @HostBinding("class.widget-bottom-left") isBottomLeft = false;
+  // @HostBinding("class.widget-bottom-right") isBottomRight = false;
+  // @HostBinding("class.widget-top") isTop = false;
+  // @HostBinding("class.widget-left") isLeft = false;
+  // @HostBinding("class.widget-right") isRight = false;
+  // @HostBinding("class.widget-bottom") isBottom = false;
+  // @HostBinding("class.widget-center") isCentered = false;
 
   public api: avg.APIScreenImage;
-  public data: avg.ScreenWidget;
-  private finishedCallback: () => void;
+  private _data: avg.ScreenWidget;
+  private _subject: Subject<any> = new Subject<any>();
+
+  public onShowAnimationCallback: () => void;
+  public onRemoveAnimationCallback: () => void;
 
   protected ElementID = "";
   protected WidgetElementID = "";
 
-  constructor(protected changeDetectorRef: ChangeDetectorRef) {}
+  constructor(protected changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2, private element: ElementRef) { }
+
+  public set data(value: avg.ScreenWidget) {
+    this._data = value;
+  }
+
+  public get data(): avg.ScreenWidget {
+    return this._data;
+  }
+
+  private lowercaseDataFields(data: avg.ScreenWidget) {
+
+    if (!data) {
+      return;
+    }
+
+    if (data.animation) {
+      data.animation.name = data.animation.name
+        ? data.animation.name.toLowerCase()
+        : "";
+    }
+
+    if (data.animation && data.animation.options) {
+
+      data.animation.options["direction"] = data.animation.options[
+        "direction"
+      ]
+        ? data.animation.options["direction"].toLowerCase()
+        : "";
+    }
+
+    data.position = data.position
+      ? data.position.toLowerCase()
+      : "";
+
+  }
 
   ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
     this.ElementID = this.data.id;
     this.WidgetElementID = "#" + this.ElementID;
 
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewChecked() {
+
+  }
 
   protected showWidget() {
+    this.lowercaseDataFields(this.data);
+
     if (this.data.x || this.data.y) {
       AnimationUtils.to("showWidget Initialize", this.WidgetElementID, 0, {
         opacity: 0,
@@ -50,16 +101,22 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Initialize positions
-    this.isTopLeft = this.data.position === avg.ScreenPosition.TopLeft;
-    this.isTopRight = this.data.position === avg.ScreenPosition.TopRight;
-    this.isBottomLeft = this.data.position === avg.ScreenPosition.BottomLeft;
-    this.isBottomRight = this.data.position === avg.ScreenPosition.BottomRight;
-    this.isTop = this.data.position === avg.ScreenPosition.Top;
-    this.isLeft = this.data.position === avg.ScreenPosition.Left;
-    this.isRight = this.data.position === avg.ScreenPosition.Right;
-    this.isBottom = this.data.position === avg.ScreenPosition.Bottom;
-    this.isCentered = this.data.position === avg.ScreenPosition.Center;
+    const positions = new Map<string, string>([
+      [avg.ScreenPosition.TopLeft, "widget-top-left"],
+      [avg.ScreenPosition.TopRight, "widget-top-right"],
+      [avg.ScreenPosition.BottomLeft, "widget-bottom-left"],
+      [avg.ScreenPosition.BottomRight, "widget-bottom-right"],
+      [avg.ScreenPosition.Top, "widget-top"],
+      [avg.ScreenPosition.Left, "widget-left"],
+      [avg.ScreenPosition.Right, "widget-right"],
+      [avg.ScreenPosition.Bottom, "widget-bottom"],
+      [avg.ScreenPosition.Center, "widget-center"]
+    ]);
+
+    const bindingClass = positions.get(this.data.position);
+    if (bindingClass) {
+      this.renderer.addClass(this.element.nativeElement, bindingClass);
+    }
   }
 
   protected initShowAnimation() {
@@ -75,15 +132,24 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
         case avg.ScreenWidgetAnimation.Enter_Appear:
           this.appear();
           break;
+        case avg.ScreenWidgetAnimation.Enter_ScaleIn:
+          break;
+        default:
+          console.warn("Could not found animation name [%s]", this.data.animation.name);
+          this.appear();
+          break;
       }
     }, 0);
   }
 
   public hideWidget(data: avg.ScreenWidget) {
+
     if (!data.animation) {
       this.hide();
       return;
     }
+
+    this.lowercaseDataFields(data);
 
     switch (data.animation.name) {
       case avg.ScreenWidgetAnimation.Leave_FadeOut:
@@ -97,12 +163,10 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
         break;
       case avg.ScreenWidgetAnimation.Leave_ScaleOut:
         break;
-    }
-  }
-
-  public registerFinishedCallback(callback: () => void) {
-    if (callback) {
-      this.finishedCallback = callback;
+      default:
+        console.warn("Could not found animation name [%s]", data.animation.name);
+        this.hide();
+        break;
     }
   }
 
@@ -223,13 +287,19 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit {
   }
 
   protected onShowAnimationComplete(): void {
-    console.log("[TextWidget: Show Animation] completed.");
+    console.log("[Widget: Show Animation] completed.");
+
+    if (this.onShowAnimationCallback) {
+      this.onShowAnimationCallback();
+    }
   }
 
   protected onHideAnimationComplete(): void {
-    console.log("[TextWidget: Show Animation] completed.");
+    console.log("[Widget: Hide Animation] completed.");
 
     // Notify manager to destroy
-    this.finishedCallback();
+    if (this.onRemoveAnimationCallback) {
+      this.onRemoveAnimationCallback();
+    }
   }
 }

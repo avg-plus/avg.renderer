@@ -8,7 +8,7 @@ import {
   Input
 } from "@angular/core";
 import { FPSCtrl } from "app/common/fps-ctrl";
-import { SceneAnimation } from "app/common/animations/scene-animation";
+// import { SceneAnimation } from "app/common/animations/scene-animation";
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
 
@@ -76,11 +76,17 @@ export class BackgroundCanvasComponent
   }
 
   public async setBackground(scene: avg.APIScene): Promise<any> {
+
     const data = scene.data;
+
     const transform = data.transform;
     const file = data.file.filename;
     const index = scene.index;
     let duration = data.duration;
+
+    if (!file || file.length === 0) {
+      console.warn("Background filename is empty");
+    }
 
     if (index >= GameDef.MaxBackgroundLayers) {
       console.error(
@@ -155,18 +161,6 @@ export class BackgroundCanvasComponent
           this.changeDetectorRef.detectChanges();
         });
       }
-
-      // setTimeout(() => {
-      //   const parallarScene = document.getElementById("avg-viewport");
-      //   const parallaxInstance = new Parallax(parallarScene, {
-      //     relativeInput: true,
-      //     hoverOnly: true
-      //   });
-      // }, 2000);
-
-      // parallaxInstance.friction(0.2, 0.2);
-
-      // console.log(parallarScene);
 
       resolve();
     });

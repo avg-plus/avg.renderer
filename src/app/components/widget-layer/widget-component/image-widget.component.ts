@@ -3,7 +3,9 @@ import {
   Injector,
   ChangeDetectorRef,
   OnInit,
-  AfterViewInit
+  AfterViewInit,
+  Renderer2,
+  ElementRef
 } from "@angular/core";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
@@ -22,7 +24,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
   private bindingStyle: SafeStyle;
 
   constructor(private sanitized: DomSanitizer, private injector: Injector) {
-    super(injector.get(ChangeDetectorRef));
+    super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
   }
 
   ngOnInit() {
@@ -37,7 +39,6 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
 
   protected showWidget() {
     super.showWidget();
-
     this.update();
     super.initShowAnimation();
   }

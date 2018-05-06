@@ -5,6 +5,12 @@ import { Injectable } from "@angular/core";
 
 import * as childProcess from "child_process";
 import { DebugingService } from "app/common/debuging-service";
+import {
+  TouchBarSpacer,
+  TouchBar,
+  TouchBarLabel,
+  TouchBarButton
+} from "electron";
 // import { dialog } from "electron";
 
 const { app, dialog } = require("electron");
@@ -34,6 +40,32 @@ export class ElectronService {
     }
 
     DebugingService.initDebugMenus();
+  }
+
+  public setMenuTouchBar() {
+    // Reel labels
+    const startGameLabel = new TouchBarLabel({
+      label: "开始游戏",
+      textColor: "blue"
+    });
+    // const reel2 = new TouchBarLabel();
+    // const reel3 = new TouchBarLabel();
+
+    // Spin result label
+    // const result = new TouchBarLabel();
+
+    // Spin button
+    const spin = new TouchBarButton({
+      label: "🎰 Spin",
+      backgroundColor: "#7851A9",
+      click: () => {}
+    });
+
+    const touchBar = new TouchBar({
+      items: [startGameLabel, spin]
+    });
+
+    // window.setTouchBar(touchBar);
   }
 
   isElectron = () => {

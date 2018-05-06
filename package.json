@@ -18,7 +18,7 @@
   "scripts": {
     "ng": "ng",
     "lint": "ng lint",
-    "start": "webpack --watch",
+    "start": "tsc main.ts --outDir dist && webpack --watch",
     "start:web": "webpack-dev-server --content-base ./dist --port 4200 --inline",
     "build:electron:main": "tsc main.ts --outDir dist && copyfiles package.json dist",
     "build": "webpack --display-error-details && npm run build:electron:main",

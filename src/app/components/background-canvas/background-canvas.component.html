@@ -4,13 +4,12 @@
     <!-- attr.data-depth]="i + 0.5"  -->
     <div *ngFor="let model of scenes; index as i">
       <canvas id="avg-particle-viewport"></canvas>
-      <img class="shake background-image front layer-{{i}}" *ngIf="model && model.scene" [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
-      <img class="shake background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene" [ngStyle]="model.styles" src="{{model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename}}">
-    </div>
+      <img class="shake background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
+        [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
 
-    <!-- <div [attr.data-depth]="0.2" [style.color]="white"> 哈哈哈哈哈 1</div>
-    <div [attr.data-depth]="0.6" [style.color]="white"> 哈哈哈哈哈 2</div>
-    <div [attr.data-depth]="0.8" [style.color]="white"> 哈哈哈哈哈 3</div> -->
+      <img class="shake background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
+        [ngStyle]="model.styles" src="{{model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename}}">
+    </div>
 
   </div>
 </div>

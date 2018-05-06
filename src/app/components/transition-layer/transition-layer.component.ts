@@ -4,7 +4,6 @@ import { transition } from "app/common/manager/transition";
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "./transition-layer.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { SceneAnimation } from "app/common/animations/scene-animation";
 import { Subject } from "rxjs/Subject";
 
 @Component({

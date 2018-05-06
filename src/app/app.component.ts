@@ -78,13 +78,21 @@ export class AppComponent implements AfterViewInit {
     APIImplManager.init();
 
     const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/story.avs";
+      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/tutorial/tutorial.avs";
 
-    this.router.navigate(["title-view"]).then(result => {
-      if (result) {
-        TransitionLayerService.fadeTo(0, 3000);
-      }
-    });
+    // this.router.navigate(["title-view"]).then(result => {
+    //   if (result) {
+    //     TransitionLayerService.fadeTo(0, 3000);
+    //   }
+    // });
+
+    this.router
+      .navigate(["main-scene", { script: entryScript }])
+      .then(result => {
+        if (result) {
+          TransitionLayerService.fadeTo(0, 3000);
+        }
+      });
 
     DebugingService.DebugMessager.asObservable().subscribe((message: any) => {
       const script =
@@ -99,12 +107,6 @@ export class AppComponent implements AfterViewInit {
       });
     });
 
-    // this.router
-    //   .navigate(["main-scene", { script: entryScript }])
-    //   .then(result => {
-    //     if (result) {
-    //       TransitionLayerService.fadeTo(0, 3000);
-    //     }
-    //   });
+
   }
 }

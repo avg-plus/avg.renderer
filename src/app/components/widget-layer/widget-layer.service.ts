@@ -9,7 +9,12 @@ import { ScreenWidgetComponent } from "./widget-component/screen-widget.componen
 import { Subtitle } from "avg-engine/engine";
 
 export class WidgetModel {
-  public shouldBeRemoved = false;
+  public inAnimation: boolean = true;
+  public shouldRemoveAfterShow = false;
+  public shouldRemoveData: avg.ScreenWidget;
+
+  public onShowAnimationFinished: () => void;
+  public onRemoveAnimationFinished: () => void;
 }
 
 export class TextWidgetModel extends WidgetModel {
@@ -45,7 +50,7 @@ export class WidgetLayerService extends AVGService {
   public static textWidgets: TextWidgetModel[] = new Array<TextWidgetModel>();
   public static imageWdigets: ImageWidgetModel[] = new Array<
     ImageWidgetModel
-  >();
+    >();
 
   public static clearAllSubtitle() {
     WidgetLayerService.textWidgets.forEach(widget => {
@@ -55,56 +60,93 @@ export class WidgetLayerService extends AVGService {
     WidgetLayerService.textWidgets = [];
   }
 
-  public static addSubtitle(
-    data: avg.Subtitle,
-    component: ComponentRef<TextWidgetComponent>
-  ) {
-    component.instance.data = data;
-    component.changeDetectorRef.detectChanges();
-
-    this.textWidgets.push(new TextWidgetModel(data, component));
-  }
-
-  // public static addImageWidget(
-  //   data: avg.ScreenImage,
-  //   component: ComponentRef<ImageWidgetComponent>
-  // ) {
-  //   component.instance.data = <avg.ScreenImage>data;
-  //   component.changeDetectorRef.detectChanges();
-
-  //   this.imageWdigets.push(new ImageWidgetModel(data, component));
-  // }
-
   public static addWidget(
     data: avg.ScreenWidget,
     component: ComponentRef<ScreenWidgetComponent>,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text
+    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+    isAsync: boolean = true
   ) {
-    if (widgetType === avg.ScreenWidgetType.Text) {
-      const textWidgetComponent = <ComponentRef<TextWidgetComponent>>component;
 
-      component.instance.data = data;
-      component.changeDetectorRef.detectChanges();
+    const isTextWidgetExists = (id: string) => {
+      this.textWidgets.forEach((v) => {
+        if (v.data.id === data.id) {
+          return true;
+        }
+      });
 
-      const model = new TextWidgetModel(
-        <avg.Subtitle>data,
-        textWidgetComponent
-      );
-      WidgetLayerService.textWidgets.push(model);
-    } else if (widgetType === avg.ScreenWidgetType.Image) {
-      const imageWidgetComponent = <ComponentRef<
-        ImageWidgetComponent
-      >>component;
-
-      component.instance.data = data;
-      component.changeDetectorRef.detectChanges();
-
-      const model = new ImageWidgetModel(
-        <avg.ScreenImage>data,
-        imageWidgetComponent
-      );
-      WidgetLayerService.imageWdigets.push(model);
+      return false;
     }
+
+    const isImageWidgetExists = (id: string) => {
+      this.imageWdigets.forEach((v) => {
+        if (v.data.id === id) {
+          return true;
+        }
+      });
+
+      return false;
+    }
+
+
+    return new Promise((resolve, reject) => {
+      let model: WidgetModel;
+
+      if (widgetType === avg.ScreenWidgetType.Text) {
+        const textWidgetComponent = <ComponentRef<
+          TextWidgetComponent
+          >>component;
+
+        model = new TextWidgetModel(
+          <avg.Subtitle>data,
+          textWidgetComponent
+        );
+
+        component.instance.data = data;
+        component.changeDetectorRef.detectChanges();
+
+        WidgetLayerService.textWidgets.push(<TextWidgetModel>model);
+      } else if (widgetType === avg.ScreenWidgetType.Image) {
+        const imageWidgetComponent = <ComponentRef<
+          ImageWidgetComponent
+          >>component;
+
+        model = new ImageWidgetModel(
+          <avg.ScreenImage>data,
+          imageWidgetComponent
+        );
+
+        component.instance.data = data;
+        component.changeDetectorRef.detectChanges();
+
+        WidgetLayerService.imageWdigets.push(<ImageWidgetModel>model);
+      }
+
+      component.instance.onShowAnimationCallback = () => {
+        model.inAnimation = false;
+
+        // Remove if async call remove operation after show animation is done
+        if (model.shouldRemoveAfterShow) {
+          // Destroy component
+          component.instance.onRemoveAnimationCallback = () => {
+            component.destroy();
+            component = null;
+
+            resolve();
+          };
+
+          component.instance.hideWidget(model.shouldRemoveData);
+        }
+
+
+        if (!isAsync) {
+          resolve();
+        }
+      };
+
+      if (isAsync) {
+        resolve();
+      }
+    });
   }
 
   public static updateSubtitle(id: string, text: string) {
@@ -129,42 +171,57 @@ export class WidgetLayerService extends AVGService {
 
   public static removeWidget(
     data: avg.ScreenWidget,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text
+    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+    isAsync: boolean = true
   ) {
-    console.log("Remove widget, type =", widgetType.toString());
-
-    const widgetContainer =
-      widgetType === avg.ScreenWidgetType.Text
-        ? WidgetLayerService.textWidgets
-        : WidgetLayerService.imageWdigets;
-
-    console.log("this.textWidgets", WidgetLayerService.textWidgets);
-
-    for (let i = 0; i < widgetContainer.length; ++i) {
-      const widget =
+    return new Promise((resolve, reject) => {
+      const widgetContainer =
         widgetType === avg.ScreenWidgetType.Text
-          ? <TextWidgetModel>widgetContainer[i]
-          : <ImageWidgetModel>widgetContainer[i];
+          ? WidgetLayerService.textWidgets
+          : WidgetLayerService.imageWdigets;
 
-      if (widget.data.id === data.id) {
-        let component = widget.component;
+      for (let i = 0; i < widgetContainer.length; ++i) {
+        const widget =
+          widgetType === avg.ScreenWidgetType.Text
+            ? <TextWidgetModel>widgetContainer[i]
+            : <ImageWidgetModel>widgetContainer[i];
 
-        // Destroy component
-        component.instance.registerFinishedCallback(() => {
-          component.destroy();
-          component = null;
-        });
+        if (widget.data.id === data.id) {
+          let component = widget.component;
 
-        // Play hide animations
-        if (widgetType === avg.ScreenWidgetType.Text) {
-          component.instance.hideWidget(<avg.Subtitle>data);
-        } else {
-          component.instance.hideWidget(<avg.ScreenImage>data);
+          // Destroy component
+          component.instance.onRemoveAnimationCallback = () => {
+
+            component.destroy();
+            component = null;
+
+            if (!isAsync) {
+              resolve();
+            }
+          };
+
+          if (widget.inAnimation) {
+            widget.shouldRemoveAfterShow = true;
+            widget.shouldRemoveData = data;
+            resolve();
+            return;
+          }
+
+          // Play hide animations
+          if (widgetType === avg.ScreenWidgetType.Text) {
+            component.instance.hideWidget(<avg.Subtitle>data);
+            WidgetLayerService.textWidgets.splice(i, 1);
+          } else {
+            component.instance.hideWidget(<avg.ScreenImage>data);
+            WidgetLayerService.imageWdigets.splice(i, 1);
+          }
         }
-
-        // Remove component
-        WidgetLayerService.textWidgets.splice(i, 1);
       }
-    }
+
+
+      if (isAsync) {
+        resolve();
+      }
+    });
   }
 }

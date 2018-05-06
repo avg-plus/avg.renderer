@@ -5,7 +5,10 @@ import {
   AfterViewInit,
   OnDestroy,
   Injector,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewChecked,
+  Renderer2,
+  ElementRef
 } from "@angular/core";
 import { NgForOf } from "@angular/common";
 import { Subtitle, Setting } from "avg-engine/engine";
@@ -22,13 +25,13 @@ import { ScreenWidgetComponent } from "./screen-widget.component";
   styleUrls: ["./text-widget.component.scss"]
 })
 export class TextWidgetComponent extends ScreenWidgetComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit, AfterViewChecked {
   private customPositionStyle: any;
 
   private bindingSubtitleSafeHtml: SafeHtml;
 
   constructor(private sanitizer: DomSanitizer, private injector: Injector) {
-    super(injector.get(ChangeDetectorRef));
+    super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
   }
 
   ngOnInit() {
@@ -41,10 +44,16 @@ export class TextWidgetComponent extends ScreenWidgetComponent
     this.showWidget();
   }
 
+  ngAfterViewChecked() {
+
+  }
+
   protected showWidget() {
     super.showWidget();
     this.update();
     super.initShowAnimation();
+
+    this.changeDetectorRef.detectChanges();    
   }
 
   public update() {

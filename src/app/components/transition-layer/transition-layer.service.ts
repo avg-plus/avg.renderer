@@ -1,7 +1,6 @@
 import { Injectable, Output } from "@angular/core";
 import { AVGService } from "../../common/avg-service";
 import { EventEmitter } from "events";
-import { SceneAnimation } from "app/common/animations/scene-animation";
 import { Subject } from "rxjs/Subject";
 
 import * as gsap from "gsap";
@@ -80,7 +79,7 @@ export class TransitionLayerService extends AVGService {
             }
           }
         },
-        _ => {}
+        _ => { }
       );
     };
 
