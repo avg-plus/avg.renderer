@@ -36,6 +36,7 @@ import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
+import { reject } from "q";
 
 export enum DialogueBoxStatus {
   None,
@@ -173,16 +174,16 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialogueData.character.index = 0;
     }
 
-    if (this.dialogueData.character && this.dialogueData.character.avatar) {
+    if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
       this.showCharacter(this.dialogueData.character);
     }
   }
 
-  private initOpacity(index: number): gsap.TweenLite {
+  private initOpacity(index: number, opacity = 0): gsap.TweenLite {
     const elementID = "#character-index-" + index;
 
     return gsap.TweenLite.to(elementID, 0, {
-      opacity: 0,
+      opacity: opacity,
       x: this.CHAR_ANIMATION_OFFSET
     });
   }
@@ -199,12 +200,17 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private onCharacterLeave(index: number): gsap.TweenLite {
+  private onCharacterLeave(index: number): Promise<any> {
     const elementID = "#character-index-" + index;
 
-    return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
-      opacity: 0,
-      x: this.CHAR_ANIMATION_OFFSET
+    return new Promise((resolve, reject) => {
+      AnimationUtils.to("CharacterLeaveAnimation", elementID, this.CHAR_ANIMATION_DURATION, {
+        opacity: 0,
+        x: this.CHAR_ANIMATION_OFFSET
+      }, () => {
+        this.characters[index] = undefined;
+        resolve();
+      });
     });
   }
 
@@ -212,30 +218,33 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const index = character.index;
 
-    if (
-      this.characters[index] === null ||
-      this.characters[index] === undefined
-    ) {
+    const charNotExists = this.characters[index] === undefined || this.characters[index] === null;
+
+    if (charNotExists) {
       this.initOpacity(index);
       this.characters[index] = character;
       this.onCharacterEnter(index, character);
     } else {
-      this.onCharacterLeave(index).eventCallback("onComplete", () => {
-        this.characters[index] = character;
-        this.onCharacterEnter(index, character);
-      });
+      this.characters[index] = character;
+      this.initOpacity(index, 1);
+      this.changeDetectorRef.detectChanges();
+
+      // this.onCharacterLeave(index).eventCallback("onComplete", () => {
+      //   this.characters[index] = character;
+      //   this.onCharacterEnter(index, character);
+      // });
     }
   }
 
-  public hideCharacter(character: avg.Character) {
+  public async hideCharacter(character: avg.Character): Promise<any> {
     const index = character.index;
 
     if (index === -1) {
       for (let i = 0; i < this.characters.length; ++i) {
-        this.onCharacterLeave(i);
+        await this.onCharacterLeave(i);
       }
     } else {
-      this.onCharacterLeave(index);
+      await this.onCharacterLeave(index);
     }
   }
 

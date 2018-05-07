@@ -36,7 +36,7 @@ export class WidgetLayerComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private resolver: ComponentFactoryResolver
-  ) {}
+  ) { }
 
   createTextWidgetComponent<T>(type: Type<T>) {
     const factory: ComponentFactory<T> = this.resolver.resolveComponentFactory(
@@ -79,13 +79,19 @@ export class WidgetLayerComponent implements OnInit {
               break;
             case avg.OP.HideSubtitle:
               {
-                const promise = WidgetLayerService.removeWidget(
-                  subtitle,
-                  avg.ScreenWidgetType.Text,
-                  value.api.isAsync
-                );
+                if (value.api.data.id === "All") {
+                  WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Text, value.api.isAsync);
+                  value.resolver();
+                  // this.onAsyncResolveHandler(value, promise);
+                } else {
+                  const promise = WidgetLayerService.removeWidget(
+                    subtitle,
+                    avg.ScreenWidgetType.Text,
+                    value.api.isAsync
+                  );
 
-                this.onAsyncResolveHandler(value, promise);
+                  this.onAsyncResolveHandler(value, promise);
+                }
               }
               break;
           }
@@ -111,12 +117,22 @@ export class WidgetLayerComponent implements OnInit {
               }
               break;
             case avg.OP.RemoveImage:
-              const promise = WidgetLayerService.removeWidget(
-                image,
-                avg.ScreenWidgetType.Image,
-                value.api.isAsync
-              );
-              this.onAsyncResolveHandler(value, promise);
+              if (value.api.data.id === "All") {
+                WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Image, value.api.isAsync);
+
+                value.resolver();
+                // this.onAsyncResolveHandler(value, promise);
+              } else {
+                const promise = WidgetLayerService.removeWidget(
+                  image,
+                  avg.ScreenWidgetType.Image,
+                  value.api.isAsync
+                );
+                this.onAsyncResolveHandler(value, promise);
+
+              }
+
+
               break;
           }
         }
@@ -136,7 +152,7 @@ export class WidgetLayerComponent implements OnInit {
         () => {
           value.resolver(returnedResult);
         },
-        _ => {}
+        _ => { }
       );
     }
   }

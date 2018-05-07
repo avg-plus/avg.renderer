@@ -15,16 +15,6 @@ import { WidgetModel } from "../widget-layer.service";
 import { Subject } from "rxjs/Subject";
 
 export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
-  // @HostBinding("class.widget-top-left") isTopLeft = false;
-  // @HostBinding("class.widget-top-right") isTopRight = false;
-  // @HostBinding("class.widget-bottom-left") isBottomLeft = false;
-  // @HostBinding("class.widget-bottom-right") isBottomRight = false;
-  // @HostBinding("class.widget-top") isTop = false;
-  // @HostBinding("class.widget-left") isLeft = false;
-  // @HostBinding("class.widget-right") isRight = false;
-  // @HostBinding("class.widget-bottom") isBottom = false;
-  // @HostBinding("class.widget-center") isCentered = false;
-
   public api: avg.APIScreenImage;
   private _data: avg.ScreenWidget;
   private _subject: Subject<any> = new Subject<any>();

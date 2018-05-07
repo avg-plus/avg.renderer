@@ -55,7 +55,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Init
@@ -108,11 +108,14 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         } else if (value.api instanceof avg.APICharacter) {
           if (value.op === avg.OP.ShowCharacter) {
             this.dialogueBox.showCharacter(value.api.data);
+            value.resolver();
+
           } else if (value.op === avg.OP.HideCharacter) {
-            this.dialogueBox.hideCharacter(value.api.data);
+            this.dialogueBox.hideCharacter(value.api.data).then(() => {
+              value.resolver();
+            }, _ => { });
           }
 
-          value.resolver();
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
             if (value.api.isAsync) {
@@ -128,7 +131,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
                   scenHandle.index = 0;
                   value.resolver(scenHandle);
                 },
-                _ => {}
+                _ => { }
               );
             }
           } else if (value.op === avg.OP.RemoveScene) {
