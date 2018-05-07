@@ -169,6 +169,18 @@ export class WidgetLayerService extends AVGService {
     }
   }
 
+  public static removeAllWidgets(widgetType: avg.ScreenWidgetType, isAsync: boolean = true) {
+    if (widgetType === avg.ScreenWidgetType.Text) {
+      this.textWidgets.forEach((value) => {
+        this.removeWidget(value.data, widgetType, isAsync);
+      });
+    } else {
+      this.imageWdigets.forEach((value) => {
+        this.removeWidget(value.data, widgetType, isAsync);
+      });
+    }
+  }
+
   public static removeWidget(
     data: avg.ScreenWidget,
     widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
@@ -217,7 +229,6 @@ export class WidgetLayerService extends AVGService {
           }
         }
       }
-
 
       if (isAsync) {
         resolve();
