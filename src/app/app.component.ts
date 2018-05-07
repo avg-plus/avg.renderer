@@ -80,11 +80,11 @@ export class AppComponent implements AfterViewInit {
     const entryScript =
       avg.Resource.getPath(avg.ResourcePath.Scripts) + "/tutorial/tutorial.avs";
 
-    // this.router.navigate(["title-view"]).then(result => {
-    //   if (result) {
-    //     TransitionLayerService.fadeTo(0, 3000);
-    //   }
-    // });
+    this.router.navigate(["title-view"]).then(result => {
+      if (result) {
+        TransitionLayerService.fadeTo(0, 3000);
+      }
+    });
 
     this.router
       .navigate(["main-scene", { script: entryScript }])

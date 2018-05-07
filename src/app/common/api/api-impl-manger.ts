@@ -11,6 +11,7 @@ import { APIDialogueChoicesImpl } from "./api-dialogue-choices-impl";
 import { APIAnimateSceneImpl } from "./api-animate-scene-impl";
 import { APIInputBoxImpl } from "./api-input-box-impl";
 import { APIScreenImageImpl } from "./api-screen-image-impl";
+import { APITransitionToImpl } from "./api-transition-to-impl";
 
 export class APIImplManager {
   public static init() {
@@ -142,6 +143,11 @@ export class APIImplManager {
       avg.APIScreenImage.name,
       OP.RemoveImage,
       APIScreenImageImpl.op_remove_image
+    );
+    avg.APIManager.extendImpl(
+      avg.APITransitionTo.name,
+      OP.TransitionTo,
+      APITransitionToImpl.op_transition_to
     );
   }
 }

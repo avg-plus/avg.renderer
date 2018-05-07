@@ -10,6 +10,7 @@ import { AnimationUtils } from "../../common/animations/animation-utils";
 export class TransitionLayerService extends AVGService {
   public static FullScreenClickListener: Subject<any> = new Subject<any>();
   private static _isLockPointerEvent = false;
+  private static CONTAINER_ELEMENT = "#transition-container";
 
   @Output() change: EventEmitter = new EventEmitter();
 
@@ -37,6 +38,17 @@ export class TransitionLayerService extends AVGService {
     complete?: () => void
   ) {
     AnimationUtils.fadeTo("#transition-container", duration, to, complete);
+  }
+
+  public static transitionTo(color: string, opacity: number, duration: number) {
+    return new Promise((resolve, reject) => {
+      AnimationUtils.to("TransitionTo", TransitionLayerService.CONTAINER_ELEMENT, duration, {
+        backgroundColor: color,
+        opacity: opacity
+      }, () => {
+        resolve();
+      });
+    });
   }
 
   public static flashScreen(
