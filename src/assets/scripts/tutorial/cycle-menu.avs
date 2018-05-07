@@ -1,7 +1,6 @@
 while (true) {
     api.hideCharacter();
     api.hideText();
-    // api.loadScene(0, "");
 
     const titleResult = api.showSubtitle("", {
         position: "Top",
@@ -13,9 +12,6 @@ while (true) {
     }, false);
 
     api.loadScene(0, "tutorial/bedroom-1-day.bmp");
-
-    //api.wait(1600);
-    // api.showCharacter(4, "tutorial/girl-ask.png");
 
     api.showText("那么，你还有什么想要了解的呢？", {
         name: "风见",
@@ -60,7 +56,7 @@ while (true) {
 
     api.hideCharacter();
     api.hideText();
-    api.loadScene(0, "");
+    // api.loadScene(0, "");
     api.removeSubtitle(titleResult.id);
 
     api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");

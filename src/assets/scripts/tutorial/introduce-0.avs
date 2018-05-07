@@ -1,6 +1,6 @@
 // /* 文本以及立绘相关剧情 */
 
-
+// api.hideCharacter();
 api.loadScene(0, "tutorial/bedroom-1-day.bmp");
 // api.wait(1000);
 api.playBGM("tutorial/text-theme.mp3");
@@ -74,7 +74,6 @@ api.showText(
 );
 api.hideCharacter();
 api.removeSubtitle(titleResult.id);
-api.removeScene(0);
 // api.loadScene(1, "");
 // api.loadScene(2, "");
 
