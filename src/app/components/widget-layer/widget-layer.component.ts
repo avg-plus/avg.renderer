@@ -79,7 +79,7 @@ export class WidgetLayerComponent implements OnInit {
               break;
             case avg.OP.HideSubtitle:
               {
-                if (value.api.data.id === "All") {
+                if (value.api.data.id === undefined) {
                   WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Text, value.api.isAsync);
                   value.resolver();
                   // this.onAsyncResolveHandler(value, promise);

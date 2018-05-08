@@ -48,9 +48,7 @@ export class ImageWidgetModel extends WidgetModel {
 @Injectable()
 export class WidgetLayerService extends AVGService {
   public static textWidgets: TextWidgetModel[] = new Array<TextWidgetModel>();
-  public static imageWdigets: ImageWidgetModel[] = new Array<
-    ImageWidgetModel
-    >();
+  public static imageWdigets: ImageWidgetModel[] = new Array<ImageWidgetModel>();
 
   public static clearAllSubtitle() {
     WidgetLayerService.textWidgets.forEach(widget => {
@@ -124,7 +122,7 @@ export class WidgetLayerService extends AVGService {
       component.instance.onShowAnimationCallback = () => {
         model.inAnimation = false;
 
-        // Remove if async call remove operation after show animation is done
+        // Remove if call remove operation in async mode after show animation is done
         if (model.shouldRemoveAfterShow) {
           // Destroy component
           component.instance.onRemoveAnimationCallback = () => {
@@ -171,13 +169,13 @@ export class WidgetLayerService extends AVGService {
 
   public static removeAllWidgets(widgetType: avg.ScreenWidgetType, isAsync: boolean = true) {
     if (widgetType === avg.ScreenWidgetType.Text) {
-      this.textWidgets.forEach((value) => {
-        this.removeWidget(value.data, widgetType, isAsync);
-      });
+      for (let i = this.textWidgets.length - 1; i >= 0; i--) {
+        this.removeWidget(this.textWidgets[i].data, widgetType, isAsync);
+      }
     } else {
-      this.imageWdigets.forEach((value) => {
-        this.removeWidget(value.data, widgetType, isAsync);
-      });
+      for (let i = this.imageWdigets.length - 1; i >= 0; i--) {
+        this.removeWidget(this.imageWdigets[i].data, widgetType, isAsync);
+      }
     }
   }
 

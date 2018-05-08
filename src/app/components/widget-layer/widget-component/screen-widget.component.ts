@@ -62,6 +62,15 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
 
   }
 
+  private initWidgetData(data: avg.ScreenWidget) {
+    data.animation = data.animation || new avg.WidgetAnimation();
+    data.animation.name = data.animation.name || "";
+    data.animation.options = data.animation.options || new avg.WidgetAnimationOptions();
+    data.animation.options.duration = data.animation.options.duration || 1000;
+
+    return data;
+  }
+
   ngOnInit() {
 
   }
@@ -78,15 +87,12 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   }
 
   protected showWidget() {
+    this.initWidgetData(this.data);    
     this.lowercaseDataFields(this.data);
 
     if (this.data.x || this.data.y) {
-      AnimationUtils.to("showWidget Initialize", this.WidgetElementID, 0, {
-        opacity: 0,
-        position: "fixed",
-        left: this.data.x,
-        top: this.data.y
-      });
+      const style = " position: fixed; left:" + this.data.x + "; top:" + this.data.y;
+      this.renderer.setProperty(this.element.nativeElement, "style", style);
 
       return;
     }
@@ -129,7 +135,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
           this.appear();
           break;
       }
-    }, 0);
+    }, 1);
   }
 
   public hideWidget(data: avg.ScreenWidget) {
@@ -139,25 +145,29 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
       return;
     }
 
+    this.initWidgetData(data);    
     this.lowercaseDataFields(data);
 
-    switch (data.animation.name) {
-      case avg.ScreenWidgetAnimation.Leave_FadeOut:
-        this.fadeOut(data.animation.options);
-        break;
-      case avg.ScreenWidgetAnimation.Leave_FlyOut:
-        this.flyOut(<avg.WidgetAnimation_FlyOutOptions>data.animation.options);
-        break;
-      case avg.ScreenWidgetAnimation.Leave_Hide:
-        this.hide();
-        break;
-      case avg.ScreenWidgetAnimation.Leave_ScaleOut:
-        break;
-      default:
-        console.warn("Could not found animation name [%s]", data.animation.name);
-        this.hide();
-        break;
-    }
+    setTimeout(() => {
+      switch (data.animation.name) {
+        case avg.ScreenWidgetAnimation.Leave_FadeOut:
+          this.fadeOut(data.animation.options);
+          break;
+        case avg.ScreenWidgetAnimation.Leave_FlyOut:
+          this.flyOut(<avg.WidgetAnimation_FlyOutOptions>data.animation.options);
+          break;
+        case avg.ScreenWidgetAnimation.Leave_Hide:
+          this.hide();
+          break;
+        case avg.ScreenWidgetAnimation.Leave_ScaleOut:
+          break;
+        default:
+          console.warn("Could not found animation name [%s]", data.animation.name);
+          this.hide();
+          break;
+      }
+    }, 1);
+
   }
 
   protected appear() {
@@ -193,7 +203,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
       options.direction = avg.AnimationDirection.FromLeft;
     }
 
-    if (!options.offset || options.offset === undefined || options.offset < 0) {
+    if (options.offset === null || options.offset === undefined || options.offset < 0) {
       options.offset = 20;
     }
 
