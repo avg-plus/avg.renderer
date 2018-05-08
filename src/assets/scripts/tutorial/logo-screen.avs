@@ -1,22 +1,22 @@
-const logoImage = api.showImage("tutorial/logo2.png", {
-  animation: {
-    name: "fadein",
-    options: {
-      duration: 3000
-    }
-  }
-}, false);
+// const logoImage = api.showImage("tutorial/logo2.png", {
+//   animation: {
+//     name: "fadein",
+//     options: {
+//       duration: 3000
+//     }
+//   }
+// }, false);
 
-api.wait(1000);
+// api.wait(1000);
 
-api.removeImage(logoImage.id, {
-  animation: {
-    name: "fadeout",
-    options: {
-      duration: 1500
-    }
-  }
-}, false);
+// api.removeImage(logoImage.id, {
+//   animation: {
+//     name: "fadeout",
+//     options: {
+//       duration: 1500
+//     }
+//   }
+// }, false);
 
 
 var title = api.showSubtitle(
@@ -26,9 +26,9 @@ var title = api.showSubtitle(
     animation: {
       name: "flyin",
       options: {
-        offset: 50,
+        offset: 30,
         direction: "up",
-        duration: 4000
+        duration: 2000
       }
     }
   },
@@ -42,7 +42,7 @@ api.removeSubtitle(
     animation: {
       name: "fadeout",
       options: {
-        duration: 2000
+        duration: 1500
       }
     }
   },

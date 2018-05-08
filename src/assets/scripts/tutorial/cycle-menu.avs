@@ -1,3 +1,5 @@
+api.playBGM("tutorial/BeautifulHawaii.mp3");
+
 while (true) {
     api.hideCharacter();
     api.hideText();
@@ -11,14 +13,14 @@ while (true) {
         }
     }, false);
 
-    api.loadScene(0, "tutorial/bedroom-1-day.bmp");
+    api.loadScene(0, "tutorial/demo-bg-1.jpg");
 
-    api.showText("那么，你还有什么想要了解的呢？", {
+    api.showText("少年，你想知道什么呢？", {
         name: "风见",
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/girl-ask.png"
+                file: "tutorial/girl-normal.png"
             }
         }
     });
