@@ -16,30 +16,33 @@ import { Subject } from "rxjs/Subject";
 })
 export class TransitionLayerComponent implements OnInit, AfterViewInit {
   private animations: any[];
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     const times = [];
     let fps;
+    const fpsOut = document.getElementById("fps");
 
     function refreshLoop() {
-      window.requestAnimationFrame(function() {
+      window.requestAnimationFrame(function () {
         const now = performance.now();
         while (times.length > 0 && times[0] <= now - 1000) {
           times.shift();
         }
         times.push(now);
         fps = times.length;
+        fpsOut.innerHTML = fps + " fps";
         refreshLoop();
       });
     }
-    const fpsOut = document.getElementById("fps");
+
+    refreshLoop();
 
     // setInterval(() => {
-    // refreshLoop();
-    // fpsOut.innerHTML = fps + " fps";
+    //   refreshLoop();
+    //   fpsOut.innerHTML = fps + " fps";
     // }, 1);
     // refreshLoop();
   }
