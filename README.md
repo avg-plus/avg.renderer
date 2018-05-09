@@ -43,6 +43,7 @@ You will get the world.
 - [x] Sounds (BGM, BGS, SE, Voice)
 - [x] Game Flow Control & Clock Handle
 - [x] Scripting
+- [ ] Advanced Animations (In Progress)
 - [ ] Camera Effects & Particle Effects (In Progress)
 - [ ] Archive (In Progress)
 
