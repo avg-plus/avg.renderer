@@ -1,5 +1,9 @@
 ![Demo1](https://user-images.githubusercontent.com/1910783/39823101-d7e1fd22-53de-11e8-9bb2-b4db1ad04292.png)
 
+---
+
+**AVGPlus** is an cross-platform engine that aims to AVG/ADV, Galgame, Audiobooks, etc. It provides a way to quickly build games for Windows and macOS, completely in JavaScript. You will get many simple APIs to build power game that had better performance from the engine.
+
 ## Getting Started
 `avg.renderer` dependent on `avg.engine`.
 
