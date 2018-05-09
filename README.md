@@ -1,4 +1,4 @@
-![Demo](https://user-images.githubusercontent.com/1910783/38559871-bda9093a-3d06-11e8-9697-8cc93f9fe0df.png)
+![Demo1](https://user-images.githubusercontent.com/1910783/39823101-d7e1fd22-53de-11e8-9bb2-b4db1ad04292.png)
 
 ## Getting Started
 `avg.renderer` dependent on `avg.engine`.
@@ -13,7 +13,6 @@ And make it to a local package for dependency with `npm`:
 $ cd avg.engine
 $ npm link
 ```
-The console shows `success Registered "avg-engine` if link well.
 
 ## Development
 Get renderer source and run the following shell in `avg.renderer` folder:
@@ -22,9 +21,27 @@ git clone https://github.com/AngryPowman/avg.renderer
 cd avg.renderer
 npm install
 npm link "avg-engine"
-npm run build
 npm start
+```
+
+Open another terminal session to launch game window:
+```shell
 npm run electron:test
 ```
 
 You will get the world.
+
+## Features & Todo
+- [x] Text & Characters
+- [x] Input Handle & Variables
+- [x] Backgrounds
+- [x] Image Widgets & Text Widgets (Subtitle)
+- [x] Sounds (BGM, BGS, SE, Voice)
+- [x] Game Flow Control & Clock Handle
+- [x] Scripting
+- [ ] Camera Effects & Particle Effects (In Progress)
+- [ ] Archive (In Progress)
+
+
+## Known Bugs
+- Please link `avg.engine` again when you add or remove NPM packages.
