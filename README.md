@@ -8,10 +8,10 @@ First of all, clone engine project from:
 git clone https://github.com/AngryPowman/avg.engine
 ```
 
-And make it to a local package for dependency with `yarn`:
+And make it to a local package for dependency with `npm`:
 ```shell
 $ cd avg.engine
-$ yarn link
+$ npm link
 ```
 The console shows `success Registered "avg-engine` if link well.
 
@@ -20,11 +20,11 @@ Get renderer source and run the following shell in `avg.renderer` folder:
 ```shell
 git clone https://github.com/AngryPowman/avg.renderer
 cd avg.renderer
-yarn
-yarn link "avg-engine"
-yarn run build
-yarn start
-yarn run electron:test
+npm install
+npm link "avg-engine"
+npm run build
+npm start
+npm run electron:test
 ```
 
 You will get the world.
