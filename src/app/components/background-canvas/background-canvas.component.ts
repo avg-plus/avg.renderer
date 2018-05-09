@@ -19,6 +19,7 @@ import * as gsap from "gsap";
 import * as Parallax from "parallax-js";
 import { element } from "protractor";
 import { AnimationUtils } from "../../common/animations/animation-utils";
+import { DomSanitizer } from "@angular/platform-browser";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -42,7 +43,8 @@ export class BackgroundCanvasComponent
 
   constructor(
     private elementRef: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {}

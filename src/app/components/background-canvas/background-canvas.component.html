@@ -5,10 +5,10 @@
     <div *ngFor="let model of scenes; index as i">
       <canvas id="avg-particle-viewport"></canvas>
       <img class="shake background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
-        [ngStyle]="model.styles" src="{{model && model.scene && model.scene.file && model.scene.file.filename}}">
+        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)">
 
       <img class="shake background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
-        [ngStyle]="model.styles" src="{{model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename}}">
+        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename)">
     </div>
 
   </div>

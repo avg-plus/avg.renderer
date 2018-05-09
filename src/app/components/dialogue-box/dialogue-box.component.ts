@@ -79,7 +79,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private sanitized: DomSanitizer
+    private sanitizer: DomSanitizer
   ) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.Character>(5);
@@ -249,7 +249,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getTrustedAnimatedText() {
-    return this.sanitized.bypassSecurityTrustHtml(this.animatedText);
+    return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
 
   public hideBox() {
