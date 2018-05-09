@@ -103,11 +103,29 @@ export class DebugingService {
       label: "Debug",
       submenu: [
         {
-          label: "执行脚本",
+          label: "🔈 声音",
+          submenu: [
+            {
+              label: "▶️ 播放BGM",
+              click: (menuItem, browserWindow, event) => {
+                avg.api.resumeBGM();
+              }
+            },
+            {
+              label: "⏸ 暂停BGM",
+              click: (menuItem, browserWindow, event) => {
+                avg.api.stopBGM();
+              }
+            }
+          ]
+        },
+
+        {
+          label: "📽 执行脚本",
           submenu: scriptMenus
         },
         {
-          label: "返回标题画面",
+          label: "🔚 返回标题画面",
           click: (menuItem, browserWindow, event) => {
             avg.api.callTitleView();
           }
