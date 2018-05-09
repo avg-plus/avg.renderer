@@ -42,7 +42,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
     this.service.menuEvent().subscribe(index => {
       switch (index) {
         case TitleMenuEvent.Start:
-          avg.api.stopBGM(null);
+          avg.api.pauseBGM();
           const entryScript =
               avg.Resource.getPath(avg.ResourcePath.Scripts) +
               "/tutorial/tutorial.avs";

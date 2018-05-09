@@ -117,11 +117,10 @@ export class WidgetLayerComponent implements OnInit {
               }
               break;
             case avg.OP.RemoveImage:
-              if (value.api.data.id === "All") {
+              if (value.api.data.id === undefined) {
                 WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Image, value.api.isAsync);
 
                 value.resolver();
-                // this.onAsyncResolveHandler(value, promise);
               } else {
                 const promise = WidgetLayerService.removeWidget(
                   image,

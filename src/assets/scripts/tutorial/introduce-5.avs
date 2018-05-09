@@ -217,14 +217,14 @@ api.removeSubtitle();
 
 api.showText(
     [
-    "这就差不多是字幕的大致功能啦。其中字幕的进场、退场都是可以配置动画以及详细的动画参数的。",
-    "合理配置动画效果可以让游戏的演出效果更加更好。",
-    "接下来跟你介绍图片的显示功能，图片的显示和字幕非常类似，它们之间的坐标描述、动画效果都是统一的。",
-    "换句话说，如果你已经掌握了字幕的基础使用方法，那么对于图片系列API的使用也会游刃有余。"
+        "这就差不多是字幕的大致功能啦。其中字幕的进场、退场都是可以配置动画以及详细的动画参数的。",
+        "合理配置动画效果可以让游戏的演出效果更好。",
+        "接下来介绍图片的显示功能，图片的显示和字幕非常类似，因为它们之间的坐标描述、动画效果都是统一的。",
+        "换句话说，如果你已经掌握了字幕的基础使用方法，那么对于图片系列API的使用也会游刃有余。"
     ],
     {
+        name: "风见",        
         character: {
-            name: "风见",
             index: 4,
             avatar: {
                 file: "tutorial/girl-smile.png"
@@ -232,9 +232,9 @@ api.showText(
         }
     });
 
-    api.hideText();
-    
-    
+api.hideText();
+
+
 
 const imgResult = api.showImage(
     "tutorial/xiaohuangtu.png",
@@ -245,8 +245,8 @@ const imgResult = api.showImage(
             name: "FlyIn",
             options: {
                 direction: "Down",
-                duration: 6000,
-                // offset: 100
+                duration: 3000,
+                offset: 300
             }
         }
     }
@@ -260,9 +260,42 @@ api.removeImage(
             options: {
                 offset: 800,
                 direction: "Up",
-                duration: 7000
+                duration: 4000
             }
         }
-    }, true
+    }
 );
 
+const m1 = api.showImage("tutorial/Monika_in_Valentines_Day.png", {
+    size: "40%",
+    position: "center",
+    animation: {
+        name: "flyin",
+        options: {
+            direction: "up",
+            duration: 3000
+        }
+    }
+})
+
+api.removeImage(m1.id, {
+    animation: { name: "flyout" }
+});
+
+
+const m2 = api.showImage("tutorial/Doki_Doki_Literature_Club!_char.png", {
+    size: "100%",
+    position: "center",
+    animation: {
+        name: "flyin",
+        options: {
+            direction: "up",
+            duration: 5000
+        }
+    }
+})
+
+
+api.removeImage(m2.id, {
+    animation: { name: "flyout", options: { direction: "right" } }
+});
