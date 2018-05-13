@@ -36,7 +36,7 @@ while (true) {
             "游戏流程和延时控制",
             "高级功能"
         ],
-        index => {
+        (index) => {
             // onEnter
             const tips = [
                 "介绍剧本对白、对话样式；立绘显示与隐藏、立绘效果以及变量输入处理。",
@@ -51,15 +51,18 @@ while (true) {
 
             api.updateSubtitle(titleResult.id, tips[index]);
         },
-        index => {
+        (index) => {
             api.updateSubtitle(titleResult.id, "");
         }
     );
 
+    api.removeSubtitle(titleResult.id);
+    
+    api.transitionTo("black", 1, 500);    
+
     api.hideCharacter();
     api.hideText();
     // api.loadScene(0, "");
-    api.removeSubtitle(titleResult.id);
 
     api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
 }

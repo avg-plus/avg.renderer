@@ -1,9 +1,14 @@
-<div class="avg-viewport-layer shake-trigger">
+<div id="avg-viewport-layer">
   <!--  -->
+
   <div id="avg-viewport">
     <!-- attr.data-depth]="i + 0.5"  -->
+
     <div *ngFor="let model of scenes; index as i">
-      <canvas id="avg-particle-viewport"></canvas>
+      <div id="avg-particle-viewport" class="snow">
+        <canvas id="avg-particle-viewport-canvas"></canvas>
+      </div>
+
       <img class="shake background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
         [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)">
 

@@ -45,13 +45,15 @@ export class BackgroundCanvasComponent
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    // ParticleEffect.snow();
+  }
 
-  ngAfterContentInit() {}
+  ngAfterContentInit() { }
 
   public reset() {
     this.scenes = [];
@@ -120,12 +122,12 @@ export class BackgroundCanvasComponent
       transform === undefined
         ? {}
         : {
-            opacity: 0,
-            width: transform.width,
-            height: transform.height,
-            left: transform.x,
-            top: transform.y
-          };
+          opacity: 0,
+          width: transform.width,
+          height: transform.height,
+          left: transform.x,
+          top: transform.y
+        };
 
     this.changeDetectorRef.detectChanges();
 
@@ -168,7 +170,7 @@ export class BackgroundCanvasComponent
     });
   }
 
-  loadParticleEffect() {}
+  loadParticleEffect() { }
 
   public blur(index: number, effect: avg.Effect) {
     effect.duration = effect.duration || 500;
@@ -215,21 +217,15 @@ export class BackgroundCanvasComponent
   }
 
   rain() {
-    const canvas = this.elementRef.nativeElement.querySelector(
-      "#avg-particle-viewport"
-    );
-    if (canvas) {
-      Effects.rain(canvas);
-    }
+    // const canvas = this.elementRef.nativeElement.querySelector(
+    //   "#avg-particle-viewport"
+    // );
+
+    Effects.rain();
   }
 
   snow() {
-    const canvas = this.elementRef.nativeElement.querySelector(
-      "#avg-particle-viewport"
-    );
-    if (canvas) {
-      Effects.snow(canvas);
-    }
+    Effects.snow();
   }
 
   shake() {
@@ -238,7 +234,7 @@ export class BackgroundCanvasComponent
     );
 
     if (viewport) {
-      Effects.shake(viewport);
+      // Effects.shake(viewport);
     }
   }
 }
