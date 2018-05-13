@@ -11,7 +11,6 @@ import { Subject } from "rxjs/Subject";
   templateUrl: "./transition-layer.component.html",
   styleUrls: ["./transition-layer.component.scss"],
   animations: [
-    // UIAnimation.AVGOpacityFade("transitionState", 0, 1, 2000)
   ]
 })
 export class TransitionLayerComponent implements OnInit, AfterViewInit {
@@ -25,26 +24,27 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
     let fps;
     const fpsOut = document.getElementById("fps");
 
+    let last = 0;
     function refreshLoop() {
       window.requestAnimationFrame(function () {
         const now = performance.now();
+
         while (times.length > 0 && times[0] <= now - 1000) {
           times.shift();
         }
         times.push(now);
         fps = times.length;
-        fpsOut.innerHTML = fps + " fps";
+
+        if ((now - last) > 100) {
+          fpsOut.innerHTML = fps + " fps";
+          last = now;
+        }
+
         refreshLoop();
       });
     }
 
     refreshLoop();
-
-    // setInterval(() => {
-    //   refreshLoop();
-    //   fpsOut.innerHTML = fps + " fps";
-    // }, 1);
-    // refreshLoop();
   }
 
   onTransitionLayerClicked() {

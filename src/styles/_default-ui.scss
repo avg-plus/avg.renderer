@@ -12,6 +12,7 @@ $COLOR_MAIN_COLOR: rgb(86, 86, 86);
 @mixin UIButton {
   border: 1px solid $BORDER_COLOR;
   background-color: $COLOR_MAIN_COLOR;
+  text-align: center;
 
   &:hover {
     transition: all 0.1s ease-in-out;
@@ -26,5 +27,5 @@ $COLOR_MAIN_COLOR: rgb(86, 86, 86);
 
 @mixin UIRhombusButton {
   @include UIButton;
-  transform: skew(-10deg);
+  transform: skew(-5deg);
 }

@@ -174,8 +174,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialogueData.character.index = 0;
     }
 
+    // Show character
     if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
       this.showCharacter(this.dialogueData.character);
+    }
+
+    // Play voice
+    if (this.dialogueData.voice && this.dialogueData.voice.length > 0) {
+      avg.api.playVoice(<string>this.dialogueData.voice);
     }
   }
 

@@ -16,7 +16,6 @@ import { BackgroundCanvasComponent } from "app/components/background-canvas/back
 
 import * as gsap from "gsap";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
-import { ParticleEffect } from "../../common/effects/effect-snow";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 
 @Component({

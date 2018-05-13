@@ -22,14 +22,17 @@ import { DialogueBoxComponent } from "./components/dialogue-box/dialogue-box.com
 import { WidgetLayerComponent } from "./components/widget-layer/widget-layer.component";
 import { TextWidgetComponent } from "./components/widget-layer/widget-component/text-widget.component";
 import { ImageWidgetComponent } from "./components/widget-layer/widget-component/image-widget.component";
+import { ReloadViewComponent } from "./components/reload-view/reload-view.component";
+import { VariableInputComponent } from "./components/variable-input-box/variable-input-box.component";
+import { GameToolbarComponent } from "./components/game-toolbar/game-toolbar.component"
+
 
 import { ElectronService } from "./providers/electron.service";
 import { MainSceneService } from "./components/main-scene/main-scene.service";
 import { DialogueBoxService } from "./components/dialogue-box/dialogue-box.service";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
-import { ReloadViewComponent } from "./components/reload-view/reload-view.component";
-import { VariableInputComponent } from "./components/variable-input-box/variable-input-box.component";
+import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
 
 @NgModule({
   declarations: [
@@ -45,7 +48,8 @@ import { VariableInputComponent } from "./components/variable-input-box/variable
     TextWidgetComponent,
     ImageWidgetComponent,
     ReloadViewComponent,
-    VariableInputComponent
+    VariableInputComponent,
+    GameToolbarComponent
   ],
   imports: [
   BrowserModule,
@@ -60,7 +64,8 @@ import { VariableInputComponent } from "./components/variable-input-box/variable
     MainSceneService,
     DialogueBoxService,
     TransitionLayerService,
-    WidgetLayerService
+    WidgetLayerService,
+    GameToolbarService
   ],
   bootstrap: [AppComponent]
 })

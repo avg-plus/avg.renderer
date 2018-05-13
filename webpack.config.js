@@ -33,6 +33,7 @@ function getPlugins() {
   plugins.push(new GlobCopyWebpackPlugin({
     "patterns": [
       "assets",
+      "data",
       "favicon.ico"
     ],
     "globOptions": {
@@ -366,6 +367,10 @@ module.exports = {
       {
         "test": /\.ts$/,
         "loader": "@ngtools/webpack"
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },

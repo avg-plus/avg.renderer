@@ -1,0 +1,33 @@
+@import "../../../styles/_common.scss";
+@import "../../../styles/_default-ui.scss";
+@import "../../../styles/_layers.scss";
+
+#avg-game-process-toolbar {
+  @include TextStrokeNormal;
+  @include H2;
+
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding-right: 20px;
+  width: auto;
+  display: flex;
+  z-index: $_LAYER_INDEX_GAME_TOOLBAR;
+  
+  .toolbar-button {
+    @include UIButton;
+    @include H4;
+    
+    width: 80px;
+  }
+
+  transition: all 1s ease-in-out;
+  
+  &.show {
+    bottom: 0%;
+  }
+
+  &.hide {
+    bottom: -8%;
+  }
+}

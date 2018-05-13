@@ -28,12 +28,10 @@ function createWindow() {
         height: 768,
         resizable: false,
         backgroundColor: "#000000",
-        hasShadow: true,
-        webPreferences: {
-            webSecurity: false
-        }
+        hasShadow: true
     });
-    win.webContents.setFrameRate(100);
+    
+    win.webContents.setFrameRate(60);
 
     // and load the index.html of the app.
     win.loadURL("file://" + __dirname + "/index.html");
