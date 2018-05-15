@@ -7,9 +7,9 @@
 ## Getting Started
 `avg.renderer` dependent on `avg.engine`.
 
-First of all, clone engine project from:
+First of all, clone engine project:
 ```shell
-git clone https://github.com/AngryPowman/avg.engine
+git clone https://github.com/avg-plus/avg.engine
 ```
 
 And make it to a local package for dependency with `npm`:
@@ -21,7 +21,7 @@ $ npm link
 ## Development
 Get renderer source and run the following shell in `avg.renderer` folder:
 ```shell
-git clone https://github.com/AngryPowman/avg.renderer
+git clone https://github.com/avg-plus/avg.renderer
 cd avg.renderer
 npm install
 npm link "avg-engine"
