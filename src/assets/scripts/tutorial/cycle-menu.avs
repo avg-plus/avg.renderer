@@ -1,6 +1,21 @@
+// api.showChoices(["去音乐会", "去新年参拜", "sdfsdfadf"],
+//   index => {
+//     // api.showText("onEnter callback");
+//     console.log("dfadsf")
+//     api.asdadasdfsdf("onLeave callback");
+
+//   }, index => {
+//     console.log("dfadsf")
+
+//     api.asdadasdfsdf("onLeave callback");
+//   })
+
+
+
 api.playBGM("tutorial/BeautifulHawaii.mp3");
 
 while (true) {
+// if (true) {
     api.hideCharacter();
     api.hideText();
 
@@ -13,7 +28,9 @@ while (true) {
         }
     }, false);
 
-    api.loadScene(0, "tutorial/demo-bg-1.jpg");
+    api.loadScene(0, "tutorial/avg-scene-forest.jpg");
+    api.wait(1000);
+    api.effect("sakura");
 
     api.showText("少年，你想知道什么呢？", {
         name: "风见",
@@ -24,6 +41,7 @@ while (true) {
             }
         }
     });
+
 
     const choice = api.showChoices(
         [
@@ -37,7 +55,6 @@ while (true) {
             "高级功能"
         ],
         (index) => {
-            // onEnter
             const tips = [
                 "介绍剧本对白、对话样式；立绘显示与隐藏、立绘效果以及变量输入处理。",
                 "场景加载、过渡效果、场景粒子特效、多层场景以及景深效果演示。",
@@ -56,13 +73,13 @@ while (true) {
         }
     );
 
-    api.removeSubtitle(titleResult.id);
-    
-    api.transitionTo("black", 1, 500);    
+        api.removeSubtitle(titleResult.id);
 
-    api.hideCharacter();
-    api.hideText();
-    // api.loadScene(0, "");
+        api.transitionTo("black", 1, 500);    
 
-    api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
+        api.hideCharacter();
+        api.hideText();
+        // api.loadScene(0, "");
+
+        api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
 }

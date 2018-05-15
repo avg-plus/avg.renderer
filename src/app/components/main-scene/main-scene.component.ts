@@ -150,6 +150,10 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
               this.backgroundCanvas.rain();
             } else if (effect.effectName === "snow") {
               this.backgroundCanvas.snow();
+            } else if (effect.effectName === "cloud") {
+              this.backgroundCanvas.cloud();
+            } else if (effect.effectName === "sakura") {
+              this.backgroundCanvas.sakura();
             } else if (effect.effectName === "blur") {
               this.backgroundCanvas.blur(value.api.index, effect);
             } else if (effect.effectName === "hue") {

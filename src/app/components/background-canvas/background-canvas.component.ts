@@ -118,15 +118,25 @@ export class BackgroundCanvasComponent
       transform.height = "100%";
     }
 
+    const background = "url(" + model.scene.file.filename + ")";
+
     model.styles =
       transform === undefined
-        ? {}
-        : {
+        ?
+        {
+          background: background,// this.sanitizer.bypassSecurityTrustUrl(model.scene.file.filename)
+          "background-size": "contain"
+        }
+        :
+        {
           opacity: 0,
           width: transform.width,
           height: transform.height,
           left: transform.x,
-          top: transform.y
+          top: transform.y,
+          background: background,// this.sanitizer.bypassSecurityTrustUrl(model.scene.file.filename)
+          "background-size": "contain"
+
         };
 
     this.changeDetectorRef.detectChanges();
@@ -226,6 +236,15 @@ export class BackgroundCanvasComponent
 
   snow() {
     Effects.snow();
+  }
+
+
+  sakura() {
+    Effects.sakura();
+  }
+
+  cloud() {
+    Effects.cloud();
   }
 
   shake() {

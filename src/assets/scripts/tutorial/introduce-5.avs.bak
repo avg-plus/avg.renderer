@@ -6,11 +6,9 @@ api.playBGM("tutorial/Sunburst.mp3")
 api.wait(1200)
 api.transitionTo("black", 0, 1000);
 
-api.effect("snow");
-// api.effect("cloud");
+// api.effect("snow");
+api.effect("cloud");
 // api.effect(0, "rain");
-
-api.loadScene(0, "tutorial/avg-scene-forest.jpg");
 
 api.showText([
     "当我们希望在屏幕显示一张[c=red]图片[/c]或者[c=red]字幕[/c]时，我们可以通过字幕&图片相关接口完成。",
@@ -20,7 +18,7 @@ api.showText([
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-normal.png"
             }
         }
     });
@@ -33,7 +31,7 @@ api.showText([
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-angry.png"
             }
         }
     });
@@ -80,7 +78,7 @@ api.showText(
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-normal.png"
             }
         }
     });
@@ -164,12 +162,11 @@ api.showText(
         "我们可以通过延时功能，在循环里不断更新字幕，比如说做一个计数器 ——"
     ],
     {
-        name: "风见",        
         voice: ["tutorial/tutorial-5-5.wav", "tutorial/tutorial-5-6.wav"],
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-normal.png"
             }
         }
     });
@@ -191,12 +188,12 @@ for (let i = 1; i <= 1024; ++i) {
 
 api.showText("怎么样，其实我们可以玩出很多花样呢，我们甚至可以通过更新字幕的样式，做更多花样。",
     {
-        name: "风见",
+        name: "风见",        
         voice: ["tutorial/tutorial-5-7.wav"],
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-smile.png"
             }
         }
     });
@@ -216,12 +213,12 @@ for (let i = 30; i < 50; ++i) {
 
 api.showText("甚至我们还能开一下脑洞，做一个纯文本的进度条动画~",
     {
-        name: "风见",
+        name: "风见",        
         voice: ["tutorial/tutorial-5-8.wav"],
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-smile.png"
             }
         }
     });
@@ -253,7 +250,7 @@ api.showText(
         character: {
             index: 4,
             avatar: {
-                file: "tutorial/avg-char-1.png"
+                file: "tutorial/girl-smile.png"
             }
         }
     });

@@ -2,18 +2,70 @@ import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
 import { FPSCtrl } from "../fps-ctrl";
 import { AnimationUtils } from "../animations/animation-utils";
+
+const sakura = require("./effect-sakura");
+
+
+const cloudgen = require("../3rd/cloudgen").cloudgen;
+// import * as cloudgen from "../3rd/cloudgen";
+
 declare var particlesJS: any;
+declare var $cloudgen: any;
 
 // const rain_json = require("./data/effect-rain.json");
 
 export class Effects {
   private static DEAULT_EFFECT_CANVAS = "avg-particle-viewport";
 
-  static snow() {
+  public static snow() {
     AnimationUtils.fadeTo("#avg-particle-viewport", 0, 0);
     particlesJS.load(this.DEAULT_EFFECT_CANVAS, "data/effects/effect-snow.json", () => {
       AnimationUtils.fadeTo("#avg-particle-viewport", 2000, 1);
     });
+  }
+
+  public static sakura() {
+    sakura.load();
+  }
+
+  public static cloud() {
+    const canvas = <HTMLCanvasElement>document.getElementById(this.DEAULT_EFFECT_CANVAS + "-canvas");
+    const context = canvas.getContext("2d");
+
+    var cloudGrid = [
+      [0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+      [1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+      [1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]];
+
+
+    // console.log(cloudgen);
+
+    const rows = 200;
+
+    let grid = [];
+    for (let i = 0; i < 1; ++i) {
+      const row = Math.floor(Math.random() * Math.floor(rows)) + 1;
+      const parts = [];
+      for (let j = 0; j < row; j++) {
+        parts.push(Math.floor(Math.random() * Math.floor(2)));  // generate 0 or 1
+      }
+
+      grid.push(parts);
+    }
+
+    console.log("grid", grid);
+    // cloudgen.drawCloudGroup(canvas.getContext("2d"), cloudGrid, 50, 60, 19, { r: 255, g: 255, b: 255 }, 0.2, 30);
+
+    setInterval(() => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      cloudgen.drawCloudGroup(context, grid, 100, 0, 100, { r: 255, g: 255, b: 255 }, 0.01, 30);
+    }, 1)
   }
 
   public static rain() {
@@ -22,7 +74,6 @@ export class Effects {
     const dropSpeed = 20;
     const opacity = 0.8;
 
-    console.log(document.getElementById(this.DEAULT_EFFECT_CANVAS + "-canvas"));
     const canvas = <HTMLCanvasElement>document.getElementById(this.DEAULT_EFFECT_CANVAS + "-canvas");
     if (!canvas) {
       console.error("Effect canvas not found");

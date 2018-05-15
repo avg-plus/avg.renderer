@@ -46,6 +46,7 @@
     "@angular/router": "4.3.0",
     "@types/gsap": "^1.19.1",
     "@types/pixi.js": "^4.5.2",
+    "animate.css": "^3.6.1",
     "asn1": "^0.2.3",
     "core-js": "2.4.1",
     "csshake": "^1.5.3",
