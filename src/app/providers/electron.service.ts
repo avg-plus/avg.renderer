@@ -65,7 +65,7 @@ export class ElectronService {
       items: [startGameLabel, spin]
     });
 
-    // window.setTouchBar(touchBar);
+    // (<any>window).setTouchBar(touchBar);
   }
 
   isElectron = () => {

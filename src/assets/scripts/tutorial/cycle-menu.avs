@@ -15,7 +15,7 @@
 api.playBGM("tutorial/BeautifulHawaii.mp3");
 
 while (true) {
-// if (true) {
+    // if (true) {
     api.hideCharacter();
     api.hideText();
 
@@ -30,7 +30,7 @@ while (true) {
 
     api.loadScene(0, "tutorial/avg-scene-forest.jpg");
     api.wait(1000);
-    api.effect("sakura");
+    // api.effect("sakura");
 
     api.showText("少年，你想知道什么呢？", {
         name: "风见",
@@ -73,13 +73,13 @@ while (true) {
         }
     );
 
-        api.removeSubtitle(titleResult.id);
+    api.removeSubtitle(titleResult.id);
 
-        api.transitionTo("black", 1, 500);    
+    api.transitionTo("black", 1, 500);
 
-        api.hideCharacter();
-        api.hideText();
-        // api.loadScene(0, "");
+    api.hideCharacter();
+    api.hideText();
+    // api.loadScene(0, "");
 
-        api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
+    api.call("tutorial/introduce-" + choice.selectedIndex + ".avs");
 }

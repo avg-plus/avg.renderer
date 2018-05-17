@@ -24,6 +24,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 class SceneModel {
   public scene: avg.Scene;
   public incommingNewScene: avg.Scene;
+  public maskTransitionEffect: string;
   public styles: any;
 }
 
@@ -111,6 +112,9 @@ export class BackgroundCanvasComponent
       model.scene = this.scenes[index].scene; // Keep old scene
     }
 
+    // model.maskTransitionEffect = "swipe";
+
+    // Set incomming new scene to data
     model.incommingNewScene = data;
 
     if (transform.stretch) {
@@ -118,26 +122,18 @@ export class BackgroundCanvasComponent
       transform.height = "100%";
     }
 
-    const background = "url(" + model.scene.file.filename + ")";
+    const background = "url(" + data.file.filename + ")";
 
-    model.styles =
-      transform === undefined
-        ?
-        {
-          background: background,// this.sanitizer.bypassSecurityTrustUrl(model.scene.file.filename)
-          "background-size": "contain"
-        }
-        :
-        {
-          opacity: 0,
-          width: transform.width,
-          height: transform.height,
-          left: transform.x,
-          top: transform.y,
-          background: background,// this.sanitizer.bypassSecurityTrustUrl(model.scene.file.filename)
-          "background-size": "contain"
+    // model.styles = {
+    //   width: transform.width,
+    //   height: transform.height,
+    //   left: transform.x,
+    //   top: transform.y,
+    //   // background: background,
+    //   backgroundSize: "cover"
+    // };
 
-        };
+    // this.sanitizer.bypassSecurityTrustStyle();
 
     this.changeDetectorRef.detectChanges();
 
@@ -149,32 +145,65 @@ export class BackgroundCanvasComponent
       this.scenes[index] = model;
       this.changeDetectorRef.detectChanges();
 
-      if (hadSceneBefore) {
-        // back is incomming scene, set it to opacity 1
-        AnimationUtils.fadeTo(backLayerElement, 1, 1, () => {
-          // FadeOut front layer
-          AnimationUtils.fadeTo(frontLayerElement, default_duration, 0, () => {
-            // Set front layer to back layer
-            this.scenes[index].scene = this.scenes[index].incommingNewScene;
-            this.changeDetectorRef.detectChanges();
+      const backgroundID = "background-layer-" + index;
+      const maskID = "mask-layer-" + index;
 
-            AnimationUtils.fadeTo(
-              frontLayerElement,
-              default_duration,
-              1,
-              () => {
-                this.scenes[index].incommingNewScene = null;
-                this.changeDetectorRef.detectChanges();
-              }
-            );
-          });
-        });
-      } else {
-        AnimationUtils.fadeTo(frontLayerElement, default_duration, 1, () => {
-          this.scenes[index].incommingNewScene = null;
-          this.changeDetectorRef.detectChanges();
-        });
-      }
+      // document.getElementById(maskID).style.transition = "13s";
+      document.getElementById(maskID).style.width = transform.width;
+      document.getElementById(maskID).style.height = transform.height;
+      document.getElementById(maskID).style.left = transform.x;
+      document.getElementById(maskID).style.top = transform.y;
+      document.getElementById(maskID).style.background = background;
+      document.getElementById(maskID).style.backgroundSize = "cover";
+
+      AnimationUtils.fadeTo("#" + maskID, 2, 0, () => {
+        this.scenes[index].incommingNewScene = model.incommingNewScene;
+      });
+
+      document.getElementById(backgroundID).style.transition = "4s";
+      document.getElementById(backgroundID).style.width = transform.width;
+      document.getElementById(backgroundID).style.height = transform.height;
+      document.getElementById(backgroundID).style.left = transform.x;
+      document.getElementById(backgroundID).style.top = transform.y;
+      document.getElementById(backgroundID).style.background = background;
+      document.getElementById(backgroundID).style.backgroundSize = "cover";
+
+      // document.getElementById("bg").style.background = background;
+      // document.getElementById("bg").style.backgroundSize = "cover";
+      // this.changeDetectorRef.detectChanges();
+
+      // document.getElementById("bg").style.maskImage = "radial-gradient(ellipse 90% 80% at 48% 78%, black 40%, transparent 50%)";
+      // mask-image: url("/path/to/image-mask.png");
+
+
+      // document.getElementById("bg").style.maskImage = "linear-gradient(rgba(0, 233, 0, 0.2), transparent)";
+
+      // if (hadSceneBefore) {
+      //   // back is incomming scene, set it to opacity 1
+      //   AnimationUtils.fadeTo(backLayerElement, 1, 1, () => {
+      //     // FadeOut front layer
+      //     AnimationUtils.fadeTo(frontLayerElement, default_duration, 0, () => {
+      //       // Set front layer to back layer
+      //       this.scenes[index].scene = this.scenes[index].incommingNewScene;
+      //       this.changeDetectorRef.detectChanges();
+
+      //       AnimationUtils.fadeTo(
+      //         frontLayerElement,
+      //         default_duration,
+      //         1,
+      //         () => {
+      //           this.scenes[index].incommingNewScene = null;
+      //           this.changeDetectorRef.detectChanges();
+      //         }
+      //       );
+      //     });
+      //   });
+      // } else {
+      //   AnimationUtils.fadeTo(frontLayerElement, default_duration, 1, () => {
+      //     this.scenes[index].incommingNewScene = null;
+      //     this.changeDetectorRef.detectChanges();
+      //   });
+      // }
 
       resolve();
     });

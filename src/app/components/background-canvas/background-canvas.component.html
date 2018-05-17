@@ -4,26 +4,28 @@
   <div id="avg-viewport">
     <!-- attr.data-depth]="i + 0.5"  -->
 
+    <div id="avg-particle-viewport" class="snow">
+      <canvas id="avg-particle-viewport-canvas"></canvas>
+      <canvas id="sakura"></canvas>
+    </div>
 
     <div *ngFor="let model of scenes; index as i">
-      <div id="avg-particle-viewport" class="snow">
-        <canvas id="avg-particle-viewport-canvas"></canvas>
-        <canvas id="sakura"></canvas>
-        <!-- <div class="btnbg"> -->
-        <!-- </div> -->
-      </div>
 
       <!--shake-->
       <!--<img class="shake-constant  background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
         [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)">-->
 
-      <div class="shake-constant background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
-        [ngStyle]="model.styles"></div>
+      <!-- <div id="bg-mask" class="mask-image" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename" [ngStyle]="model.styles"></div> -->
+
+      <div id="mask-layer-{{i}}" class="mask-image layer-{{i}}" [class.effect-swipe]="model.maskTransitionEffect === 'swipe'" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"></div>
+      <div id="background-layer-{{i}}" class="background-image layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"></div>
 
       <!--[src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)"-->
 
-      <img class="background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
-        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename)">
+      <!-- <div class="background-image front layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
+        [ngStyle]="model.styles"></div> -->
+      <!-- <img class="background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
+        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename)"> -->
     </div>
 
   </div>

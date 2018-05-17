@@ -1,15 +1,40 @@
 @import "../../../styles/_layers.scss";
 @import "node_modules/csshake/dist/csshake-slow.min";
 
+
+.mask-image {
+  position: absolute;  
+  z-index: $_LAYER_INDEX_VIEWPORT + 3;
+
+  mask-position: 0 0;
+  // mask-size: 200px 200px;
+  mask-size: 100%;
+  // mask-image: url(https://d33wubrfki0l68.cloudfront.net/d319533ac3d22c3186498254e0caee871796a29e/d7ce9/images/css/masking/image-mask.png);
+  
+  &.effect-swipe {
+    mask-image: -webkit-gradient(linear, left top, right bottom, 
+    color-stop(0.00,  rgba(0,0,0,1)),
+    color-stop(0.45,  rgba(0,0,0,1)),
+    color-stop(0.50,  rgba(0,0,0,0)),
+    color-stop(0.55,  rgba(0,0,0,0)),
+    color-stop(1.00,  rgba(0,0,0,0)));
+  }
+  
+}
+
 .background-image {
   position: absolute;
+  transition: "13s";
+  // mask-image: url('../../../assets/graphics/masks/Oval.png');
+  
+  z-index: $_LAYER_INDEX_VIEWPORT + 2;
+  
+  // &.front 
+  //   z-index: $_LAYER_INDEX_VIEWPORT + 2;
+  // }
 
-  &.front {
-    z-index: $_LAYER_INDEX_VIEWPORT + 2;
-  }
-
-  &.back {
-    z-index: $_LAYER_INDEX_VIEWPORT + 1;
-  }
+  // &.back {
+  //   z-index: $_LAYER_INDEX_VIEWPORT + 1;
+  // }
 }
 

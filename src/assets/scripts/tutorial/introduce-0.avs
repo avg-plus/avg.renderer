@@ -9,7 +9,7 @@ api.wait(1000);
 api.transitionTo("black", 0, 1000);
 
 api.wait(3000);
-api.loadScene(1, "tutorial/bedroom-1-day.bmp", {
+api.loadScene(0, "tutorial/bedroom-1-day.bmp", {
   block: true,
   animation: {
     name: "fadein",
