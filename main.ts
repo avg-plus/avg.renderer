@@ -30,7 +30,7 @@ function createWindow() {
         backgroundColor: "#000000",
         hasShadow: true
     });
-    
+
     win.webContents.setFrameRate(60);
 
     // and load the index.html of the app.
@@ -56,7 +56,7 @@ try {
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
     app.on("ready", () => {
-        setTimeout(function() {
+        setTimeout(function () {
             // const server = "http://47.106.10.135:1337";
             // const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
 

@@ -2,7 +2,7 @@ import "zone.js/dist/zone-mix";
 import "reflect-metadata";
 import "polyfills";
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { NgModule, Inject, PLATFORM_ID, APP_ID } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { RouterModule, Routes } from "@angular/router";
@@ -33,6 +33,7 @@ import { DialogueBoxService } from "./components/dialogue-box/dialogue-box.servi
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
 import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
+import { isPlatformBrowser } from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { GameToolbarService } from "./components/game-toolbar/main-scene.service
     GameToolbarComponent
   ],
   imports: [
-  BrowserModule,
+    // BrowserModule,
+    BrowserModule.withServerTransition({ appId: "AVGPlus" }),
     FormsModule,
     HttpModule,
     AppRoutingModule,
@@ -69,4 +71,14 @@ import { GameToolbarService } from "./components/game-toolbar/main-scene.service
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(APP_ID) private appId: string) {
+    const platform = isPlatformBrowser(platformId) ?
+      "in the browser" : "on the server";
+    console.log(`Running ${platform} with appId=${appId}`);
+  }
+
+}
