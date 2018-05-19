@@ -55,7 +55,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Init
@@ -109,31 +109,25 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           if (value.op === avg.OP.ShowCharacter) {
             this.dialogueBox.showCharacter(value.api.data);
             value.resolver();
-
           } else if (value.op === avg.OP.HideCharacter) {
-            this.dialogueBox.hideCharacter(value.api.data).then(() => {
-              value.resolver();
-            }, _ => { });
+            this.dialogueBox.hideCharacter(value.api.data).then(
+              () => {
+                value.resolver();
+              },
+              _ => {}
+            );
           }
-
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
-            if (value.api.isAsync) {
-              this.backgroundCanvas.setBackground(value.api);
-
-              const scenHandle = new avg.SceneHandle();
-              scenHandle.index = 0;
-              value.resolver(scenHandle);
-            } else {
-              this.backgroundCanvas.setBackground(value.api).then(
-                () => {
-                  const scenHandle = new avg.SceneHandle();
-                  scenHandle.index = 0;
-                  value.resolver(scenHandle);
-                },
-                _ => { }
-              );
-            }
+            // Load scene didn't support sync mode anymore
+            this.backgroundCanvas.setBackground(value.api).then(
+              () => {
+                const scenHandle = new avg.SceneHandle();
+                scenHandle.index = 0;
+                value.resolver(scenHandle);
+              },
+              _ => {}
+            );
           } else if (value.op === avg.OP.RemoveScene) {
             const index = value.api.index;
             this.backgroundCanvas.removeBackground(index);
