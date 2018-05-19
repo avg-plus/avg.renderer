@@ -1,11 +1,46 @@
 /* 场景操作与特效 */
 api.transitionTo("black", 0, 1000);
-api.wait(1000);
-api.loadScene(0, "tutorial/bedroom-1.bmp");
-api.wait(2000);
+// api.effect("sakura");
+// api.effect("snow");
+while (true) {
+  api.loadScene(0, "tutorial/bedroom-1.bmp", {
+    transition: "crossfade"
+  });
+  api.wait(1000);
+
+  api.loadScene(0, "tutorial/bedroom-1-day.bmp", {
+    transition: "wipe"
+  });
+  api.wait(1000);
+
+  api.loadScene(0, "tutorial/avg-scene-house.jpg", {
+    transition: "brush-down"
+  });
+  api.wait(1000);
+
+  api.loadScene(0, "tutorial/avg-scene-forest.jpg", {
+    transition: "brush"
+  });
+  api.wait(1000);
+
+  api.loadScene(0, "tutorial/demo-bg-1.jpg", {
+    transition: "window-shades"
+  });
+  api.wait(1000);
+
+  api.loadScene(0, "tutorial/bedroom-1-day.bmp", {
+    transition: "iris-in"
+  });
+  api.wait(1000);
+
+
+  api.loadScene(0, "tutorial/avg-scene-house.jpg", {
+    transition: "iris-out"
+  });
+  api.wait(1000);
+}
 // api.loadScene(0, "tutorial/avg-scene-forest.jpg");
 api.wait(15000);
-
 
 // api.showText("下面演示一下场景的加载 ~");
 
@@ -24,4 +59,3 @@ api.wait(15000);
 // api.wait(1000);
 
 // api.removeScene(2);
-

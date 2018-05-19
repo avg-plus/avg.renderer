@@ -35,7 +35,7 @@ class SceneModel {
 })
 export class BackgroundCanvasComponent
   implements OnInit, AfterViewInit, AfterContentInit {
-  private readonly _duration = 500;
+  private readonly _defaultDuration = 1000;
   private readonly ViewportElement = "#avg-viewport";
 
   public scenes: Array<SceneModel> = new Array<SceneModel>(
@@ -46,15 +46,15 @@ export class BackgroundCanvasComponent
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     // ParticleEffect.snow();
   }
 
-  ngAfterContentInit() { }
+  ngAfterContentInit() {}
 
   public reset() {
     this.scenes = [];
@@ -68,7 +68,7 @@ export class BackgroundCanvasComponent
       return;
     }
 
-    const duration = this._duration;
+    const duration = this._defaultDuration || 1000;
     const frontLayerElement = ".layer-" + index;
 
     return new Promise((resolve, reject) => {
@@ -81,13 +81,13 @@ export class BackgroundCanvasComponent
   }
 
   public async setBackground(scene: avg.APIScene): Promise<any> {
-
     const data = scene.data;
 
     const transform = data.transform;
     const file = data.file.filename;
     const index = scene.index;
-    let duration = data.duration;
+    const duration = data.duration || this._defaultDuration;
+    const transitionName = data.transition || "crossfade";
 
     if (!file || file.length === 0) {
       console.warn("Background filename is empty");
@@ -100,116 +100,83 @@ export class BackgroundCanvasComponent
       return;
     }
 
-    duration = duration || this._duration;
-
     let model = this.scenes[index];
-    const hadSceneBefore = model !== undefined;
+    const hadSceneBefore = model !== undefined || model === null;
 
-    if (model === undefined) {
+    if (hadSceneBefore) {
+      model.scene = this.scenes[index].scene; // Keep old scene
+      model.incommingNewScene = data;
+    } else {
       model = new SceneModel();
       model.scene = data;
-    } else {
-      model.scene = this.scenes[index].scene; // Keep old scene
+      model.incommingNewScene = data;
     }
-
-    // model.maskTransitionEffect = "swipe";
-
-    // Set incomming new scene to data
-    model.incommingNewScene = data;
 
     if (transform.stretch) {
       transform.width = "100%";
       transform.height = "100%";
     }
 
-    const background = "url(" + data.file.filename + ")";
+    const cacheImage = async img => {
+      return new Promise((resolve, reject) => {
+        const backgroundCached = new Image();
+        backgroundCached.src = img;
+        backgroundCached.onload = () => {
+          resolve();
+        };
+      });
+    };
 
-    // model.styles = {
-    //   width: transform.width,
-    //   height: transform.height,
-    //   left: transform.x,
-    //   top: transform.y,
-    //   // background: background,
-    //   backgroundSize: "cover"
-    // };
+    // await cacheImage(model.scene.file.filename);
+    // await cacheImage(model.incommingNewScene.file.filename);
 
-    // this.sanitizer.bypassSecurityTrustStyle();
-
-    this.changeDetectorRef.detectChanges();
+    const background = "url(" + model.scene.file.filename + ")";
+    const incommingBackground =
+      "url(" + model.incommingNewScene.file.filename + ")";
 
     return new Promise((resolve, reject) => {
-      const default_duration = 2000;
-      const frontLayerElement = ".layer-" + index;
-      const backLayerElement = ".layer-" + index + "-back";
-
       this.scenes[index] = model;
       this.changeDetectorRef.detectChanges();
 
       const backgroundID = "background-layer-" + index;
       const maskID = "mask-layer-" + index;
 
-      // document.getElementById(maskID).style.transition = "13s";
-      document.getElementById(maskID).style.width = transform.width;
-      document.getElementById(maskID).style.height = transform.height;
-      document.getElementById(maskID).style.left = transform.x;
-      document.getElementById(maskID).style.top = transform.y;
-      document.getElementById(maskID).style.background = background;
-      document.getElementById(maskID).style.backgroundSize = "cover";
+      const maskElement = document.getElementById(maskID);
+      const backgroundElenent = document.getElementById(backgroundID);
 
-      AnimationUtils.fadeTo("#" + maskID, 2, 0, () => {
-        this.scenes[index].incommingNewScene = model.incommingNewScene;
-      });
+      maskElement.style.width = transform.width;
+      maskElement.style.height = transform.height;
+      maskElement.style.left = transform.x;
+      maskElement.style.top = transform.y;
+      maskElement.style.background = background;
+      maskElement.style.animationDuration = duration / 1000 + "s";
 
-      document.getElementById(backgroundID).style.transition = "4s";
-      document.getElementById(backgroundID).style.width = transform.width;
-      document.getElementById(backgroundID).style.height = transform.height;
-      document.getElementById(backgroundID).style.left = transform.x;
-      document.getElementById(backgroundID).style.top = transform.y;
-      document.getElementById(backgroundID).style.background = background;
-      document.getElementById(backgroundID).style.backgroundSize = "cover";
+      backgroundElenent.style.width = transform.width;
+      backgroundElenent.style.height = transform.height;
+      backgroundElenent.style.left = transform.x;
+      backgroundElenent.style.top = transform.y;
+      backgroundElenent.style.background = incommingBackground;
 
-      // document.getElementById("bg").style.background = background;
-      // document.getElementById("bg").style.backgroundSize = "cover";
-      // this.changeDetectorRef.detectChanges();
+      const animationTokens = ["scene-mask-transition", transitionName];
 
-      // document.getElementById("bg").style.maskImage = "radial-gradient(ellipse 90% 80% at 48% 78%, black 40%, transparent 50%)";
-      // mask-image: url("/path/to/image-mask.png");
+      document
+        .getElementById(maskID)
+        .classList.add(animationTokens[0], animationTokens[1]);
 
+      // wait animation finished
+      setTimeout(() => {
+        document
+          .getElementById(maskID)
+          .classList.remove(animationTokens[0], animationTokens[1]);
+        maskElement.style.background = incommingBackground;
+        model.scene = data;
 
-      // document.getElementById("bg").style.maskImage = "linear-gradient(rgba(0, 233, 0, 0.2), transparent)";
-
-      // if (hadSceneBefore) {
-      //   // back is incomming scene, set it to opacity 1
-      //   AnimationUtils.fadeTo(backLayerElement, 1, 1, () => {
-      //     // FadeOut front layer
-      //     AnimationUtils.fadeTo(frontLayerElement, default_duration, 0, () => {
-      //       // Set front layer to back layer
-      //       this.scenes[index].scene = this.scenes[index].incommingNewScene;
-      //       this.changeDetectorRef.detectChanges();
-
-      //       AnimationUtils.fadeTo(
-      //         frontLayerElement,
-      //         default_duration,
-      //         1,
-      //         () => {
-      //           this.scenes[index].incommingNewScene = null;
-      //           this.changeDetectorRef.detectChanges();
-      //         }
-      //       );
-      //     });
-      //   });
-      // } else {
-      //   AnimationUtils.fadeTo(frontLayerElement, default_duration, 1, () => {
-      //     this.scenes[index].incommingNewScene = null;
-      //     this.changeDetectorRef.detectChanges();
-      //   });
-      // }
-
-      resolve();
+        resolve();
+      }, duration);
     });
   }
 
-  loadParticleEffect() { }
+  loadParticleEffect() {}
 
   public blur(index: number, effect: avg.Effect) {
     effect.duration = effect.duration || 500;
@@ -266,7 +233,6 @@ export class BackgroundCanvasComponent
   snow() {
     Effects.snow();
   }
-
 
   sakura() {
     Effects.sakura();
