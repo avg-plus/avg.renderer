@@ -4,10 +4,13 @@
   <div id="avg-viewport">
     <!-- attr.data-depth]="i + 0.5"  -->
 
-    <div id="avg-particle-viewport" class="snow">
+    <div id="avg-particle-viewport">
       <canvas id="avg-particle-viewport-canvas"></canvas>
       <canvas id="sakura"></canvas>
     </div>
+
+    <!-- Preload transition masks-->
+    <div class="mask-image scene-mask-transition {{transition}}" *ngFor="let transition of transitionList"></div>
 
     <div *ngFor="let model of scenes; index as i">
 

@@ -27,7 +27,8 @@ $MASK_IMAGE_SPRITE_BRUSH: "../../../data/masks/brush.png";
 $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
 
 .scene-mask-transition {
-  background: url($MASK_IMAGE_SPRITE_IRIS_IN) no-repeat -9999px -9999px;
+  z-index: $_LAYER_INDEX_VIEWPORT + 3;
+  position: fixed;
 
   &.iris-in {
     mask: url($MASK_IMAGE_SPRITE_IRIS_IN);
@@ -81,10 +82,16 @@ $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
   position: absolute;
   z-index: $_LAYER_INDEX_VIEWPORT + 3;
   background-size: cover !important;
+
+  transition: all ease;  
+  background-blend-mode: screen !important;
 }
 
 .background-image {
   position: absolute;
   z-index: $_LAYER_INDEX_VIEWPORT + 2;
   background-size: cover !important;
+
+  transition: all ease;
+  background-blend-mode: screen !important;
 }

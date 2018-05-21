@@ -138,29 +138,51 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           if (value.op === avg.OP.PlayEffect) {
             const effect = value.api.data;
 
-            if (effect.effectName === "shake") {
-              this.backgroundCanvas.shake();
-            } else if (effect.effectName === "rain") {
-              this.backgroundCanvas.rain();
-            } else if (effect.effectName === "snow") {
-              this.backgroundCanvas.snow();
-            } else if (effect.effectName === "cloud") {
-              this.backgroundCanvas.cloud();
-            } else if (effect.effectName === "sakura") {
-              this.backgroundCanvas.sakura();
-            } else if (effect.effectName === "blur") {
-              this.backgroundCanvas.blur(value.api.index, effect);
-            } else if (effect.effectName === "hue") {
-              this.backgroundCanvas.hueRotate(value.api.index, effect);
-            } else if (effect.effectName === "transparent") {
-              this.backgroundCanvas.transparent(
-                value.api.index,
-                effect.strength,
-                effect.duration
-              );
-            } else if (effect.effectName === "moveTo") {
-              this.backgroundCanvas.moveTo(value.api.index, 10000, -10000);
+            switch (effect.effectName) {
+              case "shake":
+                this.backgroundCanvas.shake();
+                break;
+              case "rain":
+                this.backgroundCanvas.rain();
+                break;
+              case "snow":
+                this.backgroundCanvas.snow();
+                break;
+              case "cloud":
+                this.backgroundCanvas.cloud();
+                break;
+              case "sakura":
+                this.backgroundCanvas.sakura();
+                break;
+              default:
+                this.backgroundCanvas.cssFilter(effect);
             }
+
+            // if (effect.effectName === "shake") {
+            //   this.backgroundCanvas.shake();
+            // } else if (effect.effectName === "rain") {
+            //   this.backgroundCanvas.rain();
+            // } else if (effect.effectName === "snow") {
+            //   this.backgroundCanvas.snow();
+            // } else if (effect.effectName === "cloud") {
+            //   this.backgroundCanvas.cloud();
+            // } else if (effect.effectName === "sakura") {
+            //   this.backgroundCanvas.sakura();
+            // } else if (effect.effectName === "blur") {
+            //   this.backgroundCanvas.cssFilter(effect);
+            // } else if (effect.effectName === "hue") {
+            //   this.backgroundCanvas.cssFilter(effect);
+            // } else if (effect.effectName === "blend") {
+            //   this.backgroundCanvas.cssFilter(effect);
+            // } else if (effect.effectName === "transparent") {
+            //   this.backgroundCanvas.transparent(
+            //     value.api.index,
+            //     effect.strength,
+            //     effect.duration
+            //   );
+            // } else if (effect.effectName === "moveTo") {
+            //   this.backgroundCanvas.moveTo(value.api.index, 10000, -10000);
+            // }
             value.resolver();
           }
         } else if (value.api instanceof avg.APIGotoTitleView) {

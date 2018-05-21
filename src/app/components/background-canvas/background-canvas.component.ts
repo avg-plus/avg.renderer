@@ -20,6 +20,8 @@ import * as Parallax from "parallax-js";
 import { element } from "protractor";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
+import * as $ from "jquery";
+import { EngineUtils } from "avg-engine/engine";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -37,6 +39,16 @@ export class BackgroundCanvasComponent
   implements OnInit, AfterViewInit, AfterContentInit {
   private readonly _defaultDuration = 1000;
   private readonly ViewportElement = "#avg-viewport";
+
+  transitionList = [
+    "iris-in",
+    "iris-out",
+    "wipe",
+    "window-shades",
+    "brush",
+    "brush-down",
+    "crossfade"
+  ];
 
   public scenes: Array<SceneModel> = new Array<SceneModel>(
     GameDef.MaxBackgroundLayers
@@ -117,29 +129,31 @@ export class BackgroundCanvasComponent
       transform.height = "100%";
     }
 
-    const cacheImage = async img => {
+    const cacheImage = async imgFile => {
       return new Promise((resolve, reject) => {
-        const backgroundCached = new Image();
-        backgroundCached.src = img;
-        backgroundCached.onload = () => {
-          resolve();
+        const img = new Image();
+        img.src = imgFile;
+        img.onload = () => {
+          setTimeout(() => {
+            resolve();
+          }, 100);
         };
       });
     };
 
-    // await cacheImage(model.scene.file.filename);
-    // await cacheImage(model.incommingNewScene.file.filename);
+    await cacheImage(model.scene.file.filename);
+    await cacheImage(model.incommingNewScene.file.filename);
 
     const background = "url(" + model.scene.file.filename + ")";
     const incommingBackground =
       "url(" + model.incommingNewScene.file.filename + ")";
 
     return new Promise((resolve, reject) => {
-      this.scenes[index] = model;
-      this.changeDetectorRef.detectChanges();
-
       const backgroundID = "background-layer-" + index;
       const maskID = "mask-layer-" + index;
+
+      this.scenes[index] = model;
+      this.changeDetectorRef.detectChanges();
 
       const maskElement = document.getElementById(maskID);
       const backgroundElenent = document.getElementById(backgroundID);
@@ -149,6 +163,8 @@ export class BackgroundCanvasComponent
       maskElement.style.left = transform.x;
       maskElement.style.top = transform.y;
       maskElement.style.background = background;
+
+      // Set animtion duration
       maskElement.style.animationDuration = duration / 1000 + "s";
 
       backgroundElenent.style.width = transform.width;
@@ -159,54 +175,102 @@ export class BackgroundCanvasComponent
 
       const animationTokens = ["scene-mask-transition", transitionName];
 
-      document
-        .getElementById(maskID)
-        .classList.add(animationTokens[0], animationTokens[1]);
+      maskElement.classList.add(animationTokens[0], animationTokens[1]);
 
-      // wait animation finished
+      // Waiting animation finished
       setTimeout(() => {
-        document
-          .getElementById(maskID)
-          .classList.remove(animationTokens[0], animationTokens[1]);
+        maskElement.classList.remove(animationTokens[0], animationTokens[1]);
+
         maskElement.style.background = incommingBackground;
         model.scene = data;
+        this.changeDetectorRef.detectChanges();
 
         resolve();
-      }, duration);
+      }, duration + 100);
     });
   }
 
-  loadParticleEffect() {}
+  public colorBlend(effect: avg.Effect) {
+    effect.duration = effect.duration || 1000;
+    const blur = (effect.strength || 4) * 1;
 
-  public blur(index: number, effect: avg.Effect) {
-    effect.duration = effect.duration || 500;
-    const blur = effect.strength * 1;
+    const backgroundID = ".background-image";
+    const maskID = ".mask-image";
 
-    const element = ".layer-" + index;
-    gsap.TweenLite.to(element, effect.duration / 1000, {
+    $(backgroundID).css("backgroundColor", "red");
+    $(maskID).css("backgroundColor", "red");
+  }
+
+  public cssFilter(effect: avg.Effect) {
+    effect.duration = effect.duration || 1000;
+
+    const FILTERS = new Map([
+      ["blur", "px"],
+      ["brightness", "%"],
+      ["contrast", "%"],
+      ["grayscale", "%"],
+      ["hue-rotate", "deg"],
+      ["invert", "%"],
+      ["opacity", "%"],
+      ["saturate", "%"],
+      ["sepia", "%"]
+    ]);
+
+    FILTERS.forEach((v, k) => {
+      if (v === effect.effectName) {
+        console.warn("Effect Name {0} not found.", effect.effectName);
+        return;
+      }
+    });
+
+    let value = (effect.strength || 0) * 1;
+    value = EngineUtils.NumericRange(value, 0, 100);
+
+    if (effect.effectName === "hue-rotate") {
+      value = value * (360 / 100); // normalize to 360
+    }
+
+    const element = "#avg-viewport";
+    AnimationUtils.to("filter:" + effect.effectName, element, effect.duration, {
       onUpdateParams: ["{self}"],
       onUpdate: tween => {
-        gsap.TweenMax.set(element, {
-          webkitFilter: "blur(" + tween.progress() * effect.strength + "px)"
-        });
-        this.changeDetectorRef.detectChanges();
+        $(element).css(
+          "filter",
+          effect.effectName +
+            "(" +
+            tween.progress() * value +
+            FILTERS.get(effect.effectName) +
+            ")"
+        );
       }
     });
   }
 
-  public hueRotate(index: number, effect: avg.Effect) {
-    effect.duration = effect.duration || 500;
-    const blur = effect.strength * 1;
+  public blur(effect: avg.Effect) {
+    effect.duration = effect.duration || 1000;
+    const blur = (effect.strength || 4) * 1;
 
-    const element = ".layer-" + index;
-    gsap.TweenLite.to(element, effect.duration / 1000, {
+    const element = "#avg-viewport";
+    AnimationUtils.to("blur", element, effect.duration, {
       onUpdateParams: ["{self}"],
       onUpdate: tween => {
-        gsap.TweenMax.set(element, {
-          webkitFilter:
-            "hue-rotate(" + tween.progress() * effect.strength + "deg)"
-        });
-        this.changeDetectorRef.detectChanges();
+        $(element).css("filter", "blur(" + tween.progress() * blur + "px)");
+      }
+    });
+  }
+
+  public hueRotate(effect: avg.Effect) {
+    effect.duration = effect.duration || 1000;
+    const hue = (effect.strength || 50) * 1;
+
+    const element = "#avg-viewport";
+    AnimationUtils.to("hueRotate", element, effect.duration, {
+      onUpdateParams: ["{self}"],
+      onUpdate: tween => {
+        $(element).css(
+          "filter",
+          "hue-rotate(" + tween.progress() * hue + "deg)"
+        );
       }
     });
   }
@@ -223,10 +287,6 @@ export class BackgroundCanvasComponent
   }
 
   rain() {
-    // const canvas = this.elementRef.nativeElement.querySelector(
-    //   "#avg-particle-viewport"
-    // );
-
     Effects.rain();
   }
 
