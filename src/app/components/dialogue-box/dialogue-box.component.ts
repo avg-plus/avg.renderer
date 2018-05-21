@@ -64,7 +64,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
   public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<
     avg.SelectedDialogueChoice
-    >();
+  >();
 
   public dialogueChoices: avg.APIDialogueChoice;
   private isWaitingInput = false;
@@ -114,6 +114,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     TransitionLayerService.FullScreenClickListener.subscribe(_ => {
+      // Cancel auto play when click
+      avg.Setting.AutoPlay = false;
+
       this.updateDialogueStatus();
     });
   }
@@ -175,7 +178,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Show character
-    if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
+    if (
+      this.dialogueData.character &&
+      this.dialogueData.character.avatar &&
+      this.dialogueData.character.avatar.file
+    ) {
       this.showCharacter(this.dialogueData.character);
     }
 
@@ -210,21 +217,27 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     const elementID = "#character-index-" + index;
 
     return new Promise((resolve, reject) => {
-      AnimationUtils.to("CharacterLeaveAnimation", elementID, this.CHAR_ANIMATION_DURATION, {
-        opacity: 0,
-        x: this.CHAR_ANIMATION_OFFSET
-      }, () => {
-        this.characters[index] = undefined;
-        resolve();
-      });
+      AnimationUtils.to(
+        "CharacterLeaveAnimation",
+        elementID,
+        this.CHAR_ANIMATION_DURATION,
+        {
+          opacity: 0,
+          x: this.CHAR_ANIMATION_OFFSET
+        },
+        () => {
+          this.characters[index] = undefined;
+          resolve();
+        }
+      );
     });
   }
 
   public showCharacter(character: avg.Character) {
-
     const index = character.index;
 
-    const charNotExists = this.characters[index] === undefined || this.characters[index] === null;
+    const charNotExists =
+      this.characters[index] === undefined || this.characters[index] === null;
 
     if (charNotExists) {
       this.initOpacity(index);
@@ -308,7 +321,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
     if (this.dialogueChoices.onEnter) {
       setTimeout(
-        function () {
+        function() {
           this.dialogueChoices.onEnter(index);
         }.bind(this),
         0
@@ -436,7 +449,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.autoPlayDelayHandle = setTimeout(() => {
         this.updateDialogueStatus();
-      }, (100 - avg.Setting.AutoPlaySpeed) * 30 || 1);
+      }, (100 - avg.Setting.AutoPlaySpeed) * 30 || 500);
     }
   }
 }
