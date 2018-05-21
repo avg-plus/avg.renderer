@@ -4,7 +4,6 @@ import * as fs from "fs";
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
-import { transition } from "app/common/manager/transition";
 import { APIImplManager } from "app/common/api/api-impl-manger";
 
 import * as avg from "avg-engine/engine";
@@ -97,10 +96,6 @@ export class AppComponent implements AfterViewInit {
     DebugingService.DebugMessager.asObservable().subscribe((message: any) => {
       const script =
         avg.Resource.getPath(avg.ResourcePath.Scripts) + "/" + message.data;
-
-      this.router.routeReuseStrategy.shouldReuseRoute = () => {
-        return false;
-      };
 
       this.router.navigate(["reload-view"]).then(result => {
         this.router.navigate(["main-scene", { script: script }], {});

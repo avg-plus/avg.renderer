@@ -7,7 +7,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from "@angular/core";
-import { transition } from "app/common/manager/transition";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
 import {
@@ -21,26 +20,18 @@ import * as avg from "avg-engine/engine";
 import {
   Router,
   ActivatedRoute,
-  NavigationEnd,
-  RouteReuseStrategy
+  NavigationEnd
 } from "@angular/router";
 import { SceneHandle } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
-import { AARouteReuseStrategy } from "../../common/route-reuse-strategy";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 
 @Component({
   selector: "app-main-scene",
   templateUrl: "./main-scene.component.html",
-  styleUrls: ["./main-scene.component.scss"],
-  providers: [
-    {
-      provide: RouteReuseStrategy,
-      useClass: AARouteReuseStrategy
-    }
-  ]
+  styleUrls: ["./main-scene.component.scss"]
 })
 export class MainSceneComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)

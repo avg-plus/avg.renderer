@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
-import { FPSCtrl } from "../fps-ctrl";
 import { AnimationUtils } from "../animations/animation-utils";
 
 const sakura = require("./effect-sakura");

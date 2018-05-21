@@ -8,7 +8,6 @@ import {
 import { Router } from "@angular/router";
 import * as PIXI from "pixi.js";
 import * as avg from "avg-engine/engine";
-import { transition } from "app/common/manager/transition";
 import { UIAnimation } from "app/common/animations/ui-animation";
 
 import { TitleViewService, TitleMenuEvent } from "./title-view.service";

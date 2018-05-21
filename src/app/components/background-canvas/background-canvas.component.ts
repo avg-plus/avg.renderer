@@ -7,8 +7,7 @@ import {
   AfterContentInit,
   Input
 } from "@angular/core";
-import { FPSCtrl } from "app/common/fps-ctrl";
-// import { SceneAnimation } from "app/common/animations/scene-animation";
+
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
 
