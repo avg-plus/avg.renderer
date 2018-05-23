@@ -42,15 +42,15 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
         case TitleMenuEvent.Start:
           avg.api.pauseBGM();
           const entryScript =
-              avg.Resource.getPath(avg.ResourcePath.Scripts) +
-              "/tutorial/tutorial.avs";
-            this.router
-              .navigate(["main-scene", { script: entryScript }])
-              .then(result => {
-                // TransitionLayerService.fadeTo(0, 1000);
-              });
+            avg.Resource.getPath(avg.ResourcePath.Scripts) +
+            "/tutorial/tutorial.avs";
+          this.router
+            .navigate(["main-scene", { script: entryScript }])
+            .then(result => {
+              // TransitionLayerService.fadeTo(0, 1000);
+            });
           // TransitionLayerService.fadeTo(1, 1000, () => {
-            
+
           // });
           break;
       }

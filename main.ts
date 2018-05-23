@@ -7,7 +7,11 @@ import {
     autoUpdater,
     dialog
 } from "electron";
-import * as path from "path";
+// import * as path from "path";
+
+const path = null;
+const fs = null;
+const url = null;
 
 let win, serve;
 
