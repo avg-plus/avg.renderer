@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { TitleMenuModel } from "../../common/models/title-menu-model";
 import * as avg from "avg-engine/engine";
 import * as fs from "fs";
-import { transition } from "app/common/manager/transition";
 import { AVGService } from "../../common/avg-service";
 
 export enum TitleMenuEvent {
@@ -42,7 +41,7 @@ export class TitleViewService extends AVGService {
     }
 
     if (avg.input.is(avg.core.InputKeys.Ok, $event.code)) {
-      let currentIndex = <TitleMenuEvent>this.currentMenuIndex;
+      const currentIndex = <TitleMenuEvent>this.currentMenuIndex;
       this.subject.next(currentIndex);
 
       return;

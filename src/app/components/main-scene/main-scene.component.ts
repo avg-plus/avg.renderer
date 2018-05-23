@@ -7,7 +7,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from "@angular/core";
-import { transition } from "app/common/manager/transition";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
 import {
@@ -18,29 +17,17 @@ import {
 import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
-import {
-  Router,
-  ActivatedRoute,
-  NavigationEnd,
-  RouteReuseStrategy
-} from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { SceneHandle } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
-import { AARouteReuseStrategy } from "../../common/route-reuse-strategy";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 
 @Component({
   selector: "app-main-scene",
   templateUrl: "./main-scene.component.html",
-  styleUrls: ["./main-scene.component.scss"],
-  providers: [
-    {
-      provide: RouteReuseStrategy,
-      useClass: AARouteReuseStrategy
-    }
-  ]
+  styleUrls: ["./main-scene.component.scss"]
 })
 export class MainSceneComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)
@@ -55,7 +42,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Init
@@ -109,31 +96,25 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           if (value.op === avg.OP.ShowCharacter) {
             this.dialogueBox.showCharacter(value.api.data);
             value.resolver();
-
           } else if (value.op === avg.OP.HideCharacter) {
-            this.dialogueBox.hideCharacter(value.api.data).then(() => {
-              value.resolver();
-            }, _ => { });
+            this.dialogueBox.hideCharacter(value.api.data).then(
+              () => {
+                value.resolver();
+              },
+              _ => {}
+            );
           }
-
         } else if (value.api instanceof avg.APIScene) {
           if (value.op === avg.OP.LoadScene) {
-            if (value.api.isAsync) {
-              this.backgroundCanvas.setBackground(value.api);
-
-              const scenHandle = new avg.SceneHandle();
-              scenHandle.index = 0;
-              value.resolver(scenHandle);
-            } else {
-              this.backgroundCanvas.setBackground(value.api).then(
-                () => {
-                  const scenHandle = new avg.SceneHandle();
-                  scenHandle.index = 0;
-                  value.resolver(scenHandle);
-                },
-                _ => { }
-              );
-            }
+            // Load scene didn't support sync mode anymore
+            this.backgroundCanvas.setBackground(value.api).then(
+              () => {
+                const scenHandle = new avg.SceneHandle();
+                scenHandle.index = 0;
+                value.resolver(scenHandle);
+              },
+              _ => {}
+            );
           } else if (value.op === avg.OP.RemoveScene) {
             const index = value.api.index;
             this.backgroundCanvas.removeBackground(index);
@@ -144,30 +125,37 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           if (value.op === avg.OP.PlayEffect) {
             const effect = value.api.data;
 
-            if (effect.effectName === "shake") {
-              this.backgroundCanvas.shake();
-            } else if (effect.effectName === "rain") {
-              this.backgroundCanvas.rain();
-            } else if (effect.effectName === "snow") {
-              this.backgroundCanvas.snow();
-            } else if (effect.effectName === "cloud") {
-              this.backgroundCanvas.cloud();
-            } else if (effect.effectName === "sakura") {
-              this.backgroundCanvas.sakura();
-            } else if (effect.effectName === "blur") {
-              this.backgroundCanvas.blur(value.api.index, effect);
-            } else if (effect.effectName === "hue") {
-              this.backgroundCanvas.hueRotate(value.api.index, effect);
-            } else if (effect.effectName === "transparent") {
-              this.backgroundCanvas.transparent(
-                value.api.index,
-                effect.strength,
-                effect.duration
-              );
-            } else if (effect.effectName === "moveTo") {
-              this.backgroundCanvas.moveTo(value.api.index, 10000, -10000);
+            switch (effect.effectName) {
+              case "shake":
+                this.backgroundCanvas.shake();
+                value.resolver();
+
+                break;
+              case "rain":
+                this.backgroundCanvas.rain();
+                value.resolver();
+
+                break;
+              case "snow":
+                this.backgroundCanvas.snow();
+                value.resolver();
+
+                break;
+              case "cloud":
+                this.backgroundCanvas.cloud();
+                value.resolver();
+
+                break;
+              case "sakura":
+                this.backgroundCanvas.sakura();
+                value.resolver();
+
+                break;
+              default:
+                this.backgroundCanvas
+                  .cssFilter(effect)
+                  .then(value.resolver, _ => {});
             }
-            value.resolver();
           }
         } else if (value.api instanceof avg.APIGotoTitleView) {
           this.router.navigate(["title-view"]);

@@ -5,7 +5,7 @@
     "fullscreen": false
   },
   "game": {
-    "text_speed": 60,
+    "text_speed": 80,
     "auto_play": false,
     "sound": {
       "bgm": 0,
