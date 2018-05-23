@@ -17,11 +17,7 @@ import {
 import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
-import {
-  Router,
-  ActivatedRoute,
-  NavigationEnd
-} from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { SceneHandle } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
@@ -132,49 +128,34 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             switch (effect.effectName) {
               case "shake":
                 this.backgroundCanvas.shake();
+                value.resolver();
+
                 break;
               case "rain":
                 this.backgroundCanvas.rain();
+                value.resolver();
+
                 break;
               case "snow":
                 this.backgroundCanvas.snow();
+                value.resolver();
+
                 break;
               case "cloud":
                 this.backgroundCanvas.cloud();
+                value.resolver();
+
                 break;
               case "sakura":
                 this.backgroundCanvas.sakura();
+                value.resolver();
+
                 break;
               default:
-                this.backgroundCanvas.cssFilter(effect);
+                this.backgroundCanvas
+                  .cssFilter(effect)
+                  .then(value.resolver, _ => {});
             }
-
-            // if (effect.effectName === "shake") {
-            //   this.backgroundCanvas.shake();
-            // } else if (effect.effectName === "rain") {
-            //   this.backgroundCanvas.rain();
-            // } else if (effect.effectName === "snow") {
-            //   this.backgroundCanvas.snow();
-            // } else if (effect.effectName === "cloud") {
-            //   this.backgroundCanvas.cloud();
-            // } else if (effect.effectName === "sakura") {
-            //   this.backgroundCanvas.sakura();
-            // } else if (effect.effectName === "blur") {
-            //   this.backgroundCanvas.cssFilter(effect);
-            // } else if (effect.effectName === "hue") {
-            //   this.backgroundCanvas.cssFilter(effect);
-            // } else if (effect.effectName === "blend") {
-            //   this.backgroundCanvas.cssFilter(effect);
-            // } else if (effect.effectName === "transparent") {
-            //   this.backgroundCanvas.transparent(
-            //     value.api.index,
-            //     effect.strength,
-            //     effect.duration
-            //   );
-            // } else if (effect.effectName === "moveTo") {
-            //   this.backgroundCanvas.moveTo(value.api.index, 10000, -10000);
-            // }
-            value.resolver();
           }
         } else if (value.api instanceof avg.APIGotoTitleView) {
           this.router.navigate(["title-view"]);

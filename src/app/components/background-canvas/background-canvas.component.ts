@@ -200,7 +200,7 @@ export class BackgroundCanvasComponent
     $(maskID).css("backgroundColor", "red");
   }
 
-  public cssFilter(effect: avg.Effect) {
+  public async cssFilter(effect: avg.Effect) {
     effect.duration = effect.duration || 1000;
 
     const FILTERS = new Map([
@@ -227,50 +227,64 @@ export class BackgroundCanvasComponent
 
     if (effect.effectName === "hue-rotate") {
       value = value * (360 / 100); // normalize to 360
+    } else if (effect.effectName === "blur") {
+      value = value / 10; // blur max = 10px
     }
 
-    const element = "#avg-viewport";
-    AnimationUtils.to("filter:" + effect.effectName, element, effect.duration, {
-      onUpdateParams: ["{self}"],
-      onUpdate: tween => {
-        $(element).css(
-          "filter",
-          effect.effectName +
-            "(" +
-            tween.progress() * value +
-            FILTERS.get(effect.effectName) +
-            ")"
-        );
+    const elementID = "#avg-viewport";
+    const e = $(elementID);
+
+    let currentFilters = e.css("filter");
+    let filters = EngineUtils.parseCSSFilters(currentFilters);
+
+    // Get the value of current effectName
+    let currentEffectValue = filters.get(effect.effectName);
+    if (currentEffectValue) {
+      if (effect.effectName === "hue-rotate") {
+        currentEffectValue = currentEffectValue.replace("deg", "");
+      } else if (effect.effectName === "blur") {
+        currentEffectValue = currentEffectValue.replace("px", "");
       }
-    });
-  }
+    }
 
-  public blur(effect: avg.Effect) {
-    effect.duration = effect.duration || 1000;
-    const blur = (effect.strength || 4) * 1;
+    console.log("currentEffectValue", currentEffectValue);
 
-    const element = "#avg-viewport";
-    AnimationUtils.to("blur", element, effect.duration, {
-      onUpdateParams: ["{self}"],
-      onUpdate: tween => {
-        $(element).css("filter", "blur(" + tween.progress() * blur + "px)");
+    let startValue = 0;
+    if (currentEffectValue) {
+      startValue = Number(currentEffectValue);
+    } else {
+      // opacity's initial value is 100%
+      if (
+        effect.effectName === "opacity" ||
+        effect.effectName === "brightness"
+      ) {
+        startValue = 100;
       }
-    });
-  }
+    }
 
-  public hueRotate(effect: avg.Effect) {
-    effect.duration = effect.duration || 1000;
-    const hue = (effect.strength || 50) * 1;
+    return new Promise((resolve, reject) => {
+      EngineUtils.countTo(
+        startValue,
+        value,
+        effect.duration,
+        v => {
+          // Set exist filters
+          currentFilters = e.css("filter");
+          filters = EngineUtils.parseCSSFilters(currentFilters);
+          e.css("filter", currentFilters);
 
-    const element = "#avg-viewport";
-    AnimationUtils.to("hueRotate", element, effect.duration, {
-      onUpdateParams: ["{self}"],
-      onUpdate: tween => {
-        $(element).css(
-          "filter",
-          "hue-rotate(" + tween.progress() * hue + "deg)"
-        );
-      }
+          const filterValue = v + FILTERS.get(effect.effectName);
+          const filterProperty = effect.effectName + "(" + filterValue + ")";
+          filters.set(effect.effectName, filterValue);
+
+          const newFilters = EngineUtils.toCSSFilter(filters);
+
+          e.css("filter", newFilters);
+        }
+        // resolve
+      );
+
+      resolve();
     });
   }
 
@@ -278,11 +292,6 @@ export class BackgroundCanvasComponent
     AnimationUtils.to("MoveTo", ".layer-" + index, duration, {
       x: x
     });
-  }
-
-  public transparent(index: number, to: number, duration: number) {
-    console.log("transparent " + index);
-    AnimationUtils.fadeTo(".layer-" + index, duration, to);
   }
 
   rain() {
