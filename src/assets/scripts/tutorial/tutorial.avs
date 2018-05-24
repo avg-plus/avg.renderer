@@ -1,4 +1,4 @@
-// api.transitionTo("#FF0000", 0.1, 3000);
+api.transitionTo("black", 0, 1000);
 
 // api.call("tutorial/logo-screen.avs");
 

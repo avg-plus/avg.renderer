@@ -1,4 +1,3 @@
-import * as path from "path";
 import * as fs from "fs";
 
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
@@ -8,9 +7,10 @@ import { APIImplManager } from "app/common/api/api-impl-manger";
 
 import * as avg from "avg-engine/engine";
 
-import { app, BrowserWindow, screen, remote } from "electron";
+// import { app, BrowserWindow, screen, remote } from "electron";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { DebugingService } from "./common/debuging-service";
+import { AVGNativeFS } from "avg-engine/engine";
 
 @Component({
   selector: "app-root",
@@ -34,42 +34,42 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     // Init Resources
-    avg.Resource.init(__dirname + "/assets/");
+    avg.Resource.init(AVGNativeFS.__dirname + "/assets/");
 
     // Init settings
-    const settings = fs.readFileSync(
-      path.join(avg.Resource.getRoot(), "game.json"),
-      { encoding: "utf8", flag: "r" }
+    const settings = await avg.AVGNativeFS.readFileSync(
+      avg.AVGNativePath.join(avg.Resource.getRoot(), "game.json")
     );
-    avg.Setting.parseFromSettings(settings);
 
-    const win = remote.getCurrentWindow();
+    avg.Setting.parseFromSettings(JSON.stringify(settings));
 
-    if (avg.Setting.FullScreen) {
-      console.log(screen.getPrimaryDisplay());
-      win.setBounds({
-        width: screen.getPrimaryDisplay().bounds.width,
-        height: screen.getPrimaryDisplay().bounds.height,
-        x: 0,
-        y: 0
-      });
-      win.setFullScreen(avg.Setting.FullScreen);
-    } else {
-      win.setBounds({
-        width: avg.Setting.WindowWidth,
-        height: avg.Setting.WindowHeight,
-        x:
-          screen.getPrimaryDisplay().bounds.width / 2 -
-          avg.Setting.WindowWidth / 2,
-        y:
-          screen.getPrimaryDisplay().bounds.height / 2 -
-          avg.Setting.WindowHeight / 2
-      });
-    }
+    // const win = remote.getCurrentWindow();
 
-    this.electronService.initDebugging();
+    // if (avg.Setting.FullScreen) {
+    //   console.log(screen.getPrimaryDisplay());
+    //   win.setBounds({
+    //     width: screen.getPrimaryDisplay().bounds.width,
+    //     height: screen.getPrimaryDisplay().bounds.height,
+    //     x: 0,
+    //     y: 0
+    //   });
+    //   win.setFullScreen(avg.Setting.FullScreen);
+    // } else {
+    //   win.setBounds({
+    //     width: avg.Setting.WindowWidth,
+    //     height: avg.Setting.WindowHeight,
+    //     x:
+    //       screen.getPrimaryDisplay().bounds.width / 2 -
+    //       avg.Setting.WindowWidth / 2,
+    //     y:
+    //       screen.getPrimaryDisplay().bounds.height / 2 -
+    //       avg.Setting.WindowHeight / 2
+    //   });
+    // }
+
+    // this.electronService.initDebugging();
 
     // Init transition
     // const element = this.elementRef.nativeElement.querySelector('#avg-transition');
@@ -101,7 +101,5 @@ export class AppComponent implements AfterViewInit {
         this.router.navigate(["main-scene", { script: script }], {});
       });
     });
-
-
   }
 }

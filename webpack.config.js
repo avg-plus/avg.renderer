@@ -196,7 +196,6 @@ module.exports = {
     "stream": "require('stream')",
     "string_decoder": "require('string_decoder')",
     "url": "require('url')",
-    "util": "require('util')",
     "zlib": "require('zlib')"
   },
   "resolve": {
