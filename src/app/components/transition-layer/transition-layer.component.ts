@@ -51,10 +51,10 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
   }
 
   onTransitionLayerClicked() {
-    console.log(
-      "Transition Layer Clicked: ",
-      TransitionLayerService.isLockPointerEvents()
-    );
+    // console.log(
+    //   "Transition Layer Clicked: ",
+    //   TransitionLayerService.isLockPointerEvents()
+    // );
 
     if (!TransitionLayerService.isLockPointerEvents()) {
       TransitionLayerService.FullScreenClickListener.next();

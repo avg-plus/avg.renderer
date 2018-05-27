@@ -43,7 +43,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
           avg.api.pauseBGM();
           const entryScript =
             avg.Resource.getPath(avg.ResourcePath.Scripts) +
-            "/tutorial/cycle-menu.avs";
+            "/tutorial/new.avs";
           this.router
             .navigate(["main-scene", { script: entryScript }])
             .then(result => {

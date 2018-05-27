@@ -1,4 +1,8 @@
 /* 定义高级功能的脚本 */
+api.transitionTo("black", 0, 0);
 
-api.showText("以下部分高级功能API的演示情况~")
+api.loadScene(0, "tutorial/demo-bg-1.jpg", {
+  transition: "random"
+});
 
+api.showText("你怎么那么不听话");

@@ -19,6 +19,8 @@ if (serve) {
 }
 
 function createWindow() {
+  window["process"] = process;
+
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 

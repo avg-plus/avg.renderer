@@ -1,3 +1,5 @@
+@import "../../../styles/_common.scss";
+
 #main-scene-container {
   .dialogue-box {
     position: absolute;
@@ -5,7 +7,7 @@
     width: 100%;
   }
 
-  .variable-input-box {
-
+  .input-box {
+    @include center-of-screen;
   }
 }

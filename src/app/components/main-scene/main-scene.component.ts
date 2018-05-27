@@ -62,7 +62,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   }
 
   private async enterGameProcess() {
-    const game = new avg.AVGGame();
+    const game = avg.game;
     game.start(this.currentScript);
     // avg.game.start(this.currentScript);
 

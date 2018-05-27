@@ -77,7 +77,7 @@ api.loadScene(0, "tutorial/avg-scene-forest.jpg", {
 //   api.wait(1000);
 // }
 // api.loadScene(0, "tutorial/avg-scene-forest.jpg");
-api.wait(150000);
+// api.wait(150000);
 
 // api.showText("下面演示一下场景的加载 ~");
 

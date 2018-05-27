@@ -1,0 +1,14 @@
+@import "../styles/_common.scss";
+
+#game-screen {
+  @include center-of-screen;
+  
+  position: fixed;
+  width: 1366px;
+  height: 768px;
+  border: solid 2.4px white;
+  padding: 0 !important;
+  background: black;
+
+  overflow: hidden;
+}

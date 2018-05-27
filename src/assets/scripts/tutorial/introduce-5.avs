@@ -6,7 +6,7 @@ api.playBGM("tutorial/Sunburst.mp3")
 api.wait(1200)
 api.transitionTo("black", 0, 1000);
 
-api.effect("snow");
+// api.effect("snow");
 // api.effect("cloud");
 // api.effect(0, "rain");
 

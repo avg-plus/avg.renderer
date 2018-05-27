@@ -13,7 +13,7 @@ import { DebugingService } from "./common/debuging-service";
 import { AVGNativeFS } from "avg-engine/engine";
 
 @Component({
-  selector: "app-root",
+  selector: "game",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"]
 })
@@ -23,19 +23,14 @@ export class AppComponent implements AfterViewInit {
     private router: Router,
     private elementRef: ElementRef
   ) {
-    if (electronService.isElectron()) {
-      console.log("Mode electron");
-      // Check if electron is correctly injected (see externals in webpack.config.js)
-      // console.log('c', electronService.ipcRenderer);
-      // Check if nodeJs childProcess is correctly injected (see externals in webpack.config.js)
-      // console.log('c', electronService.childProcess);
-    } else {
-      console.log("Mode web");
+    avg.PlatformService.initFromWindow(window);
+    if (avg.PlatformService.isElectron()) {
+      ElectronService.initDebugging();
     }
   }
 
   async ngAfterViewInit() {
-    // Init Resources
+    // Init resources
     avg.Resource.init(AVGNativeFS.__dirname + "/assets/");
 
     // Init settings
@@ -44,6 +39,8 @@ export class AppComponent implements AfterViewInit {
     );
 
     avg.Setting.parseFromSettings(JSON.stringify(settings));
+
+    //  Init screen size
 
     // const win = remote.getCurrentWindow();
 
@@ -71,9 +68,6 @@ export class AppComponent implements AfterViewInit {
 
     // this.electronService.initDebugging();
 
-    // Init transition
-    // const element = this.elementRef.nativeElement.querySelector('#avg-transition');
-    // transition.init(element);
     APIImplManager.init();
 
     const entryScript =

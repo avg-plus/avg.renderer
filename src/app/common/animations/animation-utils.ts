@@ -39,12 +39,12 @@ export class AnimationUtils {
           if (complete) {
             complete();
           }
-          console.log(
-            "[Animation] %s animation completed. (target=%s, duration=%d)",
-            name,
-            target,
-            duration
-          );
+          // console.log(
+          //   "[Animation] %s animation completed. (target=%s, duration=%d)",
+          //   name,
+          //   target,
+          //   duration
+          // );
         }
       );
     }, 0);
