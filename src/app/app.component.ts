@@ -7,11 +7,12 @@ import { APIImplManager } from "app/common/api/api-impl-manger";
 
 import * as avg from "avg-engine/engine";
 
-// import { app, BrowserWindow, screen, remote } from "electron";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { DebugingService } from "./common/debuging-service";
 import { AVGNativeFS } from "avg-engine/engine";
-
+import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
+if (avg.PlatformService.isElectron()) {
+}
 @Component({
   selector: "game",
   templateUrl: "./app.component.html",
@@ -30,44 +31,54 @@ export class AppComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
+    // Apply filesystem implementations to engine
+    for (const m in AVGNativeFS) {
+      AVGNativeFS[m] = AVGNativeFSImpl[m];
+    }
+    AVGNativeFS.initFileSystem();
+
     // Init resources
     avg.Resource.init(AVGNativeFS.__dirname + "/assets/");
 
     // Init settings
-    const settings = await avg.AVGNativeFS.readFileSync(
-      avg.AVGNativePath.join(avg.Resource.getRoot(), "game.json")
+    const settingFile = avg.AVGNativePath.join(
+      avg.Resource.getRoot(),
+      "game.json"
     );
+
+    console.log("Loading settings:", settingFile);
+    const settings = await AVGNativeFS.readFileSync(settingFile);
 
     avg.Setting.parseFromSettings(JSON.stringify(settings));
 
     //  Init screen size
+    if (avg.PlatformService.isElectron()) {
+      const { app, BrowserWindow, screen, remote } = require("electron");
 
-    // const win = remote.getCurrentWindow();
-
-    // if (avg.Setting.FullScreen) {
-    //   console.log(screen.getPrimaryDisplay());
-    //   win.setBounds({
-    //     width: screen.getPrimaryDisplay().bounds.width,
-    //     height: screen.getPrimaryDisplay().bounds.height,
-    //     x: 0,
-    //     y: 0
-    //   });
-    //   win.setFullScreen(avg.Setting.FullScreen);
-    // } else {
-    //   win.setBounds({
-    //     width: avg.Setting.WindowWidth,
-    //     height: avg.Setting.WindowHeight,
-    //     x:
-    //       screen.getPrimaryDisplay().bounds.width / 2 -
-    //       avg.Setting.WindowWidth / 2,
-    //     y:
-    //       screen.getPrimaryDisplay().bounds.height / 2 -
-    //       avg.Setting.WindowHeight / 2
-    //   });
-    // }
-
-    // this.electronService.initDebugging();
-
+      const win = remote.getCurrentWindow();
+      if (avg.Setting.FullScreen) {
+        console.log(screen.getPrimaryDisplay());
+        win.setBounds({
+          width: screen.getPrimaryDisplay().bounds.width,
+          height: screen.getPrimaryDisplay().bounds.height,
+          x: 0,
+          y: 0
+        });
+        win.setFullScreen(avg.Setting.FullScreen);
+      } else {
+        win.setBounds({
+          width: avg.Setting.WindowWidth,
+          height: avg.Setting.WindowHeight,
+          x:
+            screen.getPrimaryDisplay().bounds.width / 2 -
+            avg.Setting.WindowWidth / 2,
+          y:
+            screen.getPrimaryDisplay().bounds.height / 2 -
+            avg.Setting.WindowHeight / 2
+        });
+      }
+      // this.electronService.initDebugging();
+    }
     APIImplManager.init();
 
     const entryScript =

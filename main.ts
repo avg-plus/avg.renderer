@@ -19,8 +19,6 @@ if (serve) {
 }
 
 function createWindow() {
-  window["process"] = process;
-
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
@@ -30,7 +28,10 @@ function createWindow() {
     height: 768,
     resizable: false,
     backgroundColor: "#000000",
-    hasShadow: true
+    hasShadow: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   win.webContents.setFrameRate(60);

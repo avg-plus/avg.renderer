@@ -7,9 +7,9 @@
   "game": {
     "text_speed": 80,
     "auto_play": false,
-    "sound": {
-      "bgm": 0,
-      "bgs": 100,
+    "sound": { 
+      "bgm": 50,
+      "bgs": 100, 
       "se": 100,
       "voice": 100
     }

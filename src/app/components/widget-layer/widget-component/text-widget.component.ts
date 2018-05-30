@@ -28,7 +28,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent
   implements OnInit, AfterViewInit, AfterViewChecked {
   private customPositionStyle: any;
 
-  private bindingSubtitleSafeHtml: SafeHtml;
+  public bindingSubtitleSafeHtml: SafeHtml;
 
   constructor(private sanitizer: DomSanitizer, private injector: Injector) {
     super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));

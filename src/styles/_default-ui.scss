@@ -4,19 +4,19 @@ $HIGHLIGHT_COLOR: rgb(181, 99, 50);
 $COLOR_MAIN_COLOR: rgb(86, 86, 86);
 
 @mixin H1 {
-  font-size: 26px;
+  font-size: 1.6em;
 }
 
 @mixin H2 {
-  font-size: 23px;
+  font-size: 1.3em;
 }
 
 @mixin H3 {
-  font-size: 20px;
+  font-size: 1.1em;
 }
 
 @mixin H4 {
-  font-size: 17px;
+  font-size: 0.9em;
 }
 
 @mixin TextStrokeNormal {

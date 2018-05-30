@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 const postcssUrl = require("postcss-url");
-const browserify = require("browserify");
+// const CompressionPlugin = require("compression-webpack-plugin");
 
 const {
   NoEmitOnErrorsPlugin,
@@ -50,7 +50,7 @@ function getPlugins() {
 
   plugins.push(
     new GlobCopyWebpackPlugin({
-      patterns: ["assets", "data", "favicon.ico"],
+      patterns: ["assets", "data", "favicon.ico", "manifest.json"],
       globOptions: {
         cwd: process.cwd() + "/src",
         dot: true,
@@ -160,13 +160,19 @@ function getPlugins() {
   );
 
   if (isProd) {
-    plugins.push(
-      new HashedModuleIdsPlugin({
-        hashFunction: "md5",
-        hashDigest: "base64",
-        hashDigestLength: 4
-      })
-    );
+    // plugins.push(
+    //   new HashedModuleIdsPlugin({
+    //     hashFunction: "md5",
+    //     hashDigest: "base64",
+    //     hashDigestLength: 4
+    //   })
+    // );
+
+    // plugins.push(
+    //   new CompressionPlugin({
+    //     test: /\.js/
+    //   })
+    // );
 
     plugins.push(
       new AotPlugin({
@@ -179,19 +185,35 @@ function getPlugins() {
       })
     );
 
-    plugins.push(
-      new UglifyJsPlugin({
-        mangle: {
-          screw_ie8: true
-        },
-        compress: {
-          screw_ie8: true,
-          warnings: false
-        },
-        sourceMap: false
-      })
-    );
+    // plugins.push(
+    //   new UglifyJsPlugin()
+    //   // {
+    //   // mangle: {
+    //   //   screw_ie8: false
+    //   // },
+    //   // compress: {
+    //   //   screw_ie8: false,
+    //   //   warnings: false
+    //   // },
+    //   // sourceMap: false
+    //   // }
+    // );
   } else {
+    // plugins.push(
+    //   new CompressionPlugin({
+    //     test: /\.js/
+    //   })
+    // );
+
+    // plugins.push(
+      // new UglifyJsPlugin()
+      //   {
+      //   uglifyOptions: {
+      //     compress: true
+      //   }
+      // }
+    // );
+
     plugins.push(
       new AotPlugin({
         mainPath: "main.ts",
@@ -209,7 +231,7 @@ function getPlugins() {
 }
 
 module.exports = {
-  devtool: "source-map",
+  devtool: "cheap-module-source-map",
   externals: {
     electron: "require('electron')"
   },
@@ -217,6 +239,12 @@ module.exports = {
     extensions: [".ts", ".js", ".scss", ".json"],
     aliasFields: [],
     alias: {
+      // fs: "browserfs/dist/shims/fs.js",
+      // buffer: "browserfs/dist/shims/buffer.js",
+      // path: "browserfs/dist/shims/path.js",
+      // processGlobal: "browserfs/dist/shims/process.js",
+      // bufferGlobal: "browserfs/dist/shims/bufferGlobal.js",
+      // bfsGlobal: require.resolve("browserfs"),
       // WORKAROUND See. angular-cli/issues/5433
       environments: isProd
         ? path.resolve(__dirname, "src/environments/index.prod.ts")
@@ -362,13 +390,13 @@ module.exports = {
   },
   plugins: getPlugins(),
   node: {
-    // fs: "empty",
-    // global: true,
+    fs: "empty",
+    global: true,
     // crypto: "empty",
     tls: "empty",
-    net: "empty"
-    // process: true,
-    // module: false,
+    net: "empty",
+    process: true,
+    module: false,
     // clearImmediate: false,
     // setImmediate: false,
     // __dirname: false,

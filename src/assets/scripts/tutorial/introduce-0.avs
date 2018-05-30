@@ -92,7 +92,7 @@ api.showText(
   {
     name: "风见",
     character: {
-      index: 4,
+      index: 2,
       avatar: {
         file: "tutorial/girl-normal.png"
       }
@@ -123,7 +123,7 @@ while (!isOK) {
     api.showText("要告诉我你的名字哦。。。", {
       name: "风见",
       character: {
-        index: 4,
+        index: 2,
         avatar: {
           file: "tutorial/girl-angry.png"
         }
@@ -135,7 +135,7 @@ while (!isOK) {
 api.showText("唔……[wait=1000][c=yellow]${your_name}[/c]真是个好名字呢！", {
   name: "风见",
   character: {
-    index: 4,
+    index: 2,
     avatar: {
       file: "tutorial/girl-smile.png"
     }
@@ -151,7 +151,7 @@ api.showText(
   {
     name: "风见",
     character: {
-      index: 4,
+      index: 2,
       avatar: {
         file: "tutorial/girl-normal.png"
       }
