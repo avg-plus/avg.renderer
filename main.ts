@@ -7,16 +7,14 @@ import {
   autoUpdater,
   dialog
 } from "electron";
+
 import * as path from "path";
+import * as url from "url";
 
 let win, serve;
 
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
-
-if (serve) {
-  require("electron-reload")(__dirname, {});
-}
 
 function createWindow() {
   const electronScreen = screen;
@@ -36,8 +34,16 @@ function createWindow() {
 
   win.webContents.setFrameRate(60);
 
+  win.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "index.html"),
+      protocol: "file:",
+      slashes: true
+    })
+  );
+
   // and load the index.html of the app.
-  win.loadURL("file://" + __dirname + "/index.html");
+  // win.loadURL("file://" + __dirname + "/index.html");
 
   // Open the DevTools.
   if (serve) {

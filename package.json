@@ -24,7 +24,7 @@
     "build": "webpack --display-error-details && npm run build:electron:main",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "electron:serve": "npm run build:electron:main && electron ./dist/main.js --serve",
-    "electron:test": "electron ./dist/main.js",
+    "electron:test": "electron ./dist/main.js --serve",
     "electron:dev": "npm run build && electron ./dist/main.js",
     "electron:prod": "npm run build:prod && electron ./dist/main.js",
     "electron:linux": "npm run build:prod && node package.js --asar --platform=linux --arch=x64",

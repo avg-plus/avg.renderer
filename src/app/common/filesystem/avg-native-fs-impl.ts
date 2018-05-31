@@ -1,6 +1,8 @@
 import * as avg from "avg-engine/engine";
 import * as BrowserFS from "browserfs";
+
 import * as fs from "fs";
+import * as path from "path";
 import Axios from "axios";
 
 export class AVGNativeFSImpl {
@@ -9,9 +11,12 @@ export class AVGNativeFSImpl {
 
   public static __dirname = ".";
   public static async initFileSystem() {
-    BrowserFS.install(window);
+    console.log("fs", fs);
+    console.log("path", path);
 
     fs.writeFileSync("./xxx.txt", "aaa");
+
+    BrowserFS.install(window);
 
     await new Promise((resolve, reject) => {
       if (avg.PlatformService.isElectron()) {
@@ -98,7 +103,5 @@ export class AVGNativeFSImpl {
       encoding?: string;
       flag?: string;
     }
-  ) {
-
-  }
+  ) {}
 }
