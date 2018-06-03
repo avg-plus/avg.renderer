@@ -21,7 +21,7 @@ import { PlatformService } from "avg-engine/engine";
 let remote = null;
 let ipcRenderer = null;
 
-if (PlatformService.isElectron()) {
+if (PlatformService.isDesktop()) {
   remote = require("electron").remote;
   ipcRenderer = require("electron").ipcRenderer;
 }
@@ -38,7 +38,7 @@ export class ElectronService extends avg.PlatformService {
   constructor() {
     super();
 
-    if (avg.PlatformService.isElectron()) {
+    if (avg.PlatformService.isDesktop()) {
       this.ipcRenderer = window.require("electron").ipcRenderer;
       this.childProcess = window.require("child_process");
     }

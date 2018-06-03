@@ -1,5 +1,3 @@
-import * as fs from "fs";
-
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
@@ -9,10 +7,9 @@ import * as avg from "avg-engine/engine";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { DebugingService } from "./common/debuging-service";
-import { AVGNativeFS } from "avg-engine/engine";
+import { AVGNativeFS, PlatformService } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
-if (avg.PlatformService.isElectron()) {
-}
+
 @Component({
   selector: "game",
   templateUrl: "./app.component.html",
@@ -25,12 +22,15 @@ export class AppComponent implements AfterViewInit {
     private elementRef: ElementRef
   ) {
     avg.PlatformService.initFromWindow(window);
-    if (avg.PlatformService.isElectron()) {
+    if (avg.PlatformService.isDesktop()) {
       ElectronService.initDebugging();
     }
   }
 
   async ngAfterViewInit() {
+    // console.log(__dirname);
+    // console.log(__filename);
+
     // Apply filesystem implementations to engine
     for (const m in AVGNativeFS) {
       AVGNativeFS[m] = AVGNativeFSImpl[m];
@@ -49,10 +49,14 @@ export class AppComponent implements AfterViewInit {
     console.log("Loading settings:", settingFile);
     const settings = await AVGNativeFS.readFileSync(settingFile);
 
-    avg.Setting.parseFromSettings(JSON.stringify(settings));
+    if (PlatformService.isDesktop()) {
+      avg.Setting.parseFromSettings(settings);
+    } else {
+      avg.Setting.parseFromSettings(JSON.stringify(settings));
+    }
 
     //  Init screen size
-    if (avg.PlatformService.isElectron()) {
+    if (avg.PlatformService.isDesktop()) {
       const { app, BrowserWindow, screen, remote } = require("electron");
 
       const win = remote.getCurrentWindow();

@@ -22,6 +22,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
 
+
 class SceneModel {
   public scene: avg.Scene;
   public incommingNewScene: avg.Scene;

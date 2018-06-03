@@ -11,7 +11,8 @@ const {
   NoEmitOnErrorsPlugin,
   LoaderOptionsPlugin,
   DefinePlugin,
-  HashedModuleIdsPlugin
+  HashedModuleIdsPlugin,
+  ProvidePlugin
 } = require("webpack");
 const {
   GlobCopyWebpackPlugin,
@@ -33,9 +34,33 @@ const baseHref = "";
 const deployUrl = "";
 
 const isProd = process.env.NODE_ENV === "production";
+const isBrowser = process.env.GAME_PLATFORM === "browser";
+const isDesktop = process.env.GAME_PLATFORM === "desktop";
+
+
+let outputPath;
+let distTarget;
+if (isBrowser) {
+  outputPath = path.join(process.cwd(), "dist/web");
+  distTarget = "web";
+} else {
+  outputPath = path.join(process.cwd(), "dist/desktop");
+  distTarget = "node-webkit";  
+}
+
+console.log("isProd", isProd);
+console.log("process.env.GAME_PLATFORM", process.env.GAME_PLATFORM);
 
 function getPlugins() {
   var plugins = [];
+
+  plugins.push(
+    new ProvidePlugin({
+      // BrowserFS: "bfsGlobal",
+      // process: "processGlobal",
+      // Buffer: "bufferGlobal"
+    })
+  );
 
   // Always expose NODE_ENV to webpack, you can now use `process.env.NODE_ENV`
   // inside your code for any environment checks; UglifyJS will automatically
@@ -206,12 +231,12 @@ function getPlugins() {
     // );
 
     // plugins.push(
-      // new UglifyJsPlugin()
-      //   {
-      //   uglifyOptions: {
-      //     compress: true
-      //   }
-      // }
+    // new UglifyJsPlugin()
+    //   {
+    //   uglifyOptions: {
+    //     compress: true
+    //   }
+    // }
     // );
 
     plugins.push(
@@ -261,7 +286,7 @@ module.exports = {
     styles: ["./src/styles.scss"]
   },
   output: {
-    path: path.join(process.cwd(), "dist"),
+    path: outputPath,
     filename: "[name].bundle.js",
     chunkFilename: "[id].chunk.js"
   },
@@ -392,17 +417,17 @@ module.exports = {
   node: {
     fs: "empty",
     global: true,
-    // crypto: "empty",
+    crypto: "empty",
     tls: "empty",
     net: "empty",
     process: true,
     module: false,
     // clearImmediate: false,
     // setImmediate: false,
-    // __dirname: false,
-    // __filename: false
+    __dirname: false,
+    __filename: false
   },
-  target: "web",
+  target: distTarget,
   devServer: {
     disableHostCheck: true
   }

@@ -1,27 +1,31 @@
 import * as avg from "avg-engine/engine";
 import * as BrowserFS from "browserfs";
+import * as NodeFS from "fs";
 
-import * as fs from "fs";
-import * as path from "path";
 import Axios from "axios";
 
 export class AVGNativeFSImpl {
   private static _isFileSystemOK = false;
   private static _fs = null;
 
-  public static __dirname = ".";
-  public static async initFileSystem() {
-    console.log("fs", fs);
-    console.log("path", path);
+  public static get __dirname() {
+    if (avg.PlatformService.isDesktop()) {
+      return __dirname;
+    } else {
+      return ".";
+    }
+  }
 
-    fs.writeFileSync("./xxx.txt", "aaa");
+  public static async initFileSystem() {
+    console.log("Init FileSystem:BrowserFS", BrowserFS);
+    console.log("Init FileSystem:NodeFS", NodeFS);
 
     BrowserFS.install(window);
 
     await new Promise((resolve, reject) => {
-      if (avg.PlatformService.isElectron()) {
-        // this._fs = require("fs");
-        // console.log(node_fs);
+      if (avg.PlatformService.isDesktop()) {
+        this._fs = NodeFS;
+        this._isFileSystemOK = true;
       } else {
         BrowserFS.configure(
           {
@@ -37,7 +41,6 @@ export class AVGNativeFSImpl {
               throw e;
             }
 
-            // Otherwise, BrowserFS is ready-to-use!
             this._isFileSystemOK = true;
             this._fs = BrowserFS.BFSRequire("fs");
 
@@ -58,7 +61,9 @@ export class AVGNativeFSImpl {
     options?: { encoding?: string; mode?: string | number; flag?: string },
     cb?: (e?: any) => void
   ): void {
-    return this._fs.writeFile(filename, data, options, cb);
+    if (avg.PlatformService.isDesktop()) {
+      return this._fs.writeFile(filename, data, options, cb);
+    }
   }
 
   public static writeFileSync(
@@ -66,7 +71,9 @@ export class AVGNativeFSImpl {
     data: any,
     options?: { encoding?: string; mode?: string | number; flag?: string }
   ): void {
-    return this._fs.writeFileSync(filename, data, options);
+    if (avg.PlatformService.isDesktop()) {
+      return this._fs.writeFileSync(filename, data, options);
+    }
   }
 
   public static readFile(
@@ -74,10 +81,9 @@ export class AVGNativeFSImpl {
     options: { encoding: string; flag?: string },
     callback: (e: any, rv?: string) => void
   ): void {
-    if (
-      avg.PlatformService.isWebBrowser() ||
-      avg.PlatformService.isElectron()
-    ) {
+    if (avg.PlatformService.isDesktop()) {
+      this._fs.readFile(filename, options, callback);
+    } else {
       const response = Axios.get(filename).then(value => {
         if (callback) {
           callback(null, value.data);
@@ -93,15 +99,35 @@ export class AVGNativeFSImpl {
       flag?: string;
     }
   ) {
+    if (avg.PlatformService.isDesktop()) {
+      return this._fs.readFileSync(filename, options).toString();
+    }
+
     const response = await Axios.get(filename);
     return response.data;
   }
 
-  public static readFromLocalStorage(
+  public static readLocalStorage(
     filename: string,
     options?: {
       encoding?: string;
       flag?: string;
     }
-  ) {}
+  ) {
+    if (avg.PlatformService.isWebBrowser()) {
+      return this._fs.readFileSync(filename, options);
+    }
+  }
+
+  public static writeLocalStorage(
+    filename: string,
+    options?: {
+      encoding?: string;
+      flag?: string;
+    }
+  ) {
+    if (avg.PlatformService.isWebBrowser()) {
+      return this._fs.readFileSync(filename, options);
+    }
+  }
 }

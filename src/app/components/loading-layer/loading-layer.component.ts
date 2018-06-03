@@ -15,7 +15,6 @@ export class LoadingLayerComponent implements OnInit, AfterViewInit {
     document.addEventListener(
       "DOMContentLoaded",
       () => {
-        console.log("Page Loaded");
         this.isInLoading = false;
       },
       false
