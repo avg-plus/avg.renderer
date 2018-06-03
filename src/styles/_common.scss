@@ -1,23 +1,7 @@
-@mixin H1 {
-  font-size: 26px;
-}
-
-@mixin H2 {
-  font-size: 23px;
-}
-
-@mixin H3 {
-  font-size: 20px;
-}
-
-@mixin H4 {
-  font-size: 17px;
-}
-
-@mixin TextStrokeNormal {
-  font-style: italic;
-  color: white;
-  font-family: "Shanghei";
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+@mixin center-of-screen {
+  position: fixed;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

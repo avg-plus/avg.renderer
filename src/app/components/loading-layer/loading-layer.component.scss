@@ -1,0 +1,17 @@
+@import "../../../styles/_default-ui.scss";
+
+#loading-layer {
+  background: black;
+  width: 100%;
+  height: 100%;
+
+  .loading-text {
+    @include TextStrokeNormal;
+
+    font-size: 64px;
+    position: absolute;
+    right: 6%;
+    bottom: 6%;
+    color: whitesmoke;
+  }
+}

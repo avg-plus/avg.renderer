@@ -3,6 +3,30 @@ $BORDER_COLOR: #170f22;
 $HIGHLIGHT_COLOR: rgb(181, 99, 50);
 $COLOR_MAIN_COLOR: rgb(86, 86, 86);
 
+@mixin H1 {
+  font-size: 1.6em;
+}
+
+@mixin H2 {
+  font-size: 1.3em;
+}
+
+@mixin H3 {
+  font-size: 1.1em;
+}
+
+@mixin H4 {
+  font-size: 0.9em;
+}
+
+@mixin TextStrokeNormal {
+  font-style: italic;
+  color: white;
+  font-family: "Shanghei";
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
 @mixin UIPanel {
   border: 1px solid $BORDER_COLOR;
   background-color: $MAIN_COLOR;

@@ -6,7 +6,7 @@ api.playBGM("tutorial/Sunburst.mp3")
 api.wait(1200)
 api.transitionTo("black", 0, 1000);
 
-api.effect("snow");
+// api.effect("snow");
 // api.effect("cloud");
 // api.effect(0, "rain");
 
@@ -18,7 +18,7 @@ api.showText([
 ], {
         voice: ["tutorial/tutorial-5-0.wav", "tutorial/tutorial-5-1.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -31,7 +31,7 @@ api.showText([
 ], {
         voice: ["tutorial/tutorial-5-2.wav", "tutorial/tutorial-5-3.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -78,7 +78,7 @@ api.showText(
     {
         voice: ["tutorial/tutorial-5-4.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -167,7 +167,7 @@ api.showText(
         name: "风见",        
         voice: ["tutorial/tutorial-5-5.wav", "tutorial/tutorial-5-6.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -194,7 +194,7 @@ api.showText("怎么样，其实我们可以玩出很多花样呢，我们甚至
         name: "风见",
         voice: ["tutorial/tutorial-5-7.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -219,7 +219,7 @@ api.showText("甚至我们还能开一下脑洞，做一个纯文本的进度条
         name: "风见",
         voice: ["tutorial/tutorial-5-8.wav"],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }
@@ -251,7 +251,7 @@ api.showText(
             "tutorial/tutorial-5-12.wav"
         ],
         character: {
-            index: 4,
+            index: 2,
             avatar: {
                 file: "tutorial/avg-char-1.png"
             }

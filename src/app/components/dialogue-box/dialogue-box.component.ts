@@ -78,8 +78,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public characters: Array<avg.Character>;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    public changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer
   ) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.Character>(5);

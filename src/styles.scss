@@ -1,11 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "styles/_layers.scss";
 
-div, span, img {
+div,
+span,
+img {
   user-select: none;
   cursor: default;
 }
-
 
 html,
 body,
@@ -14,9 +15,15 @@ body,
   padding: 0px;
   margin: 0px;
   overflow: hidden;
-  background: #000;
+  // background: #000;
   width: 100%;
   height: 100%;
+}
+
+body {
+  background: url(http://www.summul.cn/content/plugins/kl_album/upload/201708/2141fd65ce06f2c01842e8708ffbe3a320170825213250567373341.jpg)
+    no-repeat;
+  background-size: 100% 100%;
 }
 
 /* Fonts */
@@ -32,6 +39,18 @@ body,
   font-style: normal;
   font-weight: 400;
   src: url("./assets/fonts/mf-shanghei-light.ttf");
+}
+
+#avg-loading-layer {
+  z-index: $_LAYER_INDEX_LOADING_LAYER;
+
+  position: absolute;
+  pointer-events: none;
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #avg-particle-viewport {
@@ -52,12 +71,14 @@ body,
     left: 0;
     top: 0;
     width: 100%;
-  height: 100%;
+    height: 100%;
   }
 }
 
 #avg-viewport {
   z-index: $_LAYER_INDEX_VIEWPORT;
+
+  background: black;
 }
 
 #avg-transition {
@@ -92,12 +113,4 @@ body,
 #avg-outlet {
   z-index: $_LAYER_INDEX_OUTLET;
   pointer-events: none;
-}
-
-.center-of-screen {
-  position: fixed;
-  padding: 10px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }

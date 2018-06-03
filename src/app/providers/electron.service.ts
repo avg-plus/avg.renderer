@@ -5,70 +5,64 @@ import { Injectable } from "@angular/core";
 
 import * as childProcess from "child_process";
 import { DebugingService } from "app/common/debuging-service";
-import {
-  TouchBarSpacer,
-  TouchBar,
-  TouchBarLabel,
-  TouchBarButton
-} from "electron";
+import * as avg from "avg-engine/engine";
+import { PlatformService } from "avg-engine/engine";
+
+// import {
+//   TouchBarSpacer,
+//   TouchBar,
+//   TouchBarLabel,
+//   TouchBarButton
+// } from "electron";
 // import { dialog } from "electron";
 
-const { app, dialog } = require("electron");
-const remote = require("electron").remote;
-const ipcRenderer = require("electron").ipcRenderer;
+// const { app, dialog } = require("electron");
+
+let remote = null;
+let ipcRenderer = null;
+
+if (PlatformService.isDesktop()) {
+  remote = require("electron").remote;
+  ipcRenderer = require("electron").ipcRenderer;
+}
 
 @Injectable()
-export class ElectronService {
+export class ElectronService extends avg.PlatformService {
   ipcRenderer: typeof ipcRenderer;
   childProcess: typeof childProcess;
 
-  public static showErrorDialog(title: string, text: string) {
-    dialog.showErrorBox(title, text);
+  public static initDebugging() {
+    DebugingService.initDebugMenus();
   }
 
   constructor() {
-    // Conditional imports
-    if (this.isElectron()) {
+    super();
+
+    if (avg.PlatformService.isDesktop()) {
       this.ipcRenderer = window.require("electron").ipcRenderer;
       this.childProcess = window.require("child_process");
     }
   }
 
-  public initDebugging() {
-    if (!this.isElectron()) {
-      return;
-    }
-
-    DebugingService.initDebugMenus();
-  }
-
   public setMenuTouchBar() {
-    // Reel labels
-    const startGameLabel = new TouchBarLabel({
-      label: "开始游戏",
-      textColor: "blue"
-    });
-    // const reel2 = new TouchBarLabel();
-    // const reel3 = new TouchBarLabel();
-
-    // Spin result label
-    // const result = new TouchBarLabel();
-
-    // Spin button
-    const spin = new TouchBarButton({
-      label: "🎰 Spin",
-      backgroundColor: "#7851A9",
-      click: () => {}
-    });
-
-    const touchBar = new TouchBar({
-      items: [startGameLabel, spin]
-    });
-
-    // (<any>window).setTouchBar(touchBar);
+    //   // Reel labels
+    //   const startGameLabel = new TouchBarLabel({
+    //     label: "开始游戏",
+    //     textColor: "blue"
+    //   });
+    //   // const reel2 = new TouchBarLabel();
+    //   // const reel3 = new TouchBarLabel();
+    //   // Spin result label
+    //   // const result = new TouchBarLabel();
+    //   // Spin button
+    //   const spin = new TouchBarButton({
+    //     label: "🎰 Spin",
+    //     backgroundColor: "#7851A9",
+    //     click: () => {}
+    //   });
+    //   const touchBar = new TouchBar({
+    //     items: [startGameLabel, spin]
+    //   });
+    //   // (<any>window).setTouchBar(touchBar);
   }
-
-  isElectron = () => {
-    return window && window.process && window.process.type;
-  };
 }

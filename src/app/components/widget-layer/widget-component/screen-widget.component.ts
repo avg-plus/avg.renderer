@@ -287,7 +287,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   }
 
   protected onShowAnimationComplete(): void {
-    console.log("[Widget: Show Animation] completed.");
+    // console.log("[Widget: Show Animation] completed.");
 
     if (this.onShowAnimationCallback) {
       this.onShowAnimationCallback();
@@ -295,7 +295,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   }
 
   protected onHideAnimationComplete(): void {
-    console.log("[Widget: Hide Animation] completed.");
+    // console.log("[Widget: Hide Animation] completed.");
 
     // Notify manager to destroy
     if (this.onRemoveAnimationCallback) {

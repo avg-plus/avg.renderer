@@ -22,6 +22,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
 
+
 class SceneModel {
   public scene: avg.Scene;
   public incommingNewScene: avg.Scene;
@@ -98,7 +99,13 @@ export class BackgroundCanvasComponent
     const file = data.file.filename;
     const index = scene.index;
     const duration = data.duration || this._defaultDuration;
-    const transitionName = data.transition || "crossfade";
+    let transitionName = data.transition || "crossfade";
+
+    if (transitionName === "random") {
+      const randomIndex =
+        Math.floor(Math.random() * (this.transitionList.length - 0 + 1)) + 0;
+      transitionName = this.transitionList[randomIndex];
+    }
 
     if (!file || file.length === 0) {
       console.warn("Background filename is empty");

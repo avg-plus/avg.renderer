@@ -22,7 +22,7 @@ import { DialogueBoxComponent } from "./components/dialogue-box/dialogue-box.com
 import { WidgetLayerComponent } from "./components/widget-layer/widget-layer.component";
 import { TextWidgetComponent } from "./components/widget-layer/widget-component/text-widget.component";
 import { ImageWidgetComponent } from "./components/widget-layer/widget-component/image-widget.component";
-import { ReloadViewComponent } from "./components/reload-view/reload-view.component";
+import { LoadingLayerComponent } from "./components/loading-layer/loading-layer.component";
 import { VariableInputComponent } from "./components/variable-input-box/variable-input-box.component";
 import { GameToolbarComponent } from "./components/game-toolbar/game-toolbar.component"
 
@@ -47,7 +47,7 @@ import { GameToolbarService } from "./components/game-toolbar/main-scene.service
     WidgetLayerComponent,
     TextWidgetComponent,
     ImageWidgetComponent,
-    ReloadViewComponent,
+    LoadingLayerComponent,
     VariableInputComponent,
     GameToolbarComponent
   ],
