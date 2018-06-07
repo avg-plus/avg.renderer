@@ -5,7 +5,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 const postcssUrl = require("postcss-url");
-// const CompressionPlugin = require("compression-webpack-plugin");
+var glob = require("glob");
+
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const {
   NoEmitOnErrorsPlugin,
@@ -18,18 +20,11 @@ const {
   GlobCopyWebpackPlugin,
   BaseHrefWebpackPlugin
 } = require("@angular/cli/plugins/webpack");
-const { CommonsChunkPlugin, UglifyJsPlugin } = require("webpack").optimize;
+const { CommonsChunkPlugin } = require("webpack").optimize;
 const { AotPlugin } = require("@ngtools/webpack");
 
 const nodeModules = path.join(process.cwd(), "node_modules");
-const entryPoints = [
-  "inline",
-  "polyfills",
-  "sw-register",
-  "styles",
-  "vendor",
-  "main"
-];
+const entryPoints = ["inline", "polyfills", "styles", "vendor", "main"];
 const baseHref = "";
 const deployUrl = "";
 
@@ -37,15 +32,15 @@ const isProd = process.env.NODE_ENV === "production";
 const isBrowser = process.env.GAME_PLATFORM === "browser";
 const isDesktop = process.env.GAME_PLATFORM === "desktop";
 
-
 let outputPath;
 let distTarget;
+
 if (isBrowser) {
   outputPath = path.join(process.cwd(), "dist/web");
   distTarget = "web";
 } else {
   outputPath = path.join(process.cwd(), "dist/desktop");
-  distTarget = "node-webkit";  
+  distTarget = "node-webkit";
 }
 
 console.log("isProd", isProd);
@@ -53,14 +48,6 @@ console.log("process.env.GAME_PLATFORM", process.env.GAME_PLATFORM);
 
 function getPlugins() {
   var plugins = [];
-
-  plugins.push(
-    new ProvidePlugin({
-      // BrowserFS: "bfsGlobal",
-      // process: "processGlobal",
-      // Buffer: "bufferGlobal"
-    })
-  );
 
   // Always expose NODE_ENV to webpack, you can now use `process.env.NODE_ENV`
   // inside your code for any environment checks; UglifyJS will automatically
@@ -75,7 +62,7 @@ function getPlugins() {
 
   plugins.push(
     new GlobCopyWebpackPlugin({
-      patterns: ["assets", "data", "favicon.ico", "manifest.json"],
+      patterns: ["assets", "data", "favicon.ico", "manifest.json", "loader.js"],
       globOptions: {
         cwd: process.cwd() + "/src",
         dot: true,
@@ -91,7 +78,7 @@ function getPlugins() {
       template: "./src/index.html",
       filename: "./index.html",
       hash: false,
-      inject: true,
+      inject: false,
       compile: true,
       favicon: false,
       minify: true,
@@ -193,12 +180,6 @@ function getPlugins() {
     //   })
     // );
 
-    // plugins.push(
-    //   new CompressionPlugin({
-    //     test: /\.js/
-    //   })
-    // );
-
     plugins.push(
       new AotPlugin({
         mainPath: "main.ts",
@@ -206,39 +187,18 @@ function getPlugins() {
           "environments/index.ts": "environments/index.prod.ts"
         },
         exclude: [],
-        tsConfigPath: "src/tsconfig.app.json"
+        tsConfigPath: "src/tsconfig.app.json",
+        skipCodeGeneration: true
       })
     );
 
-    // plugins.push(
-    //   new UglifyJsPlugin()
-    //   // {
-    //   // mangle: {
-    //   //   screw_ie8: false
-    //   // },
-    //   // compress: {
-    //   //   screw_ie8: false,
-    //   //   warnings: false
-    //   // },
-    //   // sourceMap: false
-    //   // }
-    // );
+    plugins.push(
+      new UglifyJsPlugin({
+        test: /\.js($|\?)/i
+      })
+    );
+
   } else {
-    // plugins.push(
-    //   new CompressionPlugin({
-    //     test: /\.js/
-    //   })
-    // );
-
-    // plugins.push(
-    // new UglifyJsPlugin()
-    //   {
-    //   uglifyOptions: {
-    //     compress: true
-    //   }
-    // }
-    // );
-
     plugins.push(
       new AotPlugin({
         mainPath: "main.ts",
@@ -264,13 +224,6 @@ module.exports = {
     extensions: [".ts", ".js", ".scss", ".json"],
     aliasFields: [],
     alias: {
-      // fs: "browserfs/dist/shims/fs.js",
-      // buffer: "browserfs/dist/shims/buffer.js",
-      // path: "browserfs/dist/shims/path.js",
-      // processGlobal: "browserfs/dist/shims/process.js",
-      // bufferGlobal: "browserfs/dist/shims/bufferGlobal.js",
-      // bfsGlobal: require.resolve("browserfs"),
-      // WORKAROUND See. angular-cli/issues/5433
       environments: isProd
         ? path.resolve(__dirname, "src/environments/index.prod.ts")
         : path.resolve(__dirname, "src/environments/index.ts")
@@ -281,7 +234,9 @@ module.exports = {
     modules: ["./node_modules"]
   },
   entry: {
-    main: ["./src/main.ts"],
+    loader: ["./src/loader.js"],
+    libs: glob.sync("./src/libs/*.js"),
+    main: ["./src/main.ts"],    
     polyfills: ["./src/polyfills.ts"],
     styles: ["./src/styles.scss"]
   },
@@ -311,7 +266,8 @@ module.exports = {
       },
       {
         test: /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani|svg)$/,
-        loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
+        // loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
+        loader: "null-loader"
       },
       {
         exclude: [path.join(process.cwd(), "src/styles.scss")],

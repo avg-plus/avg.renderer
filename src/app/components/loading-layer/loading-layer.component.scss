@@ -1,17 +1,39 @@
 @import "../../../styles/_default-ui.scss";
 
-#loading-layer {
-  background: black;
+.loading-layer {
+  // background: black;
   width: 100%;
   height: 100%;
 
-  .loading-text {
-    @include TextStrokeNormal;
+  z-index: 9999999;
 
-    font-size: 64px;
+  // background: url("../../../assets/graphics/backgrounds/loading/loading-1.jpg")
+  // background: url("http://old.bz55.com/uploads/allimg/140406/1-140406161J8.jpg")
+    // no-repeat;
+
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  .loading-container {
     position: absolute;
     right: 6%;
     bottom: 6%;
-    color: whitesmoke;
+    width: 30%;
+
+    @include TextStrokeNormal;
+
+    .loading-text {
+      font-size: 5em;
+      color: white;
+    }
+
+    .progress-value-text {
+      font-size: 3em;
+      color: white;
+    }
+    .loading-files {
+      font-size: 1.8em;
+      color: whitesmoke;
+    }
   }
 }

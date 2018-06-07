@@ -4,7 +4,7 @@ import { AVGService } from "../../common/avg-service";
 @Injectable()
 export class GameToolbarService extends AVGService {
 
-  private static _visible: boolean = true;
+  private static _visible = true;
 
   public static show() {
     this._visible = true;

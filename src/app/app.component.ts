@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit } from "@angular/core";
+import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
 import { APIImplManager } from "app/common/api/api-impl-manger";
@@ -7,16 +7,19 @@ import * as avg from "avg-engine/engine";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { DebugingService } from "./common/debuging-service";
-import { AVGNativeFS, PlatformService } from "avg-engine/engine";
+import { AVGNativeFS, PlatformService, AVGNativePath } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
+import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
+import { GameInitializer } from "./game-initializer";
 
 @Component({
   selector: "game",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"]
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   constructor(
+    private initializer: GameInitializer,
     public electronService: ElectronService,
     private router: Router,
     private elementRef: ElementRef
@@ -27,64 +30,19 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  async ngOnInit() {}
+
   async ngAfterViewInit() {
-    // console.log(__dirname);
-    // console.log(__filename);
+    await this.initializer.initFileSystem();
+    await this.initializer.initEngineSettings();
+    await this.initializer.initResource();
+    await this.initializer.initGameSettings();
+    await this.initializer.initDesktopWindow();
+    await this.initializer.initAPI();
+    await this.initializer.initLoadingService();
+    await this.initializer.preloadAssets();
 
-    // Apply filesystem implementations to engine
-    for (const m in AVGNativeFS) {
-      AVGNativeFS[m] = AVGNativeFSImpl[m];
-    }
-    AVGNativeFS.initFileSystem();
-
-    // Init resources
-    avg.Resource.init(AVGNativeFS.__dirname + "/assets/");
-
-    // Init settings
-    const settingFile = avg.AVGNativePath.join(
-      avg.Resource.getRoot(),
-      "game.json"
-    );
-
-    console.log("Loading settings:", settingFile);
-    const settings = await AVGNativeFS.readFileSync(settingFile);
-
-    if (PlatformService.isDesktop()) {
-      avg.Setting.parseFromSettings(settings);
-    } else {
-      avg.Setting.parseFromSettings(JSON.stringify(settings));
-    }
-
-    //  Init screen size
-    if (avg.PlatformService.isDesktop()) {
-      const { app, BrowserWindow, screen, remote } = require("electron");
-
-      const win = remote.getCurrentWindow();
-      if (avg.Setting.FullScreen) {
-        console.log(screen.getPrimaryDisplay());
-        win.setBounds({
-          width: screen.getPrimaryDisplay().bounds.width,
-          height: screen.getPrimaryDisplay().bounds.height,
-          x: 0,
-          y: 0
-        });
-        win.setFullScreen(avg.Setting.FullScreen);
-      } else {
-        win.setBounds({
-          width: avg.Setting.WindowWidth,
-          height: avg.Setting.WindowHeight,
-          x:
-            screen.getPrimaryDisplay().bounds.width / 2 -
-            avg.Setting.WindowWidth / 2,
-          y:
-            screen.getPrimaryDisplay().bounds.height / 2 -
-            avg.Setting.WindowHeight / 2
-        });
-      }
-      // this.electronService.initDebugging();
-    }
-    APIImplManager.init();
-
+    // Start game
     const entryScript =
       avg.Resource.getPath(avg.ResourcePath.Scripts) + "/tutorial/tutorial.avs";
 

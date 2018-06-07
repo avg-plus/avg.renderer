@@ -1,3 +1,7 @@
-<div id="loading-layer" *ngIf="isInLoading" >
-  <div class="loading-text">Loading ...</div>
+<div class="loading-layer" *ngIf="service.isShowLoadingScreen">
+  <div class="loading-container">
+    <span class="loading-text">Loading ...</span>
+    <span class="progress-value-text">{{service.currentProgress}}%</span>
+    <!-- <div class="loading-files">{{service.currentDownloadTips}} {{service.currentDownloadFile}}</div> -->
+  </div>
 </div>

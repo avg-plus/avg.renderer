@@ -33,6 +33,7 @@ import { DialogueBoxService } from "./components/dialogue-box/dialogue-box.servi
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
 import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
+import { GameInitializer } from "./game-initializer";
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { GameToolbarService } from "./components/game-toolbar/main-scene.service
     DialogueBoxService,
     TransitionLayerService,
     WidgetLayerService,
-    GameToolbarService
+    GameToolbarService,
+    GameInitializer
   ],
   bootstrap: [AppComponent]
 })

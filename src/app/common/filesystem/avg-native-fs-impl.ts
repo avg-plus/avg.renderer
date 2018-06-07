@@ -100,10 +100,13 @@ export class AVGNativeFSImpl {
     }
   ) {
     if (avg.PlatformService.isDesktop()) {
-      return this._fs.readFileSync(filename, options).toString();
+      const data = this._fs.readFileSync(filename, options);
+      return data.toString("utf8");
     }
 
-    const response = await Axios.get(filename);
+    const response = await Axios.get(filename, {
+      headers: { Accept: "text/plain" }
+    });
     return response.data;
   }
 
