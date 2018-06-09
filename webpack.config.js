@@ -197,7 +197,6 @@ function getPlugins() {
         test: /\.js($|\?)/i
       })
     );
-
   } else {
     plugins.push(
       new AotPlugin({
@@ -236,7 +235,7 @@ module.exports = {
   entry: {
     loader: ["./src/loader.js"],
     libs: glob.sync("./src/libs/*.js"),
-    main: ["./src/main.ts"],    
+    main: ["./src/main.ts"],
     polyfills: ["./src/polyfills.ts"],
     styles: ["./src/styles.scss"]
   },
@@ -265,7 +264,13 @@ module.exports = {
         loader: "file-loader?name=[name].[hash:20].[ext]"
       },
       {
-        test: /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani|svg)$/,
+        // Pack fonts
+        test: /\.(ttf|woff|woff2)$/,
+        // loader: "url-loader?name=[name].aaa[ext]"
+        loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
+      },
+      {
+        test: /\.(jpg|png|gif|otf|cur|ani|svg)$/,
         // loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
         loader: "null-loader"
       },

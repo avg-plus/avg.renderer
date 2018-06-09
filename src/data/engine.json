@@ -4,5 +4,5 @@
   "engine.env.skip_title_view": true,
   "engine.loading_screen.background":
     "graphics/backgrounds/loading/loading-1.jpg",
-  "engine.default_fonts": "fonts/mf-jianhei-normal.ttf"
+  "engine.default_fonts": "fonts/GillSans.ttc"
 }

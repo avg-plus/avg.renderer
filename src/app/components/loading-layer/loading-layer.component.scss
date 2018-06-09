@@ -1,39 +1,108 @@
 @import "../../../styles/_default-ui.scss";
+@import "../../../styles/_common.scss";
 
-.loading-layer {
-  // background: black;
+#loading-layer {
   width: 100%;
   height: 100%;
+  opacity: 0;
 
-  z-index: 9999999;
+  #loading-layer-container {
+    // background-size: 100% 100%;
+    // background-repeat: no-repeat;
 
-  // background: url("../../../assets/graphics/backgrounds/loading/loading-1.jpg")
-  // background: url("http://old.bz55.com/uploads/allimg/140406/1-140406161J8.jpg")
-    // no-repeat;
+    .loading-container {
+      position: absolute;
+      right: 5%;
+      bottom: 3%;
+      width: 50%;
+      text-align: right;
 
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+      @include TextStrokeNormal;
+      .loading-progress {
+        width: 100%;
+        opacity: 0.7;
+        background-color: grey;
 
-  .loading-container {
+        .loading-progress-bar {
+          width: 0%;
+          height: 20px;
+          background-color: orangered;
+        }
+      }
+
+      .loading-text {
+        font-size: 4vh;
+        padding-bottom: 4px;
+        color: white;
+        font-family: "DefaultFont";
+      }
+
+      .progress-value-text {
+        font-size: 3em;
+        color: white;
+      }
+    }
+  }
+}
+
+//colors
+$color_peach_cream_approx: white;
+$loader_duration: 0.6s;
+
+.lds-ellipsis {
+  @include center-of-screen;
+
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  div {
     position: absolute;
-    right: 6%;
-    bottom: 6%;
-    width: 30%;
-
-    @include TextStrokeNormal;
-
-    .loading-text {
-      font-size: 5em;
-      color: white;
+    top: 27px;
+    width: 11px;
+    height: 11px;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 50%;
+    background: $color_peach_cream_approx;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    &:nth-child(1) {
+      left: 6px;
+      animation: lds-ellipsis1 $loader_duration infinite;
     }
-
-    .progress-value-text {
-      font-size: 3em;
-      color: white;
+    &:nth-child(2) {
+      left: 6px;
+      animation: lds-ellipsis2 $loader_duration infinite;
     }
-    .loading-files {
-      font-size: 1.8em;
-      color: whitesmoke;
+    &:nth-child(3) {
+      left: 26px;
+      animation: lds-ellipsis2 $loader_duration infinite;
     }
+    &:nth-child(4) {
+      left: 45px;
+      animation: lds-ellipsis3 $loader_duration infinite;
+    }
+  }
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
   }
 }

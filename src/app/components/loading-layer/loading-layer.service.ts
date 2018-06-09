@@ -10,6 +10,8 @@ import {
 
 import * as createjs from "preload-js";
 import * as $ from "jquery";
+import { AnimationUtils } from "../../common/animations/animation-utils";
+import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 
 class ResourceFileGroup {
   public tips: string;
@@ -22,31 +24,60 @@ export class LoadingLayerService extends AVGService {
   private static asyncDownloadQueue: Array<ResourceFileGroup> = [];
 
   public static isShowLoadingScreen = false;
-  public static currentDownloadTips = "";
+  public static currentDownloadTips;
   public static currentDownloadFile = "";
-  public static currentProgress = "";
+  public static currentProgress = 0;
+
+  private static _isLoaderInitialized = false;
 
   private static _queue: any = new createjs.LoadQueue();
 
   public static init() {
-    // All file loaded
-    this._queue.on("complete", () => {
-      // console.log("preloadjs: complete");
-    });
-
     // A single file has completed loading.
     this._queue.on("fileload", event => {
       // console.log("preloadjs: fileload");
     });
 
+    let progressAnimatedTimer;
     this._queue.on("progress", event => {
-      this.currentProgress = (event.loaded * 100).toFixed(1);
-      if (event.loaded >= 1) {
-        this.currentProgress = "100";
+      console.log(event);
+      this.currentProgress = event.loaded * 100;
 
-        setTimeout(() => {
-          // this.hideLoadingScreen();
-        }, 500);
+      const elem = document.getElementById("load-progress");
+
+      if (!progressAnimatedTimer) {
+        progressAnimatedTimer = setInterval(() => {
+          elem.style.width = this.currentProgress + "%";
+          if (this.currentProgress >= 100) {
+            this.currentProgress = 100;
+            clearInterval(progressAnimatedTimer);
+          }
+        }, 1);
+      }
+
+      this.currentDownloadTips =
+        "少女祈祷中..." + this.currentProgress.toFixed(0) + "%";
+
+      if (event.loaded >= 1) {
+        this.currentProgress = 100;
+        this.currentDownloadTips = "正在进入游戏";
+        AnimationUtils.fadeTo(".loading-progress", 600, 0);
+        AnimationUtils.to("", ".loading-container", 600, {
+          bottom: "0%"
+        });
+        AnimationUtils.to(
+          "ChangeLoadingTips",
+          ".loading-text",
+          600,
+          {
+            fontSize: "7vh"
+          },
+          () => {
+            setTimeout(() => {
+              this.hideLoadingScreen();
+            }, 500);
+          }
+        );
       }
     });
 
@@ -59,51 +90,71 @@ export class LoadingLayerService extends AVGService {
     });
   }
 
+  public static asyncLoading(url: string) {
+    return new Promise((resolve, reject) => {
+      const queue = new createjs.LoadQueue();
+      queue.loadFile(url);
+
+      queue.on("complete", () => {
+        console.log("Resource Loaded: " + url);
+        resolve();
+      });
+    });
+  }
+
   public static addToSyncList(group: ResourceFileGroup[]) {
     this.syncDownloadQueue = this.syncDownloadQueue.concat(group);
   }
 
-  public static addToAsyncList(group: ResourceFileGroup[]) {
-    this.asyncDownloadQueue = this.asyncDownloadQueue.concat(group);
-  }
-
-  public static startDownloadSync() {
+  public static async startDownloadSync() {
     this.syncDownloadQueue.forEach(group => {
-      this.currentDownloadTips = group.tips;
-
       const downloadList = group.files;
       downloadList.forEach(async file => {
+        this.currentDownloadTips = group.tips;
+
         this.currentDownloadFile = file;
         this._queue.loadFile(file);
+      });
+    });
 
-        // console.log("downloaded %s", file);
+    // All file loaded
+    return new Promise((resolve, reject) => {
+      this._queue.on("complete", () => {
+        resolve();
       });
     });
   }
   public static hideLoadingScreen() {
+    AnimationUtils.fadeTo("#loading-layer", 500, 0);
+
     this.isShowLoadingScreen = false;
+    TransitionLayerService.releasePointerEvents();
   }
 
   public static showLoadingScreen() {
+    TransitionLayerService.lockPointerEvents();
     this.isShowLoadingScreen = true;
+    AnimationUtils.fadeTo("#loading-layer", 500, 1);
+    AnimationUtils.fadeTo(".loading-progress", 500, 1);
 
-    const bg = EngineSettings.get("engine.loading_screen.background") as string;
-    // const e = document.getElementById("#loading-layer");
+    if (!this._isLoaderInitialized) {
+      const bg = EngineSettings.get(
+        "engine.loading_screen.background"
+      ) as string;
 
-    console.log("bg", bg);
+      const style = {
+        width: "100%",
+        height: "100%",
+        "z-index": 9999999,
+        background: "url(" + AVGNativePath.join(Resource.getRoot(), bg) + ")",
+        "background-size": "100% 100%",
+        "background-repeat": "no-repeat"
+      };
 
-    const style = {
-      width: "100%",
-      height: "100%",
-      "z-index": 9999999,
-      background: "url(" + AVGNativePath.join(Resource.getRoot(), bg) + ")",
-      "background-size": "100% 100%",
-      "background-repeat": "no-repeat"
-    };
+      const s = EngineUtils.cssObjectToStyles(style);
 
-    const s = EngineUtils.cssObjectToStyles(style);
-    console.log("style", s);
-
-    $("loading-layer").prop("style", s);
+      $(".lds-ellipsis").remove();
+      $("#loading-layer-container").prop("style", s);
+    }
   }
 }

@@ -17,7 +17,12 @@ import {
 import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
+import {
+  Router,
+  ActivatedRoute,
+  NavigationEnd,
+  CanActivate
+} from "@angular/router";
 import { SceneHandle } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";

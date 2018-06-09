@@ -10,9 +10,21 @@ import {
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { APIImplManager } from "./common/api/api-impl-manger";
+import * as $ from "jquery";
+import { CanActivate } from "@angular/router";
 
 @Injectable()
-export class GameInitializer {
+export class GameInitializer implements CanActivate {
+  private _initilized = false;
+
+  public endInitilizing() {
+    this._initilized = true;
+  }
+
+  canActivate() {
+    return this._initilized;
+  }
+
   // Apply filesystem implementations to engine
   public initFileSystem() {
     for (const m in AVGNativeFS) {
@@ -35,7 +47,10 @@ export class GameInitializer {
   }
   // Init resources
   public async initResource() {
-    Resource.init(AVGNativeFS.__dirname + "/assets/");
+    const assetsRootDirname = EngineSettings.get(
+      "engine.env.assets_root_dirname"
+    ) as string;
+    Resource.init(AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname));
   }
   // Init settings
   public async initGameSettings() {
@@ -91,7 +106,31 @@ export class GameInitializer {
   }
 
   // Preload resources
-  public async preloadAssets() {
+  public async preloadEngineAssets() {
+    const loadingBackground = EngineSettings.get(
+      "engine.loading_screen.background"
+    ) as string;
+
+    const defaultFont = EngineSettings.get("engine.default_fonts") as string;
+
+    await LoadingLayerService.asyncLoading(
+      AVGNativePath.join(Resource.getRoot(), loadingBackground)
+    );
+    await LoadingLayerService.asyncLoading(
+      AVGNativePath.join(Resource.getRoot(), defaultFont)
+    );
+
+    const fontStyle = `
+    @font-face {
+      font-family: "DefaultFont";
+      font-style: normal;
+      font-weight: 400;
+      src: url('${AVGNativePath.join(Resource.getRoot(), defaultFont)}');
+    }`;
+
+    $("head").append("<style id='default-font'>" + fontStyle + "</style>");
+
+    // Load necessary assets for engine
     LoadingLayerService.addToSyncList([
       {
         tips: "正在加载过渡效果...",
@@ -106,11 +145,37 @@ export class GameInitializer {
       },
       {
         tips: "正在加载特效...",
-        files: [AVGNativeFS.__dirname + "/data/effects/effect-snow.json"]
+        files: [
+          AVGNativeFS.__dirname + "/data/effects/shader/bg_fsh.shader",
+          AVGNativeFS.__dirname +
+            "/data/effects/shader/fx_brightbuf_fsh.shader",
+          AVGNativeFS.__dirname + "/data/effects/shader/fx_common_fsh.shader",
+          AVGNativeFS.__dirname + "/data/effects/shader/fx_common_vsh.shader",
+          AVGNativeFS.__dirname +
+            "/data/effects/shader/fx_dirblur_r4_fsh.shader",
+          AVGNativeFS.__dirname + "/data/effects/shader/pp_final_fsh.shader",
+          AVGNativeFS.__dirname + "/data/effects/shader/pp_final_vsh.shader",
+          AVGNativeFS.__dirname +
+            "/data/effects/shader/sakura_point_fsh.shader",
+          AVGNativeFS.__dirname + "/data/effects/shader/sakura_point_vsh.shader"
+        ]
+      },
+
+      {
+        tips: "加载游戏资源...",
+        files: [
+          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/Sunburst.mp3"),
+          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/BeautifulHawaii.mp3"),
+          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/text-theme.mp3"),
+          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/avg-scene-forest.jpg"),
+          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/bedroom-1-day.jpg"),
+          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/bedroom-1.jpg"),
+        ]
       }
     ]);
 
     LoadingLayerService.showLoadingScreen();
-    LoadingLayerService.startDownloadSync();
+
+    return await LoadingLayerService.startDownloadSync();
   }
 }

@@ -11,6 +11,7 @@ import { AVGNativeFS, PlatformService, AVGNativePath } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { GameInitializer } from "./game-initializer";
+import * as $ from "jquery";
 
 @Component({
   selector: "game",
@@ -40,33 +41,43 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initDesktopWindow();
     await this.initializer.initAPI();
     await this.initializer.initLoadingService();
-    await this.initializer.preloadAssets();
+    this.initializer.preloadEngineAssets().then(
+      v => {
+        this.initializer.endInitilizing();
 
-    // Start game
-    const entryScript =
-      avg.Resource.getPath(avg.ResourcePath.Scripts) + "/tutorial/tutorial.avs";
+        // Start game
+        const entryScript =
+          avg.Resource.getPath(avg.ResourcePath.Scripts) +
+          "/tutorial/tutorial.avs";
 
-    this.router.navigate(["title-view"]).then(result => {
-      if (result) {
-        TransitionLayerService.fadeTo(0, 3000);
-      }
-    });
+        this.router.navigate(["title-view"]).then(result => {
+          if (result) {
+            TransitionLayerService.fadeTo(0, 3000);
+          }
+        });
 
-    this.router
-      .navigate(["main-scene", { script: entryScript }])
-      .then(result => {
-        if (result) {
-          TransitionLayerService.fadeTo(0, 3000);
-        }
-      });
+        this.router
+          .navigate(["main-scene", { script: entryScript }])
+          .then(result => {
+            if (result) {
+              TransitionLayerService.fadeTo(0, 3000);
+            }
+          });
 
-    DebugingService.DebugMessager.asObservable().subscribe((message: any) => {
-      const script =
-        avg.Resource.getPath(avg.ResourcePath.Scripts) + "/" + message.data;
+        // DebugingService.DebugMessager.asObservable().subscribe(
+        //   (message: any) => {
+        //     const script =
+        //       avg.Resource.getPath(avg.ResourcePath.Scripts) +
+        //       "/" +
+        //       message.data;
 
-      this.router.navigate(["reload-view"]).then(result => {
-        this.router.navigate(["main-scene", { script: script }], {});
-      });
-    });
+        //     this.router.navigate(["reload-view"]).then(result => {
+        //       this.router.navigate(["main-scene", { script: script }], {});
+        //     });
+        //   }
+        // );
+      },
+      _ => {}
+    );
   }
 }

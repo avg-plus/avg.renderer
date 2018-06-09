@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "styles/_layers.scss";
+@import "styles/3rd/loading-bar";
 
 div,
 span,
@@ -18,25 +19,27 @@ body,
   background: #000;
   width: 100%;
   height: 100%;
+
+  font-family: "Jianhei";
 }
 
 body {
 }
 
 /* Fonts */
-@font-face {
-  font-family: "Jianhei";
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/fonts/mf-jianhei-normal.ttf");
-}
+// @font-face {
+//   font-family: "Jianhei";
+//   font-style: normal;
+//   font-weight: 400;
+//   src: url("./assets/fonts/mf-jianhei-normal.ttf");
+// }
 
-@font-face {
-  font-family: "Shanghei";
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/fonts/mf-shanghei-light.ttf");
-}
+// @font-face {
+//   font-family: "Shanghei";
+//   font-style: normal;
+//   font-weight: 400;
+//   src: url("./assets/fonts/mf-shanghei-light.ttf");
+// }
 
 #avg-loading-layer {
   z-index: $_LAYER_INDEX_LOADING_LAYER;

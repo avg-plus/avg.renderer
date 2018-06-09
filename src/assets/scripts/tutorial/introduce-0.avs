@@ -1,6 +1,6 @@
 /* 文本以及立绘相关剧情 */
 api.playBGM("tutorial/text-theme.mp3");
-api.loadScene(0, "tutorial/bedroom-1.bmp", {
+api.loadScene(0, "tutorial/bedroom-1.jpg", {
   block: true
 });
 
@@ -9,7 +9,7 @@ api.wait(1000);
 api.transitionTo("black", 0, 1000);
 
 api.wait(3000);
-api.loadScene(0, "tutorial/bedroom-1-day.bmp", {});
+api.loadScene(0, "tutorial/bedroom-1-day.jpg", {});
 api.wait(1000);
 
 const titleResult = api.showSubtitle(

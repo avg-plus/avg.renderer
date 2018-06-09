@@ -23,10 +23,6 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
     let fps;
     const fpsOut = document.getElementById("fps");
 
-    // EngineUtils.countTo(200, 100, 13000, value => {
-    //   fpsOut.innerHTML = "countdown: " + value;
-    // });
-
     let last = 0;
     function refreshLoop() {
       window.requestAnimationFrame(function() {
@@ -47,7 +43,7 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
       });
     }
 
-    refreshLoop();
+    // refreshLoop();
   }
 
   onTransitionLayerClicked() {
