@@ -14,7 +14,8 @@ import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { WidgetModel } from "../widget-layer.service";
 import { Subject } from "rxjs/Subject";
 
-export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ScreenWidgetComponent
+  implements OnInit, AfterViewInit, AfterViewChecked {
   public api: avg.APIScreenImage;
   private _data: avg.ScreenWidget;
   private _subject: Subject<any> = new Subject<any>();
@@ -25,7 +26,11 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   protected ElementID = "";
   protected WidgetElementID = "";
 
-  constructor(protected changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2, private element: ElementRef) { }
+  constructor(
+    protected changeDetectorRef: ChangeDetectorRef,
+    private renderer: Renderer2,
+    private element: ElementRef
+  ) {}
 
   public set data(value: avg.ScreenWidget) {
     this._data = value;
@@ -36,7 +41,6 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   }
 
   private lowercaseDataFields(data: avg.ScreenWidget) {
-
     if (!data) {
       return;
     }
@@ -48,32 +52,25 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     if (data.animation && data.animation.options) {
-
-      data.animation.options["direction"] = data.animation.options[
-        "direction"
-      ]
+      data.animation.options["direction"] = data.animation.options["direction"]
         ? data.animation.options["direction"].toLowerCase()
         : "";
     }
 
-    data.position = data.position
-      ? data.position.toLowerCase()
-      : "";
-
+    data.position = data.position ? data.position.toLowerCase() : "";
   }
 
   private initWidgetData(data: avg.ScreenWidget) {
     data.animation = data.animation || new avg.WidgetAnimation();
     data.animation.name = data.animation.name || "";
-    data.animation.options = data.animation.options || new avg.WidgetAnimationOptions();
+    data.animation.options =
+      data.animation.options || new avg.WidgetAnimationOptions();
     data.animation.options.duration = data.animation.options.duration || 1000;
 
     return data;
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.ElementID = this.data.id;
@@ -82,16 +79,15 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewChecked() {
-
-  }
+  ngAfterViewChecked() {}
 
   protected showWidget() {
-    this.initWidgetData(this.data);    
+    this.initWidgetData(this.data);
     this.lowercaseDataFields(this.data);
 
     if (this.data.x || this.data.y) {
-      const style = " position: fixed; left:" + this.data.x + "; top:" + this.data.y;
+      const style =
+        " position: fixed; left:" + this.data.x + "; top:" + this.data.y;
       this.renderer.setProperty(this.element.nativeElement, "style", style);
 
       return;
@@ -122,8 +118,9 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
           this.fadeIn(this.data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Enter_FlyIn:
-          this.flyIn(<avg.WidgetAnimation_FlyInOptions>this.data.animation
-            .options);
+          this.flyIn(<avg.WidgetAnimation_FlyInOptions>(
+            this.data.animation.options
+          ));
           break;
         case avg.ScreenWidgetAnimation.Enter_Appear:
           this.appear();
@@ -131,7 +128,10 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
         case avg.ScreenWidgetAnimation.Enter_ScaleIn:
           break;
         default:
-          console.warn("Could not found animation name [%s]", this.data.animation.name);
+          console.warn(
+            "Could not found animation name [%s]",
+            this.data.animation.name
+          );
           this.appear();
           break;
       }
@@ -139,13 +139,12 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   }
 
   public hideWidget(data: avg.ScreenWidget) {
-
     if (!data.animation) {
       this.hide();
       return;
     }
 
-    this.initWidgetData(data);    
+    this.initWidgetData(data);
     this.lowercaseDataFields(data);
 
     setTimeout(() => {
@@ -154,7 +153,9 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
           this.fadeOut(data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Leave_FlyOut:
-          this.flyOut(<avg.WidgetAnimation_FlyOutOptions>data.animation.options);
+          this.flyOut(<avg.WidgetAnimation_FlyOutOptions>(
+            data.animation.options
+          ));
           break;
         case avg.ScreenWidgetAnimation.Leave_Hide:
           this.hide();
@@ -162,12 +163,14 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
         case avg.ScreenWidgetAnimation.Leave_ScaleOut:
           break;
         default:
-          console.warn("Could not found animation name [%s]", data.animation.name);
+          console.warn(
+            "Could not found animation name [%s]",
+            data.animation.name
+          );
           this.hide();
           break;
       }
     }, 1);
-
   }
 
   protected appear() {
@@ -203,7 +206,11 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
       options.direction = avg.AnimationDirection.FromLeft;
     }
 
-    if (options.offset === null || options.offset === undefined || options.offset < 0) {
+    if (
+      options.offset === null ||
+      options.offset === undefined ||
+      options.offset < 0
+    ) {
       options.offset = 20;
     }
 

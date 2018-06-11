@@ -40,7 +40,6 @@ export class LoadingLayerService extends AVGService {
 
     let progressAnimatedTimer;
     this._queue.on("progress", event => {
-      console.log(event);
       this.currentProgress = event.loaded * 100;
 
       const elem = document.getElementById("load-progress");
@@ -96,7 +95,7 @@ export class LoadingLayerService extends AVGService {
       queue.loadFile(url);
 
       queue.on("complete", () => {
-        console.log("Resource Loaded: " + url);
+        // console.log("Resource Loaded: " + url);
         resolve();
       });
     });

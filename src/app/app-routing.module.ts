@@ -10,13 +10,13 @@ import { MainSceneComponent } from "./components/main-scene/main-scene.component
 import { GameInitializer } from "./game-initializer";
 
 const routes: Routes = [
-  { path: "title-view", component: TitleViewComponent },
+  // { path: "title-view", component: TitleViewComponent },
   {
     path: "main-scene",
     component: MainSceneComponent,
     canActivate: [GameInitializer]
   },
-  { path: "**", component: AppComponent }
+  // { path: "**", component: AppComponent }
 ];
 
 @NgModule({
