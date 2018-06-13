@@ -8,7 +8,8 @@ import {
   AfterViewInit,
   AnimationTransitionEvent,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ElementRef
 } from "@angular/core";
 
 import {
@@ -28,15 +29,14 @@ import { Observable } from "rxjs/Observable";
 import "app/common/live2d/lib/live2d.min.js";
 import "pixi-live2d";
 
-// import * as gsap from 'gsap';
-
-// let TimelineLite = new gsap.TimelineLite();
-
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import { reject } from "q";
+
+import * as $ from "jquery";
+import { EngineUtils } from "avg-engine/engine";
 
 export enum DialogueBoxStatus {
   None,
@@ -73,9 +73,16 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   // Animation constant
   private readonly CHAR_ANIMATION_DURATION = 0.2;
   private readonly CHAR_ANIMATION_OFFSET = -30;
+  private readonly DIALOGUE_BOX_SHOW_DURATION = 300;
+  private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
+
+  private readonly MAX_CHARS = 5;
+  private readonly CHAR_WIDTH = 94 / this.MAX_CHARS;
 
   public character_slot: Array<any>;
   public characters: Array<avg.Character>;
+
+  @ViewChild("characterContainer") characterContainer: ElementRef;
 
   constructor(
     public changeDetectorRef: ChangeDetectorRef,
@@ -84,15 +91,15 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.Character>(5);
 
-    const width = avg.Setting.WindowWidth / 5;
+    // const width = avg.Setting.WindowWidth / 5;
 
-    for (let i = 0; i < 5; ++i) {
-      this.character_slot[i] = {
-        width: width + "px",
-        left: width * i + "px",
-        bottom: "100px"
-      };
-    }
+    // for (let i = 0; i < 5; ++i) {
+    //   this.character_slot[i] = {
+    //     width: width + "px",
+    //     left: width * i + "px",
+    //     bottom: "100px"
+    //   };
+    // }
   }
 
   public reset() {
@@ -165,18 +172,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public showBox() {
-    AnimationUtils.fadeTo(".dialogue-box", 200, 1);
-
-    if (this.currentName && this.currentName.length > 0) {
-      AnimationUtils.fadeTo(".name-box", 200, 1);
-    } else {
-      AnimationUtils.fadeTo(".name-box", 0, 0);
-    }
-
-    if (!this.dialogueData.character.index) {
-      this.dialogueData.character.index = 0;
-    }
-
     // Show character
     if (
       this.dialogueData.character &&
@@ -190,14 +185,39 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.dialogueData.voice && this.dialogueData.voice.length > 0) {
       avg.api.playVoice(<string>this.dialogueData.voice);
     }
+
+    AnimationUtils.fadeTo(
+      ".dialogue-text-box",
+      this.DIALOGUE_BOX_SHOW_DURATION,
+      1
+    );
+
+    if (this.currentName && this.currentName.length > 0) {
+      AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
+    } else {
+      AnimationUtils.fadeTo(".name-box", 0, 0);
+    }
+  }
+
+  public hideBox() {
+    AnimationUtils.fadeTo(
+      ".dialogue-text-box",
+      this.DIALOGUE_BOX_HIDE_DURATION,
+      0,
+      () => {
+        this.currentStatus = DialogueBoxStatus.Hidden;
+        this.subject.next(DialogueBoxStatus.Hidden);
+      }
+    );
+    AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
   private initOpacity(index: number, opacity = 0): gsap.TweenLite {
     const elementID = "#character-index-" + index;
 
     return gsap.TweenLite.to(elementID, 0, {
-      opacity: opacity,
-      x: this.CHAR_ANIMATION_OFFSET
+      opacity: opacity
+      // x: this.CHAR_ANIMATION_OFFSET
     });
   }
 
@@ -208,8 +228,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     const elementID = "#character-index-" + character.index;
 
     return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
-      opacity: 1,
-      x: 0
+      opacity: 1
+      // x: 0
     });
   }
 
@@ -235,16 +255,41 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showCharacter(character: avg.Character) {
     const index = character.index;
+    if (index < 1 || index > 5) {
+      console.warn("Character index should be 1-5");
+      return;
+    }
 
     const charNotExists =
       this.characters[index] === undefined || this.characters[index] === null;
 
+    const style = {
+      position: "fixed",
+      width: "100%",
+      height: "100%",
+      left: this.CHAR_WIDTH * (index - 1) + "%",
+      bottom: "-30%",
+      background: `url(${character.avatar.file}) no-repeat`
+    };
+
     if (charNotExists) {
       this.initOpacity(index);
       this.characters[index] = character;
+
+      $("#character-index-" + index).prop(
+        "style",
+        EngineUtils.cssObjectToStyles(style)
+      );
+
       this.onCharacterEnter(index, character);
     } else {
       this.characters[index] = character;
+
+      $("#character-index-" + index).prop(
+        "style",
+        EngineUtils.cssObjectToStyles(style)
+      );
+
       this.initOpacity(index, 1);
       this.changeDetectorRef.detectChanges();
 
@@ -271,14 +316,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
 
-  public hideBox() {
-    AnimationUtils.fadeTo(".dialogue-box", 200, 0);
-    AnimationUtils.fadeTo(".name-box", 200, 0);
-
-    this.currentStatus = DialogueBoxStatus.Hidden;
-    this.subject.next(DialogueBoxStatus.Hidden);
-  }
-
   public updateData(data: avg.Dialogue) {
     this.dialogueData = data;
     this.animatedText = "";
@@ -293,6 +330,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentName = "";
     }
 
+    // @Plugin: OnBeforeDialogue
     avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
 
     if (data) {

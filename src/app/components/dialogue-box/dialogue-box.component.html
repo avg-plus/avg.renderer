@@ -6,9 +6,14 @@
       (mouseleave)="onChoiceLeave(i, choice)" (click)="onChoiceClicked(i, choice)">{{choice.title}}</div>
   </div>
 
-  <div class="character-box">
+  <div class="character-box" #characterContainer>
+      <div id="character-index-1" class="character"></div>
+      <div id="character-index-2" class="character"></div>
+      <div id="character-index-3" class="character"></div>
+      <div id="character-index-4" class="character"></div>
+      <div id="character-index-5" class="character"></div>
 
-    <div class="character char-index-0" [ngStyle]="character_slot[0]">
+    <!-- <div class="character char-index-0" [ngStyle]="character_slot[0]">
       <img id="character-index-0" [src]="sanitizer.bypassSecurityTrustUrl(characters[0] && characters[0].avatar ? characters[0].avatar.file : '')"
       />
     </div>
@@ -31,7 +36,7 @@
     <div class="character char-index-4" [ngStyle]="character_slot[4]">
       <img id="character-index-4" [src]="sanitizer.bypassSecurityTrustUrl(characters[4] && characters[4].avatar ? characters[4].avatar.file : '')"
       />
-    </div>
+    </div> -->
 
 
 
@@ -42,7 +47,7 @@
 
   </div>
 
-  <div class="dialogue-box">
+  <div class="dialogue-text-box">
 
     <div class="name-box">
       <div class="name">{{currentName}}</div>

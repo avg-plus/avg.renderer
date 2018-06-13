@@ -14,14 +14,12 @@ import { GameDef } from "app/common/game-def";
 import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
-import * as gsap from "gsap";
 import * as Parallax from "parallax-js";
 import { element } from "protractor";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
-
 
 class SceneModel {
   public scene: avg.Scene;
@@ -182,6 +180,7 @@ export class BackgroundCanvasComponent
       const animationTokens = ["scene-mask-transition", transitionName];
 
       maskElement.classList.add(animationTokens[0], animationTokens[1]);
+
 
       // Waiting animation finished
       setTimeout(() => {

@@ -43,6 +43,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initLoadingService();
     this.initializer.preloadEngineAssets().then(
       v => {
+
         this.initializer.endInitilizing();
 
         // Start game

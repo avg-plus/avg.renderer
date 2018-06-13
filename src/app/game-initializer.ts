@@ -52,6 +52,30 @@ export class GameInitializer implements CanActivate {
     ) as string;
     Resource.init(AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname));
   }
+
+  // Init stylesheets
+  public async initStyleSheets() {
+    // Modified styles dynamically
+    for (let i = 0; i < document.styleSheets.length; i++) {
+      const sheet = document.styleSheets[i] as CSSStyleSheet;
+      console.log(document.styleSheets[i]);
+
+      if (sheet && sheet.cssRules) {
+        const rules = sheet.cssRules;
+        for (let s = 0; s < rules.length; s++) {
+          // if (rules[s] instanceof CSSStyleRule) {
+            // console.log(rules[s]);
+          // }
+        }
+      }
+
+      // console.log(sheet);
+      // if (sheet.title === "unique_title") {
+      // return sheet;
+      // }
+    }
+  }
+
   // Init settings
   public async initGameSettings() {
     const settingFile = AVGNativePath.join(Resource.getRoot(), "game.json");
@@ -164,12 +188,30 @@ export class GameInitializer implements CanActivate {
       {
         tips: "加载游戏资源...",
         files: [
-          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/Sunburst.mp3"),
-          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/BeautifulHawaii.mp3"),
-          AVGNativePath.join(Resource.getRoot(), "audio/bgm/tutorial/text-theme.mp3"),
-          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/avg-scene-forest.jpg"),
-          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/bedroom-1-day.jpg"),
-          AVGNativePath.join(Resource.getRoot(), "graphics/backgrounds/tutorial/bedroom-1.jpg"),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "audio/bgm/tutorial/Sunburst.mp3"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "audio/bgm/tutorial/BeautifulHawaii.mp3"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "audio/bgm/tutorial/text-theme.mp3"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "graphics/backgrounds/tutorial/avg-scene-forest.jpg"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "graphics/backgrounds/tutorial/bedroom-1-day.jpg"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "graphics/backgrounds/tutorial/bedroom-1.jpg"
+          )
         ]
       }
     ]);
