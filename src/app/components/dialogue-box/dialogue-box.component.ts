@@ -27,7 +27,9 @@ import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
 import "app/common/live2d/lib/live2d.min.js";
-import "pixi-live2d";
+import "pixi-live2d/src/index";
+
+
 
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
@@ -164,7 +166,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       requestAnimationFrame(animate);
       renderer.render(stage);
     }
-    // animate();
+    animate();
   }
 
   ngOnDestroy() {
