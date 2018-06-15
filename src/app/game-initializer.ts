@@ -55,25 +55,21 @@ export class GameInitializer implements CanActivate {
 
   // Init stylesheets
   public async initStyleSheets() {
-    // Modified styles dynamically
-    for (let i = 0; i < document.styleSheets.length; i++) {
-      const sheet = document.styleSheets[i] as CSSStyleSheet;
-      console.log(document.styleSheets[i]);
+    const dataRoot = AVGNativePath.join(AVGNativeFS.__dirname, "/data");
+    let style = await AVGNativeFS.readFileSync(
+      AVGNativePath.join(dataRoot, "/stylesheets/mask.css.tpl")
+    );
 
-      if (sheet && sheet.cssRules) {
-        const rules = sheet.cssRules;
-        for (let s = 0; s < rules.length; s++) {
-          // if (rules[s] instanceof CSSStyleRule) {
-            // console.log(rules[s]);
-          // }
-        }
-      }
+    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_IN", AVGNativePath.join(dataRoot, "/masks/iris-in.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_OUT", AVGNativePath.join(dataRoot, "/masks/iris-out.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_WIPE", AVGNativePath.join(dataRoot, "/masks/wipe.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_WINDOW_SHADES", AVGNativePath.join(dataRoot, "/masks/window-shades.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH", AVGNativePath.join(dataRoot, "/masks/brush.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH_DOWN", AVGNativePath.join(dataRoot, "/masks/brush-down.png"));
 
-      // console.log(sheet);
-      // if (sheet.title === "unique_title") {
-      // return sheet;
-      // }
-    }
+    // $("head").append(`<style>${style}</style>`);
+
+    // console.log(style);
   }
 
   // Init settings

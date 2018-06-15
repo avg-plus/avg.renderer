@@ -20,6 +20,7 @@ import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
+import { StylesheetService } from "../../common/stylesheet-service";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -55,8 +56,11 @@ export class BackgroundCanvasComponent
   constructor(
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
-    public sanitizer: DomSanitizer
-  ) {}
+    public sanitizer: DomSanitizer,
+    private stylesheetService: StylesheetService
+  ) {
+    this.stylesheetService.initMaskStylesheets();
+  }
 
   ngOnInit() {}
 

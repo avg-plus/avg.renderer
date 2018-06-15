@@ -7,7 +7,12 @@ import * as avg from "avg-engine/engine";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { DebugingService } from "./common/debuging-service";
-import { AVGNativeFS, PlatformService, AVGNativePath } from "avg-engine/engine";
+import {
+  AVGNativeFS,
+  PlatformService,
+  AVGNativePath,
+  EngineSettings
+} from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { GameInitializer } from "./game-initializer";
@@ -37,19 +42,22 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initFileSystem();
     await this.initializer.initEngineSettings();
     await this.initializer.initResource();
+    await this.initializer.initStyleSheets();
     await this.initializer.initGameSettings();
     await this.initializer.initDesktopWindow();
     await this.initializer.initAPI();
     await this.initializer.initLoadingService();
     this.initializer.preloadEngineAssets().then(
       v => {
-
         this.initializer.endInitilizing();
 
         // Start game
-        const entryScript =
-          avg.Resource.getPath(avg.ResourcePath.Scripts) +
-          "/tutorial/tutorial.avs";
+        const entryScript = AVGNativePath.join(
+          avg.Resource.getPath(avg.ResourcePath.Scripts),
+          EngineSettings.get("engine.env.entry_script_file") as string
+        );
+        // avg.Resource.getPath(avg.ResourcePath.Scripts) +
+        // "/tutorial/tutorial.avs";
 
         this.router.navigate(["title-view"]).then(result => {
           if (result) {

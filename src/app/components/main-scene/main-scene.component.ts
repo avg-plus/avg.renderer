@@ -64,25 +64,6 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.enterGameProcess();
-
-    for (let i = 0; i < document.styleSheets.length; i++) {
-      const sheet = document.styleSheets[i] as CSSStyleSheet;
-      console.log(document.styleSheets[i]);
-
-      if (sheet && sheet.cssRules) {
-        const rules = sheet.cssRules;
-        for (let s = 0; s < rules.length; s++) {
-          // if (rules[s] instanceof CSSStyleRule) {
-            // console.log(rules[s]);
-          // }
-        }
-      }
-
-      // console.log(sheet);
-      // if (sheet.title === "unique_title") {
-      // return sheet;
-      // }
-    }
   }
 
   private async enterGameProcess() {

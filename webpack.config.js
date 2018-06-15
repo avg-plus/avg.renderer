@@ -272,7 +272,8 @@ module.exports = {
       {
         test: /\.(jpg|png|gif|otf|cur|ani|svg)$/,
         // loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
-        loader: "null-loader"
+        loader: "url-loader?name=[name].[ext]"
+        // loader: "null-loader"
       },
       {
         exclude: [path.join(process.cwd(), "src/styles.scss")],

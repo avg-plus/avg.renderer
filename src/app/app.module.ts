@@ -24,8 +24,7 @@ import { TextWidgetComponent } from "./components/widget-layer/widget-component/
 import { ImageWidgetComponent } from "./components/widget-layer/widget-component/image-widget.component";
 import { LoadingLayerComponent } from "./components/loading-layer/loading-layer.component";
 import { VariableInputComponent } from "./components/variable-input-box/variable-input-box.component";
-import { GameToolbarComponent } from "./components/game-toolbar/game-toolbar.component"
-
+import { GameToolbarComponent } from "./components/game-toolbar/game-toolbar.component";
 
 import { ElectronService } from "./providers/electron.service";
 import { MainSceneService } from "./components/main-scene/main-scene.service";
@@ -34,6 +33,7 @@ import { TransitionLayerService } from "./components/transition-layer/transition
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
 import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
 import { GameInitializer } from "./game-initializer";
+import { StylesheetService } from "./common/stylesheet-service";
 
 @NgModule({
   declarations: [
@@ -53,7 +53,7 @@ import { GameInitializer } from "./game-initializer";
     GameToolbarComponent
   ],
   imports: [
-  BrowserModule,
+    BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
@@ -67,7 +67,8 @@ import { GameInitializer } from "./game-initializer";
     TransitionLayerService,
     WidgetLayerService,
     GameToolbarService,
-    GameInitializer
+    GameInitializer,
+    StylesheetService
   ],
   bootstrap: [AppComponent]
 })

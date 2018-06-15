@@ -51,7 +51,7 @@ while (true) {
     }
   });
 
-  api.hideText();
+  // api.hideText();
 
   const choice = api.showChoices(
     [

@@ -1,5 +1,5 @@
 {
-  "engine.env.entry_script_file": "start.avs",
+  "engine.env.entry_script_file": "tutorial/tutorial.avs",
   "engine.env.assets_root_dirname": "assets",
   "engine.env.skip_title_view": true,
   "engine.loading_screen.background":
