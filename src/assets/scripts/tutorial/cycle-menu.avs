@@ -35,11 +35,11 @@ while (true) {
   });
   //   api.wait(1000);
   // api.effect("sakura");
-  api.showCharacter(1, "tutorial/girl-normal.png", {});
-  api.showCharacter(2, "tutorial/girl-angry.png", {});
-  api.showCharacter(3, "tutorial/girl-ask.png", {});
-  api.showCharacter(4, "tutorial/girl-sad.png", {});
-  api.showCharacter(5, "tutorial/girl-smile.png", {});
+  // api.showCharacter(1, "tutorial/girl-normal.png", {});
+  // api.showCharacter(2, "tutorial/girl-angry.png", {});
+  // api.showCharacter(3, "tutorial/girl-ask.png", {});
+  // api.showCharacter(4, "tutorial/girl-sad.png", {});
+  // api.showCharacter(5, "tutorial/girl-smile.png", {});
 
   api.showText("少年，你想知道什么呢？", {
     name: "风见",
