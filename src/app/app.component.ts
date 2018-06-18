@@ -56,8 +56,6 @@ export class AppComponent implements AfterViewInit, OnInit {
           avg.Resource.getPath(avg.ResourcePath.Scripts),
           EngineSettings.get("engine.env.entry_script_file") as string
         );
-        // avg.Resource.getPath(avg.ResourcePath.Scripts) +
-        // "/tutorial/tutorial.avs";
 
         this.router.navigate(["title-view"]).then(result => {
           if (result) {

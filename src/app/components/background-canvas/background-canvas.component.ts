@@ -36,7 +36,7 @@ class SceneModel {
 })
 export class BackgroundCanvasComponent
   implements OnInit, AfterViewInit, AfterContentInit {
-  private readonly _defaultDuration = 1000;
+  private readonly _defaultDuration = 0;
   private readonly ViewportElement = "#avg-viewport";
 
   transitionList = [
@@ -102,6 +102,9 @@ export class BackgroundCanvasComponent
     const index = scene.index;
     const duration = data.duration || this._defaultDuration;
     let transitionName = data.transition || "crossfade";
+    // if (!transitionName) {
+    //   duration = 0;
+    // }
 
     if (transitionName === "random") {
       const randomIndex =
@@ -137,20 +140,20 @@ export class BackgroundCanvasComponent
       transform.height = "100%";
     }
 
-    const cacheImage = async imgFile => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = imgFile;
-        img.onload = () => {
-          setTimeout(() => {
-            resolve();
-          }, 100);
-        };
-      });
-    };
+    // const cacheImage = async imgFile => {
+    //   return new Promise((resolve, reject) => {
+    //     const img = new Image();
+    //     img.src = imgFile;
+    //     img.onload = () => {
+    //       setTimeout(() => {
+    //         resolve();
+    //       }, 100);
+    //     };
+    //   });
+    // };
 
-    await cacheImage(model.scene.file.filename);
-    await cacheImage(model.incommingNewScene.file.filename);
+    // await cacheImage(model.scene.file.filename);
+    // await cacheImage(model.incommingNewScene.file.filename);
 
     const background = "url(" + model.scene.file.filename + ")";
     const incommingBackground =
@@ -185,7 +188,6 @@ export class BackgroundCanvasComponent
 
       maskElement.classList.add(animationTokens[0], animationTokens[1]);
 
-
       // Waiting animation finished
       setTimeout(() => {
         maskElement.classList.remove(animationTokens[0], animationTokens[1]);
@@ -195,7 +197,7 @@ export class BackgroundCanvasComponent
         this.changeDetectorRef.detectChanges();
 
         resolve();
-      }, duration + 100);
+      }, duration + 10);
     });
   }
 

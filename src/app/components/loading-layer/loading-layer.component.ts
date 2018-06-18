@@ -16,8 +16,6 @@ export class LoadingLayerComponent implements OnInit, AfterViewInit {
   constructor() {}
 
   ngOnInit() {
-    // document.addEventListener("DOMContentLoaded", () => {}, false);
-    // LoadingLayerService.hideLoadingScreen();
   }
 
   ngAfterViewInit() {

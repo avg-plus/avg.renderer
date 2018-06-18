@@ -60,12 +60,30 @@ export class GameInitializer implements CanActivate {
       AVGNativePath.join(dataRoot, "/stylesheets/mask.css.tpl")
     );
 
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_IN", AVGNativePath.join(dataRoot, "/masks/iris-in.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_OUT", AVGNativePath.join(dataRoot, "/masks/iris-out.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WIPE", AVGNativePath.join(dataRoot, "/masks/wipe.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WINDOW_SHADES", AVGNativePath.join(dataRoot, "/masks/window-shades.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH", AVGNativePath.join(dataRoot, "/masks/brush.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH_DOWN", AVGNativePath.join(dataRoot, "/masks/brush-down.png"));
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_IRIS_IN",
+      AVGNativePath.join(dataRoot, "/masks/iris-in.png")
+    );
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_IRIS_OUT",
+      AVGNativePath.join(dataRoot, "/masks/iris-out.png")
+    );
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_WIPE",
+      AVGNativePath.join(dataRoot, "/masks/wipe.png")
+    );
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_WINDOW_SHADES",
+      AVGNativePath.join(dataRoot, "/masks/window-shades.png")
+    );
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_BRUSH",
+      AVGNativePath.join(dataRoot, "/masks/brush.png")
+    );
+    style = style.replace(
+      "$MASK_IMAGE_SPRITE_BRUSH_DOWN",
+      AVGNativePath.join(dataRoot, "/masks/brush-down.png")
+    );
 
     // $("head").append(`<style>${style}</style>`);
 
@@ -207,6 +225,10 @@ export class GameInitializer implements CanActivate {
           AVGNativePath.join(
             Resource.getRoot(),
             "graphics/backgrounds/tutorial/bedroom-1.jpg"
+          ),
+          AVGNativePath.join(
+            Resource.getRoot(),
+            "graphics/backgrounds/tutorial/demo-bg-1.jpg"
           )
         ]
       }
@@ -214,6 +236,7 @@ export class GameInitializer implements CanActivate {
 
     LoadingLayerService.showLoadingScreen();
 
-    return await LoadingLayerService.startDownloadSync();
+    await LoadingLayerService.startDownloadSync();
+    await LoadingLayerService.hideLoadingScreen();
   }
 }

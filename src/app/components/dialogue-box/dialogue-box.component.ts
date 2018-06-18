@@ -29,8 +29,6 @@ import { Observable } from "rxjs/Observable";
 import "app/common/live2d/lib/live2d.min.js";
 import "pixi-live2d/src/index";
 
-
-
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
@@ -73,7 +71,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private waitingInputTimeoutHandle = undefined;
 
   // Animation constant
-  private readonly CHAR_ANIMATION_DURATION = 0.2;
+  private readonly CHAR_ANIMATION_DURATION = 2000;
   private readonly CHAR_ANIMATION_OFFSET = -30;
   private readonly DIALOGUE_BOX_SHOW_DURATION = 300;
   private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
@@ -166,7 +164,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       requestAnimationFrame(animate);
       renderer.render(stage);
     }
-    animate();
+    // animate();
   }
 
   ngOnDestroy() {
@@ -214,45 +212,46 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
-  private initOpacity(index: number, opacity = 0): gsap.TweenLite {
+  private initOpacity(index: number, opacity = 0) {
     const elementID = "#character-index-" + index;
 
-    return gsap.TweenLite.to(elementID, 0, {
+    AnimationUtils.to("", elementID, 0, {
       opacity: opacity
       // x: this.CHAR_ANIMATION_OFFSET
     });
   }
 
-  private onCharacterEnter(
-    index: number,
-    character: avg.Character
-  ): gsap.TweenLite {
+  private onCharacterEnter(index: number, character: avg.Character) {
     const elementID = "#character-index-" + character.index;
 
-    return gsap.TweenLite.to(elementID, this.CHAR_ANIMATION_DURATION, {
-      opacity: 1
-      // x: 0
-    });
+    AnimationUtils.to(
+      "OnCharacterEnter",
+      elementID,
+      this.CHAR_ANIMATION_DURATION,
+      {
+        opacity: 1
+      }
+    );
   }
 
-  private onCharacterLeave(index: number): Promise<any> {
+  private onCharacterLeave(index: number) {
     const elementID = "#character-index-" + index;
 
-    return new Promise((resolve, reject) => {
-      AnimationUtils.to(
-        "CharacterLeaveAnimation",
-        elementID,
-        this.CHAR_ANIMATION_DURATION,
-        {
-          opacity: 0,
-          x: this.CHAR_ANIMATION_OFFSET
-        },
-        () => {
-          this.characters[index] = undefined;
-          resolve();
-        }
-      );
-    });
+    // return new Promise((resolve, reject) => {
+    //   AnimationUtils.to(
+    //     "CharacterLeaveAnimation",
+    //     elementID,
+    //     this.CHAR_ANIMATION_DURATION,
+    //     {
+    //       opacity: 0,
+    //       x: this.CHAR_ANIMATION_OFFSET
+    //     },
+    //     () => {
+    //       this.characters[index] = undefined;
+    //       resolve();
+    //     }
+    //   );
+    // });
   }
 
   public showCharacter(character: avg.Character) {
@@ -275,13 +274,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (charNotExists) {
-      this.initOpacity(index);
       this.characters[index] = character;
 
       $("#character-index-" + index).prop(
         "style",
         EngineUtils.cssObjectToStyles(style)
       );
+
+      this.initOpacity(index, 0);
 
       this.onCharacterEnter(index, character);
     } else {
@@ -326,14 +326,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    // @Plugin: OnBeforeDialogue
+    avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
+
     if (data.character && data.name) {
       this.currentName = data.name;
     } else {
       this.currentName = "";
     }
-
-    // @Plugin: OnBeforeDialogue
-    avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
 
     if (data) {
       this.startTypewriter();
@@ -350,7 +350,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChoiceClicked(index: number, choice: avg.DialogueChoice) {
     const result = new avg.SelectedDialogueChoice();
     result.selectedIndex = index;
-    result.selectedTitle = choice.title;
+    result.selectedText = choice.title;
     this.choicesSubject.next(result);
 
     this.dialogueChoices = null;
@@ -387,6 +387,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     let parsingBuffer = "";
     const resultBuffer = "";
     const blockRanges = [];
+    const waitInputIcon = ``;
     const spanTrimRegex = /<ruby>(.*)?<\/ruby>|<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
     if (avg.Setting.TextSpeed > 0) {
@@ -446,7 +447,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (count === this.dialogueData.text.length + 1) {
           this.currentStatus = DialogueBoxStatus.Complete;
-          this.animatedText = this.dialogueData.text;
+          this.animatedText = this.dialogueData.text + waitInputIcon;
           this.changeDetectorRef.detectChanges();
 
           clearInterval(this.typewriterHandle);
@@ -456,7 +457,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       }, (100 - avg.Setting.TextSpeed) * 2 || 1);
     } else {
       this.currentStatus = DialogueBoxStatus.Complete;
-      this.animatedText = this.dialogueData.text;
+      this.animatedText = this.dialogueData.text + waitInputIcon;
       this.changeDetectorRef.detectChanges();
 
       this.onAutoPlay();

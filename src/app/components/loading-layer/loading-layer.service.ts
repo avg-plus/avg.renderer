@@ -32,6 +32,8 @@ export class LoadingLayerService extends AVGService {
 
   private static _queue: any = new createjs.LoadQueue();
 
+  private static onCompleted: () => void;
+
   public static init() {
     // A single file has completed loading.
     this._queue.on("fileload", event => {
@@ -55,7 +57,7 @@ export class LoadingLayerService extends AVGService {
       }
 
       this.currentDownloadTips =
-        "少女祈祷中..." + this.currentProgress.toFixed(0) + "%";
+        "少女祈祷中..." + this.currentProgress.toFixed(1) + "%";
 
       if (event.loaded >= 1) {
         this.currentProgress = 100;
@@ -72,9 +74,9 @@ export class LoadingLayerService extends AVGService {
             fontSize: "7vh"
           },
           () => {
-            setTimeout(() => {
-              this.hideLoadingScreen();
-            }, 500);
+            // setTimeout(() => {
+            //   this.hideLoadingScreen();
+            // }, 500);
           }
         );
       }
@@ -123,11 +125,16 @@ export class LoadingLayerService extends AVGService {
       });
     });
   }
-  public static hideLoadingScreen() {
-    AnimationUtils.fadeTo("#loading-layer", 500, 0);
 
-    this.isShowLoadingScreen = false;
-    TransitionLayerService.releasePointerEvents();
+  public static hideLoadingScreen() {
+    return new Promise((resolve, reject) => {
+      AnimationUtils.fadeTo("#loading-layer", 1500, 0, () => {
+        this.isShowLoadingScreen = false;
+        TransitionLayerService.releasePointerEvents();
+
+        resolve();
+      });
+    });
   }
 
   public static showLoadingScreen() {
