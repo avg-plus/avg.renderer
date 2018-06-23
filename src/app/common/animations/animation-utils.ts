@@ -20,6 +20,52 @@ export class AnimationUtils {
     AnimationUtils.to("MoveTo", target, duration, { x: x, y: y }, complete);
   }
 
+  public static setAnchor(target: string, anchor: string = "center center") {
+    AnimationUtils.to(
+      "scaleTo",
+      target,
+      0,
+      {
+        "transform-origin": anchor
+      },
+      () => {}
+    );
+  }
+
+  public static scaleTo(
+    target: string,
+    duration: number = 200,
+    ratio: number,
+    complete?: () => void
+  ) {
+    AnimationUtils.to(
+      "scaleTo",
+      target,
+      duration,
+      {
+        transform: `scale(${ratio})`
+      },
+      complete
+    );
+  }
+
+  public static rotateTo(
+    target: string,
+    duration: number = 200,
+    angle: number,
+    complete?: () => void
+  ) {
+    AnimationUtils.to(
+      "rotateTo",
+      target,
+      duration,
+      {
+        transform: `rotate(${angle}deg)`
+      },
+      complete
+    );
+  }
+
   public static to(
     name: string,
     target: string,
@@ -29,7 +75,7 @@ export class AnimationUtils {
   ) {
     duration = duration === 0 ? 1 : duration;
 
-    gsap.TweenLite.killTweensOf(target, true);
+    // gsap.TweenLite.killTweensOf(target, true);
 
     setTimeout(() => {
       // Be sure DOM was created
