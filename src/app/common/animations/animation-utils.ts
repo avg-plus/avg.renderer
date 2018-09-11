@@ -1,5 +1,6 @@
 import * as gsap from "gsap";
 import * as $ from "jquery";
+import * as avg from "avg-engine/engine";
 import { EngineUtils } from "avg-engine/engine";
 
 export class AnimationUtils {
@@ -34,63 +35,67 @@ export class AnimationUtils {
    * @memberof AnimationUtils
    */
   public static animateCssFilter(target: string, filterProperty: string, duration: number, strength: number) {
-    const FILTERS = new Map([
-      ["blur", "px"],
-      ["brightness", "%"],
-      ["contrast", "%"],
-      ["grayscale", "%"],
-      ["hue-rotate", "deg"],
-      ["invert", "%"],
-      ["opacity", "%"],
-      ["saturate", "%"],
-      ["sepia", "%"]
-    ]);
-
-    FILTERS.forEach((v, k) => {
-      if (v === filterProperty) {
-        console.warn("Effect Name {0} not found.", filterProperty);
-        return;
-      }
-    });
-
-    let value = (strength || 0) * 1;
-    value = EngineUtils.NumericRange(value, 0, 100);
-
-    if (filterProperty === "hue-rotate") {
-      value = value * (360 / 100); // normalize to 360
-    } else if (filterProperty === "blur") {
-      value = value / 10; // blur max = 10px
-    }
-
-    const elementID = target;
-    const e = $(elementID);
-
-    let currentFilters = e.css("filter");
-    let filters = EngineUtils.parseCSSFilters(currentFilters);
-
-    // Get the value of current effectName
-    let currentEffectValue = filters.get(filterProperty);
-    if (currentEffectValue) {
-      if (filterProperty === "hue-rotate") {
-        currentEffectValue = currentEffectValue.replace("deg", "");
-      } else if (filterProperty === "blur") {
-        currentEffectValue = currentEffectValue.replace("px", "");
-      }
-    }
-
-    console.log("currentEffectValue", currentEffectValue);
-
-    let startValue = 0;
-    if (currentEffectValue) {
-      startValue = Number(currentEffectValue);
-    } else {
-      // opacity's initial value is 100%
-      if (filterProperty === "opacity" || filterProperty === "brightness") {
-        startValue = 100;
-      }
-    }
-
     return new Promise((resolve, reject) => {
+      const FILTERS = new Map([
+        ["blur", "px"],
+        ["brightness", "%"],
+        ["contrast", "%"],
+        ["grayscale", "%"],
+        ["hue-rotate", "deg"],
+        ["invert", "%"],
+        ["opacity", "%"],
+        ["saturate", "%"],
+        ["sepia", "%"]
+      ]);
+
+      FILTERS.forEach((v, k) => {
+        if (v === filterProperty) {
+          console.warn("Effect Name {0} not found.", filterProperty);
+          return;
+        }
+      });
+
+      let value = (strength || 0) * 1;
+      value = EngineUtils.NumericRange(value, 0, 100);
+
+      if (filterProperty === "hue-rotate") {
+        value = value * (360 / 100); // normalize to 360
+      } else if (filterProperty === "blur") {
+        value = value / 10; // blur max = 10px
+      }
+
+      const elementID = target;
+      const e = $(elementID);
+      if (e.length === 0) {
+        console.error(`Target ${target} not exists`);
+        resolve();
+      }
+
+      let currentFilters = e.css("filter");
+      let filters = EngineUtils.parseCSSFilters(currentFilters);
+
+      // Get the value of current effectName
+      let currentEffectValue = filters.get(filterProperty);
+      if (currentEffectValue) {
+        if (filterProperty === "hue-rotate") {
+          currentEffectValue = currentEffectValue.replace("deg", "");
+        } else if (filterProperty === "blur") {
+          currentEffectValue = currentEffectValue.replace("px", "");
+        }
+      }
+
+      console.log("currentEffectValue", currentEffectValue);
+
+      let startValue = 0;
+      if (currentEffectValue) {
+        startValue = Number(currentEffectValue);
+      } else {
+        // opacity's initial value is 100%
+        if (filterProperty === "opacity" || filterProperty === "brightness") {
+          startValue = 100;
+        }
+      }
+
       EngineUtils.countTo(
         startValue,
         value,
@@ -113,6 +118,14 @@ export class AnimationUtils {
         resolve
       );
     });
+  }
+
+  public static applyFilters(target: string, duration: number, filter: avg.Filter[]) {
+    if (!EngineUtils.isUndefined(filter) && Array.isArray(filter)) {
+      filter.forEach(v => {
+        AnimationUtils.animateCssFilter(target, v.name, duration, v.strength);
+      });
+    }
   }
 
   public static scaleTo(target: string, duration: number = 200, ratio: number, complete?: () => void) {

@@ -12,13 +12,7 @@ import {
   ElementRef
 } from "@angular/core";
 
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from "@angular/animations";
+import { trigger, state, style, animate, transition } from "@angular/animations";
 
 import * as avg from "avg-engine/engine";
 import * as gsap from "gsap";
@@ -37,6 +31,7 @@ import { reject } from "q";
 
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
+import { LoadingLayerService } from "../loading-layer/loading-layer.service";
 
 export enum DialogueBoxStatus {
   None,
@@ -62,16 +57,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public typewriterHandle = null;
   public autoPlayDelayHandle = null;
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
-  public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<
-    avg.SelectedDialogueChoice
-  >();
+  public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<avg.SelectedDialogueChoice>();
 
   public dialogueChoices: avg.APIDialogueChoice;
   private isWaitingInput = false;
   private waitingInputTimeoutHandle = undefined;
 
   // Animation constant
-  private readonly CHAR_ANIMATION_DURATION = 2000;
+  private readonly CHAR_ANIMATION_DURATION = 500;
   private readonly CHAR_ANIMATION_OFFSET = -30;
   private readonly DIALOGUE_BOX_SHOW_DURATION = 300;
   private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
@@ -82,15 +75,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public character_slot: Array<any>;
   public characters: Array<avg.Character>;
 
-  @ViewChild("characterContainer") characterContainer: ElementRef;
+  // @ViewChild("characterContainer") characterContainer: ElementRef;
 
-  constructor(
-    public changeDetectorRef: ChangeDetectorRef,
-    public sanitizer: DomSanitizer
-  ) {
+  constructor(public changeDetectorRef: ChangeDetectorRef, public sanitizer: DomSanitizer) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<avg.Character>(5);
 
+    this.dialogueData = null;
     // const width = avg.Setting.WindowWidth / 5;
 
     // for (let i = 0; i < 5; ++i) {
@@ -117,6 +108,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.choicesSubject = new Subject<avg.SelectedDialogueChoice>();
 
     this.dialogueChoices = new avg.APIDialogueChoice();
+    TransitionLayerService.FullScreenClickListener.observers = [];
   }
 
   ngOnInit() {
@@ -129,41 +121,41 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const renderer = new PIXI.WebGLRenderer(800, 600, { transparent: true });
-    // document.getElementById("dialogue-container").appendChild(renderer.view);
-    const stage = new PIXI.Container();
-    const modelHaru = require("app/common/live2d/sample/sampleApp1/assets/live2d/shizuku/shizuku.model.json");
-    const sprite = new PIXI.Sprite(); // PIXI.Sprite.fromImage('assets/graphics/characters/live2d/7_room2_a.jpg');
-    stage.addChild(sprite);
-    const live2dSprite = new PIXI["Live2DSprite"](modelHaru, {
-      debugLog: true,
-      randomMotion: true,
-      eyeBlink: true
-      // audioPlayer: (...args) => console.log(...args)
-    });
-    stage.addChild(live2dSprite);
-    // live2dSprite.x = -105;
-    // live2dSprite.y = -150;
-    live2dSprite.adjustScale(0, 0, 0.7);
-    live2dSprite.adjustTranslate(0.4, 0);
-    live2dSprite.startRandomMotion("idle");
-    live2dSprite.on("click", evt => {
-      const point = evt.data.global;
-      if (live2dSprite.hitTest("body", point.x, point.y)) {
-        live2dSprite.startRandomMotionOnce("tap_body");
-      }
-      if (live2dSprite.hitTest("head", point.x, point.y)) {
-        // live2dSprite.playSound("星のカケラ.mp3", "sound/");
-      }
-    });
-    live2dSprite.on("mousemove", evt => {
-      const point = evt.data.global;
-      live2dSprite.setViewPoint(point.x, point.y);
-    });
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(stage);
-    }
+    // const renderer = new PIXI.WebGLRenderer(800, 600, { transparent: true });
+    // // document.getElementById("dialogue-container").appendChild(renderer.view);
+    // const stage = new PIXI.Container();
+    // const modelHaru = require("app/common/live2d/sample/sampleApp1/assets/live2d/shizuku/shizuku.model.json");
+    // const sprite = new PIXI.Sprite(); // PIXI.Sprite.fromImage('assets/graphics/characters/live2d/7_room2_a.jpg');
+    // stage.addChild(sprite);
+    // const live2dSprite = new PIXI["Live2DSprite"](modelHaru, {
+    //   debugLog: true,
+    //   randomMotion: true,
+    //   eyeBlink: true
+    //   // audioPlayer: (...args) => console.log(...args)
+    // });
+    // stage.addChild(live2dSprite);
+    // // live2dSprite.x = -105;
+    // // live2dSprite.y = -150;
+    // live2dSprite.adjustScale(0, 0, 0.7);
+    // live2dSprite.adjustTranslate(0.4, 0);
+    // live2dSprite.startRandomMotion("idle");
+    // live2dSprite.on("click", evt => {
+    //   const point = evt.data.global;
+    //   if (live2dSprite.hitTest("body", point.x, point.y)) {
+    //     live2dSprite.startRandomMotionOnce("tap_body");
+    //   }
+    //   if (live2dSprite.hitTest("head", point.x, point.y)) {
+    //     // live2dSprite.playSound("星のカケラ.mp3", "sound/");
+    //   }
+    // });
+    // live2dSprite.on("mousemove", evt => {
+    //   const point = evt.data.global;
+    //   live2dSprite.setViewPoint(point.x, point.y);
+    // });
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   renderer.render(stage);
+    // }
     // animate();
   }
 
@@ -173,11 +165,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showBox() {
     // Show character
-    if (
-      this.dialogueData.character &&
-      this.dialogueData.character.avatar &&
-      this.dialogueData.character.avatar.file
-    ) {
+    if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
       this.showCharacter(this.dialogueData.character);
     }
 
@@ -186,11 +174,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       avg.api.playVoice(<string>this.dialogueData.voice);
     }
 
-    AnimationUtils.fadeTo(
-      ".dialogue-text-box",
-      this.DIALOGUE_BOX_SHOW_DURATION,
-      1
-    );
+    AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
 
     if (this.currentName && this.currentName.length > 0) {
       AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
@@ -200,15 +184,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public hideBox() {
-    AnimationUtils.fadeTo(
-      ".dialogue-text-box",
-      this.DIALOGUE_BOX_HIDE_DURATION,
-      0,
-      () => {
-        this.currentStatus = DialogueBoxStatus.Hidden;
-        this.subject.next(DialogueBoxStatus.Hidden);
-      }
-    );
+    AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_HIDE_DURATION, 0, () => {
+      this.currentStatus = DialogueBoxStatus.Hidden;
+      this.subject.next(DialogueBoxStatus.Hidden);
+    });
     AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
@@ -224,81 +203,91 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private onCharacterEnter(index: number, character: avg.Character) {
     const elementID = "#character-index-" + character.index;
 
-    AnimationUtils.to(
-      "OnCharacterEnter",
-      elementID,
-      this.CHAR_ANIMATION_DURATION,
-      {
-        opacity: 1
-      }
-    );
+    AnimationUtils.to("OnCharacterEnter", elementID, this.CHAR_ANIMATION_DURATION, {
+      opacity: 1
+    });
   }
 
   private onCharacterLeave(index: number) {
     const elementID = "#character-index-" + index;
 
-    // return new Promise((resolve, reject) => {
-    //   AnimationUtils.to(
-    //     "CharacterLeaveAnimation",
-    //     elementID,
-    //     this.CHAR_ANIMATION_DURATION,
-    //     {
-    //       opacity: 0,
-    //       x: this.CHAR_ANIMATION_OFFSET
-    //     },
-    //     () => {
-    //       this.characters[index] = undefined;
-    //       resolve();
-    //     }
-    //   );
-    // });
+    return new Promise((resolve, reject) => {
+      AnimationUtils.to(
+        "CharacterLeaveAnimation",
+        elementID,
+        this.CHAR_ANIMATION_DURATION,
+        {
+          opacity: 0
+          // x: this.CHAR_ANIMATION_OFFSET
+        },
+        () => {
+          this.characters[index] = undefined;
+        }
+      );
+
+      resolve();
+    });
   }
 
-  public showCharacter(character: avg.Character) {
+  public async showCharacter(character: avg.Character) {
     const index = character.index;
+    const elementID = "#character-index-" + index;
     if (index < 1 || index > 5) {
       console.warn("Character index should be 1-5");
       return;
     }
 
-    const charNotExists =
-      this.characters[index] === undefined || this.characters[index] === null;
+    const charNotExists = this.characters[index] === undefined || this.characters[index] === null;
+
+    // Preload avatar
+    // await LoadingLayerService.asyncLoading(character.avatar.file);
+
+    const img = new Image();
+    img.style.opacity = "0";
+    img.src = character.avatar.file;
+
+    const dimension: any = await new Promise((resolve, reject) => {
+      $(img).ready(() => {
+        setTimeout(() => {
+          resolve({ width: img.width, height: img.height });
+        }, 0);
+      });
+    });
+
+    // console.log(dimension);
+
+    const imageRenderer = character.avatar.renderer;
+    const filter = imageRenderer.filter || [];
+    AnimationUtils.applyFilters(elementID, 0, filter);
 
     const style = {
       position: "fixed",
-      width: "100%",
-      height: "100%",
-      left: this.CHAR_WIDTH * (index - 1) + "%",
-      bottom: "-30%",
-      background: `url(${character.avatar.file}) no-repeat`
+      width: `${dimension.width + "px"}`,
+      height: `${dimension.height + "px"}`,
+      opacity: "0",
+      left: this.CHAR_WIDTH * (index - 1) + (imageRenderer.offset_x || 0) + "%",
+      bottom: 0 + (imageRenderer.offset_y || 0) + `%`,
+      transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
+      background: `url(${character.avatar.file}) no-repeat`,
+      "background-size": `100% 100%`
     };
+
+    AnimationUtils.setAnchor(elementID, "center center");
 
     if (charNotExists) {
       this.characters[index] = character;
-
-      $("#character-index-" + index).prop(
-        "style",
-        EngineUtils.cssObjectToStyles(style)
-      );
-
       this.initOpacity(index, 0);
+
+      $("#character-index-" + index).prop("style", EngineUtils.cssObjectToStyles(style));
 
       this.onCharacterEnter(index, character);
     } else {
       this.characters[index] = character;
-
-      $("#character-index-" + index).prop(
-        "style",
-        EngineUtils.cssObjectToStyles(style)
-      );
-
       this.initOpacity(index, 1);
-      this.changeDetectorRef.detectChanges();
 
-      // this.onCharacterLeave(index).eventCallback("onComplete", () => {
-      //   this.characters[index] = character;
-      //   this.onCharacterEnter(index, character);
-      // });
+      $("#character-index-" + index).prop("style", EngineUtils.cssObjectToStyles(style));
+
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -314,6 +303,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  public getTrustedName() {
+    return this.sanitizer.bypassSecurityTrustHtml(this.currentName);
+  }
+
   public getTrustedAnimatedText() {
     return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
@@ -322,12 +315,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogueData = data;
     this.animatedText = "";
 
+    this.changeDetectorRef.detectChanges();
+
     if (!this.dialogueData) {
       return;
     }
 
-    // @Plugin: OnBeforeDialogue
-    avg.PluginManager.on(avg.PluginEvents.OnBeforeDialogue, data);
+    // @Plugin: OnBeforeShowDialogue
+    avg.PluginManager.on(avg.AVGPluginHooks.OnBeforeShowDialogue, data);
 
     if (data.character && data.name) {
       this.currentName = data.name;
@@ -387,7 +382,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     let parsingBuffer = "";
     const resultBuffer = "";
     const blockRanges = [];
-    const waitInputIcon = ``;
+    // const waitInputIcon = `<img src="data/icons/wait-input.gif" />`;
     const spanTrimRegex = /<ruby>(.*)?<\/ruby>|<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
     if (avg.Setting.TextSpeed > 0) {
@@ -447,7 +442,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (count === this.dialogueData.text.length + 1) {
           this.currentStatus = DialogueBoxStatus.Complete;
-          this.animatedText = this.dialogueData.text + waitInputIcon;
+          this.animatedText = this.dialogueData.text;
           this.changeDetectorRef.detectChanges();
 
           clearInterval(this.typewriterHandle);
@@ -457,7 +452,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       }, (100 - avg.Setting.TextSpeed) * 2 || 1);
     } else {
       this.currentStatus = DialogueBoxStatus.Complete;
-      this.animatedText = this.dialogueData.text + waitInputIcon;
+      this.animatedText = this.dialogueData.text;
       this.changeDetectorRef.detectChanges();
 
       this.onAutoPlay();

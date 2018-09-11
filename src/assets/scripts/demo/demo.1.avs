@@ -2,7 +2,6 @@ let mainChar = "";
 let secondChar = "";
 
 const vizee = "[c=red][rt=战备通信专家]木村长[/rt][/c]";
-const space = "[c=red][rt=黑客]空格[/rt][/c]";
 const latyas = "[c=red][rt=死肥宅]拉提亚斯[/rt][/c]";
 
 const char_vizee = function(index, suffix) {
@@ -11,38 +10,17 @@ const char_vizee = function(index, suffix) {
     character: {
       index: index,
       avatar: {
-        file: `demo/vizee-${suffix}.png`,
+        file: `demo/vizee_${suffix}.png`,
         renderer: {
-          offset_x: 0,
-          offset_y: -10,
+          offset_x: -75,
+          offset_y: -220,
+          scale: 0.35,
           filter: []
         }
       }
     }
   };
 };
-
-const char_space = function(index, suffix) {
-  return {
-    name: space,
-    character: {
-      index: index,
-      avatar: {
-        file: `demo/space-${suffix}.png`,
-        renderer: {
-          offset_x: 0,
-          offset_y: -24,
-          filter: []
-        }
-      }
-    }
-  };
-};
-
-const samplePlugin = plugins.load("sample-plugin.js");
-plugins.call(samplePlugin, "onBeforeShowDialogue", {});
-plugins.call(samplePlugin, "myPluginMethod", {});
-plugins.call(samplePlugin, "onRenderUI", {});
 
 api.showText(["「唔……」", "「咦……？[wait]这里是……？」"]);
 api.hideText();
@@ -122,7 +100,7 @@ let isOK = false;
 
 while (!isOK) {
   let choice = api.showChoices(["风见", "（手动输入）"]);
-  if (choice.selectedIndex === 1) {
+  if (choice.selectedIndex === 3) {
     let inputResult = api.showInputBox("我叫什么名字？", {
       inputType: 0,
       minLength: 1,
@@ -274,6 +252,32 @@ api.showText(["（你到底是有多不会写剧本啊，就算不会也别抄�
   name: "${your_name}"
 });
 
+// api.hideText();
+// api.wait(600);
+
+// api.showText(["「咳咳，妹妹，出来吧！」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.hideText();
+// api.wait(600);
+
+// api.showText(["「哥哥，你找我吗？」"], {
+//   name: "妹妹"
+// });
+
+// api.showText(["「诶？！好可爱的妹妹(*╹▽╹*)！」", "「不过为什么妹妹的画风和你完全不一样。」"], {
+//   name: "${your_name}"
+// });
+
+// api.showText(["「因为……这是 Live2D，比起不会动的我们。我的妹妹不仅会自己动，还会改变姿势。」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.showText(["「糟糕的对白！」"], {
+//   name: "${your_name}"
+// });
+
 api.showText(["「是不是很厉害。」"], {
   name: "${AngryPowman}"
 });
@@ -282,9 +286,97 @@ api.showText(["（一点都不！）"], {
   name: "${your_name}"
 });
 
-api.showText(["「啊！对了，差点忘记去木村的」"], {
-  name: "${AngryPowman}"
-});
+// api.showImage("demo/qrcode.jpg", {
+//   size: "50%",
+//   position: "(42%,20%)",
+//   animation: {
+//     name: "fadein"
+//   }
+// });
+
+// api.showText(["「扫描屏幕上方的二维码，给我打钱。」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.showText(["（这钱要的猝不及防！有人会给你钱才怪！）"], {
+//   name: "${your_name}"
+// });
+// api.hideText();
+// api.wait(400);
+
+// const tuhao = ["誅诺", "黑娘", "王文璐", "章思源", "村长", "小安", "74", "胡大头"];
+// for (let i = 0; i < tuhao.length; ++i) {
+//   api.playSE("demo/coin.mp3");
+//   api.showSubtitle(
+//     `[s=22][c=yellow]${tuhao[i]}[/c] 支付了 $` + (Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000).toString(),
+//     {
+//       position: "(60%, " + (20 + i * 5).toString() + "%)",
+//       animation: {
+//         name: "flyIn",
+//         options: {
+//           direction: "left",
+//           offset: 50,
+//           duration: 200
+//         }
+//       }
+//     }
+//   );
+//   api.wait(300);
+// }
+
+// api.wait(1000);
+// api.showText(["「……」", "「居然还真的有人打钱了，这些人到底是有多有钱啊喂！」"], {
+//   name: "${your_name}"
+// });
+
+// api.showText(["「咳咳，Please don't mind the detail.」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.showText(["「收起你奇怪的英语！体育老师教的吧？！」"], {
+//   name: "${your_name}"
+// });
+
+// api.hideText();
+// api.wait(600);
+
+// api.showText(["「哥哥你怎么不理我？」"], {
+//   name: "妹妹"
+// });
+
+// api.showText(["「妹妹等我跟这个女人解释一下我英文为什么那么好。」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.showText(["「哼╭(╯^╰)╮！」"], {
+//   name: "妹妹"
+// });
+
+// api.showText(["[emoji=n2.jpg]"], {
+//   name: "妹妹"
+// });
+
+// api.showText(["[s=30]男人没一个好东西！"], {
+//   name: "妹妹"
+// });
+
+// api.showText(["[emoji=n1.jpg] [s=42]不理你惹！"], {
+//   name: "妹妹"
+// });
+
+// api.hideText();
+// api.wait(600);
+
+// api.showText(["「……!!！」", "「妹妹等等我！」"], {
+//   name: "${AngryPowman}"
+// });
+
+// api.hideText();
+// api.wait(600);
+
+// api.showText(["「？？？？」", "「喂你们两个算闹哪样，等……等等我。」"], {
+//   name: "${your_name}"
+// });
 
 api.hideText();
 api.wait(600);
@@ -292,12 +384,11 @@ api.wait(600);
 api.transitionTo("black", 0, 0);
 api.transitionTo("black", 1, 1000);
 
+api.removeImage();
+api.removeSubtitle();
 api.wait(600);
 
-api.loadScene(0, "demo/room.png", {
-  transition: "brush",
-  duration: 1000
-});
+api.loadScene(0, "demo/room.png");
 
 api.transitionTo("black", 0, 1000);
 
@@ -312,7 +403,7 @@ api.showText(
   char_vizee(1, "normal")
 );
 
-// api.hideCharacter(1);
+api.hideCharacter(1);
 
 api.showText(["「嘿嘿嘿，其实这个是有原因的。这不是画师跳票了嘛。看在只有你有立绘的份上……不提这事儿。」"], {
   name: "${AngryPowman}"
@@ -320,78 +411,24 @@ api.showText(["「嘿嘿嘿，其实这个是有原因的。这不是画师跳�
 
 api.showText(["「哦？可是我听说你是因为沉迷游戏才导致跳票的。」"], char_vizee(1, "normal"));
 
-// api.hideCharacter(1);
+api.hideCharacter(1);
 
 api.showText(["「没……没有这回事，游戏制作人的事，能叫跳票吗？」"], {
   name: "${AngryPowman}"
 });
 
 api.showText(["「我认为得你在逃避跳票的责任。」", "「后面打算做一款什么样的游戏？」"], char_vizee(1, "normal"));
-// api.hideCharacter(1);
+api.hideCharacter(1);
+api.hideText();
 
 api.showText(["「你也看到了，这都跳票了，我怎么知道是什么游戏。」"], {
   name: "${AngryPowman}"
 });
 
 api.showText(["「没有事先计划吗？」"], char_vizee(1, "normal"));
-// api.hideCharacter(1);
 
 api.showText(["「有是有的，可这[rt=AVGPlus]引擎[/rt]部分完工都太久了。做一款正式正式的游戏太难了。」"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「你们……在说什么？」"], char_space(3, "normal"));
-// api.hideCharacter(1);
-
-api.showText(
-  ["「诶？！」", "「如果问没猜错的话……」", "「这位就是你们研究所里那位神秘而且神龙见首不见尾、从不露脸的大黑客吗？」"],
-  {
-    name: "${AngryPowman}"
-  }
-);
-
-api.showText(["「……」", "「被你说的，一点都不神秘了。」"], char_space(3, "normal"));
-// api.hideCharacter(3);
-
-api.wait(800);
-
-api.showText(["「等我一会儿。」"], char_space(3, "normal"));
-api.hideText();
-api.hideCharacter();
-api.wait(700);
-
-api.showText(["「蒙面术——」", "「启动！」"], char_space(3, "normal"));
-api.hideCharacter();
-api.wait(300);
-
-api.transitionTo("white", 1, 200);
-api.transitionTo("white", 0, 200);
-
-api.showText(["「怎么样，现在不知道我是谁了吧？」"], char_space(3, "hidden"));
-api.showText(["「……」"], char_vizee(1, "normal"));
-api.showText(["「……」"], {
-  name: "${AngryPowman}"
-});
-
-api.showText(["（这种中二病，真的会是被联邦通缉的大黑客吗？）"], {
-  name: "${AngryPowman}"
-});
-
-api.showText(["「真的是。」"], char_space(3, "hidden"));
-
-api.showText(["「？！」", "「为什么你知道我在想什么？！」"], {
-  name: "${AngryPowman}"
-});
-
-api.showText(
-  ["「听说这是你开发的世界？」", "「刚刚带上面罩的瞬间，root 权限已经是我的了。」"],
-  char_space(3, "hidden")
-);
-
-api.showText(["「……！」"], {
-  name: "${AngryPowman}"
-});
-api.showText(["「……大哥喝茶！」"], {
-  name: "${AngryPowman}"
-});
-// api.wait(300);
+api.showText(["「哦？是什么游戏来着？」"], char_vizee(1, "normal"));

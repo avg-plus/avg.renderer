@@ -34,24 +34,13 @@ class SceneModel {
   templateUrl: "./background-canvas.component.html",
   styleUrls: ["./background-canvas.component.scss"]
 })
-export class BackgroundCanvasComponent
-  implements OnInit, AfterViewInit, AfterContentInit {
+export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterContentInit {
   private readonly _defaultDuration = 0;
   private readonly ViewportElement = "#avg-viewport";
 
-  transitionList = [
-    "iris-in",
-    "iris-out",
-    "wipe",
-    "window-shades",
-    "brush",
-    "brush-down",
-    "crossfade"
-  ];
+  transitionList = ["iris-in", "iris-out", "wipe", "window-shades", "brush", "brush-down", "crossfade"];
 
-  public scenes: Array<SceneModel> = new Array<SceneModel>(
-    GameDef.MaxBackgroundLayers
-  );
+  public scenes: Array<SceneModel> = new Array<SceneModel>(GameDef.MaxBackgroundLayers);
 
   constructor(
     private elementRef: ElementRef,
@@ -97,7 +86,8 @@ export class BackgroundCanvasComponent
   public async setBackground(scene: avg.APIScene): Promise<any> {
     const data = scene.data;
 
-    const transform = data.transform;
+    // const transform = data.transform;
+    const renderer = data.renderer;
     const file = data.file.filename;
     const index = scene.index;
     const duration = data.duration || this._defaultDuration;
@@ -107,9 +97,12 @@ export class BackgroundCanvasComponent
     // }
 
     if (transitionName === "random") {
-      const randomIndex =
-        Math.floor(Math.random() * (this.transitionList.length - 0 + 1)) + 0;
+      // const randomIndex = Math.floor(Math.random() * (this.transitionList.length - 0 + 1)) + 0;
+      const randomIndex = EngineUtils.getRandom(this.transitionList.length);
+
       transitionName = this.transitionList[randomIndex];
+
+      console.log("Random transition: ", randomIndex, transitionName);
     }
 
     if (!file || file.length === 0) {
@@ -117,9 +110,7 @@ export class BackgroundCanvasComponent
     }
 
     if (index >= GameDef.MaxBackgroundLayers) {
-      console.error(
-        "Index is greater than MaxBackgroundLayers. Index = " + index
-      );
+      console.error("Index is greater than MaxBackgroundLayers. Index = " + index);
       return;
     }
 
@@ -135,29 +126,13 @@ export class BackgroundCanvasComponent
       model.incommingNewScene = data;
     }
 
-    if (transform.stretch) {
-      transform.width = "100%";
-      transform.height = "100%";
-    }
-
-    // const cacheImage = async imgFile => {
-    //   return new Promise((resolve, reject) => {
-    //     const img = new Image();
-    //     img.src = imgFile;
-    //     img.onload = () => {
-    //       setTimeout(() => {
-    //         resolve();
-    //       }, 100);
-    //     };
-    //   });
-    // };
-
-    // await cacheImage(model.scene.file.filename);
-    // await cacheImage(model.incommingNewScene.file.filename);
+    // if (transform.stretch) {
+    //   transform.width = "100%";
+    //   transform.height = "100%";
+    // }
 
     const background = "url(" + model.scene.file.filename + ")";
-    const incommingBackground =
-      "url(" + model.incommingNewScene.file.filename + ")";
+    const incommingBackground = "url(" + model.incommingNewScene.file.filename + ")";
 
     return new Promise((resolve, reject) => {
       const backgroundID = "background-layer-" + index;
@@ -169,24 +144,37 @@ export class BackgroundCanvasComponent
       const maskElement = document.getElementById(maskID);
       const backgroundElenent = document.getElementById(backgroundID);
 
-      maskElement.style.width = transform.width;
-      maskElement.style.height = transform.height;
-      maskElement.style.left = transform.x;
-      maskElement.style.top = transform.y;
+      maskElement.style.width = `${renderer.width || 100}%`;
+      maskElement.style.height = `${renderer.height || 100}%`;
+      maskElement.style.left = `${renderer.x + renderer.offset_x}%`;
+      maskElement.style.top = `${renderer.y + renderer.offset_y}%`;
+      maskElement.style.transform = renderer.scale ? `scale(${renderer.scale})` : "";
+
       maskElement.style.background = background;
 
       // Set animtion duration
       maskElement.style.animationDuration = duration / 1000 + "s";
 
-      backgroundElenent.style.width = transform.width;
-      backgroundElenent.style.height = transform.height;
-      backgroundElenent.style.left = transform.x;
-      backgroundElenent.style.top = transform.y;
+      backgroundElenent.style.width = `${renderer.width || 100}%`;
+      backgroundElenent.style.height = `${renderer.height || 100}%`;
+      backgroundElenent.style.left = `${renderer.x + renderer.offset_x}%`;
+      backgroundElenent.style.top = `${renderer.y + renderer.offset_y}%`;
+      backgroundElenent.style.transform = renderer.scale ? `scale(${renderer.scale})` : "";
       backgroundElenent.style.background = incommingBackground;
+
+      const filter = renderer.filter || [];
+      // filter.forEach(v => {
+      //   AnimationUtils.animateCssFilter(`#${maskID}`, v.name, 0, v.strength);
+      //   AnimationUtils.animateCssFilter(`#${backgroundID}`, v.name, 0, v.strength);
+      // });
+
+      AnimationUtils.applyFilters(`#${maskID}`, 0, filter);
+      AnimationUtils.applyFilters(`#${backgroundID}`, 0, filter);
 
       const animationTokens = ["scene-mask-transition", transitionName];
 
       maskElement.classList.add(animationTokens[0], animationTokens[1]);
+      this.changeDetectorRef.detectChanges();
 
       // Waiting animation finished
       setTimeout(() => {
@@ -214,90 +202,9 @@ export class BackgroundCanvasComponent
 
   public async cssFilter(effect: avg.Effect) {
     effect.duration = effect.duration || 1000;
-
-    const FILTERS = new Map([
-      ["blur", "px"],
-      ["brightness", "%"],
-      ["contrast", "%"],
-      ["grayscale", "%"],
-      ["hue-rotate", "deg"],
-      ["invert", "%"],
-      ["opacity", "%"],
-      ["saturate", "%"],
-      ["sepia", "%"]
-    ]);
-
-    FILTERS.forEach((v, k) => {
-      if (v === effect.effectName) {
-        console.warn("Effect Name {0} not found.", effect.effectName);
-        return;
-      }
-    });
-
-    let value = (effect.strength || 0) * 1;
-    value = EngineUtils.NumericRange(value, 0, 100);
-
-    if (effect.effectName === "hue-rotate") {
-      value = value * (360 / 100); // normalize to 360
-    } else if (effect.effectName === "blur") {
-      value = value / 10; // blur max = 10px
-    }
-
     const elementID = "#avg-viewport";
-    const e = $(elementID);
 
-    let currentFilters = e.css("filter");
-    let filters = EngineUtils.parseCSSFilters(currentFilters);
-
-    // Get the value of current effectName
-    let currentEffectValue = filters.get(effect.effectName);
-    if (currentEffectValue) {
-      if (effect.effectName === "hue-rotate") {
-        currentEffectValue = currentEffectValue.replace("deg", "");
-      } else if (effect.effectName === "blur") {
-        currentEffectValue = currentEffectValue.replace("px", "");
-      }
-    }
-
-    console.log("currentEffectValue", currentEffectValue);
-
-    let startValue = 0;
-    if (currentEffectValue) {
-      startValue = Number(currentEffectValue);
-    } else {
-      // opacity's initial value is 100%
-      if (
-        effect.effectName === "opacity" ||
-        effect.effectName === "brightness"
-      ) {
-        startValue = 100;
-      }
-    }
-
-    return new Promise((resolve, reject) => {
-      EngineUtils.countTo(
-        startValue,
-        value,
-        effect.duration,
-        v => {
-          // Set exist filters
-          currentFilters = e.css("filter");
-          filters = EngineUtils.parseCSSFilters(currentFilters);
-          e.css("filter", currentFilters);
-
-          const filterValue = v + FILTERS.get(effect.effectName);
-          const filterProperty = effect.effectName + "(" + filterValue + ")";
-          filters.set(effect.effectName, filterValue);
-
-          const newFilters = EngineUtils.toCSSFilter(filters);
-
-          e.css("filter", newFilters);
-        }
-        // resolve
-      );
-
-      resolve();
-    });
+    await AnimationUtils.animateCssFilter(elementID, effect.effectName, effect.duration, effect.strength);
   }
 
   public moveTo(index: number, duration: number, x: number) {
@@ -323,9 +230,7 @@ export class BackgroundCanvasComponent
   }
 
   shake() {
-    const viewport = this.elementRef.nativeElement.querySelector(
-      "#avg-viewport"
-    );
+    const viewport = this.elementRef.nativeElement.querySelector("#avg-viewport");
 
     if (viewport) {
       // Effects.shake(viewport);

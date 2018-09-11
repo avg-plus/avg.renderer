@@ -50,7 +50,7 @@
   <div class="dialogue-text-box">
 
     <div class="name-box">
-      <div class="name">{{currentName}}</div>
+      <div class="name" [innerHTML]="getTrustedName()"></div>
     </div>
 
     <div class="content" [innerHTML]="getTrustedAnimatedText()"></div>

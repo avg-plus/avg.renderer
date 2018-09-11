@@ -8,8 +8,10 @@ api.wait(1000);
 
 api.transitionTo("black", 0, 1000);
 
-api.wait(3000);
-api.loadScene(0, "tutorial/bedroom-1-day.jpg", {});
+api.wait(1500);
+api.loadScene(0, "tutorial/bedroom-1-day.jpg", {
+  duration: 1000
+});
 api.wait(1000);
 
 const titleResult = api.showSubtitle(

@@ -4,7 +4,7 @@ api.transitionTo("black", 0, 1000);
 api.loadScene(0, "tutorial/avg-scene-forest.jpg", {
   // transition: "brush"
 });
-// api.wait(1000);
+api.wait(1000);
 
 // while (true) {
   // api.effect("sakura", { strength: 60 });
@@ -12,23 +12,24 @@ api.loadScene(0, "tutorial/avg-scene-forest.jpg", {
   // api.effect("snow", { strength: 60 });
   
   // api.effect("opacity", { duration: 2000, strength: 10 });
-  api.effect("brightness", { duration: 2000, strength: 10 });
+  // api.effect("brightness", { duration: 2000, strength: 10 });
   
-  // api.effect("hue-rotate", { duration: 2000, strength: 60 });
-  // api.effect("sepia", { duration: 3000, strength: 60 });
-  // api.effect("blur", { duration: 4000, strength: 35 });
+  api.effect("hue-rotate", { duration: 2000, strength: 60 });
+  api.effect("sepia", { duration: 3000, strength: 60 });
+  api.effect("blur", { duration: 4000, strength: 59 });
+  // api.wait(5000);
 
   // api.wait(12000);
-  // api.effect("blur", { duration: 1000, strength: 0 });
-  // api.effect("hue-rotate", { duration: 4000, strength: 0 });
-  // api.effect("sepia", { duration: 1000, strength: 0 });
+  api.effect("blur", { duration: 1000, strength: 0 });
+  api.effect("hue-rotate", { duration: 1000, strength: 0 });
+  api.effect("sepia", { duration: 1000, strength: 0 });
   
   // api.effect("blur", { duration: 3000, strength: 30 });
   // api.effect("blur", { duration: 2000, strength: 50 });
   // api.effect("blur", { duration: 3000, strength: 10 });
   // api.effect("blur", { duration: 1000, strength: 0 });
 
-  // api.wait(3000);
+  // api.wait(8000);
 // }
 
 // api.effect("blur", { duration: 3000 });

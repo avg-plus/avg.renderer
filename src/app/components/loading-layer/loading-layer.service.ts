@@ -128,7 +128,7 @@ export class LoadingLayerService extends AVGService {
 
   public static hideLoadingScreen() {
     return new Promise((resolve, reject) => {
-      AnimationUtils.fadeTo("#loading-layer", 1500, 0, () => {
+      AnimationUtils.fadeTo("#loading-layer", 300, 0, () => {
         this.isShowLoadingScreen = false;
         TransitionLayerService.releasePointerEvents();
 
@@ -152,7 +152,7 @@ export class LoadingLayerService extends AVGService {
         width: "100%",
         height: "100%",
         "z-index": 9999999,
-        background: "url(" + AVGNativePath.join(Resource.getRoot(), bg) + ")",
+        background: "url(" + AVGNativePath.join(Resource.getAssetsRoot(), bg) + ")",
         "background-size": "100% 100%",
         "background-repeat": "no-repeat"
       };

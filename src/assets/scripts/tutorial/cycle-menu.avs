@@ -13,7 +13,6 @@
 api.playBGM("tutorial/BeautifulHawaii.mp3");
 
 while (true) {
-  // if (true) {
   api.hideCharacter();
   api.hideText();
 
@@ -31,11 +30,45 @@ while (true) {
   );
 
   api.loadScene(0, "tutorial/avg-scene-forest.jpg", {
-    transition: "random"
+    transition: "crossfade",
+    renderer: {
+      // scale: 0.7,
+      width: 100,
+      height: 100,
+      x: 0,
+      y: 0,
+      offset_x: 0,
+      offset_y: 0,
+      filter: [
+        // {
+        //   name: "sepia",
+        //   strength: 40
+        // },
+        // {
+        //   name: "hue-rotate",
+        //   strength: 40
+        // },
+        // {
+        //   name: "blur",
+        //   strength: 50
+        // }
+      ]
+    }
   });
+
+  api.transitionTo("black", 0, 1000);
+
+  // api.effect("sepia", { duration: 1000, strength: 80 });
+  // api.effect("blur", { duration: 1, strength: 20 });
+
   //   api.wait(1000);
   // api.effect("sakura");
-  // api.showCharacter(1, "tutorial/girl-normal.png", {});
+  api.showCharacter(1, "cat-normal.png", {
+    renderer: {
+      scale: 0.7,
+      filter: []
+    }
+  });
   // api.showCharacter(2, "tutorial/girl-angry.png", {});
   // api.showCharacter(3, "tutorial/girl-ask.png", {});
   // api.showCharacter(4, "tutorial/girl-sad.png", {});
@@ -46,7 +79,18 @@ while (true) {
     character: {
       index: 2,
       avatar: {
-        file: "tutorial/girl-normal.png"
+        file: "tutorial/girl-normal.png",
+        renderer: {
+          offset_x: 0,
+          offset_y: -33,
+          scale: 0.7,
+          filter: [
+            // {
+            //   name: "sepia",
+            //   strength: 20
+            // }
+          ]
+        }
       }
     }
   });
@@ -87,7 +131,7 @@ while (true) {
 
   api.removeSubtitle(titleResult.id);
 
-  api.transitionTo("black", 1, 500);
+  // api.transitionTo("black", 1, 500);
 
   api.hideCharacter();
   api.hideText();

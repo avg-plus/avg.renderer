@@ -24,8 +24,7 @@ import { ScreenWidgetComponent } from "./screen-widget.component";
   templateUrl: "./text-widget.component.html",
   styleUrls: ["./text-widget.component.scss"]
 })
-export class TextWidgetComponent extends ScreenWidgetComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
+export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
   private customPositionStyle: any;
 
   public bindingSubtitleSafeHtml: SafeHtml;
@@ -44,28 +43,23 @@ export class TextWidgetComponent extends ScreenWidgetComponent
     this.showWidget();
   }
 
-  ngAfterViewChecked() {
-
-  }
+  ngAfterViewChecked() {}
 
   protected showWidget() {
     super.showWidget();
     this.update();
     super.initShowAnimation();
 
-    this.changeDetectorRef.detectChanges();    
+    this.changeDetectorRef.detectChanges();
   }
 
   public update() {
     const subtitleData = <avg.Subtitle>this.data;
 
     // Update and parse content
-    subtitleData.text = avg.DialogueParserPlugin.parseContent(
-      subtitleData.text
-    );
+    subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
+    this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(subtitleData.text);
 
-    this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-      subtitleData.text
-    );
+    this.changeDetectorRef.detectChanges();
   }
 }

@@ -1,16 +1,7 @@
-import {
-  app,
-  BrowserWindow,
-  screen,
-  Menu,
-  MenuItem,
-  autoUpdater,
-  dialog
-} from "electron";
+import { app, BrowserWindow, screen, Menu, MenuItem, autoUpdater, dialog } from "electron";
 
 import * as path from "path";
 import * as url from "url";
-
 
 // import * as fs from "fs";
 // const BrowserFS = require("browserfs/dist/node/index");
@@ -22,7 +13,6 @@ const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
 function createWindow() {
-
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
@@ -33,6 +23,7 @@ function createWindow() {
     resizable: false,
     backgroundColor: "#000000",
     hasShadow: true,
+    titleBarStyle: "hiddenInset",
     webPreferences: {
       nodeIntegration: true
     }

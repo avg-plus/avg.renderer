@@ -84,10 +84,11 @@ $DIALOGUE_BOX_HEIGHT: 200px;
 
 .character {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 10%;
-  bottom: -30%;
+  overflow: visible;
+  // width: 100%;
+  // height: 100%;
+  // left: 10%;
+  // bottom: -30%;
   // background: url(/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/dist/desktop/assets/graphics/characters/tutorial/girl-angry.png)
   // no-repeat;
 
