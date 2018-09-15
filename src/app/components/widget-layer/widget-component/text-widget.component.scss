@@ -1,14 +1,14 @@
 @import "./widget-styles.scss";
 
 .text-widget {
-    font-size: 23px;
-    color: white;
-    font-family: "Shanghei";
-    opacity: 0;
-    // transform: scale(0);
-    text-align: center;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-        1px 1px 0 #000;
+  font-size: 23px;
+  color: white;
+  font-family: "Shanghei";
+  opacity: 0;
+  // transform: scale(0);
+  text-align: center;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+  1px 1px 0 #000;
 }
 
 @include initHostStlyes();

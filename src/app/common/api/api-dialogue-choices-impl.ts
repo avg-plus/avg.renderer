@@ -4,9 +4,7 @@ import { Impl } from "app/common/api/impl";
 
 export class APIDialogueChoicesImpl extends Impl {
   @Impl.printAPIDetail
-  public static async op_show(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.SelectedDialogueChoice> {
+  public static async op_show(scriptUnit: avg.AVGScriptUnit): Promise<avg.SelectedDialogueChoice> {
     const script = <avg.APIDialogueChoice>scriptUnit;
 
     return await new Promise<avg.SelectedDialogueChoice>((resolve, reject) => {

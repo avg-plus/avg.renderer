@@ -55,32 +55,26 @@ export class AVGNativeFSImpl {
     return this._isFileSystemOK;
   }
 
-  public static writeFile(
-    filename: string,
-    data: any,
-    options?: { encoding?: string; mode?: string | number; flag?: string },
-    cb?: (e?: any) => void
-  ): void {
+  public static writeFile(filename: string,
+                          data: any,
+                          options?: { encoding?: string; mode?: string | number; flag?: string },
+                          cb?: (e?: any) => void): void {
     if (avg.PlatformService.isDesktop()) {
       return this._fs.writeFile(filename, data, options, cb);
     }
   }
 
-  public static writeFileSync(
-    filename: string,
-    data: any,
-    options?: { encoding?: string; mode?: string | number; flag?: string }
-  ): void {
+  public static writeFileSync(filename: string,
+                              data: any,
+                              options?: { encoding?: string; mode?: string | number; flag?: string }): void {
     if (avg.PlatformService.isDesktop()) {
       return this._fs.writeFileSync(filename, data, options);
     }
   }
 
-  public static readFile(
-    filename: string,
-    options: { encoding: string; flag?: string },
-    callback: (e: any, rv?: string) => void
-  ): void {
+  public static readFile(filename: string,
+                         options: { encoding: string; flag?: string },
+                         callback: (e: any, rv?: string) => void): void {
     if (avg.PlatformService.isDesktop()) {
       this._fs.readFile(filename, options, callback);
     } else {
@@ -92,13 +86,11 @@ export class AVGNativeFSImpl {
     }
   }
 
-  public static async readFileSync(
-    filename: string,
-    options?: {
-      encoding?: string;
-      flag?: string;
-    }
-  ) {
+  public static async readFileSync(filename: string,
+                                   options?: {
+                                     encoding?: string;
+                                     flag?: string;
+                                   }) {
     if (avg.PlatformService.isDesktop()) {
       const data = this._fs.readFileSync(filename, options);
       return data.toString("utf8");
@@ -110,25 +102,21 @@ export class AVGNativeFSImpl {
     return response.data;
   }
 
-  public static readLocalStorage(
-    filename: string,
-    options?: {
-      encoding?: string;
-      flag?: string;
-    }
-  ) {
+  public static readLocalStorage(filename: string,
+                                 options?: {
+                                   encoding?: string;
+                                   flag?: string;
+                                 }) {
     if (avg.PlatformService.isWebBrowser()) {
       return this._fs.readFileSync(filename, options);
     }
   }
 
-  public static writeLocalStorage(
-    filename: string,
-    options?: {
-      encoding?: string;
-      flag?: string;
-    }
-  ) {
+  public static writeLocalStorage(filename: string,
+                                  options?: {
+                                    encoding?: string;
+                                    flag?: string;
+                                  }) {
     if (avg.PlatformService.isWebBrowser()) {
       return this._fs.readFileSync(filename, options);
     }

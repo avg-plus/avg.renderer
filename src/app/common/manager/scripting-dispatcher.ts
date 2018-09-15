@@ -5,11 +5,9 @@ import * as avg from "avg-engine/engine";
 export class ScriptingDispatcher {
   public static subject = new Subject<any>();
 
-  public static dispatch(
-    op: string,
-    scriptUnit: avg.AVGScriptUnit,
-    resolver?: any
-  ) {
+  public static dispatch(op: string,
+                         scriptUnit: avg.AVGScriptUnit,
+                         resolver?: any) {
     this.subject.next({
       api: scriptUnit,
       op: op,

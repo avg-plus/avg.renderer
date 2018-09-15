@@ -21,9 +21,11 @@ export class AnimationUtils {
       {
         "transform-origin": anchor
       },
-      () => {}
+      () => {
+      }
     );
   }
+
   /**
    *  animateCssFilter
    *

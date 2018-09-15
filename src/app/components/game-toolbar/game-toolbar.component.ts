@@ -1,4 +1,4 @@
-import { OnInit, AfterViewInit, Component } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { GameToolbarService } from "./main-scene.service";
 
 
@@ -6,20 +6,21 @@ import { GameToolbarService } from "./main-scene.service";
   selector: "game-toolbar",
   templateUrl: "./game-toolbar.component.html",
   styleUrls: ["./game-toolbar.component.scss"],
-  animations: [
-  ]
+  animations: []
 })
 export class GameToolbarComponent implements OnInit, AfterViewInit {
 
   private service = GameToolbarService;
-  constructor() { 
-    
-  }
 
-
-  ngOnInit() { 
+  constructor() {
 
   }
 
-  ngAfterViewInit() { }
+
+  ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
+  }
 }

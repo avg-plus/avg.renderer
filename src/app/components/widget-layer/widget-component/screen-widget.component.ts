@@ -1,17 +1,6 @@
-import {
-  OnInit,
-  AfterViewInit,
-  HostBinding,
-  Input,
-  Injector,
-  ChangeDetectorRef,
-  AfterViewChecked,
-  Renderer2,
-  ElementRef
-} from "@angular/core";
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, ElementRef, OnInit, Renderer2 } from "@angular/core";
 import * as avg from "avg-engine/engine";
 import { AnimationUtils } from "../../../common/animations/animation-utils";
-import { WidgetModel } from "../widget-layer.service";
 import { Subject } from "rxjs/Subject";
 
 export class ScreenWidgetComponent
@@ -26,11 +15,10 @@ export class ScreenWidgetComponent
   protected ElementID = "";
   protected WidgetElementID = "";
 
-  constructor(
-    protected changeDetectorRef: ChangeDetectorRef,
-    private renderer: Renderer2,
-    private element: ElementRef
-  ) {}
+  constructor(protected changeDetectorRef: ChangeDetectorRef,
+              private renderer: Renderer2,
+              private element: ElementRef) {
+  }
 
   public set data(value: avg.ScreenWidget) {
     this._data = value;
@@ -70,7 +58,8 @@ export class ScreenWidgetComponent
     return data;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     this.ElementID = this.data.id;
@@ -79,7 +68,8 @@ export class ScreenWidgetComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewChecked() {}
+  ngAfterViewChecked() {
+  }
 
   protected showWidget() {
     this.initWidgetData(this.data);
@@ -185,11 +175,8 @@ export class ScreenWidgetComponent
     });
   }
 
-  protected flyAnimation_calc(
-    options:
-      | avg.WidgetAnimation_FlyInOptions
-      | avg.WidgetAnimation_FlyOutOptions
-  ) {
+  protected flyAnimation_calc(options: | avg.WidgetAnimation_FlyInOptions
+    | avg.WidgetAnimation_FlyOutOptions) {
     let offsetX = 0,
       offsetY = 0;
 

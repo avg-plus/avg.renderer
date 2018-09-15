@@ -1,25 +1,12 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  ChangeDetectorRef,
-  AfterContentInit,
-  Input
-} from "@angular/core";
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit } from "@angular/core";
 
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
-
-import * as PIXI from "pixi.js";
-import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
-import * as Parallax from "parallax-js";
-import { element } from "protractor";
+import { EngineUtils } from "avg-engine/engine";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
-import { EngineUtils } from "avg-engine/engine";
 import { StylesheetService } from "../../common/stylesheet-service";
 
 class SceneModel {
@@ -42,22 +29,22 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
 
   public scenes: Array<SceneModel> = new Array<SceneModel>(GameDef.MaxBackgroundLayers);
 
-  constructor(
-    private elementRef: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef,
-    public sanitizer: DomSanitizer,
-    private stylesheetService: StylesheetService
-  ) {
+  constructor(private elementRef: ElementRef,
+              private changeDetectorRef: ChangeDetectorRef,
+              public sanitizer: DomSanitizer,
+              private stylesheetService: StylesheetService) {
     this.stylesheetService.initMaskStylesheets();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     // ParticleEffect.snow();
   }
 
-  ngAfterContentInit() {}
+  ngAfterContentInit() {
+  }
 
   public reset() {
     this.scenes = [];

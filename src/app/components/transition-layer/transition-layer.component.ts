@@ -1,10 +1,5 @@
-import { Component, OnInit, AfterViewInit, ElementRef } from "@angular/core";
-import * as PIXI from "pixi.js";
-import { UIAnimation } from "../../common/animations/ui-animation";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { TransitionLayerService } from "./transition-layer.service";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { Subject } from "rxjs/Subject";
-import { EngineUtils } from "avg-engine/engine";
 
 @Component({
   selector: "transition-layer",
@@ -14,9 +9,12 @@ import { EngineUtils } from "avg-engine/engine";
 })
 export class TransitionLayerComponent implements OnInit, AfterViewInit {
   private animations: any[];
-  constructor() {}
 
-  ngOnInit() {}
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     const times = [];
@@ -24,8 +22,9 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
     const fpsOut = document.getElementById("fps");
 
     let last = 0;
+
     function refreshLoop() {
-      window.requestAnimationFrame(function() {
+      window.requestAnimationFrame(function () {
         const now = performance.now();
 
         while (times.length > 0 && times[0] <= now - 1000) {

@@ -13,16 +13,16 @@
   width: auto;
   display: flex;
   z-index: $_LAYER_INDEX_GAME_TOOLBAR;
-  
+
   .toolbar-button {
     @include UIButton;
     @include H4;
-    
+
     width: 80px;
   }
 
   transition: all 1s ease-in-out;
-  
+
   &.show {
     bottom: 0%;
   }

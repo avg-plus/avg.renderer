@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  ChangeDetectorRef
-} from "@angular/core";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { AnimationUtils } from "app/common/animations/animation-utils";
 import * as avg from "avg-engine/engine";
 
@@ -19,16 +12,17 @@ export class VariableInputComponent implements OnInit, AfterViewInit {
   inputValue: string | number;
   private _complete: (isOk: boolean, value: string | number) => void;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+  }
 
-  public show(
-    data: avg.InputData,
-    onCompleted: (isOk: boolean, value: string | number) => void
-  ) {
+  public show(data: avg.InputData,
+              onCompleted: (isOk: boolean, value: string | number) => void) {
     this.inputData = data;
     this._complete = onCompleted;
 

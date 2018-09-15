@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TitleMenuModel } from "../../common/models/title-menu-model";
 import * as avg from "avg-engine/engine";
-import * as fs from "fs";
 import { AVGService } from "../../common/avg-service";
 
 export enum TitleMenuEvent {
@@ -48,7 +47,8 @@ export class TitleViewService extends AVGService {
     }
   }
 
-  public async startGame(): Promise<any> {}
+  public async startGame(): Promise<any> {
+  }
 
   public menuEvent() {
     return this.subject;

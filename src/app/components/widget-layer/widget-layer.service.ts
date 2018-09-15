@@ -1,4 +1,4 @@
-import { Injectable, ComponentRef, ChangeDetectorRef } from "@angular/core";
+import { ComponentRef, Injectable } from "@angular/core";
 
 import * as avg from "avg-engine/engine";
 
@@ -6,7 +6,6 @@ import { AVGService } from "../../common/avg-service";
 import { TextWidgetComponent } from "./widget-component/text-widget.component";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
 import { ScreenWidgetComponent } from "./widget-component/screen-widget.component";
-import { Subtitle } from "avg-engine/engine";
 
 export class WidgetModel {
   public inAnimation: boolean = true;
@@ -21,10 +20,8 @@ export class TextWidgetModel extends WidgetModel {
   public data: avg.Subtitle;
   public component: ComponentRef<TextWidgetComponent>;
 
-  constructor(
-    subtitle: avg.Subtitle,
-    component: ComponentRef<TextWidgetComponent>
-  ) {
+  constructor(subtitle: avg.Subtitle,
+              component: ComponentRef<TextWidgetComponent>) {
     super();
     this.data = subtitle;
     this.component = component;
@@ -35,10 +32,8 @@ export class ImageWidgetModel extends WidgetModel {
   public data: avg.ScreenImage;
   public component: ComponentRef<ImageWidgetComponent>;
 
-  constructor(
-    image: avg.ScreenImage,
-    component: ComponentRef<ImageWidgetComponent>
-  ) {
+  constructor(image: avg.ScreenImage,
+              component: ComponentRef<ImageWidgetComponent>) {
     super();
     this.data = image;
     this.component = component;
@@ -58,12 +53,10 @@ export class WidgetLayerService extends AVGService {
     WidgetLayerService.textWidgets = [];
   }
 
-  public static addWidget(
-    data: avg.ScreenWidget,
-    component: ComponentRef<ScreenWidgetComponent>,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
-    isAsync: boolean = true
-  ) {
+  public static addWidget(data: avg.ScreenWidget,
+                          component: ComponentRef<ScreenWidgetComponent>,
+                          widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+                          isAsync: boolean = true) {
 
     const isTextWidgetExists = (id: string) => {
       this.textWidgets.forEach((v) => {
@@ -90,9 +83,7 @@ export class WidgetLayerService extends AVGService {
       let model: WidgetModel;
 
       if (widgetType === avg.ScreenWidgetType.Text) {
-        const textWidgetComponent = <ComponentRef<
-          TextWidgetComponent
-          >>component;
+        const textWidgetComponent = <ComponentRef<TextWidgetComponent>>component;
 
         model = new TextWidgetModel(
           <avg.Subtitle>data,
@@ -104,9 +95,7 @@ export class WidgetLayerService extends AVGService {
 
         WidgetLayerService.textWidgets.push(<TextWidgetModel>model);
       } else if (widgetType === avg.ScreenWidgetType.Image) {
-        const imageWidgetComponent = <ComponentRef<
-          ImageWidgetComponent
-          >>component;
+        const imageWidgetComponent = <ComponentRef<ImageWidgetComponent>>component;
 
         model = new ImageWidgetModel(
           <avg.ScreenImage>data,
@@ -179,11 +168,9 @@ export class WidgetLayerService extends AVGService {
     }
   }
 
-  public static removeWidget(
-    data: avg.ScreenWidget,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
-    isAsync: boolean = true
-  ) {
+  public static removeWidget(data: avg.ScreenWidget,
+                             widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+                             isAsync: boolean = true) {
     return new Promise((resolve, reject) => {
       const widgetContainer =
         widgetType === avg.ScreenWidgetType.Text

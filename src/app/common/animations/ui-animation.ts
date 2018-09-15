@@ -1,20 +1,11 @@
-import {
-  animate,
-  keyframes,
-  state,
-  style,
-  transition,
-  trigger
-} from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/core";
 
 export class UIAnimation {
-  public static AVGColorFade(
-    name: string,
-    rgb: string = "255,255,255",
-    from: number = 0,
-    to: number = 1,
-    timings: number = 500
-  ) {
+  public static AVGColorFade(name: string,
+                             rgb: string = "255,255,255",
+                             from: number = 0,
+                             to: number = 1,
+                             timings: number = 500) {
     return trigger(name, [
       state(
         "inactive",
@@ -32,12 +23,10 @@ export class UIAnimation {
     ]);
   }
 
-  public static AVGOpacityFade(
-    name: string,
-    from: number = 0,
-    to: number = 1,
-    timings: number = 500
-  ) {
+  public static AVGOpacityFade(name: string,
+                               from: number = 0,
+                               to: number = 1,
+                               timings: number = 500) {
     return trigger(name, [
       state(
         "inactive",

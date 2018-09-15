@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as $ from "jquery";
-import { AVGNativeFS } from "avg-engine/engine";
 
 @Injectable()
 export class StylesheetService {

@@ -1,22 +1,12 @@
-import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
-import { APIImplManager } from "app/common/api/api-impl-manger";
 
 import * as avg from "avg-engine/engine";
+import { AVGNativePath, EngineSettings } from "avg-engine/engine";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
-import { DebugingService } from "./common/debuging-service";
-import {
-  AVGNativeFS,
-  PlatformService,
-  AVGNativePath,
-  EngineSettings
-} from "avg-engine/engine";
-import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
-import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { GameInitializer } from "./game-initializer";
-import * as $ from "jquery";
 
 @Component({
   selector: "game",
@@ -24,19 +14,18 @@ import * as $ from "jquery";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements AfterViewInit, OnInit {
-  constructor(
-    private initializer: GameInitializer,
-    public electronService: ElectronService,
-    private router: Router,
-    private elementRef: ElementRef
-  ) {
+  constructor(private initializer: GameInitializer,
+              public electronService: ElectronService,
+              private router: Router,
+              private elementRef: ElementRef) {
     avg.PlatformService.initFromWindow(window);
     if (avg.PlatformService.isDesktop()) {
       ElectronService.initDebugging();
     }
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+  }
 
   async ngAfterViewInit() {
     await this.initializer.initWindowEventListener(this.router);
@@ -85,7 +74,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         //   }
         // );
       },
-      _ => {}
+      _ => {
+      }
     );
   }
 }

@@ -32,11 +32,9 @@ export class TransitionLayerService extends AVGService {
     });
   }
 
-  public static fadeTo(
-    to: number = 1,
-    duration: number = 500,
-    complete?: () => void
-  ) {
+  public static fadeTo(to: number = 1,
+                       duration: number = 500,
+                       complete?: () => void) {
     AnimationUtils.fadeTo("#transition-container", duration, to, complete);
   }
 
@@ -51,11 +49,10 @@ export class TransitionLayerService extends AVGService {
     });
   }
 
-  public static flashScreen(
-    color: string,
-    opacity: number = 1,
-    duration: number = 10,
-    count = 1 // -1 is loop
+  public static flashScreen(color: string,
+                            opacity: number = 1,
+                            duration: number = 10,
+                            count = 1 // -1 is loop
   ) {
     if (count === 0) {
       return;
@@ -91,7 +88,8 @@ export class TransitionLayerService extends AVGService {
             }
           }
         },
-        _ => { }
+        _ => {
+        }
       );
     };
 
