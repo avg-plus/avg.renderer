@@ -115,6 +115,7 @@ export class GameInitializer implements CanActivate {
 
   // Init API implementations
   public async initAPI() {
+    avg.APIManager.init();
     APIImplManager.init();
   }
 

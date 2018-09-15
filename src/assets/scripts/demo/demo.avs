@@ -39,10 +39,12 @@ const char_space = function(index, suffix) {
   };
 };
 
-const samplePlugin = plugins.load("sample-plugin.js");
-plugins.call(samplePlugin, "onBeforeShowDialogue", {});
-plugins.call(samplePlugin, "myPluginMethod", {});
-plugins.call(samplePlugin, "onRenderUI", {});
+// const samplePlugin = plugins.load("sample-plugin.js");
+// plugins.call(samplePlugin, "onBeforeShowDialogue", {});
+// plugins.call(samplePlugin, "myPluginMethod", {});
+// plugins.call(samplePlugin, "onRenderUI", {});
+
+// api.startSkip();
 
 api.showText(["「唔……」", "「咦……？[wait]这里是……？」"]);
 api.hideText();
@@ -391,6 +393,9 @@ api.showText(
 api.showText(["「……！」"], {
   name: "${AngryPowman}"
 });
+
+// api.stopSkip();
+
 api.showText(["「……大哥喝茶！」"], {
   name: "${AngryPowman}"
 });
