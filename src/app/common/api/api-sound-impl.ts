@@ -7,23 +7,17 @@ export class APISoundImpl extends Impl {
   );
 
   @Impl.printAPIDetail
-  public static op_play_bgm(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_play_bgm(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.play(avg.SoundTrack.BGM, scriptUnit);
   }
 
   @Impl.printAPIDetail
-  public static op_play_bgs(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_play_bgs(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.play(avg.SoundTrack.BGS, scriptUnit);
   }
 
   @Impl.printAPIDetail
-  public static op_play_voice(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_play_voice(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.play(
       APISoundImpl.tracks[avg.SoundTrack.Voice],
       scriptUnit
@@ -31,37 +25,27 @@ export class APISoundImpl extends Impl {
   }
 
   @Impl.printAPIDetail
-  public static op_play_se(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_play_se(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.play(avg.SoundTrack.SE, scriptUnit);
   }
 
   @Impl.printAPIDetail
-  public static op_pause_bgm(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_pause_bgm(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.pause(avg.SoundTrack.BGM, scriptUnit);
   }
 
   @Impl.printAPIDetail
-  public static op_stop_bgm(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_stop_bgm(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.stop(avg.SoundTrack.BGM, scriptUnit);
   }
 
   @Impl.printAPIDetail
-  public static op_resume_bgm(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_resume_bgm(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     return APISoundImpl.resume(avg.SoundTrack.BGM, scriptUnit);
   }
 
-  private static play(
-    track: avg.SoundTrack,
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  private static play(track: avg.SoundTrack,
+                      scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APISound>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -102,10 +86,8 @@ export class APISoundImpl extends Impl {
     });
   }
 
-  private static pause(
-    track: avg.SoundTrack,
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  private static pause(track: avg.SoundTrack,
+                       scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APISound>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -117,10 +99,8 @@ export class APISoundImpl extends Impl {
     });
   }
 
-  private static resume(
-    track: avg.SoundTrack,
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  private static resume(track: avg.SoundTrack,
+                        scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APISound>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -132,10 +112,8 @@ export class APISoundImpl extends Impl {
     });
   }
 
-  private static stop(
-    track: avg.SoundTrack,
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  private static stop(track: avg.SoundTrack,
+                      scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APISound>scriptUnit;
 
     return new Promise((resolve, reject) => {

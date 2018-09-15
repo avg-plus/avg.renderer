@@ -1,22 +1,6 @@
-import {
-  OnInit,
-  Component,
-  Input,
-  AfterViewInit,
-  OnDestroy,
-  Injector,
-  ChangeDetectorRef,
-  AfterViewChecked,
-  Renderer2,
-  ElementRef
-} from "@angular/core";
-import { NgForOf } from "@angular/common";
-import { Subtitle, Setting } from "avg-engine/engine";
-
-import * as gsap from "gsap";
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Renderer2 } from "@angular/core";
 import * as avg from "avg-engine/engine";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
 @Component({
@@ -43,7 +27,8 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     this.showWidget();
   }
 
-  ngAfterViewChecked() {}
+  ngAfterViewChecked() {
+  }
 
   protected showWidget() {
     super.showWidget();

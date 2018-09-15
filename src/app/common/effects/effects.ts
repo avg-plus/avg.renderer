@@ -1,4 +1,3 @@
-import * as PIXI from "pixi.js";
 // import * as particles from "pixi-particles";
 import { AnimationUtils } from "../animations/animation-utils";
 

@@ -1,32 +1,13 @@
-import * as fs from "fs";
-
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef
-} from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
-import {
-  DialogueBoxComponent,
-  DialogueBoxStatus
-} from "app/components/dialogue-box/dialogue-box.component";
+import { DialogueBoxComponent, DialogueBoxStatus } from "app/components/dialogue-box/dialogue-box.component";
 
 import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
-import {
-  Router,
-  ActivatedRoute,
-  NavigationEnd,
-  CanActivate
-} from "@angular/router";
-import { SceneHandle } from "avg-engine/engine";
-import { DebugingService } from "app/common/debuging-service";
+import { ActivatedRoute, Router } from "@angular/router";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
-import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 
 @Component({
@@ -42,12 +23,12 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   @ViewChild(VariableInputComponent) inputBox: VariableInputComponent;
 
   private currentScript: string;
-  constructor(
-    private service: MainSceneService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+
+  constructor(private service: MainSceneService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     // Init
@@ -106,7 +87,8 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
               () => {
                 value.resolver();
               },
-              _ => {}
+              _ => {
+              }
             );
           }
         } else if (value.api instanceof avg.APIScene) {
@@ -118,7 +100,8 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
                 scenHandle.index = 0;
                 value.resolver(scenHandle);
               },
-              _ => {}
+              _ => {
+              }
             );
           } else if (value.op === avg.OP.RemoveScene) {
             const index = value.api.index;
@@ -159,7 +142,8 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
               default:
                 this.backgroundCanvas
                   .cssFilter(effect)
-                  .then(value.resolver, _ => {});
+                  .then(value.resolver, _ => {
+                  });
             }
           }
         } else if (value.api instanceof avg.APIGotoTitleView) {

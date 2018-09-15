@@ -1,12 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AVGService } from "../../common/avg-service";
-import {
-  AVGNativeFS,
-  EngineSettings,
-  Resource,
-  AVGNativePath,
-  EngineUtils
-} from "avg-engine/engine";
+import { AVGNativePath, EngineSettings, EngineUtils, Resource } from "avg-engine/engine";
 
 import * as createjs from "preload-js";
 import * as $ from "jquery";

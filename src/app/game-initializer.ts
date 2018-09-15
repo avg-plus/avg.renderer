@@ -1,20 +1,11 @@
 import { Injectable } from "@angular/core";
-import {
-  AVGNativeFS,
-  AVGNativePath,
-  PlatformService,
-  EngineSettings,
-  Resource,
-  Setting,
-  AVGGame
-} from "avg-engine/engine";
+import * as avg from "avg-engine/engine";
+import { AVGGame, AVGNativeFS, AVGNativePath, EngineSettings, PlatformService, Resource, Setting } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { APIImplManager } from "./common/api/api-impl-manger";
 import * as $ from "jquery";
 import { CanActivate, Router } from "@angular/router";
-
-import * as avg from "avg-engine/engine";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -46,6 +37,7 @@ export class GameInitializer implements CanActivate {
       EngineSettings.init(JSON.stringify(content));
     }
   }
+
   // Init resources
   public async initResource() {
     const assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;

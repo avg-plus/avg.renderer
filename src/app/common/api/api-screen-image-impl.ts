@@ -4,9 +4,7 @@ import { Impl } from "app/common/api/impl";
 
 export class APIScreenImageImpl extends Impl {
   @Impl.printAPIDetail
-  public static op_show_image(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.ScreenImageResult> {
+  public static op_show_image(scriptUnit: avg.AVGScriptUnit): Promise<avg.ScreenImageResult> {
     const script = <avg.APIScreenImage>scriptUnit;
 
     return new Promise<avg.ScreenImageResult>((resolve, reject) => {
@@ -15,9 +13,7 @@ export class APIScreenImageImpl extends Impl {
   }
 
   @Impl.printAPIDetail
-  public static op_update_image(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_update_image(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIScreenImage>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -26,9 +22,7 @@ export class APIScreenImageImpl extends Impl {
   }
 
   @Impl.printAPIDetail
-  public static op_animate_image(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_animate_image(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIScreenImage>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -37,9 +31,7 @@ export class APIScreenImageImpl extends Impl {
   }
 
   @Impl.printAPIDetail
-  public static op_remove_image(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_remove_image(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIScreenImage>scriptUnit;
 
     return new Promise((resolve, reject) => {

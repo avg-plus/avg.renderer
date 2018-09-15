@@ -20,8 +20,10 @@
 
       <!-- <div id="bg-mask" class="mask-image" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename" [ngStyle]="model.styles"></div> -->
 
-      <div id="mask-layer-{{i}}" class="mask-image layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"></div>
-      <div id="background-layer-{{i}}" class="background-image layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"></div>
+      <div id="mask-layer-{{i}}" class="mask-image layer-{{i}}"
+           *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"></div>
+      <div id="background-layer-{{i}}" class="background-image layer-{{i}}"
+           *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"></div>
 
       <!--[src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)"-->
 

@@ -1,20 +1,9 @@
-import {
-  ElementRef,
-  Component,
-  OnInit,
-  AfterViewInit,
-  ViewChild
-} from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import * as PIXI from "pixi.js";
 import * as avg from "avg-engine/engine";
-import { UIAnimation } from "app/common/animations/ui-animation";
 
-import { TitleViewService, TitleMenuEvent } from "./title-view.service";
+import { TitleMenuEvent, TitleViewService } from "./title-view.service";
 import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
-
-import * as gsap from "gsap";
-import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 
 @Component({
@@ -29,11 +18,11 @@ import { AnimationUtils } from "../../common/animations/animation-utils";
 export class TitleViewComponent implements OnInit, AfterViewInit {
   @ViewChild(BackgroundCanvasComponent)
   titleViewBackgroundCanvas: BackgroundCanvasComponent;
-  constructor(
-    public service: TitleViewService,
-    private router: Router,
-    private elementRef: ElementRef
-  ) {}
+
+  constructor(public service: TitleViewService,
+              private router: Router,
+              private elementRef: ElementRef) {
+  }
 
   ngOnInit() {
     // Start listen

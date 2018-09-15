@@ -1,12 +1,4 @@
-import {
-  Component,
-  Injector,
-  ChangeDetectorRef,
-  OnInit,
-  AfterViewInit,
-  Renderer2,
-  ElementRef
-} from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Renderer2 } from "@angular/core";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
 import * as avg from "avg-engine/engine";

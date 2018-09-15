@@ -1,19 +1,14 @@
 import {
+  ChangeDetectorRef,
   Component,
-  OnInit,
-  Input,
-  DoCheck,
-  IterableDiffers,
-  ViewChild,
-  ComponentRef,
-  ComponentFactoryResolver,
   ComponentFactory,
-  HostBinding,
-  ViewContainerRef,
+  ComponentFactoryResolver,
+  ComponentRef,
+  OnInit,
   Type,
-  ChangeDetectorRef
+  ViewChild,
+  ViewContainerRef
 } from "@angular/core";
-import { NgForOf } from "@angular/common";
 
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { TextWidgetComponent } from "./widget-component/text-widget.component";
@@ -21,7 +16,6 @@ import { WidgetLayerService } from "./widget-layer.service";
 
 import * as avg from "avg-engine/engine";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
-import { ScreenWidgetType } from "avg-engine/engine";
 
 @Component({
   selector: "widget-layer",
@@ -33,10 +27,9 @@ export class WidgetLayerComponent implements OnInit {
   @ViewChild("widgetContainer", { read: ViewContainerRef })
   container;
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private resolver: ComponentFactoryResolver
-  ) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+              private resolver: ComponentFactoryResolver) {
+  }
 
   createTextWidgetComponent<T>(type: Type<T>) {
     const factory: ComponentFactory<T> = this.resolver.resolveComponentFactory(
@@ -77,44 +70,42 @@ export class WidgetLayerComponent implements OnInit {
               break;
             case avg.OP.AnimateSubtitle:
               break;
-            case avg.OP.HideSubtitle:
-              {
-                if (value.api.data.id === undefined) {
-                  WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Text, value.api.isAsync);
-                  value.resolver();
-                  // this.onAsyncResolveHandler(value, promise);
-                } else {
-                  const promise = WidgetLayerService.removeWidget(
-                    subtitle,
-                    avg.ScreenWidgetType.Text,
-                    value.api.isAsync
-                  );
+            case avg.OP.HideSubtitle: {
+              if (value.api.data.id === undefined) {
+                WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Text, value.api.isAsync);
+                value.resolver();
+                // this.onAsyncResolveHandler(value, promise);
+              } else {
+                const promise = WidgetLayerService.removeWidget(
+                  subtitle,
+                  avg.ScreenWidgetType.Text,
+                  value.api.isAsync
+                );
 
-                  this.onAsyncResolveHandler(value, promise);
-                }
+                this.onAsyncResolveHandler(value, promise);
               }
+            }
               break;
           }
         } else if (value.api instanceof avg.APIScreenImage) {
           const image = (<avg.APIScreenImage>value.api).data;
 
           switch (value.op) {
-            case avg.OP.ShowImage:
-              {
-                const promise = WidgetLayerService.addWidget(
-                  image,
-                  this.createTextWidgetComponent<ImageWidgetComponent>(
-                    ImageWidgetComponent
-                  ),
-                  avg.ScreenWidgetType.Image,
-                  value.api.isAsync
-                );
+            case avg.OP.ShowImage: {
+              const promise = WidgetLayerService.addWidget(
+                image,
+                this.createTextWidgetComponent<ImageWidgetComponent>(
+                  ImageWidgetComponent
+                ),
+                avg.ScreenWidgetType.Image,
+                value.api.isAsync
+              );
 
-                const result = new avg.ScreenImageResult();
-                result.id = image.id;
+              const result = new avg.ScreenImageResult();
+              result.id = image.id;
 
-                this.onAsyncResolveHandler(value, promise, result);
-              }
+              this.onAsyncResolveHandler(value, promise, result);
+            }
               break;
             case avg.OP.RemoveImage:
               if (value.api.data.id === undefined) {
@@ -139,11 +130,9 @@ export class WidgetLayerComponent implements OnInit {
     );
   }
 
-  private onAsyncResolveHandler(
-    value: { api: avg.AVGScriptUnit; op: string; resolver: any },
-    promise: Promise<any>,
-    returnedResult?: any
-  ) {
+  private onAsyncResolveHandler(value: { api: avg.AVGScriptUnit; op: string; resolver: any },
+                                promise: Promise<any>,
+                                returnedResult?: any) {
     if (value.api.isAsync) {
       value.resolver(returnedResult);
     } else {
@@ -151,7 +140,8 @@ export class WidgetLayerComponent implements OnInit {
         () => {
           value.resolver(returnedResult);
         },
-        _ => { }
+        _ => {
+        }
       );
     }
   }

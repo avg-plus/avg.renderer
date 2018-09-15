@@ -4,9 +4,7 @@ import { Impl } from "app/common/api/impl";
 
 export class APIEffectImpl extends Impl {
   @Impl.printAPIDetail
-  public static op_play_effect(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  public static op_play_effect(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIEffect>scriptUnit;
 
     return new Promise((resolve, reject) => {

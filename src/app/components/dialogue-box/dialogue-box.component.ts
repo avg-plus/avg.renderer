@@ -1,37 +1,18 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  OnDestroy,
-  SimpleChange,
-  SimpleChanges,
-  AfterViewInit,
-  AnimationTransitionEvent,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef
-} from "@angular/core";
-
-import { trigger, state, style, animate, transition } from "@angular/animations";
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 
 import * as avg from "avg-engine/engine";
-import * as gsap from "gsap";
+import { EngineUtils } from "avg-engine/engine";
 
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
 import "app/common/live2d/lib/live2d.min.js";
 import "pixi-live2d/src/index";
-
-import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
-import { reject } from "q";
 
 import * as $ from "jquery";
-import { EngineUtils } from "avg-engine/engine";
-import { LoadingLayerService } from "../loading-layer/loading-layer.service";
 
 export enum DialogueBoxStatus {
   None,
@@ -356,7 +337,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
     if (this.dialogueChoices.onEnter) {
       setTimeout(
-        function() {
+        function () {
           this.dialogueChoices.onEnter(index);
         }.bind(this),
         0
