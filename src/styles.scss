@@ -11,8 +11,7 @@ img {
 
 html,
 body,
-#app,
-#avg-viewport {
+#app{
   padding: 0px;
   margin: 0px;
   overflow: hidden;
@@ -23,8 +22,14 @@ body,
   font-family: "Jianhei";
 }
 
-body {
+#avg-viewport {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  will-change: transform;
 }
+
+
 
 /* Fonts */
 // @font-face {

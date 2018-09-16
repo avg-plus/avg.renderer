@@ -1,6 +1,7 @@
 {
+  "engine.env.entry_script_file": "test/api-v2.avs",
   "//engine.env.entry_script_file": "test/api-v2.avs",
-  "engine.env.entry_script_file": "tutorial/tutorial.avs",
+  "////engine.env.entry_script_file": "tutorial/tutorial.avs",
   "engine.env.assets_root_dirname": "assets",
   "engine.env.data_root_dirname": "data",
   "engine.env.skip_title_view": true,

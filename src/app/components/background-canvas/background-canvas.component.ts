@@ -11,8 +11,8 @@ import {
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
 
-import * as PIXI from "pixi.js";
-import * as particles from "pixi-particles";
+// import * as PIXI from "pixi.js";
+// import * as particles from "pixi-particles";
 import * as avg from "avg-engine/engine";
 import * as Parallax from "parallax-js";
 import { element } from "protractor";
@@ -21,6 +21,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
 import { StylesheetService } from "../../common/stylesheet-service";
+import { Camera2D } from "app/common/animations/camera2d";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -186,6 +187,24 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
 
         resolve();
       }, duration + 10);
+
+      setTimeout(() => {
+        // const elms = ["#background-layer-0", "#avg-viewport"];
+        const elms = ["#avg-viewport", ".character-box" ];
+        const char_elms1 = ["#character-index-1"];
+        const char_elms3 = ["#character-index-3"];
+        // const elms = ["#mask-layer-0"];
+        // for (let i = 0; i < this.scenes.length; ++i) {
+        //   elms.push(`#mask-layer-${i}`);
+        //   elms.push(`#background-layer-${i}`);
+        // }
+
+        const camera = new Camera2D(elms, 1000);
+        camera.setRotation(-1);
+        camera.setScale(1.2);
+        camera.setTranslation(30, 0);
+        camera.begin();
+      }, 2000);
     });
   }
 

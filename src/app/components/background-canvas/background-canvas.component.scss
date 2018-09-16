@@ -8,6 +8,11 @@ $MASK_IMAGE_SPRITE_WINDOW_SHADES: "../../../data/masks/window-shades.png";
 $MASK_IMAGE_SPRITE_BRUSH: "../../../data/masks/brush.png";
 $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
 
+#main-scene-container {
+  width: 100%;
+  height: 100%;
+}
+
 @keyframes mask-play {
   from {
     mask-position: 0% 0;
