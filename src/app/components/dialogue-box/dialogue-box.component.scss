@@ -71,7 +71,7 @@ $DIALOGUE_BOX_HEIGHT: 200px;
   }
 }
 
-.character-box {
+#character-box {
   // position: absolute;
   z-index: $_LAYER_INDEX_DIALOGUE_BOX - 1;
 

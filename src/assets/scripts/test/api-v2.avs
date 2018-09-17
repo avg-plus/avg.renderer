@@ -1,7 +1,4 @@
-text.show("这是一个新的 API 啦 ~");
-text.show("我连命名都改掉了，但是看起来比之前清爽多了呢！", {
-  name: "小黑"
-});
+const handle = scene.load(0, "demo/room.png");
 
 character.show(3, "demo/space-normal.png", {
   renderer: {
@@ -11,7 +8,15 @@ character.show(3, "demo/space-normal.png", {
   }
 });
 
-character.show(2, "demo/vizee-normal.png");
+text.show("这是V2版本的API ~");
+text.show("下面将演示新增的摄像机变换效果。", {
+  name: "空格"
+});
+
+dialog.choices(["开始演示", "没什么好看的老铁"]);
+
+
+// character.show(2, "demo/vizee-normal.png");
 
 // dialog.choices(["选项1", "[c=red]选项2[/c]", "第三个选项"]);
 
@@ -22,7 +27,6 @@ character.show(2, "demo/vizee-normal.png");
 //   allowCancel: true
 // });
 
-const handle = scene.load(0, "demo/room.png");
 api.wait(2000);
 
 // scene.load(0, "demo/demo-tree.png", {

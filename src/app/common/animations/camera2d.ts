@@ -2,6 +2,7 @@ import { AnimationUtils } from "./animation-utils";
 import { TweenMax, TweenLite } from "gsap";
 import { EngineUtils } from "../../../../../avg.engine/engine/core";
 import * as $ from "jquery";
+import * as dynamics from "dynamics.js";
 
 class CameraOptions {
   public restrictedMode = true;
@@ -38,17 +39,35 @@ export class Camera2D {
   }
 
   public begin() {
-    console.log("camera begin");
     for (let i = 0; i < this.targets.length; ++i) {
-      TweenMax.to(this.targets[i], 1, {
-        // transform: "scale(1.2) translateX(-200)",
-        css: {
-          scale: 1.6,
-          rotation: -2,
-          x: "-20%"
+      const e = $(this.targets[i]);
+      dynamics.animate(
+        e[0],
+        {
+          translateX: this.cameraData.translationX,
+          translateY: this.cameraData.translationY,
+          // x: `${this.cameraData.translationX}%`,
+          // y: `${this.cameraData.translationY}%`,
+          scale: this.cameraData.scale,
+          rotation: `${this.cameraData.angle}deg`
         },
-        ease: TweenLite.defaultEase
-      });
+        {
+          type: dynamics.easeInOut,
+          friction: 500
+        }
+      );
+
+      // TweenMax.to(this.targets[i], 1, {
+      //   // transform: "scale(1.2) translateX(-200)",
+      //   // transform: `translate(}, ${this.cameraData.translationY})`,
+      //   css: {
+      //     x: `${this.cameraData.translationX}%`,
+      //     y: `${this.cameraData.translationY}%`,
+      //     scale: this.cameraData.scale,
+      //     rotation: `${this.cameraData.angle}deg`
+      //   },
+      //   ease: TweenLite.defaultEase
+      // });
     }
   }
 }

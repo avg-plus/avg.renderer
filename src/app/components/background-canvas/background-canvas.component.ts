@@ -190,9 +190,10 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
 
       setTimeout(() => {
         // const elms = ["#background-layer-0", "#avg-viewport"];
-        const elms = ["#avg-viewport", ".character-box" ];
-        const char_elms1 = ["#character-index-1"];
-        const char_elms3 = ["#character-index-3"];
+        const elms = ["#avg-viewport"];
+        // const char_elms1 = ["#character-box"]
+        // const char_elms1 = ["#character"];
+        const char_elms1 = ["#character-index-1", "#character-index-2", "#character-index-3"];
         // const elms = ["#mask-layer-0"];
         // for (let i = 0; i < this.scenes.length; ++i) {
         //   elms.push(`#mask-layer-${i}`);
@@ -200,11 +201,17 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
         // }
 
         const camera = new Camera2D(elms, 1000);
-        camera.setRotation(-1);
-        camera.setScale(1.2);
-        camera.setTranslation(30, 0);
+        camera.setRotation(-4);
+        camera.setScale(1.5);
+        camera.setTranslation(-152, 0);
         camera.begin();
-      }, 2000);
+
+        const camera2 = new Camera2D(char_elms1, 500);
+        camera2.setRotation(0);
+        camera2.setScale(1.1);
+        camera2.setTranslation(-100, 0);
+        camera2.begin();
+      }, 4000);
     });
   }
 
