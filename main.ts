@@ -23,7 +23,7 @@ function createWindow() {
     resizable: false,
     backgroundColor: "#000000",
     hasShadow: true,
-    titleBarStyle: "hiddenInset",
+    // titleBarStyle: "hiddenInset",
     webPreferences: {
       nodeIntegration: true
     }

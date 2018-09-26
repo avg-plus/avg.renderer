@@ -1,12 +1,11 @@
 import * as avg from "avg-engine/engine";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { Impl } from "app/common/api/impl";
+import { APIEffect } from "avg-engine/engine";
 
 export class APIEffectImpl extends Impl {
-  @Impl.printAPIDetail
-  public static op_play_effect(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APIEffect, avg.OP.PlayEffect)
+  public static op_play_effect(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIEffect>scriptUnit;
 
     return new Promise((resolve, reject) => {

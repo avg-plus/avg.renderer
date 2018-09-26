@@ -11,6 +11,8 @@ $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
 #main-scene-container {
   width: 100%;
   height: 100%;
+
+  // transform: translateZ(0);
 }
 
 @keyframes mask-play {

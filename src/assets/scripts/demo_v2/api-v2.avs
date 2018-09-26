@@ -1,20 +1,47 @@
 const handle = scene.load(0, "demo/room.png");
 
-character.show(3, "demo/space-normal.png", {
+setTimeout(() => {
+  (() => {
+    const logo = widget.image("demo/logo.png", {
+      position: "(40%, 0%)",
+      size: "(30%,30%)",
+      animation: {
+        name: "flyin"
+      }
+    });
+    api.wait(1000);
+    widget.removeImage(logo.id, {
+      animation: {
+        name: "flyout"
+      }
+    });
+  })();
+}, 2000);
+
+character.show("demo/space-normal.png", {
+  slot: 4,
+  x: 40,
+  y: 50,
   renderer: {
-    offset_x: 0,
-    offset_y: -10,
+    // offset_x: 0,
+    // offset_y: 0,
     filter: []
   }
 });
 
-text.show("这是V2版本的API ~");
+text.show(["这是V2版本的API ~", "在观看这个 Demo 的同时，来点音乐吧？"]);
+const c1 = dialog.choices(["一起摇摆！", "我耳朵听不见"]);
+if (c1.selectedIndex === 0) {
+  audio.playBGM("demo/demo_theme.mp3");
+}
+
 text.show("下面将演示新增的摄像机变换效果。", {
   name: "空格"
 });
 
-dialog.choices(["开始演示", "没什么好看的老铁"]);
+text.hide();
 
+dialog.choices(["开始演示", "没什么好看的老铁"]);
 
 // character.show(2, "demo/vizee-normal.png");
 

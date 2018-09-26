@@ -34,6 +34,7 @@ import { WidgetLayerService } from "./components/widget-layer/widget-layer.servi
 import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
 import { GameInitializer } from "./game-initializer";
 import { StylesheetService } from "./common/stylesheet-service";
+import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/html-widget.component";
 
 @NgModule({
   declarations: [
@@ -48,17 +49,12 @@ import { StylesheetService } from "./common/stylesheet-service";
     WidgetLayerComponent,
     TextWidgetComponent,
     ImageWidgetComponent,
+    HtmlWidgetComponent,
     LoadingLayerComponent,
     VariableInputComponent,
     GameToolbarComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    AppRoutingModule,
-    BrowserAnimationsModule
-  ],
+  imports: [BrowserModule, FormsModule, HttpModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [
     ElectronService,
     TitleViewService,

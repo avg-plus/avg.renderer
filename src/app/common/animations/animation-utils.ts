@@ -159,6 +159,7 @@ export class AnimationUtils {
 
     setTimeout(() => {
       // Be sure DOM was created
+
       gsap.TweenLite.to(target, duration / 1000, vars).eventCallback("onComplete", () => {
         if (complete) {
           complete();

@@ -1,6 +1,5 @@
 import { AnimationUtils } from "./animation-utils";
 import { TweenMax, TweenLite } from "gsap";
-import { EngineUtils } from "../../../../../avg.engine/engine/core";
 import * as $ from "jquery";
 import * as dynamics from "dynamics.js";
 
@@ -8,66 +7,104 @@ class CameraOptions {
   public restrictedMode = true;
 }
 
-class CameraData {
-  public translationX = 0;
-  public translationY = 0;
-  public angle = 0;
-  public scale = 1;
+export class CameraData {
+  public translationX?;
+  public translationY?;
+  public rotation?;
+  public scale?;
+  public skewX?;
+  public skewY?;
 }
 
 export class Camera2D {
-  private targets: string | string[] = [];
-  private duration;
+  private targets: string[] = [];
 
   private cameraData: CameraData = new CameraData();
 
-  constructor(targets: string | string[], duration: number = 1000) {
-    this.targets = targets;
-    this.duration = duration;
+  constructor(targets: string | string[]) {
+    this.setTargets(targets);
+  }
+
+  public setTargets(targets: string | string[]) {
+    if (!Array.isArray(targets)) {
+      this.targets = [targets];
+    } else {
+      this.targets = targets;
+    }
+  }
+
+  public setCameraData(data: CameraData) {
+    this.cameraData = data;
   }
 
   public async setTranslation(x: number, y: number) {
     this.cameraData.translationX = x;
     this.cameraData.translationY = y;
   }
+
+  public setSkewX(skewX: number) {
+    this.cameraData.skewX = skewX;
+  }
+
+  public setSkewY(skewY: number) {
+    this.cameraData.skewY = skewY;
+  }
+
   public async setRotation(angle: number) {
-    this.cameraData.angle = angle;
+    this.cameraData.rotation = angle;
   }
 
   public async setScale(scale: number) {
     this.cameraData.scale = scale;
   }
 
-  public begin() {
-    for (let i = 0; i < this.targets.length; ++i) {
-      const e = $(this.targets[i]);
-      dynamics.animate(
-        e[0],
-        {
-          translateX: this.cameraData.translationX,
-          translateY: this.cameraData.translationY,
-          // x: `${this.cameraData.translationX}%`,
-          // y: `${this.cameraData.translationY}%`,
-          scale: this.cameraData.scale,
-          rotation: `${this.cameraData.angle}deg`
-        },
-        {
-          type: dynamics.easeInOut,
-          friction: 500
-        }
-      );
+  public async begin(duration: number = 1000) {
+    const animationQueue = [];
 
-      // TweenMax.to(this.targets[i], 1, {
-      //   // transform: "scale(1.2) translateX(-200)",
-      //   // transform: `translate(}, ${this.cameraData.translationY})`,
-      //   css: {
-      //     x: `${this.cameraData.translationX}%`,
-      //     y: `${this.cameraData.translationY}%`,
-      //     scale: this.cameraData.scale,
-      //     rotation: `${this.cameraData.angle}deg`
-      //   },
-      //   ease: TweenLite.defaultEase
-      // });
+    const data = {
+      translateX: -this.cameraData.translationX,
+      translateY: this.cameraData.translationY,
+      skewX: this.cameraData.skewX,
+      skewY: this.cameraData.skewY,
+      scale: this.cameraData.scale,
+      rotation: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}deg`
+    };
+
+    Object.keys(data).forEach(key => {
+      if (data[key] === undefined) {
+        delete data[key];
+      }
+    });
+    console.log("Camera Data:", data);
+
+    for (let i = 0; i < this.targets.length; ++i) {
+      animationQueue.push(
+        new Promise((resolve, reject) => {
+          const e = $(this.targets[i]);
+          dynamics.animate(e[0], data, {
+            type: dynamics.easeInOut,
+            friction: 500,
+            duration: duration,
+            complete: () => resolve()
+          });
+        })
+      );
     }
+
+    return await Promise.all(animationQueue);
+
+    // TweenMax.to(this.targets[i], 1, {
+    //   css: {
+    //     // left: `${this.cameraData.translationX}%`,
+    //     // top: `${this.cameraData.translationY}%`,
+    //     // scale: this.cameraData.scale,
+    //     rotation: `${this.cameraData.angle}deg`,
+    //     transform: `scale(${this.cameraData.scale})`
+
+    //     // transform: `scale(${this.cameraData.scale}) translate(${this.cameraData.translationX}, ${this.cameraData.translationY})`
+    //   },
+    //   ease: TweenLite.defaultEase
+    // });
+    // }
   }
 }

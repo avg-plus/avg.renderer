@@ -16,10 +16,8 @@ const {
   HashedModuleIdsPlugin,
   ProvidePlugin
 } = require("webpack");
-const {
-  GlobCopyWebpackPlugin,
-  BaseHrefWebpackPlugin
-} = require("@angular/cli/plugins/webpack");
+const { GlobCopyWebpackPlugin, BaseHrefWebpackPlugin } = require("@angular/cli/plugins/webpack");
+// const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CommonsChunkPlugin } = require("webpack").optimize;
 const { AotPlugin } = require("@ngtools/webpack");
 
@@ -69,6 +67,11 @@ function getPlugins() {
         ignore: "**/.gitkeep"
       }
     })
+    // new CopyWebpackPlugin(["src/assets", "src/data", "src/favicon.ico", "src/manifest.json", "src/loader.js"], {
+    //   ignore: "**/.gitkeep",
+    //   // cwd: process.cwd() + "/src",
+    //   dot: true
+    // })
   );
 
   plugins.push(new ProgressPlugin());
@@ -114,8 +117,7 @@ function getPlugins() {
   plugins.push(
     new CommonsChunkPlugin({
       name: "vendor",
-      minChunks: module =>
-        module.resource && module.resource.startsWith(nodeModules),
+      minChunks: module => module.resource && module.resource.startsWith(nodeModules),
       chunks: ["main"]
     })
   );
@@ -144,17 +146,11 @@ function getPlugins() {
                 return `${deployUrl.replace(/\/$/, "")}${obj.url}`;
               } else if (baseHref.match(/:\/\//)) {
                 // If baseHref contains a scheme, include it as is.
-                return (
-                  baseHref.replace(/\/$/, "") +
-                  `/${deployUrl}/${obj.url}`.replace(/\/\/+/g, "/")
-                );
+                return baseHref.replace(/\/$/, "") + `/${deployUrl}/${obj.url}`.replace(/\/\/+/g, "/");
               } else {
                 // Join together base-href, deploy-url and the original URL.
                 // Also dedupe multiple slashes into single ones.
-                return `/${baseHref}/${deployUrl}/${obj.url}`.replace(
-                  /\/\/+/g,
-                  "/"
-                );
+                return `/${baseHref}/${deployUrl}/${obj.url}`.replace(/\/\/+/g, "/");
               }
             }
           })
@@ -216,6 +212,7 @@ function getPlugins() {
 
 module.exports = {
   devtool: "cheap-module-source-map",
+  watch: true,
   externals: {
     electron: "require('electron')"
   },
@@ -250,10 +247,7 @@ module.exports = {
         enforce: "pre",
         test: /\.(js|ts)$/,
         loader: "source-map-loader",
-        exclude: [
-          /\/node_modules\//,
-          path.join(__dirname, "node_modules", "@angular/compiler")
-        ]
+        exclude: [/\/node_modules\//, path.join(__dirname, "node_modules", "@angular/compiler")]
       },
       {
         test: /\.html$/,
@@ -318,10 +312,7 @@ module.exports = {
         include: [path.join(process.cwd(), "src/styles.scss")],
         test: /\.css$/,
         loaders: ExtractTextPlugin.extract({
-          use: [
-            'css-loader?{"sourceMap":false,"importLoaders":1}',
-            "postcss-loader"
-          ],
+          use: ['css-loader?{"sourceMap":false,"importLoaders":1}', "postcss-loader"],
           fallback: "style-loader",
           publicPath: ""
         })
@@ -330,11 +321,7 @@ module.exports = {
         include: [path.join(process.cwd(), "src/styles.scss")],
         test: /\.scss$|\.sass$/,
         loaders: ExtractTextPlugin.extract({
-          use: [
-            'css-loader?{"sourceMap":false,"importLoaders":1}',
-            "postcss-loader",
-            "sass-loader"
-          ],
+          use: ['css-loader?{"sourceMap":false,"importLoaders":1}', "postcss-loader", "sass-loader"],
           fallback: "style-loader",
           publicPath: ""
         })
@@ -343,11 +330,7 @@ module.exports = {
         include: [path.join(process.cwd(), "src/styles.scss")],
         test: /\.less$/,
         loaders: ExtractTextPlugin.extract({
-          use: [
-            'css-loader?{"sourceMap":false,"importLoaders":1}',
-            "postcss-loader",
-            "less-loader"
-          ],
+          use: ['css-loader?{"sourceMap":false,"importLoaders":1}', "postcss-loader", "less-loader"],
           fallback: "style-loader",
           publicPath: ""
         })

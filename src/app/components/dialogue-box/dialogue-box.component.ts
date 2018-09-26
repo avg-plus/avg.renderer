@@ -201,7 +201,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private onCharacterEnter(index: number, character: avg.Character) {
-    const elementID = "#character-index-" + character.index;
+    const elementID = "#character-index-" + character.slot;
 
     AnimationUtils.to("OnCharacterEnter", elementID, this.CHAR_ANIMATION_DURATION, {
       opacity: 1
@@ -230,14 +230,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public async showCharacter(character: avg.Character) {
-    const index = character.index;
-    const elementID = "#character-index-" + index;
-    if (index < 1 || index > 5) {
+    const slot = character.slot;
+    const elementID = "#character-index-" + slot;
+    if (slot < 1 || slot > 5) {
       console.warn("Character index should be 1-5");
       return;
     }
 
-    const charNotExists = this.characters[index] === undefined || this.characters[index] === null;
+    const charNotExists = this.characters[slot] === undefined || this.characters[slot] === null;
 
     // Preload avatar
     // await LoadingLayerService.asyncLoading(character.avatar.file);
@@ -261,11 +261,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     AnimationUtils.applyFilters(elementID, 0, filter);
 
     const style = {
-      position: "fixed",
+      position: "absolute",
       width: `${dimension.width + "px"}`,
       height: `${dimension.height + "px"}`,
       opacity: "0",
-      left: this.CHAR_WIDTH * (index - 1) + (imageRenderer.offset_x || 0) + "%",
+      left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || 0) + "%",
       bottom: 0 + (imageRenderer.offset_y || 0) + `%`,
       transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
       background: `url(${character.avatar.file}) no-repeat`,
@@ -275,24 +275,24 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     AnimationUtils.setAnchor(elementID, "center center");
 
     if (charNotExists) {
-      this.characters[index] = character;
-      this.initOpacity(index, 0);
+      this.characters[slot] = character;
+      this.initOpacity(slot, 0);
 
-      $("#character-index-" + index).prop("style", EngineUtils.cssObjectToStyles(style));
+      $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
 
-      this.onCharacterEnter(index, character);
+      this.onCharacterEnter(slot, character);
     } else {
-      this.characters[index] = character;
-      this.initOpacity(index, 1);
+      this.characters[slot] = character;
+      this.initOpacity(slot, 1);
 
-      $("#character-index-" + index).prop("style", EngineUtils.cssObjectToStyles(style));
+      $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
 
       this.changeDetectorRef.detectChanges();
     }
   }
 
   public async hideCharacter(character: avg.Character): Promise<any> {
-    const index = character.index;
+    const index = character.slot;
 
     if (index === -1) {
       for (let i = 0; i < this.characters.length; ++i) {

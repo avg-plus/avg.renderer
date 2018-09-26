@@ -22,6 +22,7 @@ import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
 import { StylesheetService } from "../../common/stylesheet-service";
 import { Camera2D } from "app/common/animations/camera2d";
+import { CameraDirector, DirectLayers } from "../../common/animations/camera-director";
 
 class SceneModel {
   public scene: avg.Scene;
@@ -188,30 +189,47 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
         resolve();
       }, duration + 10);
 
-      setTimeout(() => {
+      setTimeout(async () => {
+        const director = new CameraDirector();
+        await director.moveTo(
+          DirectLayers.Characters,
+          {
+            translationX: 600,
+            skewX: 6,
+            scale: 1.5
+          },
+          4200
+        );
+
         // const elms = ["#background-layer-0", "#avg-viewport"];
-        const elms = ["#avg-viewport"];
+        // const elms = ["#avg-viewport"];
         // const char_elms1 = ["#character-box"]
         // const char_elms1 = ["#character"];
-        const char_elms1 = ["#character-index-1", "#character-index-2", "#character-index-3"];
+        // const char_elms1 = [
+        //   "#character-index-1",
+        //   "#character-index-2",
+        //   "#character-index-3",
+        //   "#character-index-4",
+        //   "#character-index-5"
+        // ];
         // const elms = ["#mask-layer-0"];
         // for (let i = 0; i < this.scenes.length; ++i) {
         //   elms.push(`#mask-layer-${i}`);
         //   elms.push(`#background-layer-${i}`);
         // }
 
-        const camera = new Camera2D(elms, 1000);
-        camera.setRotation(-4);
-        camera.setScale(1.5);
-        camera.setTranslation(-152, 0);
-        camera.begin();
+        // const camera = new Camera2D(elms, 1000);
+        // camera.setRotation(-2);
+        // camera.setScale(1.5);
+        // camera.setTranslation(-15, 0);
+        // camera.begin();
 
-        const camera2 = new Camera2D(char_elms1, 500);
-        camera2.setRotation(0);
-        camera2.setScale(1.1);
-        camera2.setTranslation(-100, 0);
-        camera2.begin();
-      }, 4000);
+        // const camera2 = new Camera2D(char_elms1, 1000);
+        // camera2.setRotation(-2);
+        // camera2.setScale(1.3);
+        // camera2.setTranslation(-500, 250);
+        // camera2.begin();
+      }, 3000);
     });
   }
 

@@ -72,41 +72,19 @@ $DIALOGUE_BOX_HEIGHT: 200px;
 }
 
 #character-box {
-  // position: absolute;
-  z-index: $_LAYER_INDEX_DIALOGUE_BOX - 1;
+  position: absolute;
+  z-index: $_LAYER_INDEX_CHARACTERS;
 
   width: 100%;
   height: 100%;
-  bottom: -40px; // text-align: center;
+  // bottom: -40px; // text-align: center;
   padding: 0;
   margin: 0;
 }
 
 .character {
-  position: fixed;
-  overflow: visible;
-  // width: 100%;
-  // height: 100%;
-  // left: 10%;
-  // bottom: -30%;
-  // background: url(/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/dist/desktop/assets/graphics/characters/tutorial/girl-angry.png)
-  // no-repeat;
-
-  // position: absolute;
-  // width: 18%;
-  // display: inline-block; // margin: 5px;
-  // // margin: 0 auto;
-  // height: 100%;
-  // // background: #FF7979;
-  // img {
-  //   position: absolute;
-
-  //   top: -9999px;
-  //   bottom: -9999px;
-  //   left: -9999px;
-  //   right: -9999px;
-  //   margin: auto;
-  // }
+  // position: fixed;
+  // overflow: visible;
 }
 
 .wait-input-icon {

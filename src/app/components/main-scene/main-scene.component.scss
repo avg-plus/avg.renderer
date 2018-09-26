@@ -1,6 +1,8 @@
 @import "../../../styles/_common.scss";
 
 #main-scene-container {
+  // will-change: transform;
+
   .dialogue-box {
     position: absolute;
     bottom: 3%;

@@ -1,12 +1,11 @@
 import * as avg from "avg-engine/engine";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { Impl } from "app/common/api/impl";
+import { APICharacter } from "avg-engine/engine";
 
 export class APICharacterImpl extends Impl {
-  @Impl.printAPIDetail
-  public static op_show(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APICharacter, avg.OP.ShowCharacter)
+  public static op_show(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APICharacter>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -14,11 +13,8 @@ export class APICharacterImpl extends Impl {
     });
   }
 
-
-  @Impl.printAPIDetail
-  public static op_animate(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APICharacter, avg.OP.AnimateCharacter)
+  public static op_animate(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APIAnimateCharacter>scriptUnit;
 
     return new Promise((resolve, reject) => {
@@ -26,10 +22,8 @@ export class APICharacterImpl extends Impl {
     });
   }
 
-  @Impl.printAPIDetail
-  public static op_hide(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APICharacter, avg.OP.HideCharacter)
+  public static op_hide(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APICharacter>scriptUnit;
 
     return new Promise((resolve, reject) => {

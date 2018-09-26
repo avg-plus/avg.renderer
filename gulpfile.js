@@ -3,9 +3,12 @@
 const gulp = require("gulp");
 const electron = require("electron-connect").server.create();
 
-import * as fs from "fs";
+// import * as fs from "fs";
+// import * as path from "path";
+// const path = require("path");
+const path = require("path");
 
-console.log(`Starting watch files ...`, electron);
+// console.log(`Starting watch files ...`, electron);
 gulp.task("serve-electron-connect", () => {
   // Start browser process
   electron.start();
@@ -25,6 +28,31 @@ gulp.task("serve-electron-connect", () => {
   gulp.watch(["dist/*.js", "dist/*.css", "dist/index.html"], electron.reload);
 });
 
+gulp.task("avs-watcher", () => {
+  const full = "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/";
+
+  const src = "./src/assets/**/*.avs";
+  const dest = "./dist/desktop/assets/scripts/";
+
+  // gulp.src(src).pipe(gulp.dest(dest));
+
+  const watcher = gulp.watch(src);
+  watcher.on("change", event => {
+    const short = event.path.replace(
+      "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/",
+      ""
+    );
+
+    const destFile = dest + short;
+    // gulp.del(destFile);
+    const destDir = path.dirname(destFile);
+
+    console.log("Copy '" + event.path + "' to " + destDir + " ...");
+
+    gulp.src(event.path).pipe(gulp.dest(destDir));
+  });
+});
+
 gulp.task("avgplus-release", () => {
   const releasePath = "../avgplus-release";
 
@@ -34,6 +62,5 @@ gulp.task("avgplus-release", () => {
 
   // 创建配置文件
 
-
-  fs.rmdirSync()
+  // fs.rmdirSync();
 });

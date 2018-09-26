@@ -83,6 +83,7 @@
     "@types/node": "7.0.7",
     "autoprefixer": "7.1.1",
     "codelyzer": "3.1.1",
+    "copy-webpack-plugin": "^4.5.2",
     "copyfiles": "1.2.0",
     "cross-env": "5.0.1",
     "css-loader": "0.28.4",

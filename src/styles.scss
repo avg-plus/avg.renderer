@@ -11,7 +11,7 @@ img {
 
 html,
 body,
-#app{
+#app {
   padding: 0px;
   margin: 0px;
   overflow: hidden;
@@ -26,10 +26,7 @@ body,
   height: 100%;
   width: 100%;
   position: absolute;
-  will-change: transform;
 }
-
-
 
 /* Fonts */
 // @font-face {
@@ -84,6 +81,14 @@ body,
   z-index: $_LAYER_INDEX_VIEWPORT;
 
   background: black;
+  will-change: transform, left, top;
+}
+
+#avg-camera-viewport {
+  z-index: $_LAYER_INDEX_VIEWPORT;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 #avg-transition {
@@ -93,6 +98,8 @@ body,
   height: 100%;
   opacity: 1;
   // pointer-events: none;
+
+  will-change: transform, opacity;
 }
 
 #avg-dialogue-box-layer {
@@ -109,6 +116,7 @@ body,
   width: 100%;
   height: 100%;
   pointer-events: none;
+  will-change: transform, left, top, right, bottom;
 }
 
 #avg-title-menu-layer {
