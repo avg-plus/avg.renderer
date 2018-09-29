@@ -2,24 +2,16 @@ import { AnimationUtils } from "./animation-utils";
 import { TweenMax, TweenLite } from "gsap";
 import * as $ from "jquery";
 import * as dynamics from "dynamics.js";
+import * as avg from "avg-engine/engine";
 
 class CameraOptions {
   public restrictedMode = true;
 }
 
-export class CameraData {
-  public translationX?;
-  public translationY?;
-  public rotation?;
-  public scale?;
-  public skewX?;
-  public skewY?;
-}
-
 export class Camera2D {
   private targets: string[] = [];
 
-  private cameraData: CameraData = new CameraData();
+  private cameraData: avg.CameraData = new avg.CameraData();
 
   constructor(targets: string | string[]) {
     this.setTargets(targets);
@@ -33,13 +25,13 @@ export class Camera2D {
     }
   }
 
-  public setCameraData(data: CameraData) {
+  public setCameraData(data: avg.CameraData) {
     this.cameraData = data;
   }
 
   public async setTranslation(x: number, y: number) {
-    this.cameraData.translationX = x;
-    this.cameraData.translationY = y;
+    this.cameraData.x = x;
+    this.cameraData.y = y;
   }
 
   public setSkewX(skewX: number) {
@@ -62,8 +54,8 @@ export class Camera2D {
     const animationQueue = [];
 
     const data = {
-      translateX: -this.cameraData.translationX,
-      translateY: this.cameraData.translationY,
+      translateX: -this.cameraData.x,
+      translateY: this.cameraData.y,
       skewX: this.cameraData.skewX,
       skewY: this.cameraData.skewY,
       scale: this.cameraData.scale,

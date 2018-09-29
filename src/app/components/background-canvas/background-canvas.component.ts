@@ -190,16 +190,16 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
       }, duration + 10);
 
       setTimeout(async () => {
-        const director = new CameraDirector();
-        await director.moveTo(
-          DirectLayers.Characters,
-          {
-            translationX: 600,
-            skewX: 6,
-            scale: 1.5
-          },
-          4200
-        );
+        // const director = new CameraDirector();
+        // await director.moveTo(
+        //   DirectLayers.Characters,
+        //   {
+        //     translationX: 600,
+        //     skewX: 6,
+        //     scale: 1.5
+        //   },
+        //   4200
+        // );
 
         // const elms = ["#background-layer-0", "#avg-viewport"];
         // const elms = ["#avg-viewport"];

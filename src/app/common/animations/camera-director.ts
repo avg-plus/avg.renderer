@@ -1,4 +1,5 @@
-import { Camera2D, CameraData } from "app/common/animations/camera2d";
+import { Camera2D } from "app/common/animations/camera2d";
+import { CameraData } from "avg-engine/engine";
 
 export enum DirectLayers {
   All,

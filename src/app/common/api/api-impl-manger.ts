@@ -13,6 +13,7 @@ import "./api-input-box-impl";
 import "./api-screen-image-impl";
 import "./api-transition-to-impl";
 import "./api-widget-html-impl";
+import "./api-camera-impl";
 
 export class APIImplManager {
   public static init() {

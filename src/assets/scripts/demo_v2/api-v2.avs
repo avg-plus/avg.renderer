@@ -9,12 +9,12 @@ setTimeout(() => {
         name: "flyin"
       }
     });
-    api.wait(1000);
-    widget.removeImage(logo.id, {
-      animation: {
-        name: "flyout"
-      }
-    });
+    // api.wait(1000);
+    // widget.removeImage(logo.id, {
+    //   animation: {
+    //     name: "flyout"
+    //   }
+    // });
   })();
 }, 2000);
 
@@ -29,7 +29,9 @@ character.show("demo/space-normal.png", {
   }
 });
 
-text.show(["这是V2版本的API ~", "在观看这个 Demo 的同时，来点音乐吧？"]);
+text.show(["这是V2版本的API ~", "在观看这个 Demo 的同时，来点音乐吧？"], {
+  name: "李狗蛋"
+});
 const c1 = dialog.choices(["一起摇摆！", "我耳朵听不见"]);
 if (c1.selectedIndex === 0) {
   audio.playBGM("demo/demo_theme.mp3");
@@ -41,7 +43,15 @@ text.show("下面将演示新增的摄像机变换效果。", {
 
 text.hide();
 
-dialog.choices(["开始演示", "没什么好看的老铁"]);
+const c2 = dialog.choices(["开始演示", "没什么好看的老铁"]);
+if (c2.selectedIndex === 0) {
+  camera.moveTo(1200, {
+    x: 600,
+    y: 200,
+    skewX: 6,
+    scale: 1.1
+  });
+}
 
 // character.show(2, "demo/vizee-normal.png");
 

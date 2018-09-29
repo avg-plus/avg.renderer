@@ -11,6 +11,10 @@
     <script type="application/javascript" src="inline.bundle.js"></script>
     <script type="application/javascript" src="loader.js"></script>
 
+    <script>
+        document.addEventListener("dragover", event => event.preventDefault());
+        document.addEventListener("drop", event => event.preventDefault());
+    </script>
 
     <style>
         /* @import url('assets/fonts/mf-jianhei-normal.ttf'); */

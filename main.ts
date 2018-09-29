@@ -3,10 +3,6 @@ import { app, BrowserWindow, screen, Menu, MenuItem, autoUpdater, dialog } from 
 import * as path from "path";
 import * as url from "url";
 
-// import * as fs from "fs";
-// const BrowserFS = require("browserfs/dist/node/index");
-// import * as bfs from "browserfs/dist/node";
-
 let win, serve;
 
 const args = process.argv.slice(1);
