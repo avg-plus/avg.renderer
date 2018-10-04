@@ -20,7 +20,7 @@ import { AnimationUtils } from "../../../common/animations/animation-utils";
 })
 export class ImageWidgetComponent extends ScreenWidgetComponent
   implements OnInit, AfterViewInit {
-  private bindingImageFile = "";
+  private bindingImageFile ;
   private bindingStyle: SafeStyle;
 
   constructor(private sanitized: DomSanitizer, private injector: Injector) {
@@ -51,8 +51,11 @@ export class ImageWidgetComponent extends ScreenWidgetComponent
 
   public update() {
     const imageData = <avg.ScreenImage>this.data;
-    this.bindingImageFile = imageData.file.filename;
-
+    if(avg.PlatformService.isWindowsDesktop()){
+      this.bindingImageFile = this.sanitized.bypassSecurityTrustUrl(imageData.file.filename);
+    }else{
+      this.bindingImageFile = imageData.file.filename;
+    }
     AnimationUtils.to("Init Image", this.WidgetElementID + " .main-img", 0, {
       width: imageData.width,
       height: imageData.height,
