@@ -63,7 +63,7 @@ export class Camera2D {
     };
 
     Object.keys(data).forEach(key => {
-      if (data[key] === undefined) {
+      if (data[key] === undefined || data[key] === NaN) {
         delete data[key];
       }
     });

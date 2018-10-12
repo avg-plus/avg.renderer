@@ -1,24 +1,18 @@
 import { Camera2D } from "app/common/animations/camera2d";
-import { CameraData } from "avg-engine/engine";
-
-export enum DirectLayers {
-  All,
-  Scenes,
-  Characters
-}
+import { CameraData, CameraDirectorLayers } from "avg-engine/engine";
 
 export class CameraDirector {
   private camera: Camera2D = new Camera2D([]);
 
-  public async moveTo(applyLayers: DirectLayers, cameraData: CameraData, duration: number = 1000) {
+  public async moveTo(applyLayers: CameraDirectorLayers, cameraData: CameraData, duration: number = 1000) {
     switch (applyLayers) {
-      case DirectLayers.All:
+      case CameraDirectorLayers.All:
         this.camera.setTargets(["#avg-camera-viewport", "#character-box"]);
         break;
-      case DirectLayers.Scenes:
-        this.camera.setTargets(["#avg-viewport"]);
+      case CameraDirectorLayers.Scenes:
+        this.camera.setTargets(["#avg-camera-viewport"]);
         break;
-      case DirectLayers.Characters:
+      case CameraDirectorLayers.Characters:
         this.camera.setTargets(["#character-box"]);
         break;
     }

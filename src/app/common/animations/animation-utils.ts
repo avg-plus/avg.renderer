@@ -121,9 +121,9 @@ export class AnimationUtils {
   }
 
   public static applyFilters(target: string, duration: number, filter: avg.Filter[]) {
-    if (!EngineUtils.isUndefined(filter) && Array.isArray(filter)) {
+    if (!EngineUtils.isNullOrUndefined(filter) && Array.isArray(filter)) {
       filter.forEach(v => {
-        AnimationUtils.animateCssFilter(target, v.name, duration, v.strength);
+        AnimationUtils.animateCssFilter(target, v.name, duration, v.value);
       });
     }
   }
