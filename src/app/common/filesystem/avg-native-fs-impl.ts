@@ -10,6 +10,9 @@ export class AVGNativeFSImpl {
 
   public static get __dirname() {
     if (avg.PlatformService.isDesktop()) {
+      if (avg.PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
+        __dirname = __dirname.replace(/\\/g, "/");
+      }
       return __dirname;
     } else {
       return ".";
