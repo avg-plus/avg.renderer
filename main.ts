@@ -16,7 +16,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1366,
     height: 768,
-    resizable: false,
+    // resizable: false,
     backgroundColor: "#000000",
     hasShadow: true,
     // titleBarStyle: "hiddenInset",

@@ -32,6 +32,7 @@ import { reject } from "q";
 import * as $ from "jquery";
 import { EngineUtils } from "avg-engine/engine";
 import { LoadingLayerService } from "../loading-layer/loading-layer.service";
+import { Utils } from "../../common/utils";
 
 export enum DialogueBoxStatus {
   None,
@@ -242,17 +243,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     // Preload avatar
     // await LoadingLayerService.asyncLoading(character.avatar.file);
 
-    const img = new Image();
-    img.style.opacity = "0";
-    img.src = character.avatar.file;
+    const dimension: any = await Utils.getImageDimensions(character.avatar.file);
 
-    const dimension: any = await new Promise((resolve, reject) => {
-      $(img).ready(() => {
-        setTimeout(() => {
-          resolve({ width: img.width, height: img.height });
-        }, 0);
-      });
-    });
+    this.changeDetectorRef.detectChanges();
 
     // console.log(dimension);
 
@@ -265,8 +258,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       width: `${dimension.width + "px"}`,
       height: `${dimension.height + "px"}`,
       opacity: "0",
-      left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || 0) + "%",
-      bottom: 0 + (imageRenderer.offset_y || 0) + `%`,
+      // left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || "0") + "%",
+      // bottom: 0 + (imageRenderer.offset_y || "0") + `px`,
+      left: this.CHAR_WIDTH * (slot - 1) + "%",
+      bottom: `0%`,
       transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
       background: `url(${character.avatar.file}) no-repeat`,
       "background-size": `100% 100%`
@@ -375,6 +370,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private startTypewriter(speed: number = 30) {
+    clearInterval(this.typewriterHandle);
+    this.typewriterHandle = null;
+
     let count = 0;
     this.animatedText = "";
     this.currentStatus = DialogueBoxStatus.Typing;

@@ -135,7 +135,7 @@ for (let i = 0; i < bundles.length; ++i) {
       loadedCount +
       "/" +
       bundles.length +
-      "]\n 可能需要等待一些时间...";
+      "]\n 首次加载可能需要等待几分钟...";
 
     if (loadedCount === bundles.length) {
       document.getElementById("loading-tips").hidden = true;

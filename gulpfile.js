@@ -1,6 +1,7 @@
 "use strict";
 
 const gulp = require("gulp");
+var watch = require("gulp-watch");
 const electron = require("electron-connect").server.create();
 
 // import * as fs from "fs";
@@ -28,30 +29,44 @@ gulp.task("serve-electron-connect", () => {
   gulp.watch(["dist/*.js", "dist/*.css", "dist/index.html"], electron.reload);
 });
 
-gulp.task("avs-watcher", () => {
-  const full = "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/";
+gulp.task("assets-watcher", () => {
+  var source = "./src/assets",
+    destination = "./dist/desktop/assets";
 
-  const src = "./src/assets/**/*.avs";
-  const dest = "./dist/desktop/assets/scripts/";
-
-  // gulp.src(src).pipe(gulp.dest(dest));
-
-  const watcher = gulp.watch(src);
-  watcher.on("change", event => {
-    const short = event.path.replace(
-      "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/",
-      ""
-    );
-
-    const destFile = dest + short;
-    // gulp.del(destFile);
-    const destDir = path.dirname(destFile);
-
-    console.log("Copy '" + event.path + "' to " + destDir + " ...");
-
-    gulp.src(event.path).pipe(gulp.dest(destDir));
+  gulp.watch(source).on("change", event => {
+    console.log("Copy '" + event.path + "' to " + destination + " ...");
   });
+
+  gulp
+    .src(source + "/**/*", { base: source })
+    .pipe(watch(source, { base: source }))
+    .pipe(gulp.dest(destination));
 });
+
+// gulp.task("avs-watcher", () => {
+//   const full = "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/";
+
+//   const src = "./src/assets/**/*.avs";
+//   const dest = "./dist/desktop/assets/scripts/";
+
+//   // gulp.src(src).pipe(gulp.dest(dest));
+
+//   const watcher = gulp.watch(src);
+//   watcher.on("change", event => {
+//     const short = event.path.replace(
+//       "/Users/angrypowman/Workspace/Programming/Revisions/avg-plus/avg.renderer/src/assets/scripts/",
+//       ""
+//     );
+
+//     const destFile = dest + short;
+//     // gulp.del(destFile);
+//     const destDir = path.dirname(destFile);
+
+//     console.log("Copy '" + event.path + "' to " + destDir + " ...");
+
+//     gulp.src(event.path).pipe(gulp.dest(destDir));
+//   });
+// });
 
 gulp.task("avgplus-release", () => {
   const releasePath = "../avgplus-release";

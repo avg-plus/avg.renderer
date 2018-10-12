@@ -5,16 +5,56 @@ const vizee = "[c=red][rt=战备通信专家]木村长[/rt][/c]";
 const space = "[c=red][rt=黑客]空格[/rt][/c]";
 const latyas = "[c=red][rt=死肥宅]拉提亚斯[/rt][/c]";
 
-const char_vizee = function(index, suffix) {
+const resetCamera = () => {
+  camera.to(
+    0,
+    {
+      scale: 1
+    },
+    500
+  );
+};
+
+const focusToVizee = () => {
+  camera.to(1, {
+    x: -100,
+    scale: 1.2,
+    skewX: -1
+  });
+
+  camera.to(2, {
+    x: -200,
+    y: 0,
+    scale: 1.2,
+    skewX: -1
+  });
+};
+
+const focusToSpace = () => {
+  camera.to(1, {
+    x: 100,
+    scale: 1.2,
+    skewX: 1
+  });
+
+  camera.to(2, {
+    x: 210,
+    y: 10,
+    scale: 1.2,
+    skewX: 1
+  });
+};
+
+const char_vizee = function(slot, suffix) {
   return {
     name: vizee,
     character: {
-      index: index,
+      slot: slot,
       avatar: {
         file: `demo/vizee-${suffix}.png`,
         renderer: {
           offset_x: 0,
-          offset_y: -10,
+          offset_y: -130,
           filter: []
         }
       }
@@ -22,16 +62,16 @@ const char_vizee = function(index, suffix) {
   };
 };
 
-const char_space = function(index, suffix) {
+const char_space = function(slot, suffix) {
   return {
     name: space,
     character: {
-      index: index,
+      slot: slot,
       avatar: {
         file: `demo/space-${suffix}.png`,
         renderer: {
           offset_x: 0,
-          offset_y: -24,
+          offset_y: -160,
           filter: []
         }
       }
@@ -39,12 +79,7 @@ const char_space = function(index, suffix) {
   };
 };
 
-// const samplePlugin = plugins.load("sample-plugin.js");
-// plugins.call(samplePlugin, "onBeforeShowDialogue", {});
-// plugins.call(samplePlugin, "myPluginMethod", {});
-// plugins.call(samplePlugin, "onRenderUI", {});
-
-// api.startSkip();
+api.startSkip();
 
 api.showText(["「唔……」", "「咦……？[wait]这里是……？」"]);
 api.hideText();
@@ -289,12 +324,12 @@ api.showText(["「啊！对了，差点忘记去木村的」"], {
 });
 
 api.hideText();
-api.wait(600);
+// api.wait(600);
 
-api.transitionTo("black", 0, 0);
-api.transitionTo("black", 1, 1000);
+// api.transitionTo("black", 0, 0);
+// api.transitionTo("black", 1, 1000);
 
-api.wait(600);
+// api.wait(600);
 
 api.loadScene(0, "demo/room.png", {
   transition: "brush",
@@ -303,48 +338,58 @@ api.loadScene(0, "demo/room.png", {
 
 api.transitionTo("black", 0, 1000);
 
+resetCamera();
 api.showText(["「嗨，木村先生，我来看望您了。」"], {
   name: "${AngryPowman}"
 });
 
 api.showText(["「咳咳……」"]);
 
+focusToVizee();
 api.showText(
   ["「请称呼我的全名——[c=yellow]木村长[/c]。」", "「另外，据说有人原本打算今天要发一个很厉害的科幻短篇故事来着？」"],
-  char_vizee(1, "normal")
+  char_vizee(2, "normal")
 );
 
 // api.hideCharacter(1);
 
+resetCamera();
 api.showText(["「嘿嘿嘿，其实这个是有原因的。这不是画师跳票了嘛。看在只有你有立绘的份上……不提这事儿。」"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「哦？可是我听说你是因为沉迷游戏才导致跳票的。」"], char_vizee(1, "normal"));
+focusToVizee();
+api.showText(["「哦？可是我听说你是因为沉迷游戏才导致跳票的。」"], char_vizee(2, "smile"));
 
 // api.hideCharacter(1);
 
+resetCamera();
 api.showText(["「没……没有这回事，游戏制作人的事，能叫跳票吗？」"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「我认为得你在逃避跳票的责任。」", "「后面打算做一款什么样的游戏？」"], char_vizee(1, "normal"));
+focusToVizee();
+api.showText(["「我认为得你在逃避跳票的责任。」", "「后面打算做一款什么样的游戏？」"], char_vizee(2, "smile"));
 // api.hideCharacter(1);
 
+resetCamera();
 api.showText(["「你也看到了，这都跳票了，我怎么知道是什么游戏。」"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「没有事先计划吗？」"], char_vizee(1, "normal"));
-// api.hideCharacter(1);
+focusToVizee();
+api.showText(["「没有事先计划吗？」"], char_vizee(2, "normal"));
 
+resetCamera();
 api.showText(["「有是有的，可这[rt=AVGPlus]引擎[/rt]部分完工都太久了。做一款正式正式的游戏太难了。」"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「你们……在说什么？」"], char_space(3, "normal"));
+focusToSpace();
+api.showText(["「你们……在说什么？」"], char_space(4, "normal"));
 // api.hideCharacter(1);
 
+resetCamera();
 api.showText(
   ["「诶？！」", "「如果问没猜错的话……」", "「这位就是你们研究所里那位神秘而且神龙见首不见尾、从不露脸的大黑客吗？」"],
   {
@@ -352,51 +397,95 @@ api.showText(
   }
 );
 
-api.showText(["「……」", "「被你说的，一点都不神秘了。」"], char_space(3, "normal"));
-// api.hideCharacter(3);
+focusToSpace();
+api.showText(["「……」", "「被你说的，一点都不神秘了。」"], char_space(4, "normal"));
 
 api.wait(800);
 
-api.showText(["「等我一会儿。」"], char_space(3, "normal"));
+focusToSpace();
+api.showText(["「等我一会儿。」"], char_space(4, "normal"));
 api.hideText();
 api.hideCharacter();
+character.hide();
 api.wait(700);
 
-api.showText(["「蒙面术——」", "「启动！」"], char_space(3, "normal"));
+focusToSpace();
+api.showText(["「蒙面术——」", "「启动！」"], char_space(4, "normal"));
 api.hideCharacter();
 api.wait(300);
 
 api.transitionTo("white", 1, 200);
 api.transitionTo("white", 0, 200);
 
-api.showText(["「怎么样，现在不知道我是谁了吧？」"], char_space(3, "hidden"));
-api.showText(["「……」"], char_vizee(1, "normal"));
+focusToSpace();
+api.showText(["「怎么样，现在不知道我是谁了吧？」"], char_space(4, "hidden"));
+
+focusToVizee();
+api.showText(["「……」"], char_vizee(2, "normal"));
 api.showText(["「……」"], {
   name: "${AngryPowman}"
 });
 
+resetCamera();
 api.showText(["（这种中二病，真的会是被联邦通缉的大黑客吗？）"], {
   name: "${AngryPowman}"
 });
 
-api.showText(["「真的是。」"], char_space(3, "hidden"));
+focusToSpace();
+api.showText(["「真的是。」"], char_space(4, "hidden"));
 
+resetCamera();
 api.showText(["「？！」", "「为什么你知道我在想什么？！」"], {
   name: "${AngryPowman}"
 });
 
+focusToSpace();
 api.showText(
   ["「听说这是你开发的世界？」", "「刚刚带上面罩的瞬间，root 权限已经是我的了。」"],
-  char_space(3, "hidden")
+  char_space(4, "hidden")
 );
 
+resetCamera();
 api.showText(["「……！」"], {
   name: "${AngryPowman}"
 });
 
-// api.stopSkip();
-
+resetCamera();
 api.showText(["「……大哥喝茶！」"], {
   name: "${AngryPowman}"
 });
-// api.wait(300);
+
+text.hide();
+
+api.wait(1000);
+api.stopSkip();
+
+widget.image("demo/camera_bloodstain.png", {
+  // size: "(500%, 500%)",
+  position: "center",
+  // scale: 4,
+  renderer: {
+    filter: [
+      {
+        name: "opacity",
+        value: 30
+      }
+    ]
+  }
+});
+focusToSpace();
+api.showText(["「对了……木村」", "「听说阿斯特防线的战况不太好？」"], char_space(4, "hidden"));
+
+api.showText(
+  ["「……」", "「情况非常不好，兽化人开始了大规模暴动，似乎是统一接到了某种[c=blue]命令[/c]，对人类发动了袭击。」"],
+  char_vizee(2, "angry")
+);
+
+focusToVizee();
+
+focusToSpace();
+api.showText(["「对了……木村」", "「听说阿斯特防线的战况不太好？」"], char_space(4, "hidden"));
+
+api.wait(300);
+
+api.transitionTo("black", 1, 2000);

@@ -173,13 +173,13 @@ export class GameInitializer implements CanActivate {
       {
         tips: "加载游戏资源...",
         files: [
-          AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/Sunburst.mp3"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/BeautifulHawaii.mp3"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/text-theme.mp3"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/avg-scene-forest.jpg"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1-day.jpg"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1.jpg"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/demo-bg-1.jpg")
+          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/Sunburst.mp3"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/BeautifulHawaii.mp3"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/text-theme.mp3"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/avg-scene-forest.jpg"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1-day.jpg"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1.jpg"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/demo-bg-1.jpg")
         ]
       }
     ]);
@@ -197,16 +197,30 @@ export class GameInitializer implements CanActivate {
         "message",
         event => {
           const message = event.data;
+          console.log("Incomming Message From ", event.source, message);
 
-          router.ngOnDestroy();
-          router.navigated = false;
-          router.navigate(["main-scene", { script: "" }]).then(result => {
-            AVGGame._entryStory = new avg.AVGStory();
-            // story.UnsafeTerminate();
+          if (message) {
+            switch (message.OP) {
+              case "ReloadPlayer": {
+                window.location.reload();
 
-            AVGGame._entryStory.loadFromString(message);
-            AVGGame._entryStory.run();
-          });
+                break;
+              }
+              case "RunStory": {
+                router.ngOnDestroy();
+                router.navigated = false;
+                router.navigate(["main-scene", { script: "" }]).then(result => {
+                  AVGGame._entryStory = new avg.AVGStory();
+                  // story.UnsafeTerminate();
+
+                  AVGGame._entryStory.loadFromString(message.data.script);
+                  AVGGame._entryStory.run();
+                });
+
+                break;
+              }
+            }
+          }
         },
         false
       );

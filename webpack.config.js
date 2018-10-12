@@ -217,7 +217,7 @@ module.exports = {
     electron: "require('electron')"
   },
   resolve: {
-    extensions: [".ts", ".js", ".scss", ".json"],
+    extensions: [".ts", ".js", ".scss", ".json", ".avs"],
     aliasFields: [],
     alias: {
       environments: isProd
@@ -268,6 +268,10 @@ module.exports = {
         // loader: "url-loader?name=[name].[hash:20].[ext]&limit=10000"
         loader: "url-loader?name=[name].[ext]"
         // loader: "null-loader"
+      },
+      {
+        test: /\.(avs)$/,
+        loader: "file-loader"
       },
       {
         exclude: [path.join(process.cwd(), "src/styles.scss")],

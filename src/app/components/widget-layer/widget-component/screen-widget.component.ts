@@ -13,14 +13,15 @@ import * as avg from "avg-engine/engine";
 import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { WidgetModel } from "../widget-layer.service";
 import { Subject } from "rxjs/Subject";
+import { EngineUtils } from "avg-engine/engine";
 
-export class ScreenWidgetComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
+export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
   public api: avg.APIScreenImage;
   private _data: avg.ScreenWidget;
   private _subject: Subject<any> = new Subject<any>();
 
   public onShowAnimationCallback: () => void;
+  public onAnimateCallback: () => void;
   public onRemoveAnimationCallback: () => void;
 
   protected ElementID = "";
@@ -46,9 +47,7 @@ export class ScreenWidgetComponent
     }
 
     if (data.animation) {
-      data.animation.name = data.animation.name
-        ? data.animation.name.toLowerCase()
-        : "";
+      data.animation.name = data.animation.name ? data.animation.name.toLowerCase() : "";
     }
 
     if (data.animation && data.animation.options) {
@@ -63,8 +62,7 @@ export class ScreenWidgetComponent
   private initWidgetData(data: avg.ScreenWidget) {
     data.animation = data.animation || new avg.WidgetAnimation();
     data.animation.name = data.animation.name || "";
-    data.animation.options =
-      data.animation.options || new avg.WidgetAnimationOptions();
+    data.animation.options = data.animation.options || new avg.WidgetAnimationOptions();
     data.animation.options.duration = data.animation.options.duration || 1000;
 
     return data;
@@ -86,9 +84,15 @@ export class ScreenWidgetComponent
     this.lowercaseDataFields(this.data);
 
     if (this.data.x || this.data.y) {
-      const style =
-        " position: fixed; left:" + this.data.x + "; top:" + this.data.y;
-      this.renderer.setProperty(this.element.nativeElement, "style", style);
+      const style = {
+        position: "fixed",
+        left: this.data.x,
+        top: this.data.y,
+        // width: "100%",
+        // height: "100%"
+      };
+
+      this.renderer.setProperty(this.element.nativeElement, "style", EngineUtils.cssObjectToStyles(style));
 
       return;
     }
@@ -118,9 +122,7 @@ export class ScreenWidgetComponent
           this.fadeIn(this.data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Enter_FlyIn:
-          this.flyIn(<avg.WidgetAnimation_FlyInOptions>(
-            this.data.animation.options
-          ));
+          this.flyIn(<avg.WidgetAnimation_FlyInOptions>this.data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Enter_Appear:
           this.appear();
@@ -128,14 +130,15 @@ export class ScreenWidgetComponent
         case avg.ScreenWidgetAnimation.Enter_ScaleIn:
           break;
         default:
-          console.warn(
-            "Could not found animation name [%s]",
-            this.data.animation.name
-          );
+          console.warn("Could not found animation name [%s]", this.data.animation.name);
           this.appear();
           break;
       }
     }, 1);
+  }
+
+  public animateWidgetTo(vars: any, duration: number) {
+    AnimationUtils.to("animateWidgetTo", this.WidgetElementID, duration, vars, this.onAnimateComplete);
   }
 
   public hideWidget(data: avg.ScreenWidget) {
@@ -153,9 +156,7 @@ export class ScreenWidgetComponent
           this.fadeOut(data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Leave_FlyOut:
-          this.flyOut(<avg.WidgetAnimation_FlyOutOptions>(
-            data.animation.options
-          ));
+          this.flyOut(<avg.WidgetAnimation_FlyOutOptions>data.animation.options);
           break;
         case avg.ScreenWidgetAnimation.Leave_Hide:
           this.hide();
@@ -163,10 +164,7 @@ export class ScreenWidgetComponent
         case avg.ScreenWidgetAnimation.Leave_ScaleOut:
           break;
         default:
-          console.warn(
-            "Could not found animation name [%s]",
-            data.animation.name
-          );
+          console.warn("Could not found animation name [%s]", data.animation.name);
           this.hide();
           break;
       }
@@ -185,11 +183,7 @@ export class ScreenWidgetComponent
     });
   }
 
-  protected flyAnimation_calc(
-    options:
-      | avg.WidgetAnimation_FlyInOptions
-      | avg.WidgetAnimation_FlyOutOptions
-  ) {
+  protected flyAnimation_calc(options: avg.WidgetAnimation_FlyInOptions | avg.WidgetAnimation_FlyOutOptions) {
     let offsetX = 0,
       offsetY = 0;
 
@@ -206,11 +200,7 @@ export class ScreenWidgetComponent
       options.direction = avg.AnimationDirection.FromLeft;
     }
 
-    if (
-      options.offset === null ||
-      options.offset === undefined ||
-      options.offset < 0
-    ) {
+    if (options.offset === null || options.offset === undefined || options.offset < 0) {
       options.offset = 20;
     }
 
@@ -298,6 +288,14 @@ export class ScreenWidgetComponent
 
     if (this.onShowAnimationCallback) {
       this.onShowAnimationCallback();
+    }
+  }
+
+  protected onAnimateComplete(): void {
+    // console.log("[Widget: Show Animation] completed.");
+
+    if (this.onAnimateCallback) {
+      this.onAnimateCallback();
     }
   }
 

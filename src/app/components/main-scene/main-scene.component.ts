@@ -9,12 +9,12 @@ import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
 import { Router, ActivatedRoute, NavigationEnd, CanActivate } from "@angular/router";
-import { SceneHandle } from "avg-engine/engine";
+import { SceneHandle, CameraDirectorLayers } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
-import { DirectLayers, CameraDirector } from "../../common/animations/camera-director";
+import { CameraDirector } from "../../common/animations/camera-director";
 
 @Component({
   selector: "app-main-scene",
@@ -160,7 +160,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         });
       } else if (value.api instanceof avg.APICamera) {
         const director = new CameraDirector();
-        await director.moveTo(DirectLayers.All, value.api.data, value.api.duration || 1000);
+        director.moveTo(value.api.layer, value.api.data, value.api.duration || 1000);
         value.resolver();
       }
     });
