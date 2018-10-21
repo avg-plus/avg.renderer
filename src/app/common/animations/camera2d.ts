@@ -59,7 +59,8 @@ export class Camera2D {
       skewX: this.cameraData.skewX,
       skewY: this.cameraData.skewY,
       scale: this.cameraData.scale,
-      rotation: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}deg`
+      rotateZ: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}`,
+      // filter: `blur(10px)`
     };
 
     Object.keys(data).forEach(key => {
