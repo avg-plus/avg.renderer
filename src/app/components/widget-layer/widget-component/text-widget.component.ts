@@ -11,12 +11,21 @@ import {
   ElementRef
 } from "@angular/core";
 import { NgForOf } from "@angular/common";
-import { Subtitle, Setting } from "avg-engine/engine";
+import {
+  Subtitle,
+  Setting,
+  MeasurementUnitPart,
+  AVGMeasurementUnit,
+  UnitType,
+  Renderer,
+  EngineUtils
+} from "avg-engine/engine";
 
-import * as gsap from "gsap";
 import * as avg from "avg-engine/engine";
+import * as $ from "jquery";
+
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { AnimationUtils } from "../../../common/animations/animation-utils";
+// import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
 @Component({
@@ -56,9 +65,94 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
   public update() {
     const subtitleData = <avg.Subtitle>this.data;
 
+    const renderer = new Renderer();
+
+    // renderer.width = renderer.width || subtitleData.width;
+    // renderer.height = renderer.height || subtitleData.height;
+    renderer.x = subtitleData.x;
+    renderer.y = subtitleData.y;
+    // renderer.scale = renderer.scale;
+
+    // renderer = this.data.mergeToRenderer(imageRenderer);
+
     // Update and parse content
     subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
     this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(subtitleData.text);
+    this.changeDetectorRef.detectChanges();
+
+    const elementWidth = $(this.WidgetElementID).width();
+    const elementHeight = $(this.WidgetElementID).height();
+
+    // Get user specified image size
+    // const widthUnitPart = new MeasurementUnitPart(`${elementWidth}px`);
+    // const heightUnitPart = new MeasurementUnitPart(`${elementHeight}px`);
+    const xUnitPart = new MeasurementUnitPart(this.data.x);
+    const yUnitPart = new MeasurementUnitPart(this.data.y);
+
+    const actualWidth = elementWidth; // elementWidth * (widthUnitPart.getNumbericValue() / 100);
+    const actualHeight = elementHeight; // elementHeight * (heightUnitPart.getNumbericValue() / 100);
+    const screenWidth = avg.Setting.WindowWidth;
+    const screenHeight = avg.Setting.WindowHeight;
+    const relativeWidth = actualWidth / screenWidth;
+    const relativeHeight = actualHeight / screenHeight;
+
+    // Get image demension
+    renderer.x = xUnitPart.getValue();
+    renderer.y = yUnitPart.getValue();
+
+    // 1. Get screen solution in pixels
+    // 2. Get actual size in pixel with user specified percent
+    // 3. Calculating percentage in screen pixels
+    const position = this.data.position;
+    if (position) {
+      const positionUnits = AVGMeasurementUnit.fromString(position);
+      const left = positionUnits.getLeft();
+      const right = positionUnits.getRight();
+      if (left.isCustomUnit()) {
+        // x-axis position
+        switch (left.getValue()) {
+          case "left": {
+            renderer.x = 0 + UnitType.Percent;
+            break;
+          }
+          case "right": {
+            renderer.x = 100 - relativeWidth * 100 + UnitType.Percent;
+            break;
+          }
+          case "center": {
+            renderer.x = 100 / 2 - (relativeWidth * 100) / 2 + UnitType.Percent;
+            break;
+          }
+        }
+      }
+
+      if (right.isCustomUnit()) {
+        // y-axis position
+        switch (right.getValue()) {
+          case "top": {
+            renderer.y = 0 + UnitType.Percent;
+            break;
+          }
+          case "center": {
+            renderer.y = 100 / 2 - (relativeHeight * 100) / 2 + UnitType.Percent;
+            break;
+          }
+          case "bottom": {
+            renderer.y = 100 - relativeHeight * 100 + UnitType.Percent;
+            break;
+          }
+        }
+      }
+    }
+
+    const element = $(this.WidgetElementID)[0];
+    element.setAttribute(
+      "style",
+      EngineUtils.cssObjectToStyles({
+        left: renderer.x,
+        top: renderer.y
+      })
+    );
 
     this.changeDetectorRef.detectChanges();
   }

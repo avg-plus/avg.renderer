@@ -20,7 +20,7 @@
     "start:desktop:prod": "cross-env NODE_ENV=production npm run start:desktop",
     "start:web": "npm run serve",
     "start:web:prod": "cross-env NODE_ENV=production npm run serve",
-    "serve": "cross-env GAME_PLATFORM=browser webpack-dev-server --public --host 0.0.0.0 --content-base ./dist/web --port 80 --inline",
+    "serve": "cross-env GAME_PLATFORM=browser webpack-dev-server --public --host 0.0.0.0 --content-base ./dist/web --port 2333 --inline",
     "build:electron:main": "tsc -p tsconfig.main.json --outDir dist/desktop && cross-env GAME_PLATFORM=desktop",
     "build": "webpack --display-error-details && npm run build:electron:main",
     "build:web": "mkdir -p ./dist/web && cp server.js ./dist/web && cross-env GAME_PLATFORM=browser NODE_ENV=production webpack",

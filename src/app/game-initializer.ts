@@ -6,7 +6,8 @@ import {
   EngineSettings,
   Resource,
   Setting,
-  AVGGame
+  AVGGame,
+  i18n
 } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
@@ -15,6 +16,7 @@ import * as $ from "jquery";
 import { CanActivate, Router } from "@angular/router";
 
 import * as avg from "avg-engine/engine";
+import { AVGEngineError } from "../../../avg.engine/engine/core/engine-errors";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -26,6 +28,55 @@ export class GameInitializer implements CanActivate {
 
   canActivate() {
     return this._initilized;
+  }
+
+  public async initErrorHandler() {
+    AVGEngineError.init(window, error => {
+      const errorTemplate = `
+        <div style="padding:20px; width: 100%; height: 100%; background: #292929; user-select: auto; color: white; overflow-y: scroll">
+          <h2 style="color: salmon;">${error.type}</h2>
+          ${"<h3 style='color: bisque;'> Error In " + error.file + "</h3>"}
+          <h4 style='color: indianred;'> [${i18n.lang.ERROR_HANDLER_ERROR}] <br>${error.desc}</h4>
+          <br>
+          <h3 style='color: salmon;'>${i18n.lang.ERROR_HANDLER_ADDITION_INFOS}</h3>
+          ${
+            error.data.file
+              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
+              : ""
+          }
+          ${
+            error.data.lineNumber
+              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> Line: " +
+                error.data.lineNumber +
+                "</div>"
+              : ""
+          }
+        </div>
+      `;
+
+      $("body").html(errorTemplate);
+    });
+    // window.onerror = (message, source, lineno, colno, error) => {};
+
+    // window.onerror = function(message, filename, lineno, colno, error) {
+    //   alert(event);
+
+    //   // if (global.process.listeners("uncaughtException").length > 0) {
+    //   //   global.process.emit("uncaughtException", error);
+    //   //   return true;
+    //   // } else {
+    //   //   return false;
+    //   // }
+    // };
+
+    // // console.log(window.onerror);
+
+    // // process.addListener("uncaughtException", event => {
+    // //   alert(event);
+    // // });
+    // window.addEventListener("error", function(event) {
+    //   alert(event);
+    // });
   }
 
   // Apply filesystem implementations to engine

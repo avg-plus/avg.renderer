@@ -1,3 +1,28 @@
+
+character.show("demo/domo-ask.png", {
+  position: "(left,10%)",
+  renderer: {
+    filter: [
+      {
+        name: "opacity",
+        value: 90
+      }
+    ]
+  }
+});
+
+character.show("demo/kingwl-normal.png", {
+  position: "(70%,5%)",
+  renderer: {
+    filter: [
+      {
+        name: "opacity",
+        value: 90
+      }
+    ]
+  }
+});
+
 let mainChar = "";
 let secondChar = "";
 
@@ -79,12 +104,14 @@ const char_space = function(slot, suffix) {
   };
 };
 
-api.startSkip();
+// api.startSkip();
 
 api.showText(["「唔……」", "「咦……？[wait]这里是……？」"]);
 api.hideText();
 api.transitionTo("white", 1, 100);
-api.loadScene(0, "demo/demo-tree.png");
+// api.loadScene(0, "demo/demo-tree.png");
+const handle = scene.load(0, "demo/room-2.jpg");
+
 api.transitionTo("white", 0, 100);
 api.updateSetting("TextSpeed", 100);
 api.showText(["「呜哇哇哇哇哇哇！！！！[wait]发生了什么？！」"]);
@@ -409,6 +436,8 @@ api.hideCharacter();
 character.hide();
 api.wait(700);
 
+// api.stopSkip();
+
 focusToSpace();
 api.showText(["「蒙面术——」", "「启动！」"], char_space(4, "normal"));
 api.hideCharacter();
@@ -416,6 +445,8 @@ api.wait(300);
 
 api.transitionTo("white", 1, 200);
 api.transitionTo("white", 0, 200);
+
+api.wait(10);
 
 focusToSpace();
 api.showText(["「怎么样，现在不知道我是谁了吧？」"], char_space(4, "hidden"));
@@ -458,7 +489,6 @@ api.showText(["「……大哥喝茶！」"], {
 text.hide();
 
 api.wait(1000);
-api.stopSkip();
 
 widget.image("demo/camera_bloodstain.png", {
   // size: "(500%, 500%)",

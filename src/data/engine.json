@@ -1,6 +1,6 @@
 {
   "//engine.env.entry_script_file": "demo_v2/playground-blank.avs",
-  "engine.env.entry_script_file": "demo_v2/api-v2.avs",
+  "engine.env.entry_script_file": "demo/api-v2.avs",
   "///engine.env.entry_script_file": "demo/demo.avs",
   "////engine.env.entry_script_file": "tutorial/tutorial.avs",
   "engine.env.assets_root_dirname": "assets",

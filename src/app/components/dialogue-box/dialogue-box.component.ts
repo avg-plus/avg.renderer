@@ -30,9 +30,24 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { reject } from "q";
 
 import * as $ from "jquery";
-import { EngineUtils } from "avg-engine/engine";
+import {
+  EngineUtils,
+  api,
+  EngineAPI_Widget,
+  ScreenWidget,
+  ScreenWidgetType,
+  ScreenImage,
+  Resource,
+  ResourceData,
+  ResourcePath,
+  WidgetAnimation_FlyInOptions,
+  WidgetAnimation_FadeInOptions,
+  IDGenerator
+} from "avg-engine/engine";
 import { LoadingLayerService } from "../loading-layer/loading-layer.service";
 import { Utils } from "../../common/utils";
+import { WidgetLayerService } from "../widget-layer/widget-layer.service";
+import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
 
 export enum DialogueBoxStatus {
   None,
@@ -201,101 +216,140 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private onCharacterEnter(index: number, character: avg.Character) {
-    const elementID = "#character-index-" + character.slot;
+  // private onCharacterEnter(index: number, character: avg.Character) {
+  //   const elementID = "#character-index-" + character.slot;
 
-    AnimationUtils.to("OnCharacterEnter", elementID, this.CHAR_ANIMATION_DURATION, {
-      opacity: 1
-    });
-  }
+  //   AnimationUtils.to(
+  //     "OnCharacterEnter",
+  //     elementID,
+  //     this.CHAR_ANIMATION_DURATION,
+  //     {
+  //       opacity: 1
+  //     },
+  //     () => {
+  //       this.changeDetectorRef.detectChanges();
+  //     }
+  //   );
+  // }
 
-  private onCharacterLeave(index: number) {
-    const elementID = "#character-index-" + index;
+  // private onCharacterLeave(index: number) {
+  //   const elementID = "#character-index-" + index;
 
-    return new Promise((resolve, reject) => {
-      AnimationUtils.to(
-        "CharacterLeaveAnimation",
-        elementID,
-        this.CHAR_ANIMATION_DURATION,
-        {
-          opacity: 0
-          // x: this.CHAR_ANIMATION_OFFSET
-        },
-        () => {
-          this.characters[index] = undefined;
-        }
-      );
+  //   return new Promise((resolve, reject) => {
+  //     AnimationUtils.to(
+  //       "CharacterLeaveAnimation",
+  //       elementID,
+  //       this.CHAR_ANIMATION_DURATION,
+  //       {
+  //         opacity: 0
+  //         // x: this.CHAR_ANIMATION_OFFSET
+  //       },
+  //       () => {
+  //         this.characters[index] = undefined;
+  //       }
+  //     );
 
-      resolve();
-    });
-  }
+  //     resolve();
+  //   });
+  // }
 
   public async showCharacter(character: avg.Character) {
-    const slot = character.slot;
-    const elementID = "#character-index-" + slot;
-    if (slot < 1 || slot > 5) {
-      console.warn("Character index should be 1-5");
-      return;
-    }
+    // EngineAPI_Widget.image("");
 
-    const charNotExists = this.characters[slot] === undefined || this.characters[slot] === null;
+    // let width = "0%";
+    // if (!EngineUtils.isNullOrUndefined(character.slot) && (character.slot > 0 && character.slot < 5)) {
+    //   width = `${100 - 100 / character.slot}%`;
+    // }
 
-    // Preload avatar
-    // await LoadingLayerService.asyncLoading(character.avatar.file);
+    const image = new ScreenImage();
+    image.file = ResourceData.from(character.avatar.file);
+    image.renderer = character.renderer;
+    image.position = character.position;
+    image.id = `character-${IDGenerator.generate()}`;
+    image.animation.name = "flyin";
 
-    const dimension: any = await Utils.getImageDimensions(character.avatar.file);
+    const options = new WidgetAnimation_FlyInOptions();
+    options.direction = "left";
+    options.duration = 500;
+    options.offset = 40;
+    image.animation.options = options;
 
-    this.changeDetectorRef.detectChanges();
+    const promise = await WidgetLayerService.addWidget(
+      image,
+      WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
+      avg.ScreenWidgetType.Image,
+      true
+    );
 
-    // console.log(dimension);
+    const result = new avg.ScreenImageResult();
+    result.id = image.id;
 
-    const imageRenderer = character.avatar.renderer;
-    const filter = imageRenderer.filter || [];
-    AnimationUtils.applyFilters(elementID, 0, filter);
+    // this.onAsyncResolveHandler(value, promise, result);
 
-    const style = {
-      position: "absolute",
-      width: `${dimension.width + "px"}`,
-      height: `${dimension.height + "px"}`,
-      opacity: "0",
-      // left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || "0") + "%",
-      // bottom: 0 + (imageRenderer.offset_y || "0") + `px`,
-      left: this.CHAR_WIDTH * (slot - 1) + "%",
-      bottom: `0%`,
-      transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
-      background: `url(${character.avatar.file}) no-repeat`,
-      "background-size": `100% 100%`
-    };
+    // const slot = character.slot;
+    // const elementID = "#character-index-" + slot;
+    // if (slot < 1 || slot > 5) {
+    //   console.warn("Character index should be 1-5");
+    //   return;
+    // }
 
-    AnimationUtils.setAnchor(elementID, "center center");
+    // const charNotExists = this.characters[slot] === undefined || this.characters[slot] === null;
 
-    if (charNotExists) {
-      this.characters[slot] = character;
-      this.initOpacity(slot, 0);
+    // // Preload avatar
+    // // await LoadingLayerService.asyncLoading(character.avatar.file);
 
-      $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
+    // const dimension: any = await Utils.getImageDimensions(character.avatar.file);
 
-      this.onCharacterEnter(slot, character);
-    } else {
-      this.characters[slot] = character;
-      this.initOpacity(slot, 1);
+    // this.changeDetectorRef.detectChanges();
 
-      $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
+    // // console.log(dimension);
 
-      this.changeDetectorRef.detectChanges();
-    }
+    // const imageRenderer = character.avatar.renderer;
+    // const filter = imageRenderer.filter || [];
+    // AnimationUtils.applyFilters(elementID, 0, filter);
+
+    // const style = {
+    //   position: "absolute",
+    //   width: `${dimension.width + "px"}`,
+    //   height: `${dimension.height + "px"}`,
+    //   opacity: "0",
+    //   // left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || "0") + "%",
+    //   // bottom: 0 + (imageRenderer.offset_y || "0") + `px`,
+    //   left: this.CHAR_WIDTH * (slot - 1) + "%",
+    //   bottom: `0%`,
+    //   transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
+    //   background: `url(${character.avatar.file}) no-repeat`,
+    //   "background-size": `100% 100%`
+    // };
+
+    // AnimationUtils.setAnchor(elementID, "center center");
+
+    // if (charNotExists) {
+    //   this.characters[slot] = character;
+    //   this.initOpacity(slot, 0);
+
+    //   $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
+
+    //   this.onCharacterEnter(slot, character);
+    // } else {
+    //   this.characters[slot] = character;
+    //   this.initOpacity(slot, 1);
+
+    //   $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
+
+    //   this.changeDetectorRef.detectChanges();
+    // }
   }
 
   public async hideCharacter(character: avg.Character): Promise<any> {
-    const index = character.slot;
-
-    if (index === -1) {
-      for (let i = 0; i < this.characters.length; ++i) {
-        await this.onCharacterLeave(i);
-      }
-    } else {
-      await this.onCharacterLeave(index);
-    }
+    // const index = character.slot;
+    // if (index === -1) {
+    //   for (let i = 0; i < this.characters.length; ++i) {
+    //     await this.onCharacterLeave(i);
+    //   }
+    // } else {
+    //   await this.onCharacterLeave(index);
+    // }
   }
 
   public getTrustedName() {
@@ -476,7 +530,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   }
 
-  private onAutoPlay() {
+  public onAutoPlay() {
     if (avg.Setting.AutoPlay) {
       clearTimeout(this.autoPlayDelayHandle);
       this.autoPlayDelayHandle = null;

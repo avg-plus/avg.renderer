@@ -3,26 +3,26 @@
 @import "../../../styles/_default-ui.scss";
 
 $DIALOGUE_BOX_BOTTOM: -35%;
-$DIALOGUE_BOX_HEIGHT: 200px;
+$DIALOGUE_BOX_HEIGHT: 160px;
 
 #dialogue-container {
   width: 100%;
 
   .name-box {
-    @include UIPanel;
+    // @include UIPanel;
 
     position: absolute;
     width: auto;
     height: 30px;
     bottom: -$DIALOGUE_BOX_BOTTOM + 70%;
     // margin-left: 5%;
-    padding-left: 5px;
+    padding-left: 10px;
     padding-right: 5px;
     opacity: 0;
 
     .name {
       @include TextStrokeNormal;
-      @include H2;
+      @include H1;
       text-align: center;
       color: yellow;
     }
@@ -35,8 +35,8 @@ $DIALOGUE_BOX_HEIGHT: 200px;
     bottom: $DIALOGUE_BOX_BOTTOM;
     height: $DIALOGUE_BOX_HEIGHT;
 
-    width: 90%;
-    margin-left: 5%;
+    width: 100%;
+    // margin-left: 5%;
 
     opacity: 0;
 

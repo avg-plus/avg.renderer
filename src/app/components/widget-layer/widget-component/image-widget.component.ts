@@ -5,7 +5,7 @@ import * as avg from "avg-engine/engine";
 import * as $ from "jquery";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { AnimationUtils } from "../../../common/animations/animation-utils";
-import { EngineUtils, MeasurementNumeric, Dimension, AVGGame, UnitType } from "avg-engine/engine";
+import { EngineUtils, MeasurementUnitPart, Dimension, AVGGame, UnitType, AVGMeasurementUnit } from "avg-engine/engine";
 import { Utils } from "../../../common/utils";
 
 @Component({
@@ -48,80 +48,127 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     this.bindingImageFile = imageData.file.filename;
 
     let imageRenderer = imageData.renderer;
-    imageRenderer.x = imageRenderer.x || imageData.x;
-    imageRenderer.y = imageRenderer.y || imageData.y;
+    const filter = imageRenderer.filter || [];
+
     imageRenderer.width = imageRenderer.width || imageData.width;
     imageRenderer.height = imageRenderer.height || imageData.height;
     imageRenderer.scale = imageRenderer.scale;
-    const filter = imageRenderer.filter || [];
 
     imageRenderer = imageData.mergeToRenderer(imageRenderer);
 
     const dimension: Dimension = await Utils.getImageDimensions(this.bindingImageFile);
 
     // Get user specified image size
-    const widthNumberic = new MeasurementNumeric(imageRenderer.width);
-    const heightNumberic = new MeasurementNumeric(imageRenderer.height);
-    const xNumberic = new MeasurementNumeric(imageRenderer.x);
-    const yNumberic = new MeasurementNumeric(imageRenderer.y);
+    const widthUnitPart = new MeasurementUnitPart(imageRenderer.width);
+    const heightUnitPart = new MeasurementUnitPart(imageRenderer.height);
+    const xUnitPart = new MeasurementUnitPart(imageRenderer.x);
+    const yUnitPart = new MeasurementUnitPart(imageRenderer.y);
+
+    // Get image demension
+    const actualWidth = dimension.width * (widthUnitPart.getNumbericValue() / 100);
+    const actualHeight = dimension.height * (heightUnitPart.getNumbericValue() / 100);
+    const screenWidth = avg.Setting.WindowWidth;
+    const screenHeight = avg.Setting.WindowHeight;
+    const relativeWidth = actualWidth / screenWidth;
+    const relativeHeight = actualHeight / screenHeight;
+
+    imageRenderer.x = xUnitPart.getValue();
+    imageRenderer.y = yUnitPart.getValue();
 
     // 1. Get screen solution in pixels
     // 2. Get actual size in pixel with user specified percent
     // 3. Calculating percentage in screen pixels
-    if (widthNumberic.isPercent()) {
-      const actualWidth = dimension.width * (widthNumberic.getValue() / 100);
-
-      const screenWidth = avg.Setting.WindowWidth;
-      const relativeWidth = actualWidth / screenWidth;
+    if (widthUnitPart.isPercent()) {
       imageRenderer.width = relativeWidth * 100 + UnitType.Percent;
     }
 
-    if (heightNumberic.isPercent()) {
-      const actualHeight = dimension.height * (heightNumberic.getValue() / 100);
-
-      const screenHeight = avg.Setting.WindowHeight;
-      const relativeHeight = actualHeight / screenHeight;
+    if (heightUnitPart.isPercent()) {
       imageRenderer.height = relativeHeight * 100 + UnitType.Percent;
     }
 
-    if (widthNumberic.isPixel()) {
-      imageRenderer.width = widthNumberic.getStringValue();
+    if (widthUnitPart.isPixel()) {
+      imageRenderer.width = widthUnitPart.getValue();
     }
 
-    if (heightNumberic.isPixel()) {
-      imageRenderer.height = heightNumberic.getStringValue();
+    if (heightUnitPart.isPixel()) {
+      imageRenderer.height = heightUnitPart.getValue();
     }
 
-    imageRenderer.x = xNumberic.getStringValue();
-    imageRenderer.y = yNumberic.getStringValue();
+    const position = imageData.position;
+    if (position) {
+      const positionUnits = AVGMeasurementUnit.fromString(position);
+      const left = positionUnits.getLeft();
+      const right = positionUnits.getRight();
+      if (left.isCustomUnit()) {
+        // x-axis position
+        switch (left.getValue()) {
+          case "left": {
+            imageRenderer.x = 0 + UnitType.Percent;
+            break;
+          }
+          case "right": {
+            imageRenderer.x = 100 - relativeWidth * 100 + UnitType.Percent;
+            break;
+          }
+          case "center": {
+            imageRenderer.x = 100 / 2 - (relativeWidth * 100) / 2 + UnitType.Percent;
+            break;
+          }
+        }
+      } else {
+        imageRenderer.x = left.getValue();
+      }
 
-    const positions = new Map<string, string>([
-      [avg.ScreenPosition.TopLeft, "widget-top-left"],
-      [avg.ScreenPosition.TopRight, "widget-top-right"],
-      [avg.ScreenPosition.BottomLeft, "widget-bottom-left"],
-      [avg.ScreenPosition.BottomRight, "widget-bottom-right"],
-      [avg.ScreenPosition.Top, "widget-top"],
-      [avg.ScreenPosition.Left, "widget-left"],
-      [avg.ScreenPosition.Right, "widget-right"],
-      [avg.ScreenPosition.Bottom, "widget-bottom"],
-      [avg.ScreenPosition.Center, "widget-center"]
-    ]);
-
-    const bindingClass = positions.get(this.data.position);
+      if (right.isCustomUnit()) {
+        // y-axis position
+        switch (right.getValue()) {
+          case "top": {
+            imageRenderer.y = 0 + UnitType.Percent;
+            break;
+          }
+          case "center": {
+            imageRenderer.y = 100 / 2 - (relativeHeight * 100) / 2 + UnitType.Percent;
+            break;
+          }
+          case "bottom": {
+            imageRenderer.y = 100 - relativeHeight * 100 + UnitType.Percent;
+            break;
+          }
+        }
+      } else {
+        imageRenderer.y = right.getValue();
+      }
+    }
 
     const style = {
       // "transform-origin": "top left",
-      transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
+      // transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
       width: imageRenderer.width,
       height: imageRenderer.height,
+      // width: "100%",
+      // height: "100%",
       // scale: imageRenderer.scale,
-      opacity: 1,
+      // opacity: 1,
       // left: imageRenderer.x,
       // top: imageRenderer.y,
       "background-image": `url(${this.bindingImageFile})`,
       "background-repeat": "no-repeat",
       "background-size": `100% 100%`
     };
+
+    const parentElement = $(this.WidgetElementID)[0];
+    parentElement.setAttribute(
+      "style",
+      EngineUtils.cssObjectToStyles({
+        position: "fixed",
+        transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
+        width: "100%",
+        height: "100%",
+        // opacity: 1,
+        left: imageRenderer.x,
+        top: imageRenderer.y
+      })
+    );
 
     const styles = EngineUtils.cssObjectToStyles(style);
     const element = $(this.WidgetElementID + " .main-img")[0];

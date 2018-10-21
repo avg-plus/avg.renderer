@@ -97,22 +97,22 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
       return;
     }
 
-    const positions = new Map<string, string>([
-      [avg.ScreenPosition.TopLeft, "widget-top-left"],
-      [avg.ScreenPosition.TopRight, "widget-top-right"],
-      [avg.ScreenPosition.BottomLeft, "widget-bottom-left"],
-      [avg.ScreenPosition.BottomRight, "widget-bottom-right"],
-      [avg.ScreenPosition.Top, "widget-top"],
-      [avg.ScreenPosition.Left, "widget-left"],
-      [avg.ScreenPosition.Right, "widget-right"],
-      [avg.ScreenPosition.Bottom, "widget-bottom"],
-      [avg.ScreenPosition.Center, "widget-center"]
-    ]);
+    // const positions = new Map<string, string>([
+    //   [avg.ScreenPosition.TopLeft, "widget-top-left"],
+    //   [avg.ScreenPosition.TopRight, "widget-top-right"],
+    //   [avg.ScreenPosition.BottomLeft, "widget-bottom-left"],
+    //   [avg.ScreenPosition.BottomRight, "widget-bottom-right"],
+    //   [avg.ScreenPosition.Top, "widget-top"],
+    //   [avg.ScreenPosition.Left, "widget-left"],
+    //   [avg.ScreenPosition.Right, "widget-right"],
+    //   [avg.ScreenPosition.Bottom, "widget-bottom"],
+    //   [avg.ScreenPosition.Center, "widget-center"]
+    // ]);
 
-    const bindingClass = positions.get(this.data.position);
-    if (bindingClass) {
-      this.renderer.addClass(this.element.nativeElement, bindingClass);
-    }
+    // const bindingClass = positions.get(this.data.position);
+    // if (bindingClass) {
+    //   this.renderer.addClass(this.element.nativeElement, bindingClass);
+    // }
   }
 
   protected initShowAnimation() {

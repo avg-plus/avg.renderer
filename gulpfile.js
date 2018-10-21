@@ -30,17 +30,20 @@ gulp.task("serve-electron-connect", () => {
 });
 
 gulp.task("assets-watcher", () => {
-  var source = "./src/assets",
-    destination = "./dist/desktop/assets";
+  var sources = ["./src/assets", "./src/data"],
+    destinations = ["./dist/desktop/assets", "./dist/desktop/data"];
 
-  gulp.watch(source).on("change", event => {
-    console.log("Copy '" + event.path + "' to " + destination + " ...");
-  });
+  for (let i = 0; i < sources.length; ++i) {
+    const source = sources[i];
+    const destination = destinations[i];
 
-  gulp
-    .src(source + "/**/*", { base: source })
-    .pipe(watch(source, { base: source }))
-    .pipe(gulp.dest(destination));
+    gulp
+      .src(source + "/**/*", { base: source })
+      .pipe(watch(source, { base: source }))
+      .pipe(gulp.dest(destination));
+  }
+
+  // console.log("Copy '" + source + "' to " + destination + " ...");
 });
 
 // gulp.task("avs-watcher", () => {

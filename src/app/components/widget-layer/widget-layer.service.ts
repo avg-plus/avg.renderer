@@ -1,4 +1,11 @@
-import { Injectable, ComponentRef, ChangeDetectorRef } from "@angular/core";
+import {
+  Injectable,
+  ComponentRef,
+  ChangeDetectorRef,
+  ComponentFactory,
+  Type,
+  ComponentFactoryResolver
+} from "@angular/core";
 
 import * as avg from "avg-engine/engine";
 
@@ -57,12 +64,28 @@ export class WidgetLayerService extends AVGService {
   public static imageWdigets: ImageWidgetModel[] = new Array<ImageWidgetModel>();
   public static htmlWdigets: HtmlWidgetModel[] = new Array<HtmlWidgetModel>();
 
+  private static _resolver: ComponentFactoryResolver;
+  private static _container: any;
+
   public static clearAllSubtitle() {
     WidgetLayerService.textWidgets.forEach(widget => {
       widget.component.destroy();
     });
 
     WidgetLayerService.textWidgets = [];
+  }
+
+  public static createWidgetComponent<T>(type: Type<T>) {
+    const factory: ComponentFactory<T> = this._resolver.resolveComponentFactory(type);
+
+    const widget: ComponentRef<T> = this._container.createComponent(factory);
+
+    return widget;
+  }
+
+  public static setWidgetLayer(resolver: ComponentFactoryResolver, container: any) {
+    this._resolver = resolver;
+    this._container = container;
   }
 
   public static addWidget(
@@ -93,6 +116,11 @@ export class WidgetLayerService extends AVGService {
 
     return new Promise((resolve, reject) => {
       let model: WidgetModel;
+
+      if (isTextWidgetExists(data.id) || isImageWidgetExists(data.id)) {
+        reject(`Widget already exists: \n  -> id: ${data.id}`);
+        return;
+      }
 
       if (widgetType === avg.ScreenWidgetType.Text) {
         const textWidgetComponent = <ComponentRef<TextWidgetComponent>>component;
@@ -189,6 +217,7 @@ export class WidgetLayerService extends AVGService {
       const widgetContainer =
         widgetType === avg.ScreenWidgetType.Text ? WidgetLayerService.textWidgets : WidgetLayerService.imageWdigets;
 
+      let isWidgetFound = false;
       for (let i = 0; i < widgetContainer.length; ++i) {
         const widget =
           widgetType === avg.ScreenWidgetType.Text
@@ -196,6 +225,7 @@ export class WidgetLayerService extends AVGService {
             : <ImageWidgetModel>widgetContainer[i];
 
         if (widget.data.id === data.id) {
+          isWidgetFound = true;
           let component = widget.component;
 
           // Destroy component
@@ -226,8 +256,13 @@ export class WidgetLayerService extends AVGService {
         }
       }
 
-      if (isAsync) {
-        resolve();
+      if (!isWidgetFound) {
+        // Not found
+        reject(`Widget Not Found: \n  -> id: ${data.id}`);
+      } else {
+        if (isAsync) {
+          resolve();
+        }
       }
     });
   }

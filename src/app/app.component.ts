@@ -39,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   async ngOnInit() {}
 
   async ngAfterViewInit() {
+    await this.initializer.initErrorHandler();
     await this.initializer.initWindowEventListener(this.router);
     await this.initializer.initFileSystem();
     await this.initializer.initEngineSettings();

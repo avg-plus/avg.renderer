@@ -23,7 +23,8 @@ import { WidgetLayerService } from "./widget-layer.service";
 
 import * as avg from "avg-engine/engine";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
-import { ScreenWidgetType } from "avg-engine/engine";
+import { ScreenWidgetType, i18n } from "avg-engine/engine";
+import { AVGEngineError } from "../../../../../avg.engine/engine/core/engine-errors";
 
 @Component({
   selector: "widget-layer",
@@ -37,15 +38,9 @@ export class WidgetLayerComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private resolver: ComponentFactoryResolver) {}
 
-  createWidgetComponent<T>(type: Type<T>) {
-    const factory: ComponentFactory<T> = this.resolver.resolveComponentFactory(type);
-
-    const widget: ComponentRef<T> = this.container.createComponent(factory);
-
-    return widget;
-  }
-
   ngOnInit() {
+    WidgetLayerService.setWidgetLayer(this.resolver, this.container);
+
     ScriptingDispatcher.watch().subscribe((value: { api: avg.AVGScriptUnit; op: string; resolver: any }) => {
       if (value.api instanceof avg.APIScreenSubtitle) {
         const subtitle = (<avg.APIScreenSubtitle>value.api).data;
@@ -54,7 +49,7 @@ export class WidgetLayerComponent implements OnInit {
           case avg.OP.ShowTextWidget:
             const promise = WidgetLayerService.addWidget(
               subtitle,
-              this.createWidgetComponent<TextWidgetComponent>(TextWidgetComponent),
+              WidgetLayerService.createWidgetComponent<TextWidgetComponent>(TextWidgetComponent),
               avg.ScreenWidgetType.Text,
               value.api.isAsync
             );
@@ -93,7 +88,7 @@ export class WidgetLayerComponent implements OnInit {
             {
               const promise = WidgetLayerService.addWidget(
                 image,
-                this.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
+                WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
                 avg.ScreenWidgetType.Image,
                 value.api.isAsync
               );
@@ -123,7 +118,7 @@ export class WidgetLayerComponent implements OnInit {
 
             const promise = WidgetLayerService.addWidget(
               model,
-              this.createWidgetComponent<HtmlWidgetComponent>(HtmlWidgetComponent),
+              WidgetLayerService.createWidgetComponent<HtmlWidgetComponent>(HtmlWidgetComponent),
               avg.ScreenWidgetType.Html,
               value.api.isAsync
             );
@@ -150,7 +145,9 @@ export class WidgetLayerComponent implements OnInit {
         () => {
           value.resolver(returnedResult);
         },
-        _ => {}
+        _ => {
+          AVGEngineError.emit(i18n.lang.SCRIPTING_API_IVALID_ARGUMENTS, _);
+        }
       );
     }
   }

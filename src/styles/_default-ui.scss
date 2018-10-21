@@ -1,4 +1,4 @@
-$MAIN_COLOR: rgba(54, 54, 61, 0.6);
+$MAIN_COLOR: rgba(0, 0, 0, 0.55);
 $BORDER_COLOR: #170f22;
 $HIGHLIGHT_COLOR: rgb(181, 99, 50);
 $COLOR_MAIN_COLOR: rgb(86, 86, 86);
@@ -23,12 +23,12 @@ $COLOR_MAIN_COLOR: rgb(86, 86, 86);
   font-style: italic;
   color: white;
   font-family: "Shanghei";
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 @mixin UIPanel {
-  border: 1px solid $BORDER_COLOR;
+  // border: 1px solid $BORDER_COLOR;
+  box-shadow: 0px 0px 30px 50px $MAIN_COLOR; /* change to alter the effect*/
   background-color: $MAIN_COLOR;
   opacity: 0.7;
 }

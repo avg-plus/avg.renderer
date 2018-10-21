@@ -1,6 +1,7 @@
-const handle = scene.load(0, "demo/room.png");
 
-api.call("demo_v2/char-introduction.avs");
+api.call("demo/chapters/char-def.avs")
+api.call("demo/chapters/chapter-1.avs")
+// api.call("demo_v2/char-introduction.avs");
 
 
 // // audio.playBGM("demo/living.mp3");
