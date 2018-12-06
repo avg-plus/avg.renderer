@@ -14,9 +14,9 @@ $DIALOGUE_BOX_HEIGHT: 160px;
     position: absolute;
     width: auto;
     height: 30px;
-    bottom: -$DIALOGUE_BOX_BOTTOM + 70%;
+    bottom: -$DIALOGUE_BOX_BOTTOM + 68%;
     // margin-left: 5%;
-    padding-left: 10px;
+    padding-left: 3%;
     padding-right: 5px;
     opacity: 0;
 
@@ -43,8 +43,9 @@ $DIALOGUE_BOX_HEIGHT: 160px;
     .content {
       height: 100%;
       padding: 24px;
+      padding-left: 6%;
       @include TextStrokeNormal;
-      @include H2;
+      @include H1;
     }
   }
 

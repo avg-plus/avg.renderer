@@ -11,9 +11,9 @@ import "./api-dialogue-choices-impl";
 import "./api-animate-scene-impl";
 import "./api-input-box-impl";
 import "./api-screen-image-impl";
-import "./api-transition-to-impl";
 import "./api-widget-html-impl";
 import "./api-camera-impl";
+import "./api-system-impl";
 
 export class APIImplManager {
   public static init() {

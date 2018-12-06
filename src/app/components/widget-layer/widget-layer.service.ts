@@ -13,7 +13,7 @@ import { AVGService } from "../../common/avg-service";
 import { TextWidgetComponent } from "./widget-component/text-widget.component";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
 import { ScreenWidgetComponent } from "./widget-component/screen-widget.component";
-import { Subtitle } from "avg-engine/engine";
+import { Subtitle, ScreenImage, mergeDeep } from "avg-engine/engine";
 import { HtmlWidgetComponent } from "./widget-component/html-widget.component";
 
 export class WidgetModel {
@@ -61,7 +61,7 @@ export class HtmlWidgetModel extends WidgetModel {
 @Injectable()
 export class WidgetLayerService extends AVGService {
   public static textWidgets: TextWidgetModel[] = new Array<TextWidgetModel>();
-  public static imageWdigets: ImageWidgetModel[] = new Array<ImageWidgetModel>();
+  public static imageWidgets: ImageWidgetModel[] = new Array<ImageWidgetModel>();
   public static htmlWdigets: HtmlWidgetModel[] = new Array<HtmlWidgetModel>();
 
   private static _resolver: ComponentFactoryResolver;
@@ -105,7 +105,7 @@ export class WidgetLayerService extends AVGService {
     };
 
     const isImageWidgetExists = (id: string) => {
-      this.imageWdigets.forEach(v => {
+      this.imageWidgets.forEach(v => {
         if (v.data.id === id) {
           return true;
         }
@@ -139,7 +139,7 @@ export class WidgetLayerService extends AVGService {
         component.instance.data = data;
         component.changeDetectorRef.detectChanges();
 
-        WidgetLayerService.imageWdigets.push(<ImageWidgetModel>model);
+        WidgetLayerService.imageWidgets.push(<ImageWidgetModel>model);
       } else if (widgetType === avg.ScreenWidgetType.Html) {
         const htmlWidgetComponent = <ComponentRef<HtmlWidgetComponent>>component;
 
@@ -182,16 +182,17 @@ export class WidgetLayerService extends AVGService {
     for (let i = 0; i < WidgetLayerService.textWidgets.length; ++i) {
       if (WidgetLayerService.textWidgets[i].data.id === id) {
         WidgetLayerService.textWidgets[i].data.text = text;
-        WidgetLayerService.textWidgets[i].component.instance.update();
+        WidgetLayerService.textWidgets[i].component.instance.updateText();
       }
     }
   }
 
-  public static updateImage(id: string, file: string) {
-    for (let i = 0; i < WidgetLayerService.textWidgets.length; ++i) {
-      if (WidgetLayerService.imageWdigets[i].data.id === id) {
-        WidgetLayerService.imageWdigets[i].data.file = avg.ResourceData.from(file);
-        WidgetLayerService.imageWdigets[i].component.instance.update();
+  public static updateImage(id: string, data: ScreenImage) {
+    for (let i = 0; i < WidgetLayerService.imageWidgets.length; ++i) {
+      if (WidgetLayerService.imageWidgets[i].data.id === id) {
+        WidgetLayerService.imageWidgets[i].data.file.filename = data.file.filename;
+        WidgetLayerService.imageWidgets[i].data.renderer = data.renderer;
+        WidgetLayerService.imageWidgets[i].component.instance.updateImage();
       }
     }
   }
@@ -202,8 +203,8 @@ export class WidgetLayerService extends AVGService {
         this.removeWidget(this.textWidgets[i].data, widgetType, isAsync);
       }
     } else {
-      for (let i = this.imageWdigets.length - 1; i >= 0; i--) {
-        this.removeWidget(this.imageWdigets[i].data, widgetType, isAsync);
+      for (let i = this.imageWidgets.length - 1; i >= 0; i--) {
+        this.removeWidget(this.imageWidgets[i].data, widgetType, isAsync);
       }
     }
   }
@@ -215,7 +216,7 @@ export class WidgetLayerService extends AVGService {
   ) {
     return new Promise((resolve, reject) => {
       const widgetContainer =
-        widgetType === avg.ScreenWidgetType.Text ? WidgetLayerService.textWidgets : WidgetLayerService.imageWdigets;
+        widgetType === avg.ScreenWidgetType.Text ? WidgetLayerService.textWidgets : WidgetLayerService.imageWidgets;
 
       let isWidgetFound = false;
       for (let i = 0; i < widgetContainer.length; ++i) {
@@ -251,7 +252,7 @@ export class WidgetLayerService extends AVGService {
             WidgetLayerService.textWidgets.splice(i, 1);
           } else {
             component.instance.hideWidget(<avg.ScreenImage>data);
-            WidgetLayerService.imageWdigets.splice(i, 1);
+            WidgetLayerService.imageWidgets.splice(i, 1);
           }
         }
       }

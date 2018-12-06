@@ -51,15 +51,17 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
     private stylesheetService: StylesheetService
   ) {
     this.stylesheetService.initMaskStylesheets();
+
+
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     // ParticleEffect.snow();
   }
 
-  ngAfterContentInit() {}
+  ngAfterContentInit() { }
 
   public reset() {
     this.scenes = [];
@@ -153,8 +155,8 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
       // maskElement.style.left = `${renderer.x + renderer.offset_x}%`;
       // maskElement.style.top = `${renderer.y + renderer.offset_y}%`;
       maskElement.style.transform = renderer.scale ? `scale(${renderer.scale})` : "";
-
-      maskElement.style.background = background;
+      maskElement.style.backgroundImage = background;
+      maskElement.style.backgroundSize = "100% 100%";
 
       // Set animtion duration
       maskElement.style.animationDuration = duration / 1000 + "s";
@@ -166,9 +168,10 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
       // backgroundElenent.style.left = `${renderer.x + renderer.offset_x}%`;
       // backgroundElenent.style.top = `${renderer.y + renderer.offset_y}%`;
       backgroundElenent.style.transform = renderer.scale ? `scale(${renderer.scale})` : "";
-      backgroundElenent.style.background = incommingBackground;
+      backgroundElenent.style.backgroundImage = incommingBackground;
+      backgroundElenent.style.backgroundSize = "100% 100%";
 
-      const filter = renderer.filter || [];
+      const filter = renderer.filters || [];
       // filter.forEach(v => {
       //   AnimationUtils.animateCssFilter(`#${maskID}`, v.name, 0, v.strength);
       //   AnimationUtils.animateCssFilter(`#${backgroundID}`, v.name, 0, v.strength);
@@ -186,7 +189,7 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
       setTimeout(() => {
         maskElement.classList.remove(animationTokens[0], animationTokens[1]);
 
-        maskElement.style.background = incommingBackground;
+        maskElement.style.backgroundImage = incommingBackground;
         model.scene = data;
         this.changeDetectorRef.detectChanges();
 
@@ -207,7 +210,7 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
   }
 
   public async cssFilter(effect: avg.Effect) {
-    effect.duration = effect.duration || 1000;
+    effect.duration = effect.duration || 0;
     const elementID = "#avg-viewport";
 
     await AnimationUtils.animateCssFilter(elementID, effect.effectName, effect.duration, effect.strength);

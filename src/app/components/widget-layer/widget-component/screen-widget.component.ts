@@ -63,7 +63,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     data.animation = data.animation || new avg.WidgetAnimation();
     data.animation.name = data.animation.name || "";
     data.animation.options = data.animation.options || new avg.WidgetAnimationOptions();
-    data.animation.options.duration = data.animation.options.duration || 1000;
+    data.animation.options.duration = data.animation.options.duration || 0;
 
     return data;
   }

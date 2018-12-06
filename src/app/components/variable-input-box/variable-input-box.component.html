@@ -1,4 +1,4 @@
-<div id="input-box-container" *ngIf="inputData !== undefined">
+<div id="input-box-container" *ngIf="inputData">
 
     <div class="box-title">{{inputData.title}}</div>
     <input [attr.type]="inputData.inputType === 0 ? 'text' : 'number'" [attr.minlength]="inputData.minLength" [attr.maxlength]="inputData.maxLength" class="input-box" [(ngModel)]="inputValue" />

@@ -3,7 +3,7 @@
 
   <div class="choices-box" *ngIf="dialogueChoices">
     <div class="dialogue-choice" *ngFor="let choice of dialogueChoices.choices; let i = index" (mouseenter)="onChoiceEnter(i, choice)"
-      (mouseleave)="onChoiceLeave(i, choice)" (click)="onChoiceClicked(i, choice)">{{choice.title}}</div>
+      (mouseleave)="onChoiceLeave(i, choice)" (click)="onChoiceClicked(i, choice)" [innerHTML]="sanitizer.bypassSecurityTrustHtml(choice.title)"></div>
   </div>
 
   <div id="character-box" #characterContainer>

@@ -30,22 +30,22 @@ export class TitleViewService extends AVGService {
   public handleKeyboardEvents($event: KeyboardEvent) {
     console.log(`Keyboard Event:`, $event);
 
-    if (avg.input.is(avg.core.InputKeys.ArrowUp, $event.code)) {
-      this.lastMenuItem();
-      return;
-    }
+    // if (avg.input.is(avg.core.InputKeys.ArrowUp, $event.code)) {
+    //   this.lastMenuItem();
+    //   return;
+    // }
 
-    if (avg.input.is(avg.core.InputKeys.ArrowDown, $event.code)) {
-      this.nextMenuItem();
-      return;
-    }
+    // if (avg.input.is(avg.core.InputKeys.ArrowDown, $event.code)) {
+    //   this.nextMenuItem();
+    //   return;
+    // }
 
-    if (avg.input.is(avg.core.InputKeys.Ok, $event.code)) {
-      const currentIndex = <TitleMenuEvent>this.currentMenuIndex;
-      this.subject.next(currentIndex);
+    // if (avg.input.is(avg.core.InputKeys.Ok, $event.code)) {
+    //   const currentIndex = <TitleMenuEvent>this.currentMenuIndex;
+    //   this.subject.next(currentIndex);
 
-      return;
-    }
+    //   return;
+    // }
   }
 
   public async startGame(): Promise<any> {}

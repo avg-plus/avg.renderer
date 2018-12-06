@@ -40,7 +40,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
     this.service.menuEvent().subscribe(index => {
       switch (index) {
         case TitleMenuEvent.Start:
-          avg.api.pauseBGM();
+          // avg.api.pauseBGM();
           const entryScript =
             avg.Resource.getPath(avg.ResourcePath.Scripts) +
             "/tutorial/new.avs";
@@ -58,7 +58,7 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    avg.api.playBGM("title.mp3", undefined);
+    // avg.api.playBGM("title.mp3", undefined);
 
     AnimationUtils.to("[Animate Title Menu]", "#avg-title-menu-layer", 3000, {
       opacity: 1,

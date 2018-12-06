@@ -1,4 +1,3 @@
-
 <div id="avg-viewport-layer">
   <!--  -->
 
@@ -13,13 +12,15 @@
     <!-- Preload transition masks-->
     <div class="mask-image scene-mask-transition {{transition}}" *ngFor="let transition of transitionList"></div>
 
+
     <div *ngFor="let model of scenes; index as i">
 
-      <!--shake-->
+
       <!--<img class="shake-constant  background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
         [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)">-->
 
       <!-- <div id="bg-mask" class="mask-image" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename" [ngStyle]="model.styles"></div> -->
+
 
       <div id="mask-layer-{{i}}" class="mask-image layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"></div>
       <div id="background-layer-{{i}}" class="background-image layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"></div>
@@ -31,6 +32,7 @@
       <!-- <img class="background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
         [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename)"> -->
     </div>
+
 
   </div>
 </div>

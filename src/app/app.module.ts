@@ -36,8 +36,13 @@ import { GameInitializer } from "./game-initializer";
 import { StylesheetService } from "./common/stylesheet-service";
 import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/html-widget.component";
 
+import { ShakeDirective } from "./common/effects/shake/directive/shake.directive";
+
 @NgModule({
   declarations: [
+    // ShakeComponent,
+    ShakeDirective,
+
     AppComponent,
     TitleViewComponent,
     TitleMenuComponent,
@@ -68,4 +73,4 @@ import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

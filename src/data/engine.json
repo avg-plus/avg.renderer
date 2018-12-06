@@ -1,11 +1,12 @@
 {
   "//engine.env.entry_script_file": "demo_v2/playground-blank.avs",
-  "engine.env.entry_script_file": "demo/api-v2.avs",
+  "engine.env.entry_script_file": "start.avs",
   "///engine.env.entry_script_file": "demo/demo.avs",
-  "////engine.env.entry_script_file": "tutorial/tutorial.avs",
-  "engine.env.assets_root_dirname": "assets",
+  "////engine.env.entry_script_file": "tutorial/start.avs",
+  "engine.env.assets_root_dirname": "../../../game-projects/tutorials",
+  "//engine.env.assets_root_dirname": "../assets",
   "engine.env.data_root_dirname": "data",
-  "engine.env.skip_title_view": true,
+  "engine.env.skip_title_view": false,
   "engine.loading_screen.background": "graphics/backgrounds/loading/loading-1.jpg",
   "engine.default_fonts": "fonts/GillSans.ttc"
 }

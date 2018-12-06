@@ -36,7 +36,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
 
   async ngAfterViewInit() {
     await this.initializer.initErrorHandler();
@@ -46,6 +46,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initResource();
     await this.initializer.initStyleSheets();
     await this.initializer.initGameSettings();
+    await this.initializer.initHotkeys();
     await this.initializer.initDesktopWindow();
     await this.initializer.initAPI();
     await this.initializer.initLoadingService();
@@ -86,7 +87,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         //   }
         // );
       },
-      _ => {}
+      _ => { }
     );
   }
 }

@@ -1,5 +1,4 @@
 @import "../../../styles/_layers.scss";
-// @import "node_modules/csshake/dist/csshake-slow.min";
 
 $MASK_IMAGE_SPRITE_IRIS_IN: "../../../data/masks/iris-in.png";
 $MASK_IMAGE_SPRITE_IRIS_OUT: "../../../data/masks/iris-out.png";
@@ -88,7 +87,8 @@ $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
 .mask-image {
   position: absolute;
   z-index: $_LAYER_INDEX_VIEWPORT + 3;
-  background-size: cover !important;
+  // background-size: cover !important;
+  // background-size: "100% 100%";
 
   transition: all ease;
   background-blend-mode: screen !important;
@@ -97,7 +97,8 @@ $MASK_IMAGE_SPRITE_BRUSH_DOWN: "../../../data/masks/brush-down.png";
 .background-image {
   position: absolute;
   z-index: $_LAYER_INDEX_VIEWPORT + 2;
-  background-size: cover !important;
+  // background-size: cover !important;
+  // background-size: "100% 100%";
 
   transition: all ease;
   background-blend-mode: screen !important;

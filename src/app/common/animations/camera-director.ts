@@ -7,13 +7,13 @@ export class CameraDirector {
   public async moveTo(applyLayers: CameraDirectorLayers, cameraData: CameraData, duration: number = 1000) {
     switch (applyLayers) {
       case CameraDirectorLayers.All:
-        this.camera.setTargets(["#avg-camera-viewport", "#character-box"]);
+        this.camera.setTargets(["#avg-camera-viewport", "#widget-layer"]);
         break;
       case CameraDirectorLayers.Scenes:
         this.camera.setTargets(["#avg-camera-viewport"]);
         break;
       case CameraDirectorLayers.Characters:
-        this.camera.setTargets(["#character-box"]);
+        this.camera.setTargets(["#widget-layer"]);
         break;
     }
 

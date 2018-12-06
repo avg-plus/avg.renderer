@@ -41,9 +41,9 @@ gulp.task("assets-watcher", () => {
       .src(source + "/**/*", { base: source })
       .pipe(watch(source, { base: source }))
       .pipe(gulp.dest(destination));
-  }
 
-  // console.log("Copy '" + source + "' to " + destination + " ...");
+    console.log("Copy '" + source + "' to " + destination + " ...");
+  }
 });
 
 // gulp.task("avs-watcher", () => {

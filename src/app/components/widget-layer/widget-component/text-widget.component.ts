@@ -52,7 +52,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     this.showWidget();
   }
 
-  ngAfterViewChecked() {}
+  ngAfterViewChecked() { }
 
   protected showWidget() {
     super.showWidget();
@@ -62,18 +62,22 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     this.changeDetectorRef.detectChanges();
   }
 
+  public updateText() {
+    const subtitleData = <avg.Subtitle>this.data;
+
+    subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
+    this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(subtitleData.text);
+
+    this.changeDetectorRef.detectChanges();
+  }
+
   public update() {
     const subtitleData = <avg.Subtitle>this.data;
 
     const renderer = new Renderer();
 
-    // renderer.width = renderer.width || subtitleData.width;
-    // renderer.height = renderer.height || subtitleData.height;
     renderer.x = subtitleData.x;
     renderer.y = subtitleData.y;
-    // renderer.scale = renderer.scale;
-
-    // renderer = this.data.mergeToRenderer(imageRenderer);
 
     // Update and parse content
     subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
@@ -84,13 +88,11 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     const elementHeight = $(this.WidgetElementID).height();
 
     // Get user specified image size
-    // const widthUnitPart = new MeasurementUnitPart(`${elementWidth}px`);
-    // const heightUnitPart = new MeasurementUnitPart(`${elementHeight}px`);
     const xUnitPart = new MeasurementUnitPart(this.data.x);
     const yUnitPart = new MeasurementUnitPart(this.data.y);
 
-    const actualWidth = elementWidth; // elementWidth * (widthUnitPart.getNumbericValue() / 100);
-    const actualHeight = elementHeight; // elementHeight * (heightUnitPart.getNumbericValue() / 100);
+    const actualWidth = elementWidth;
+    const actualHeight = elementHeight;
     const screenWidth = avg.Setting.WindowWidth;
     const screenHeight = avg.Setting.WindowHeight;
     const relativeWidth = actualWidth / screenWidth;

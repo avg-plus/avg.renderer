@@ -42,7 +42,9 @@ import {
   ResourcePath,
   WidgetAnimation_FlyInOptions,
   WidgetAnimation_FadeInOptions,
-  IDGenerator
+  IDGenerator,
+  WidgetAnimation_FlyOutOptions,
+  Sandbox
 } from "avg-engine/engine";
 import { LoadingLayerService } from "../loading-layer/loading-layer.service";
 import { Utils } from "../../common/utils";
@@ -181,13 +183,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showBox() {
     // Show character
-    if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
-      this.showCharacter(this.dialogueData.character);
-    }
+    // if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
+    //   this.showCharacter(this.dialogueData.character);
+    // }
 
     // Play voice
     if (this.dialogueData.voice && this.dialogueData.voice.length > 0) {
-      avg.api.playVoice(<string>this.dialogueData.voice);
+      avg.EngineAPI_Audio.play("voice", <string>this.dialogueData.voice);
     }
 
     AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
@@ -253,19 +255,15 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   //   });
   // }
 
-  public async showCharacter(character: avg.Character) {
-    // EngineAPI_Widget.image("");
+  public async showCharacter(api: avg.APICharacter) {
 
-    // let width = "0%";
-    // if (!EngineUtils.isNullOrUndefined(character.slot) && (character.slot > 0 && character.slot < 5)) {
-    //   width = `${100 - 100 / character.slot}%`;
-    // }
+    const character = api.data;
 
     const image = new ScreenImage();
     image.file = ResourceData.from(character.avatar.file);
     image.renderer = character.renderer;
     image.position = character.position;
-    image.id = `character-${IDGenerator.generate()}`;
+    image.id = api.id;
     image.animation.name = "flyin";
 
     const options = new WidgetAnimation_FlyInOptions();
@@ -274,82 +272,50 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     options.offset = 40;
     image.animation.options = options;
 
-    const promise = await WidgetLayerService.addWidget(
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
+      options.duration = 0;
+    }
+
+    await WidgetLayerService.addWidget(
       image,
       WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
       avg.ScreenWidgetType.Image,
-      true
+      false
     );
-
-    const result = new avg.ScreenImageResult();
-    result.id = image.id;
-
-    // this.onAsyncResolveHandler(value, promise, result);
-
-    // const slot = character.slot;
-    // const elementID = "#character-index-" + slot;
-    // if (slot < 1 || slot > 5) {
-    //   console.warn("Character index should be 1-5");
-    //   return;
-    // }
-
-    // const charNotExists = this.characters[slot] === undefined || this.characters[slot] === null;
-
-    // // Preload avatar
-    // // await LoadingLayerService.asyncLoading(character.avatar.file);
-
-    // const dimension: any = await Utils.getImageDimensions(character.avatar.file);
-
-    // this.changeDetectorRef.detectChanges();
-
-    // // console.log(dimension);
-
-    // const imageRenderer = character.avatar.renderer;
-    // const filter = imageRenderer.filter || [];
-    // AnimationUtils.applyFilters(elementID, 0, filter);
-
-    // const style = {
-    //   position: "absolute",
-    //   width: `${dimension.width + "px"}`,
-    //   height: `${dimension.height + "px"}`,
-    //   opacity: "0",
-    //   // left: this.CHAR_WIDTH * (slot - 1) + (imageRenderer.offset_x || "0") + "%",
-    //   // bottom: 0 + (imageRenderer.offset_y || "0") + `px`,
-    //   left: this.CHAR_WIDTH * (slot - 1) + "%",
-    //   bottom: `0%`,
-    //   transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
-    //   background: `url(${character.avatar.file}) no-repeat`,
-    //   "background-size": `100% 100%`
-    // };
-
-    // AnimationUtils.setAnchor(elementID, "center center");
-
-    // if (charNotExists) {
-    //   this.characters[slot] = character;
-    //   this.initOpacity(slot, 0);
-
-    //   $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
-
-    //   this.onCharacterEnter(slot, character);
-    // } else {
-    //   this.characters[slot] = character;
-    //   this.initOpacity(slot, 1);
-
-    //   $("#character-index-" + slot).prop("style", EngineUtils.cssObjectToStyles(style));
-
-    //   this.changeDetectorRef.detectChanges();
-    // }
   }
 
-  public async hideCharacter(character: avg.Character): Promise<any> {
-    // const index = character.slot;
-    // if (index === -1) {
-    //   for (let i = 0; i < this.characters.length; ++i) {
-    //     await this.onCharacterLeave(i);
-    //   }
-    // } else {
-    //   await this.onCharacterLeave(index);
-    // }
+  public async updateCharacter(api: avg.APICharacter) {
+    const character = api.data;
+
+    const image = new ScreenImage();
+    image.file = ResourceData.from(character.avatar.file);
+    image.renderer = character.renderer;
+    image.position = character.position;
+    image.id = api.id;
+
+    const promise = await WidgetLayerService.updateImage(
+      image.id, image
+    );
+  }
+
+  public async hideCharacter(api: avg.APICharacter): Promise<any> {
+    const image = new ScreenImage();
+    image.id = api.id;
+    image.animation.name = "flyout";
+
+    const options = new WidgetAnimation_FlyOutOptions();
+    options.direction = "left";
+    options.duration = 500;
+    options.offset = 40;
+    image.animation.options = options;
+
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
+      options.duration = 0;
+    }
+
+    WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, api.isAsync);
   }
 
   public getTrustedName() {
@@ -385,8 +351,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(`Update dialogue data:`, data);
   }
 
-  public showChoices(data: avg.APIDialogueChoice) {
-    this.dialogueChoices = data;
+  public showChoices(api: avg.APIDialogueChoice) {
+    // @Plugin: OnBeforeShowChoices
+    avg.PluginManager.on(avg.AVGPluginHooks.OnBeforeShowChoices, api);
+
+    this.dialogueChoices = api;
     this.changeDetectorRef.detectChanges();
     TransitionLayerService.lockPointerEvents();
   }
@@ -405,7 +374,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
     if (this.dialogueChoices.onEnter) {
       setTimeout(
-        function() {
+        function () {
           this.dialogueChoices.onEnter(index);
         }.bind(this),
         0

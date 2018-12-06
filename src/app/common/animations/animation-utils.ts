@@ -21,7 +21,7 @@ export class AnimationUtils {
       {
         "transform-origin": anchor
       },
-      () => {}
+      () => { }
     );
   }
   /**
@@ -56,13 +56,17 @@ export class AnimationUtils {
       });
 
       let value = (strength || 0) * 1;
-      value = EngineUtils.NumericRange(value, 0, 100);
 
       if (filterProperty === "hue-rotate") {
+        value = EngineUtils.NumericRange(value, 0, 100);
         value = value * (360 / 100); // normalize to 360
       } else if (filterProperty === "blur") {
+        value = EngineUtils.NumericRange(value, 0, 100);
         value = value / 10; // blur max = 10px
+      } else {
+        value = EngineUtils.NumericRange(value, 0, 9999);
       }
+
 
       const elementID = target;
       const e = $(elementID);
@@ -99,7 +103,7 @@ export class AnimationUtils {
       EngineUtils.countTo(
         startValue,
         value,
-        duration,
+        duration || 1,
         v => {
           // console.log(v);
           // Set exist filters
@@ -152,7 +156,7 @@ export class AnimationUtils {
     );
   }
 
-  public static to(name: string, target: string, duration: number = 200, vars: any, complete?: () => void) {
+  public static to(name: string, target: string, duration: number , vars: any, complete?: () => void) {
     duration = duration === 0 ? 1 : duration;
 
     // gsap.TweenLite.killTweensOf(target, true);

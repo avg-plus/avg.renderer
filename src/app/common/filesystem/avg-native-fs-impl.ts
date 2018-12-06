@@ -9,6 +9,7 @@ export class AVGNativeFSImpl {
   private static _fs = null;
 
   public static get __dirname() {
+
     if (avg.PlatformService.isDesktop()) {
       if (avg.PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
         __dirname = __dirname.replace(/\\/g, "/");
@@ -22,6 +23,7 @@ export class AVGNativeFSImpl {
   public static async initFileSystem() {
     console.log("Init FileSystem:BrowserFS", BrowserFS);
     console.log("Init FileSystem:NodeFS", NodeFS);
+    console.log("Init Env", process.env);
 
     BrowserFS.install(window);
 

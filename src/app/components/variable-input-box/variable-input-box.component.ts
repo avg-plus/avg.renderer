@@ -19,11 +19,11 @@ export class VariableInputComponent implements OnInit, AfterViewInit {
   inputValue: string | number;
   private _complete: (isOk: boolean, value: string | number) => void;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private changeDetector: ChangeDetectorRef) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public show(
     data: avg.InputData,
@@ -32,7 +32,7 @@ export class VariableInputComponent implements OnInit, AfterViewInit {
     this.inputData = data;
     this._complete = onCompleted;
 
-    this.changeDetectorRef.detectChanges();
+    this.changeDetector.detectChanges();
 
     AnimationUtils.fadeTo("#input-box-container", 300, 1);
   }
@@ -41,6 +41,8 @@ export class VariableInputComponent implements OnInit, AfterViewInit {
     AnimationUtils.fadeTo("#input-box-container", 100, 0, () => {
       this.inputData = undefined;
       this._complete = undefined;
+
+      this.changeDetector.detectChanges();
     });
   }
 

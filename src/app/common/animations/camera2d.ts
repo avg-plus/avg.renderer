@@ -3,6 +3,7 @@ import { TweenMax, TweenLite } from "gsap";
 import * as $ from "jquery";
 import * as dynamics from "dynamics.js";
 import * as avg from "avg-engine/engine";
+import { EngineUtils } from "avg-engine/engine";
 
 class CameraOptions {
   public restrictedMode = true;
@@ -60,11 +61,11 @@ export class Camera2D {
       skewY: this.cameraData.skewY,
       scale: this.cameraData.scale,
       rotateZ: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}`,
-      // filter: `blur(10px)`
+      // filter: `blur(${this.cameraData.blur}px)`
     };
 
     Object.keys(data).forEach(key => {
-      if (data[key] === undefined || data[key] === NaN) {
+      if (EngineUtils.isNullOrUndefined(data[key]) === undefined || isNaN(data[key]) || data[key] === -0) {
         delete data[key];
       }
     });

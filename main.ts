@@ -58,48 +58,7 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on("ready", () => {
-    setTimeout(function() {
-      // const server = "http://47.106.10.135:1337";
-      // const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-
-      // autoUpdater.on(
-      //   "update-downloaded",
-      //   (event, releaseNotes, releaseName) => {
-      //     const dialogOpts = {
-      //       type: "info",
-      //       buttons: ["Restart", "Later"],
-      //       title: "Application Update",
-      //       message: process.platform === "win32" ? releaseNotes : releaseName,
-      //       detail:
-      //         "A new version has been downloaded. Restart the application to apply the updates."
-      //     };
-
-      //     dialog.showMessageBox(dialogOpts, response => {
-      //       if (response === 0) {
-      //         autoUpdater.quitAndInstall();
-      //       }
-      //     });
-      //   }
-      // );
-
-      // autoUpdater.on("update-available", message => {
-      //   console.log("update available");
-      // });
-
-      // autoUpdater.on("update-not-available", message => {
-      //   console.log("update notavailable");
-      // });
-
-      // autoUpdater.on("error", message => {
-      //   console.error("There was a problem updating the application");
-      //   console.error(message);
-      // });
-
-      // autoUpdater.setFeedURL(feed);
-      // autoUpdater.checkForUpdates();
-
-      createWindow();
-    }, 1000);
+    createWindow();
   });
 
   // Quit when all windows are closed.

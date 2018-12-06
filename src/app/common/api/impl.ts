@@ -19,7 +19,6 @@ export class Impl {
 
   protected static registerImpl<T>(type: new () => T, op: string) {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
-      // console.log(target.name, key, descriptor);
 
       const originalMethod = descriptor.value;
 

@@ -7,7 +7,8 @@ import {
   Resource,
   Setting,
   AVGGame,
-  i18n
+  i18n,
+  input,
 } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
@@ -30,6 +31,10 @@ export class GameInitializer implements CanActivate {
     return this._initilized;
   }
 
+  public async initHotkeys() {
+    input.init();
+  }
+
   public async initErrorHandler() {
     AVGEngineError.init(window, error => {
       const errorTemplate = `
@@ -40,43 +45,27 @@ export class GameInitializer implements CanActivate {
           <br>
           <h3 style='color: salmon;'>${i18n.lang.ERROR_HANDLER_ADDITION_INFOS}</h3>
           ${
-            error.data.file
-              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
-              : ""
-          }
+        error.data.file
+          ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
+          : ""
+        }
           ${
-            error.data.lineNumber
-              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> Line: " +
-                error.data.lineNumber +
-                "</div>"
-              : ""
-          }
+        error.data.lineNumber
+          ? "<div style='color: bisque; white-space: pre; user-select: auto;'> Line: " +
+          error.data.lineNumber +
+          "</div>"
+          : ""
+        }
+
+        ${
+        JSON.stringify(error.data)
+        }
         </div>
       `;
 
       $("body").html(errorTemplate);
     });
-    // window.onerror = (message, source, lineno, colno, error) => {};
 
-    // window.onerror = function(message, filename, lineno, colno, error) {
-    //   alert(event);
-
-    //   // if (global.process.listeners("uncaughtException").length > 0) {
-    //   //   global.process.emit("uncaughtException", error);
-    //   //   return true;
-    //   // } else {
-    //   //   return false;
-    //   // }
-    // };
-
-    // // console.log(window.onerror);
-
-    // // process.addListener("uncaughtException", event => {
-    // //   alert(event);
-    // // });
-    // window.addEventListener("error", function(event) {
-    //   alert(event);
-    // });
   }
 
   // Apply filesystem implementations to engine
@@ -224,13 +213,19 @@ export class GameInitializer implements CanActivate {
       {
         tips: "加载游戏资源...",
         files: [
-          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/Sunburst.mp3"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/BeautifulHawaii.mp3"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/tutorial/text-theme.mp3"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/avg-scene-forest.jpg"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1-day.jpg"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/bedroom-1.jpg"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/tutorial/demo-bg-1.jpg")
+          AVGNativePath.join(Resource.getAssetsRoot(), "audio/se/explode.wav"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/living.mp3"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/lab-lighting.jpg"),
+
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-normal.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-really.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-normal.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-laugh.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-serious.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-normal.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-smile.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-hidden.png"),
+          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/vizee-normal.png"),
         ]
       }
     ]);

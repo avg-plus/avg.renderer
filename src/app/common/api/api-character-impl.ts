@@ -22,6 +22,16 @@ export class APICharacterImpl extends Impl {
     });
   }
 
+
+  @Impl.registerImpl(APICharacter, avg.OP.UpdateCharacter)
+  public static op_update(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
+    const script = <avg.APICharacter>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(avg.OP.UpdateCharacter, script, resolve);
+    });
+  }
+
   @Impl.registerImpl(APICharacter, avg.OP.HideCharacter)
   public static op_hide(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APICharacter>scriptUnit;

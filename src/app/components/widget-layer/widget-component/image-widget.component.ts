@@ -43,20 +43,38 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     console.log(imageData);
   }
 
+  public async updateImage() {
+    const imageData = <avg.ScreenImage>this.data;
+    const filters = imageData.renderer.filters || [];
+    this.bindingImageFile = imageData.file.filename;
+    console.log("filters", filters);
+
+    const dimension: Dimension = await Utils.getImageDimensions(this.bindingImageFile);
+
+    const element = $(this.WidgetElementID + " .main-img")[0];
+    element.style.setProperty("background-image", `url(${this.bindingImageFile})`);
+
+    AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filters);
+
+    this.changeDetectorRef.detectChanges();
+  }
+
   public async update() {
     const imageData = <avg.ScreenImage>this.data;
     this.bindingImageFile = imageData.file.filename;
 
     let imageRenderer = imageData.renderer;
-    const filter = imageRenderer.filter || [];
+    const filter = imageRenderer.filters || [];
 
-    imageRenderer.width = imageRenderer.width || imageData.width;
-    imageRenderer.height = imageRenderer.height || imageData.height;
-    imageRenderer.scale = imageRenderer.scale;
+    imageRenderer.width = imageRenderer.width || imageData.width || "100%";
+    imageRenderer.height = imageRenderer.height || imageData.height || "100%";
+    imageRenderer.scale = imageRenderer.scale || 1;
 
     imageRenderer = imageData.mergeToRenderer(imageRenderer);
 
     const dimension: Dimension = await Utils.getImageDimensions(this.bindingImageFile);
+
+    this.changeDetectorRef.detectChanges();
 
     // Get user specified image size
     const widthUnitPart = new MeasurementUnitPart(imageRenderer.width);
@@ -65,8 +83,21 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     const yUnitPart = new MeasurementUnitPart(imageRenderer.y);
 
     // Get image demension
-    const actualWidth = dimension.width * (widthUnitPart.getNumbericValue() / 100);
-    const actualHeight = dimension.height * (heightUnitPart.getNumbericValue() / 100);
+    let actualWidth = 0;
+    let actualHeight = 0;
+
+    if (widthUnitPart.isPercent()) {
+      actualWidth = dimension.width * (widthUnitPart.getNumbericValue() / 100);
+    } else if (widthUnitPart.isPixel()) {
+      actualWidth = widthUnitPart.getNumbericValue();
+    }
+
+    if (heightUnitPart.isPercent()) {
+      actualHeight = dimension.height * (heightUnitPart.getNumbericValue() / 100);
+    } else if (heightUnitPart.isPixel()) {
+      actualHeight = heightUnitPart.getNumbericValue();
+    }
+
     const screenWidth = avg.Setting.WindowWidth;
     const screenHeight = avg.Setting.WindowHeight;
     const relativeWidth = actualWidth / screenWidth;
