@@ -20,16 +20,16 @@ export class TransitionLayerService extends AVGService {
 
   public static lockPointerEvents() {
     this._isLockPointerEvent = true;
-    gsap.TweenLite.to("#avg-transition", 0, {
-      pointerEvents: "none"
-    });
+    // gsap.TweenLite.to("#avg-transition", 0, {
+    //   pointerEvents: "none"
+    // });
   }
 
   public static releasePointerEvents() {
     this._isLockPointerEvent = false;
-    gsap.TweenLite.to("#avg-transition", 0, {
-      pointerEvents: "all"
-    });
+    // gsap.TweenLite.to("#avg-transition", 0, {
+    //   pointerEvents: "all"
+    // });
   }
 
   public static fadeTo(

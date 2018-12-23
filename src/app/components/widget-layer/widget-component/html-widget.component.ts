@@ -38,10 +38,5 @@ export class HtmlWidgetComponent extends ScreenWidgetComponent implements OnInit
     const htmlModel = <avg.ScreenWidgetHtml>this.data;
 
     return this.sanitizer.bypassSecurityTrustHtml(htmlModel.html);
-
-    // `
-    //   <div style="width: 300px; height: 300px; background: red">
-    //   </div>
-    // `
   }
 }

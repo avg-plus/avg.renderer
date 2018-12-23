@@ -96,11 +96,11 @@ body,
 
 #avg-transition {
   position: absolute;
-  z-index: $_LAYER_INDEX_TRANSITION;
+  z-index: $_LAYER_INDEX_CAMERA_BACKDROP;
   width: 100%;
   height: 100%;
   opacity: 1;
-  // pointer-events: none;
+  pointer-events: none;
 
   will-change: transform, opacity;
 }
@@ -118,7 +118,7 @@ body,
   z-index: $_LAYER_INDEX_WIDGETS;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  // pointer-events: none;
   will-change: transform, left, top, right, bottom;
 }
 

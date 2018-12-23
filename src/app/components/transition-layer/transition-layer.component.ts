@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Subject } from "rxjs/Subject";
 import { EngineUtils } from "avg-engine/engine";
 
+import * as $ from "jquery";
+
 @Component({
   selector: "transition-layer",
   templateUrl: "./transition-layer.component.html",
@@ -14,9 +16,10 @@ import { EngineUtils } from "avg-engine/engine";
 })
 export class TransitionLayerComponent implements OnInit, AfterViewInit {
   private animations: any[];
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     const times = [];
@@ -25,7 +28,7 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
 
     let last = 0;
     function refreshLoop() {
-      window.requestAnimationFrame(function() {
+      window.requestAnimationFrame(function () {
         const now = performance.now();
 
         while (times.length > 0 && times[0] <= now - 1000) {
@@ -43,7 +46,6 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
       });
     }
 
-    // refreshLoop();
   }
 
   onTransitionLayerClicked() {
@@ -51,9 +53,5 @@ export class TransitionLayerComponent implements OnInit, AfterViewInit {
     //   "Transition Layer Clicked: ",
     //   TransitionLayerService.isLockPointerEvents()
     // );
-
-    if (!TransitionLayerService.isLockPointerEvents()) {
-      TransitionLayerService.FullScreenClickListener.next();
-    }
   }
 }

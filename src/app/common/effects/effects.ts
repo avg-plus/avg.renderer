@@ -15,12 +15,12 @@ export class Effects {
   public static snow() {
     require("../3rd/particles");
 
-    AnimationUtils.fadeTo("#avg-particle-viewport", 0, 0);
+    // AnimationUtils.fadeTo("#avg-particle-viewport", 0, 0);
     particlesJS.load(
       this.DEAULT_EFFECT_CANVAS,
       "data/effects/effect-snow.json",
       () => {
-        AnimationUtils.fadeTo("#avg-particle-viewport", 2000, 1);
+        // AnimationUtils.fadeTo("#avg-particle-viewport", 2000, 1);
       }
     );
   }

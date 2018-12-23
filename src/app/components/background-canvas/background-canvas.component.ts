@@ -75,7 +75,7 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
       return;
     }
 
-    const duration = this._defaultDuration || 1000;
+    const duration = this._defaultDuration;
     const frontLayerElement = ".layer-" + index;
 
     return new Promise((resolve, reject) => {

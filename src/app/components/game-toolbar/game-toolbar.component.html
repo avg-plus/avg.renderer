@@ -1,7 +1,8 @@
 <div id="avg-game-process-toolbar" [ngClass]="{'show': service.isVisible(), 'hide': !service.isVisible()}">
-  <div class="toolbar-button" (click)="onSaveClicked()" >Save</div>
-  <div class="toolbar-button">Load</div>
-  <div class="toolbar-button">Auto</div>
-  <div class="toolbar-button" (click)="onSkipClicked()" >Skip</div>
-  <div class="toolbar-button">Setting</div>
+  <div class="toolbar-button" (click)="onResetClicked()">重置游戏</div>
+  <div class="toolbar-button" (click)="onSaveClicked()">保存</div>
+  <div class="toolbar-button">载入</div>
+  <div class="toolbar-button">自动</div>
+  <div class="toolbar-button" (click)="onSkipClicked()">跳过</div>
+  <div class="toolbar-button">设置</div>
 </div>

@@ -435,6 +435,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
+        if (!this.dialogueData.text) {
+          return;
+        }
+
         const inSpan = false;
         const inSpanStartPos = -1;
         parsingBuffer = this.dialogueData.text.substr(0, count);

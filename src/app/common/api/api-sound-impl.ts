@@ -25,6 +25,16 @@ export class APISoundImpl extends Impl {
     return APISoundImpl._pause((<Sound>scriptUnit.data).track, scriptUnit);
   }
 
+  @Impl.registerImpl(APISound, avg.OP.GetAllTracks)
+  public static getTracks() {
+    const tracks = [];
+    for (const track in APISoundImpl.tracks) {
+      tracks.push(track)
+    }
+
+    return tracks;
+  }
+
   @Impl.registerImpl(APISound, avg.OP.SetVolume)
   public static setVolume(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
     const script = <avg.APISound>scriptUnit;

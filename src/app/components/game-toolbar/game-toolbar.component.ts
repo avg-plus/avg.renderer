@@ -1,6 +1,6 @@
 import { OnInit, AfterViewInit, Component } from "@angular/core";
 import { GameToolbarService } from "./main-scene.service";
-import { api, Sandbox, Setting, AVGArchives } from "avg-engine/engine";
+import { api, Sandbox, Setting, AVGArchives, AVGGame } from "avg-engine/engine";
 
 @Component({
   selector: "game-toolbar",
@@ -16,14 +16,17 @@ export class GameToolbarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() { }
 
-  onSkipClicked() {
-    console.log("On skip clicked");
+  async onResetClicked() {
+    await AVGGame.getInstance().resetGame();
+  }
 
-    // if (!Sandbox.isSkipMode) {
-    //   api.startSkip();
-    // } else {
-    //   api.stopSkip();
-    // }
+  async onSkipClicked() {
+
+    if (!Sandbox.isSkipMode) {
+      await api.startSkip();
+    } else {
+      await api.stopSkip();
+    }
   }
 
   onSaveClicked() {

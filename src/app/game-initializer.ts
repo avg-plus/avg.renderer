@@ -18,6 +18,7 @@ import { CanActivate, Router } from "@angular/router";
 
 import * as avg from "avg-engine/engine";
 import { AVGEngineError } from "../../../avg.engine/engine/core/engine-errors";
+import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -126,6 +127,21 @@ export class GameInitializer implements CanActivate {
     }
   }
 
+  public async initGlobalClickEvent() {
+    document.addEventListener("click", (evnt: Event) => {
+      const element = <any>evnt.target;
+
+      // TODO: If has 'story-locker' attribute, prevent click event for story process
+      if (element.attributes["story-locker"]) {
+        return;
+      }
+
+      if (!TransitionLayerService.isLockPointerEvents()) {
+        TransitionLayerService.FullScreenClickListener.next();
+      }
+    });
+  }
+
   //  Init screen size
   public async initDesktopWindow() {
     if (PlatformService.isDesktop()) {
@@ -213,19 +229,19 @@ export class GameInitializer implements CanActivate {
       {
         tips: "加载游戏资源...",
         files: [
-          AVGNativePath.join(Resource.getAssetsRoot(), "audio/se/explode.wav"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/living.mp3"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/lab-lighting.jpg"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/se/explode.wav"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/living.mp3"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/lab-lighting.jpg"),
 
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-normal.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-really.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-normal.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-laugh.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-serious.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-normal.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-smile.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-hidden.png"),
-          AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/vizee-normal.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-normal.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-really.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-normal.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-laugh.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-serious.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-normal.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-smile.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-hidden.png"),
+          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/vizee-normal.png"),
         ]
       }
     ]);
