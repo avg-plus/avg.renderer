@@ -255,7 +255,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   //   });
   // }
 
-  public async showCharacter(api: avg.APICharacter) {
+  public async showCharacter(api: avg.APICharacter, isUpdate = false) {
 
     const character = api.data;
 
@@ -264,39 +264,53 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     image.renderer = character.renderer;
     image.position = character.position;
     image.id = api.id;
-    image.animation.name = "flyin";
 
-    const options = new WidgetAnimation_FlyInOptions();
-    options.direction = "left";
-    options.duration = 500;
-    options.offset = 40;
-    image.animation.options = options;
+    if (isUpdate === false) {
+      image.animation.name = "flyin";
 
-    // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
-      options.duration = 0;
+      const options = new WidgetAnimation_FlyInOptions();
+      options.direction = "left";
+      options.duration = 500;
+      options.offset = 40;
+      image.animation.options = options;
+
+      // 跳过模式处理，忽略时间
+      if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
+        options.duration = 0;
+      }
     }
 
-    await WidgetLayerService.addWidget(
-      image,
-      WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
-      avg.ScreenWidgetType.Image,
-      false
-    );
+    if (isUpdate) {
+      // Remove first
+      // await WidgetLayerService.removeWidget(image, avg.ScreenWidgetType.Image, false);
+      await WidgetLayerService.updateImage(
+        image.id, image
+      );
+    } else {
+      WidgetLayerService.addWidget(
+        image,
+        WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
+        avg.ScreenWidgetType.Image,
+        false
+      );
+    }
+
   }
 
   public async updateCharacter(api: avg.APICharacter) {
-    const character = api.data;
+    // const character = api.data;
 
-    const image = new ScreenImage();
-    image.file = ResourceData.from(character.avatar.file);
-    image.renderer = character.renderer;
-    image.position = character.position;
-    image.id = api.id;
+    await this.showCharacter(api, true);
 
-    const promise = await WidgetLayerService.updateImage(
-      image.id, image
-    );
+    // const image = new ScreenImage();
+    // image.file = ResourceData.from(character.avatar.file);
+    // image.renderer = character.renderer;
+    // image.position = character.position;
+    // image.id = api.id;
+
+    // const promise = await WidgetLayerService.updateImage(
+    //   image.id, image
+    // );
   }
 
   public async hideCharacter(api: avg.APICharacter): Promise<any> {

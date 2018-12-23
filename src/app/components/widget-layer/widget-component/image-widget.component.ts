@@ -44,19 +44,20 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
   }
 
   public async updateImage() {
-    const imageData = <avg.ScreenImage>this.data;
-    const filters = imageData.renderer.filters || [];
-    this.bindingImageFile = imageData.file.filename;
-    console.log("filters", filters);
+    // const imageData = <avg.ScreenImage>this.data;
+    // const filters = imageData.renderer.filters || [];
+    // this.bindingImageFile = imageData.file.filename;
 
-    const dimension: Dimension = await Utils.getImageDimensions(this.bindingImageFile);
+    // const dimension: Dimension = await Utils.getImageDimensions(this.bindingImageFile);
 
-    const element = $(this.WidgetElementID + " .main-img")[0];
-    element.style.setProperty("background-image", `url(${this.bindingImageFile})`);
+    // const element = $(this.WidgetElementID + " .main-img")[0];
+    // element.style.setProperty("background-image", `url(${this.bindingImageFile})`);
 
-    AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filters);
+    // AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filters);
 
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
+
+    await this.update();
   }
 
   public async update() {
@@ -172,20 +173,19 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     }
 
     const style = {
-      // "transform-origin": "top left",
-      // transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
       width: imageRenderer.width,
       height: imageRenderer.height,
-      // width: "100%",
-      // height: "100%",
-      // scale: imageRenderer.scale,
-      // opacity: 1,
-      // left: imageRenderer.x,
-      // top: imageRenderer.y,
       "background-image": `url(${this.bindingImageFile})`,
       "background-repeat": "no-repeat",
       "background-size": `100% 100%`
     };
+
+    const styles = EngineUtils.cssObjectToStyles(style);
+    const element = $(this.WidgetElementID + " .main-img")[0];
+
+    AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filter);
+    element.setAttribute("style", EngineUtils.cssObjectToStyles(style));
+
 
     const parentElement = $(this.WidgetElementID)[0];
     parentElement.setAttribute(
@@ -195,17 +195,12 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
         transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
         width: "100%",
         height: "100%",
-        // opacity: 1,
+        opacity: 1,
         left: imageRenderer.x,
         top: imageRenderer.y
       })
     );
 
-    const styles = EngineUtils.cssObjectToStyles(style);
-    const element = $(this.WidgetElementID + " .main-img")[0];
-
-    AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filter);
-    element.setAttribute("style", EngineUtils.cssObjectToStyles(style));
 
     this.changeDetectorRef.detectChanges();
 

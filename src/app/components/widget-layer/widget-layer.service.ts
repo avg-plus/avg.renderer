@@ -191,6 +191,7 @@ export class WidgetLayerService extends AVGService {
     for (let i = 0; i < WidgetLayerService.imageWidgets.length; ++i) {
       if (WidgetLayerService.imageWidgets[i].data.id === id) {
         WidgetLayerService.imageWidgets[i].data.file.filename = data.file.filename;
+        WidgetLayerService.imageWidgets[i].data.position = data.position;
         WidgetLayerService.imageWidgets[i].data.renderer = data.renderer;
         WidgetLayerService.imageWidgets[i].component.instance.updateImage();
       }
