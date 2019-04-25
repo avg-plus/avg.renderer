@@ -21,7 +21,7 @@ export class AnimationUtils {
       {
         "transform-origin": anchor
       },
-      () => { }
+      () => {}
     );
   }
   /**
@@ -63,10 +63,16 @@ export class AnimationUtils {
       } else if (filterProperty === "blur") {
         value = EngineUtils.NumericRange(value, 0, 100);
         value = value / 10; // blur max = 10px
+      } else if (
+        filterProperty === "grayscale" ||
+        filterProperty === "invert" ||
+        filterProperty === "opacity" ||
+        filterProperty === "sepia"
+      ) {
+        value = EngineUtils.NumericRange(value, 0, 100);
       } else {
         value = EngineUtils.NumericRange(value, 0, 9999);
       }
-
 
       const elementID = target;
       const e = $(elementID);
@@ -156,7 +162,7 @@ export class AnimationUtils {
     );
   }
 
-  public static to(name: string, target: string, duration: number , vars: any, complete?: () => void) {
+  public static to(name: string, target: string, duration: number, vars: any, complete?: () => void) {
     duration = duration === 0 ? 1 : duration;
 
     // gsap.TweenLite.killTweensOf(target, true);

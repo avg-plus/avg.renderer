@@ -54,7 +54,6 @@ export class ShakeDirective implements OnInit, OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes && changes.shake && changes.shake.currentValue) {
       Object.assign(this, this.shake);
       this.initStyle();

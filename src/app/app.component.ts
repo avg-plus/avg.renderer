@@ -1,5 +1,5 @@
 import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
 import { APIImplManager } from "app/common/api/api-impl-manger";
 
@@ -28,8 +28,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     private initializer: GameInitializer,
     public electronService: ElectronService,
     private router: Router,
+    private route: ActivatedRoute,
     private elementRef: ElementRef
   ) {
+
     avg.PlatformService.initFromWindow(window);
     if (avg.PlatformService.isDesktop()) {
       ElectronService.initDebugging();
@@ -43,8 +45,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initWindowEventListener(this.router);
     await this.initializer.initFileSystem();
     await this.initializer.initEngineSettings();
-    await this.initializer.initResource();
-    await this.initializer.initStyleSheets();
+    await this.initializer.initResource(this.route, this.router);
+    // await this.initializer.initStyleSheets();
     await this.initializer.initGameSettings();
     await this.initializer.initHotkeys();
     await this.initializer.initDesktopWindow();
@@ -61,17 +63,17 @@ export class AppComponent implements AfterViewInit, OnInit {
           EngineSettings.get("engine.env.entry_script_file") as string
         );
 
-        this.router.navigate(["title-view"]).then(result => {
-          if (result) {
-            TransitionLayerService.fadeTo(0, 3000);
-          }
-        });
+        // this.router.navigate(["title-view"]).then(result => {
+        //   if (result) {
+        //     TransitionLayerService.fadeTo(0, 3000);
+        //   }
+        // });
 
         this.router
           .navigate(["main-scene", { script: entryScript }])
           .then(result => {
             if (result) {
-              TransitionLayerService.fadeTo(0, 3000);
+              TransitionLayerService.fadeTo(0, 0);
             }
           });
 

@@ -31,7 +31,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     protected changeDetectorRef: ChangeDetectorRef,
     private renderer: Renderer2,
     private element: ElementRef
-  ) {}
+  ) { }
 
   public set data(value: avg.ScreenWidget) {
     this._data = value;
@@ -68,7 +68,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     return data;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.ElementID = this.data.id;
@@ -77,7 +77,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewChecked() {}
+  ngAfterViewChecked() { }
 
   protected showWidget() {
     this.initWidgetData(this.data);
@@ -225,6 +225,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     options = calcData.options;
 
     AnimationUtils.to("FlyIn::Initialize()", this.WidgetElementID, 0, {
+      opacity: 0,
       x: offsetX,
       y: offsetY
     });

@@ -1,8 +1,10 @@
+import { Axios } from "../../common/axios-default";
 import * as avg from "avg-engine/engine";
 import * as BrowserFS from "browserfs";
 import * as NodeFS from "fs";
 
-import Axios from "axios";
+
+import { AVGNativePath } from "avg-engine/engine";
 
 export class AVGNativeFSImpl {
   private static _isFileSystemOK = false;
@@ -86,11 +88,15 @@ export class AVGNativeFSImpl {
     options: { encoding: string; flag?: string },
     callback: (e: any, rv?: string) => void
   ): void {
-    if (avg.PlatformService.isDesktop()) {
+    if (avg.PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       this._fs.readFile(filename, options, callback);
     } else {
       const response = Axios.get(filename).then(value => {
         if (callback) {
+          if (value.status !== 200) {
+            callback(null, null);
+            return;
+          }
           callback(null, value.data);
         }
       });
@@ -104,14 +110,21 @@ export class AVGNativeFSImpl {
       flag?: string;
     }
   ) {
-    if (avg.PlatformService.isDesktop()) {
+    if (avg.PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       const data = this._fs.readFileSync(filename, options);
       return data.toString("utf8");
     }
 
     const response = await Axios.get(filename, {
-      headers: { Accept: "text/plain" }
+      transformResponse: (res) => {
+        return res;
+      }
     });
+
+    if (response.status !== 200) {
+      return "";
+    }
+
     return response.data;
   }
 

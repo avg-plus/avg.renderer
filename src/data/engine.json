@@ -1,7 +1,5 @@
 {
   "engine.env.entry_script_file": "start.avs",
-  "engine.env.assets_root_dirname": "../../../game-projects/tutorials",
-  "engine.env.data_root_dirname": "data",
   "engine.env.skip_title_view": false,
   "engine.loading_screen.background": "graphics/backgrounds/loading/loading-1.jpg",
   "engine.default_fonts": "fonts/GillSans.ttc"

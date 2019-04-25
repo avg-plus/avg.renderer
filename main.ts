@@ -8,6 +8,8 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
+app.commandLine.appendSwitch("in-process-gpu");
+
 function createWindow() {
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -21,11 +23,12 @@ function createWindow() {
     hasShadow: true,
     // titleBarStyle: "hiddenInset",
     webPreferences: {
+      // offscreen: true,
       nodeIntegration: true
     }
   });
 
-  win.webContents.setFrameRate(60);
+  win.webContents.setFrameRate(120);
 
   win.loadURL(
     url.format({
@@ -57,6 +60,8 @@ try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
+  // app.disableHardwareAcceleration();
+
   app.on("ready", () => {
     createWindow();
   });

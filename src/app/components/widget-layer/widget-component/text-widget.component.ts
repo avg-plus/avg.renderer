@@ -110,19 +110,22 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
       const positionUnits = AVGMeasurementUnit.fromString(position);
       const left = positionUnits.getLeft();
       const right = positionUnits.getRight();
+
+      const PADDING = 1;
+
       if (left.isCustomUnit()) {
         // x-axis position
         switch (left.getValue()) {
           case "left": {
-            renderer.x = 0 + UnitType.Percent;
+            renderer.x = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "right": {
-            renderer.x = 100 - relativeWidth * 100 + UnitType.Percent;
+            renderer.x = (100 - (relativeWidth * 100) - PADDING) + UnitType.Percent;
             break;
           }
           case "center": {
-            renderer.x = 100 / 2 - (relativeWidth * 100) / 2 + UnitType.Percent;
+            renderer.x = (100 / 2 - (relativeWidth * 100) / 2) + UnitType.Percent;
             break;
           }
         }
@@ -132,15 +135,15 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
         // y-axis position
         switch (right.getValue()) {
           case "top": {
-            renderer.y = 0 + UnitType.Percent;
+            renderer.y = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "center": {
-            renderer.y = 100 / 2 - (relativeHeight * 100) / 2 + UnitType.Percent;
+            renderer.y = (100 / 2 - (relativeHeight * 100) / 2) + UnitType.Percent;
             break;
           }
           case "bottom": {
-            renderer.y = 100 - relativeHeight * 100 + UnitType.Percent;
+            renderer.y = (100 - (relativeHeight * 100) - PADDING) + UnitType.Percent;
             break;
           }
         }

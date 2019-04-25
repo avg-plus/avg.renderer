@@ -57,10 +57,10 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
 
     // this.changeDetectorRef.detectChanges();
 
-    await this.update();
+    await this.update(true);
   }
 
-  public async update() {
+  public async update(isUpdateImage = false) {
     const imageData = <avg.ScreenImage>this.data;
     this.bindingImageFile = imageData.file.filename;
 
@@ -175,34 +175,36 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     const style = {
       width: imageRenderer.width,
       height: imageRenderer.height,
+      opacity: 1,
       "background-image": `url(${this.bindingImageFile})`,
       "background-repeat": "no-repeat",
       "background-size": `100% 100%`
     };
 
-    const styles = EngineUtils.cssObjectToStyles(style);
+    const parentStyle = {
+      position: "fixed",
+      transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
+      width: "100%",
+      height: "100%",
+      opacity: isUpdateImage ? 1 : 0,
+      left: imageRenderer.x,
+      top: imageRenderer.y
+    };
+
+    const parentElement = $(this.WidgetElementID)[0];
     const element = $(this.WidgetElementID + " .main-img")[0];
+
+    // const styles = EngineUtils.cssObjectToStyles(style);
 
     AnimationUtils.applyFilters(this.WidgetElementID + " .main-img", 0, filter);
     element.setAttribute("style", EngineUtils.cssObjectToStyles(style));
+    parentElement.setAttribute("style", EngineUtils.cssObjectToStyles(parentStyle));
 
+    // parentStyle.opacity = 1;
+    // element.setAttribute("style", EngineUtils.cssObjectToStyles(style));
+    parentElement.setAttribute("style", EngineUtils.cssObjectToStyles(parentStyle));
 
-    const parentElement = $(this.WidgetElementID)[0];
-    parentElement.setAttribute(
-      "style",
-      EngineUtils.cssObjectToStyles({
-        position: "fixed",
-        transform: imageRenderer.scale ? `scale(${imageRenderer.scale})` : "",
-        width: "100%",
-        height: "100%",
-        opacity: 1,
-        left: imageRenderer.x,
-        top: imageRenderer.y
-      })
-    );
-
-
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
 
     console.log("Updated image widget styles");
   }

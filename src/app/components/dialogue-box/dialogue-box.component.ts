@@ -20,8 +20,8 @@ import * as gsap from "gsap";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
-import "app/common/live2d/lib/live2d.min.js";
-import "pixi-live2d/src/index";
+// import "app/common/live2d/lib/live2d.min.js";
+// import "pixi-live2d/src/index";
 
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
@@ -189,7 +189,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Play voice
     if (this.dialogueData.voice && this.dialogueData.voice.length > 0) {
-      avg.EngineAPI_Audio.play("voice", <string>this.dialogueData.voice);
+      avg.EngineAPI_Audio.play("_voice", <string>this.dialogueData.voice);
     }
 
     AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);

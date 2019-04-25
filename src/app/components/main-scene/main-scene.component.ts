@@ -9,13 +9,14 @@ import { MainSceneService } from "./main-scene.service";
 
 import * as avg from "avg-engine/engine";
 import { Router, ActivatedRoute, NavigationEnd, CanActivate } from "@angular/router";
-import { SceneHandle, CameraDirectorLayers, CameraShakeData, APICameraMove, AVGGame, Sandbox } from "avg-engine/engine";
+import { SceneHandle, CameraDirectorLayers, CameraShakeData, APICameraMove, AVGGame, Sandbox, GameStatus } from "avg-engine/engine";
 import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 import { CameraDirector } from "../../common/animations/camera-director";
 import { ShakeStyle } from "../../common/effects/shake/interface/shake";
+import { AVGPlusIPC } from "../../common/manager/avgplus-ipc";
 
 @Component({
   selector: "app-main-scene",
@@ -59,13 +60,14 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.enterGameProcess();
+
+    AVGGame.setGameStatus(GameStatus.Loaded);
+    AVGPlusIPC.onGameEngineLoaded();
   }
 
   private async enterGameProcess() {
     const game = AVGGame.getInstance();
     game.start(this.currentScript);
-
-
 
     // avg.game.start(this.currentScript);
 

@@ -30,8 +30,8 @@ gulp.task("serve-electron-connect", () => {
 });
 
 gulp.task("assets-watcher", () => {
-  var sources = ["./src/assets", "./src/data"],
-    destinations = ["./dist/desktop/assets", "./dist/desktop/data"];
+  var sources = ["./src/assets", "./src/data", "./src/assets", "./src/data"],
+    destinations = ["./dist/desktop/assets", "./dist/desktop/data", "./dist/web/assets", "./dist/web/data"];
 
   for (let i = 0; i < sources.length; ++i) {
     const source = sources[i];

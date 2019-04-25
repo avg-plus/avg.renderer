@@ -14,11 +14,12 @@ import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { APIImplManager } from "./common/api/api-impl-manger";
 import * as $ from "jquery";
-import { CanActivate, Router } from "@angular/router";
+import { CanActivate, Router, ActivatedRoute } from "@angular/router";
 
 import * as avg from "avg-engine/engine";
 import { AVGEngineError } from "../../../avg.engine/engine/core/engine-errors";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
+import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -81,33 +82,54 @@ export class GameInitializer implements CanActivate {
   public async initEngineSettings() {
     const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "/data/engine.json"));
 
-    if (PlatformService.isDesktop()) {
-      EngineSettings.init(content);
-    } else {
-      EngineSettings.init(JSON.stringify(content));
-    }
+    EngineSettings.init(content);
+
+    // if (PlatformService.isDesktop()) {
+    //   EngineSettings.init(content);
+    // } else {
+    //   EngineSettings.init(JSON.stringify(content));
+    // }
   }
   // Init resources
-  public async initResource() {
-    const assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
-    const dataRootDirname = EngineSettings.get("engine.env.data_root_dirname") as string;
-    Resource.init(
-      AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname),
-      AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname)
-    );
+  public async initResource(route: ActivatedRoute, router: Router) {
+    // Get current url params to get assets directory
+    console.log("init resource", router.url)
+
+    // Read 'env.avd' to get game project dir and engine dir
+    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "env.avd"));
+    const envData = JSON.parse(content);
+
+    // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
+    // let dataRootDirname = EngineSettings.get("engine.env.data_root_dirname") as string;
+
+
+    let assetsRootDirname = envData.game_assets_root as string;
+    let dataRootDirname = envData.engine_bundle_root as string;
+
+
+    // 如果不是 HTTP URL 则使用本地路径
+    if (!AVGNativePath.isHttpURL(assetsRootDirname)) {
+      assetsRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname)
+    }
+
+    if (!AVGNativePath.isHttpURL(dataRootDirname)) {
+      dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname)
+    }
+
+    Resource.init(assetsRootDirname, dataRootDirname);
   }
 
   // Init stylesheets
   public async initStyleSheets() {
-    const dataRoot = AVGNativePath.join(AVGNativeFS.__dirname, "/data");
-    let style = await AVGNativeFS.readFileSync(AVGNativePath.join(dataRoot, "/stylesheets/mask.css.tpl"));
+    const dataRoot = AVGNativePath.join(AVGNativeFS.__dirname, "data");
+    let style = await AVGNativeFS.readFileSync(AVGNativePath.join(dataRoot, "stylesheets/mask.css.tpl"));
 
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_IN", AVGNativePath.join(dataRoot, "/masks/iris-in.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_OUT", AVGNativePath.join(dataRoot, "/masks/iris-out.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WIPE", AVGNativePath.join(dataRoot, "/masks/wipe.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WINDOW_SHADES", AVGNativePath.join(dataRoot, "/masks/window-shades.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH", AVGNativePath.join(dataRoot, "/masks/brush.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH_DOWN", AVGNativePath.join(dataRoot, "/masks/brush-down.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_IN", AVGNativePath.join(dataRoot, "masks/iris-in.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_OUT", AVGNativePath.join(dataRoot, "masks/iris-out.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_WIPE", AVGNativePath.join(dataRoot, "masks/wipe.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_WINDOW_SHADES", AVGNativePath.join(dataRoot, "masks/window-shades.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH", AVGNativePath.join(dataRoot, "masks/brush.png"));
+    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH_DOWN", AVGNativePath.join(dataRoot, "masks/brush-down.png"));
 
     // $("head").append(`<style>${style}</style>`);
 
@@ -116,15 +138,15 @@ export class GameInitializer implements CanActivate {
 
   // Init settings
   public async initGameSettings() {
-    const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
 
+    const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
     const settings = await AVGNativeFS.readFileSync(settingFile);
 
-    if (PlatformService.isDesktop()) {
-      Setting.parseFromSettings(settings);
-    } else {
-      Setting.parseFromSettings(JSON.stringify(settings));
-    }
+    // if (PlatformService.isDesktop()) {
+    Setting.parseFromSettings(settings);
+    // } else {
+    // Setting.parseFromSettings(JSON.stringify(settings));
+    // }
   }
 
   public async initGlobalClickEvent() {
@@ -185,8 +207,8 @@ export class GameInitializer implements CanActivate {
 
     const defaultFont = EngineSettings.get("engine.default_fonts") as string;
 
-    await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), loadingBackground));
-    await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), defaultFont));
+    // await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), loadingBackground));
+    // await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), defaultFont));
 
     const fontStyle = `
     @font-face {
@@ -254,38 +276,7 @@ export class GameInitializer implements CanActivate {
 
   // Init playground communicator
   public async initWindowEventListener(router: Router) {
-    if (window.addEventListener) {
-      window.addEventListener(
-        "message",
-        event => {
-          const message = event.data;
-          console.log("Incomming Message From ", event.source, message);
 
-          if (message) {
-            switch (message.OP) {
-              case "ReloadPlayer": {
-                window.location.reload();
-
-                break;
-              }
-              case "RunStory": {
-                router.ngOnDestroy();
-                router.navigated = false;
-                router.navigate(["main-scene", { script: "" }]).then(result => {
-                  AVGGame._entryStory = new avg.AVGStory();
-                  // story.UnsafeTerminate();
-
-                  AVGGame._entryStory.loadFromString(message.data.script);
-                  AVGGame._entryStory.run();
-                });
-
-                break;
-              }
-            }
-          }
-        },
-        false
-      );
-    }
+    AVGPlusIPC.init(router);
   }
 }

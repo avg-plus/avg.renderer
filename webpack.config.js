@@ -60,7 +60,7 @@ function getPlugins() {
 
   plugins.push(
     new GlobCopyWebpackPlugin({
-      patterns: ["assets", "data", "favicon.ico", "manifest.json", "loader.js"],
+      patterns: ["assets", "data", "favicon.ico", "env.avd", "manifest.json", "loader.js"],
       globOptions: {
         cwd: process.cwd() + "/src",
         dot: true,
