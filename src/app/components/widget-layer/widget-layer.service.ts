@@ -96,7 +96,7 @@ export class WidgetLayerService extends AVGService {
   ) {
     const isTextWidgetExists = (id: string) => {
       this.textWidgets.forEach(v => {
-        if (v.data.id === data.id) {
+        if (v.data.name === data.name) {
           return true;
         }
       });
@@ -106,7 +106,7 @@ export class WidgetLayerService extends AVGService {
 
     const isImageWidgetExists = (id: string) => {
       this.imageWidgets.forEach(v => {
-        if (v.data.id === id) {
+        if (v.data.name === id) {
           return true;
         }
       });
@@ -117,8 +117,8 @@ export class WidgetLayerService extends AVGService {
     return new Promise((resolve, reject) => {
       let model: WidgetModel;
 
-      if (isTextWidgetExists(data.id) || isImageWidgetExists(data.id)) {
-        reject(`Widget already exists: \n  -> id: ${data.id}`);
+      if (isTextWidgetExists(data.name) || isImageWidgetExists(data.name)) {
+        reject(`Widget already exists: \n  -> id: ${data.name}`);
         return;
       }
 
@@ -180,7 +180,7 @@ export class WidgetLayerService extends AVGService {
 
   public static updateSubtitle(id: string, text: string) {
     for (let i = 0; i < WidgetLayerService.textWidgets.length; ++i) {
-      if (WidgetLayerService.textWidgets[i].data.id === id) {
+      if (WidgetLayerService.textWidgets[i].data.name === id) {
         WidgetLayerService.textWidgets[i].data.text = text;
         WidgetLayerService.textWidgets[i].component.instance.updateText();
       }
@@ -189,7 +189,7 @@ export class WidgetLayerService extends AVGService {
 
   public static updateImage(id: string, data: ScreenImage) {
     for (let i = 0; i < WidgetLayerService.imageWidgets.length; ++i) {
-      if (WidgetLayerService.imageWidgets[i].data.id === id) {
+      if (WidgetLayerService.imageWidgets[i].data.name === id) {
         WidgetLayerService.imageWidgets[i].data = data;
         // WidgetLayerService.imageWidgets[i].data.file.filename = data.file.filename;
         // WidgetLayerService.imageWidgets[i].data.position = data.position;
@@ -228,7 +228,7 @@ export class WidgetLayerService extends AVGService {
             ? <TextWidgetModel>widgetContainer[i]
             : <ImageWidgetModel>widgetContainer[i];
 
-        if (widget.data.id === data.id) {
+        if (widget.data.name === data.name) {
           isWidgetFound = true;
           let component = widget.component;
 
@@ -262,7 +262,7 @@ export class WidgetLayerService extends AVGService {
 
       if (!isWidgetFound) {
         // Not found
-        reject(`Widget Not Found: \n  -> id: ${data.id}`);
+        reject(`Widget Not Found: \n  -> id: ${data.name}`);
       } else {
         if (isAsync) {
           resolve();

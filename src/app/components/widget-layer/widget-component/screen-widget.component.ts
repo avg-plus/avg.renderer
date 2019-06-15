@@ -71,7 +71,7 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.ElementID = this.data.id;
+    this.ElementID = this.data.name;
     this.WidgetElementID = "#" + this.ElementID;
 
     this.changeDetectorRef.detectChanges();
@@ -83,19 +83,19 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     this.initWidgetData(this.data);
     this.lowercaseDataFields(this.data);
 
-    if (this.data.x || this.data.y) {
-      const style = {
-        position: "fixed",
-        left: this.data.x,
-        top: this.data.y,
-        // width: "100%",
-        // height: "100%"
-      };
+    // if (this.data.xUnit || this.data.yUnit) {
+    //   const style = {
+    //     position: "fixed",
+    //     left: this.data.x,
+    //     top: this.data.y,
+    //     // width: "100%",
+    //     // height: "100%"
+    //   };
 
-      this.renderer.setProperty(this.element.nativeElement, "style", EngineUtils.cssObjectToStyles(style));
+    //   this.renderer.setProperty(this.element.nativeElement, "style", EngineUtils.cssObjectToStyles(style));
 
-      return;
-    }
+    //   return;
+    // }
 
     // const positions = new Map<string, string>([
     //   [avg.ScreenPosition.TopLeft, "widget-top-left"],

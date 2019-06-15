@@ -162,7 +162,14 @@ export class AnimationUtils {
     );
   }
 
-  public static to(name: string, target: string, duration: number, vars: any, complete?: () => void) {
+  public static async animateTo(target: any, duration: number, vars: any) {
+    return new Promise(resolve => {
+      this.to("animateTo", target, duration, vars, () => {
+        resolve();
+      });
+    });
+  }
+  public static to(name: string, target: any, duration: number, vars: any, complete?: () => void) {
     duration = duration === 0 ? 1 : duration;
 
     // gsap.TweenLite.killTweensOf(target, true);

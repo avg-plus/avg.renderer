@@ -52,7 +52,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     this.showWidget();
   }
 
-  ngAfterViewChecked() { }
+  ngAfterViewChecked() {}
 
   protected showWidget() {
     super.showWidget();
@@ -76,8 +76,8 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
 
     const renderer = new Renderer();
 
-    renderer.x = subtitleData.x;
-    renderer.y = subtitleData.y;
+    // renderer.x = subtitleData.x;
+    // renderer.y = subtitleData.y;
 
     // Update and parse content
     subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
@@ -88,8 +88,8 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     const elementHeight = $(this.WidgetElementID).height();
 
     // Get user specified image size
-    const xUnitPart = new MeasurementUnitPart(this.data.x);
-    const yUnitPart = new MeasurementUnitPart(this.data.y);
+    const xUnitPart = new MeasurementUnitPart(this.data.xUnit);
+    const yUnitPart = new MeasurementUnitPart(this.data.yUnit);
 
     const actualWidth = elementWidth;
     const actualHeight = elementHeight;
@@ -99,8 +99,8 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     const relativeHeight = actualHeight / screenHeight;
 
     // Get image demension
-    renderer.x = xUnitPart.getValue();
-    renderer.y = yUnitPart.getValue();
+    let xUnit = xUnitPart.getValue();
+    let yUnit = yUnitPart.getValue();
 
     // 1. Get screen solution in pixels
     // 2. Get actual size in pixel with user specified percent
@@ -117,15 +117,15 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
         // x-axis position
         switch (left.getValue()) {
           case "left": {
-            renderer.x = 0 + PADDING + UnitType.Percent;
+            xUnit = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "right": {
-            renderer.x = (100 - (relativeWidth * 100) - PADDING) + UnitType.Percent;
+            xUnit = 100 - relativeWidth * 100 - PADDING + UnitType.Percent;
             break;
           }
           case "center": {
-            renderer.x = (100 / 2 - (relativeWidth * 100) / 2) + UnitType.Percent;
+            xUnit = 100 / 2 - (relativeWidth * 100) / 2 + UnitType.Percent;
             break;
           }
         }
@@ -135,15 +135,15 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
         // y-axis position
         switch (right.getValue()) {
           case "top": {
-            renderer.y = 0 + PADDING + UnitType.Percent;
+            yUnit = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "center": {
-            renderer.y = (100 / 2 - (relativeHeight * 100) / 2) + UnitType.Percent;
+            yUnit = 100 / 2 - (relativeHeight * 100) / 2 + UnitType.Percent;
             break;
           }
           case "bottom": {
-            renderer.y = (100 - (relativeHeight * 100) - PADDING) + UnitType.Percent;
+            yUnit = 100 - relativeHeight * 100 - PADDING + UnitType.Percent;
             break;
           }
         }

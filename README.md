@@ -44,10 +44,11 @@ You will get the world.
 - [x] Sounds (BGM, BGS, SE, Voice)
 - [x] Game Flow Control & Clock Handle
 - [x] Scripting
-- [x] Advanced Animations (In Progress)
-- [x] Camera Effects & Particle Effects (In Progress)
-- [ ] Plugins & Rendering Extensions
-- [ ] Archive (In Progress)
+- [x] Advanced Animations
+- [x] Plugins & Rendering Extensions
+- [x] Archive
+- [ ] Camera Effects & Particle Effects (In Progress)
+- [ ] WebGL Support (In Progress)
 
 
 ## Known Bugs

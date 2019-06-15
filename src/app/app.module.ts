@@ -5,7 +5,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { RouterModule, Routes } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from "./app.component";
@@ -33,7 +32,6 @@ import { TransitionLayerService } from "./components/transition-layer/transition
 import { WidgetLayerService } from "./components/widget-layer/widget-layer.service";
 import { GameToolbarService } from "./components/game-toolbar/main-scene.service";
 import { GameInitializer } from "./game-initializer";
-import { StylesheetService } from "./common/stylesheet-service";
 import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/html-widget.component";
 
 import { ShakeDirective } from "./common/effects/shake/directive/shake.directive";
@@ -68,9 +66,8 @@ import { ShakeDirective } from "./common/effects/shake/directive/shake.directive
     TransitionLayerService,
     WidgetLayerService,
     GameToolbarService,
-    GameInitializer,
-    StylesheetService
+    GameInitializer
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

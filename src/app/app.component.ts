@@ -1,22 +1,13 @@
 import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
-import { APIImplManager } from "app/common/api/api-impl-manger";
 
 import * as avg from "avg-engine/engine";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
-import { DebugingService } from "./common/debuging-service";
-import {
-  AVGNativeFS,
-  PlatformService,
-  AVGNativePath,
-  EngineSettings
-} from "avg-engine/engine";
-import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
-import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
+import { AVGNativePath, EngineSettings } from "avg-engine/engine";
 import { GameInitializer } from "./game-initializer";
-import * as $ from "jquery";
+import { DebugPanel } from "./common/debugger/debug-panel";
 
 @Component({
   selector: "game",
@@ -31,14 +22,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     private route: ActivatedRoute,
     private elementRef: ElementRef
   ) {
-
     avg.PlatformService.initFromWindow(window);
     if (avg.PlatformService.isDesktop()) {
       ElectronService.initDebugging();
     }
+
+    DebugPanel.init();
   }
 
-  async ngOnInit() { }
+  async ngOnInit() {}
 
   async ngAfterViewInit() {
     await this.initializer.initErrorHandler();
@@ -58,39 +50,17 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.initializer.endInitilizing();
 
         // Start game
-        const entryScript = AVGNativePath.join(
-          avg.Resource.getPath(avg.ResourcePath.Scripts),
-          EngineSettings.get("engine.env.entry_script_file") as string
-        );
+        const entryScript = AVGNativePath.join(avg.Resource.getPath(avg.ResourcePath.Scripts), EngineSettings.get(
+          "engine.env.entry_script_file"
+        ) as string);
 
-        // this.router.navigate(["title-view"]).then(result => {
-        //   if (result) {
-        //     TransitionLayerService.fadeTo(0, 3000);
-        //   }
-        // });
-
-        this.router
-          .navigate(["main-scene", { script: entryScript }])
-          .then(result => {
-            if (result) {
-              TransitionLayerService.fadeTo(0, 0);
-            }
-          });
-
-        // DebugingService.DebugMessager.asObservable().subscribe(
-        //   (message: any) => {
-        //     const script =
-        //       avg.Resource.getPath(avg.ResourcePath.Scripts) +
-        //       "/" +
-        //       message.data;
-
-        //     this.router.navigate(["reload-view"]).then(result => {
-        //       this.router.navigate(["main-scene", { script: script }], {});
-        //     });
-        //   }
-        // );
+        this.router.navigate(["main-scene", { script: entryScript }]).then(result => {
+          if (result) {
+            TransitionLayerService.fadeTo(0, 0);
+          }
+        });
       },
-      _ => { }
+      _ => {}
     );
   }
 }

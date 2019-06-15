@@ -55,20 +55,20 @@ export class WidgetLayerComponent implements OnInit {
             );
 
             const result = new avg.ScreenSubtitleResult();
-            result.id = subtitle.id;
+            result.id = subtitle.name;
 
             this.onAsyncResolveHandler(value, promise, result);
 
             break;
           case avg.OP.UpdateTextWidget:
-            WidgetLayerService.updateSubtitle(subtitle.id, subtitle.text);
+            WidgetLayerService.updateSubtitle(subtitle.name, subtitle.text);
             value.resolver();
             break;
           case avg.OP.AnimateTextWidget:
             break;
           case avg.OP.RemoveTextWidget:
             {
-              if (value.api.data.id === undefined) {
+              if (value.api.data.name === undefined) {
                 WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Text, value.api.isAsync);
                 value.resolver();
                 // this.onAsyncResolveHandler(value, promise);
@@ -94,13 +94,13 @@ export class WidgetLayerComponent implements OnInit {
               );
 
               const result = new avg.ScreenImageResult();
-              result.id = image.id;
+              result.id = image.name;
 
               this.onAsyncResolveHandler(value, promise, result);
             }
             break;
           case avg.OP.UpdateImageWidget:
-            const updatePromise = WidgetLayerService.updateImage(image.id, image);
+            const updatePromise = WidgetLayerService.updateImage(image.name, image);
 
             // const result = new avg.ScreenImageResult();
             // result.id = image.id;
@@ -108,7 +108,7 @@ export class WidgetLayerComponent implements OnInit {
             // this.onAsyncResolveHandler(value, null, result);
             break;
           case avg.OP.RemoveImageWidget:
-            if (value.api.data.id === undefined) {
+            if (value.api.data.name === undefined) {
               WidgetLayerService.removeAllWidgets(avg.ScreenWidgetType.Image, value.api.isAsync);
 
               value.resolver();
@@ -132,7 +132,7 @@ export class WidgetLayerComponent implements OnInit {
             );
 
             const result = new avg.HtmlWidgetResult();
-            result.id = model.id;
+            result.id = model.name;
 
             this.onAsyncResolveHandler(value, promise, result);
             break;

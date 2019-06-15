@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 // the resulting javascript file will look as if you never imported the module at all.
 
 import * as childProcess from "child_process";
-import { DebugingService } from "app/common/debuging-service";
+// import { DebugingService } from "app/common/debuging-service";
 import * as avg from "avg-engine/engine";
 import { PlatformService } from "avg-engine/engine";
 
@@ -32,7 +32,7 @@ export class ElectronService extends avg.PlatformService {
   childProcess: typeof childProcess;
 
   public static initDebugging() {
-    DebugingService.initDebugMenus();
+    // DebugingService.initDebugMenus();
   }
 
   constructor() {

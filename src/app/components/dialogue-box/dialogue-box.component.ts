@@ -1,55 +1,27 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  OnDestroy,
-  SimpleChange,
-  SimpleChanges,
-  AfterViewInit,
-  AnimationTransitionEvent,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef
-} from "@angular/core";
-
-import { trigger, state, style, animate, transition } from "@angular/animations";
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 
 import * as avg from "avg-engine/engine";
-import * as gsap from "gsap";
 
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
-// import "app/common/live2d/lib/live2d.min.js";
-// import "pixi-live2d/src/index";
-
-import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
-import { reject } from "q";
 
-import * as $ from "jquery";
 import {
-  EngineUtils,
-  api,
-  EngineAPI_Widget,
-  ScreenWidget,
   ScreenWidgetType,
   ScreenImage,
-  Resource,
   ResourceData,
-  ResourcePath,
   WidgetAnimation_FlyInOptions,
-  WidgetAnimation_FadeInOptions,
-  IDGenerator,
   WidgetAnimation_FlyOutOptions,
-  Sandbox
+  Sandbox,
+  Character,
+  Renderer
 } from "avg-engine/engine";
-import { LoadingLayerService } from "../loading-layer/loading-layer.service";
-import { Utils } from "../../common/utils";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
+import { SpriteType } from "app/common/graphics/sprite";
 
 export enum DialogueBoxStatus {
   None,
@@ -81,14 +53,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private isWaitingInput = false;
   private waitingInputTimeoutHandle = undefined;
 
-  // Animation constant
-  private readonly CHAR_ANIMATION_DURATION = 500;
-  private readonly CHAR_ANIMATION_OFFSET = -30;
   private readonly DIALOGUE_BOX_SHOW_DURATION = 300;
   private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
 
   private readonly MAX_CHARS = 5;
-  private readonly CHAR_WIDTH = 94 / this.MAX_CHARS;
 
   public character_slot: Array<any>;
   public characters: Array<avg.Character>;
@@ -209,15 +177,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
-  private initOpacity(index: number, opacity = 0) {
-    const elementID = "#character-index-" + index;
-
-    AnimationUtils.to("", elementID, 0, {
-      opacity: opacity
-      // x: this.CHAR_ANIMATION_OFFSET
-    });
-  }
-
   // private onCharacterEnter(index: number, character: avg.Character) {
   //   const elementID = "#character-index-" + character.slot;
 
@@ -256,14 +215,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   public async showCharacter(api: avg.APICharacter, isUpdate = false) {
-
-    const character = api.data;
+    const character = <Character>api.data;
 
     const image = new ScreenImage();
-    image.file = ResourceData.from(character.avatar.file);
-    image.renderer = character.renderer;
-    image.position = character.position;
-    image.id = api.id;
+    image.file = ResourceData.from(api.filename);
+    image.renderer = <Renderer>character;
+    image.spriteType = SpriteType.Character;
+    image.name = api.name;
 
     if (isUpdate === false) {
       image.animation.name = "flyin";
@@ -283,9 +241,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isUpdate) {
       // Remove first
       // await WidgetLayerService.removeWidget(image, avg.ScreenWidgetType.Image, false);
-      await WidgetLayerService.updateImage(
-        image.id, image
-      );
+      await WidgetLayerService.updateImage(image.name, image);
     } else {
       WidgetLayerService.addWidget(
         image,
@@ -294,7 +250,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         false
       );
     }
-
   }
 
   public async updateCharacter(api: avg.APICharacter) {
@@ -315,7 +270,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public async hideCharacter(api: avg.APICharacter): Promise<any> {
     const image = new ScreenImage();
-    image.id = api.id;
+    image.name = api.name;
     image.animation.name = "flyout";
 
     const options = new WidgetAnimation_FlyOutOptions();
@@ -385,10 +340,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     TransitionLayerService.releasePointerEvents();
   }
 
-  public onChoiceEnter(index: number, choice: avg.DialogueChoice) {
+  public onChoiceEnter(index: number) {
     if (this.dialogueChoices.onEnter) {
       setTimeout(
-        function () {
+        function() {
           this.dialogueChoices.onEnter(index);
         }.bind(this),
         0
@@ -396,7 +351,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public onChoiceLeave(index: number, choice: avg.DialogueChoice) {
+  public onChoiceLeave(index: number) {
     if (this.dialogueChoices.onLeave) {
       this.dialogueChoices.onLeave(index);
     }
@@ -406,7 +361,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.subject.asObservable();
   }
 
-  private startTypewriter(speed: number = 30) {
+  private startTypewriter() {
     clearInterval(this.typewriterHandle);
     this.typewriterHandle = null;
 
@@ -415,7 +370,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentStatus = DialogueBoxStatus.Typing;
 
     let parsingBuffer = "";
-    const resultBuffer = "";
     const blockRanges = [];
     // const waitInputIcon = `<img src="data/icons/wait-input.gif" />`;
     const spanTrimRegex = /<ruby>(.*)?<\/ruby>|<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
@@ -453,8 +407,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        const inSpan = false;
-        const inSpanStartPos = -1;
         parsingBuffer = this.dialogueData.text.substr(0, count);
 
         blockRanges.forEach((value: any) => {

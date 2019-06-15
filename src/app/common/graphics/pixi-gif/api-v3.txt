@@ -1,0 +1,31 @@
+// 显示单一场景
+scene.show(name, "xxxx.png");
+
+// 显示自定义场景
+scene.show(name, {
+  file: "scene.png",
+  distance: 1000,
+  width: 1000,
+  x: 100,
+  y: 200
+});
+
+// 显示多层场景
+scene.show(
+  name,
+  [
+    {
+      file: "layer1.png",
+      distance: 1000,
+      x: 100,
+      y: 200
+    },
+    {
+      file: "layer2.png",
+      distance: 1000
+    }
+  ],
+  {
+    renderInCamera: true // 是否渲染到摄像机，默认为true
+  }
+);

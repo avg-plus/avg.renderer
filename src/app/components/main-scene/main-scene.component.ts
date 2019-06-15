@@ -10,7 +10,6 @@ import { MainSceneService } from "./main-scene.service";
 import * as avg from "avg-engine/engine";
 import { Router, ActivatedRoute, NavigationEnd, CanActivate } from "@angular/router";
 import { SceneHandle, CameraDirectorLayers, CameraShakeData, APICameraMove, AVGGame, Sandbox, GameStatus } from "avg-engine/engine";
-import { DebugingService } from "app/common/debuging-service";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
@@ -121,7 +120,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           );
         } else if (value.op === avg.OP.RemoveScene) {
           const index = value.api.index;
-          this.backgroundCanvas.removeBackground(index);
+          this.backgroundCanvas.removeBackground();
 
           value.resolver();
         }

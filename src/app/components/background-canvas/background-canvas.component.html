@@ -1,38 +1,26 @@
 <div id="avg-viewport-layer">
-  <!--  -->
-
   <div id="avg-viewport">
-    <!-- attr.data-depth]="i + 0.5"  -->
-
-    <div id="avg-particle-viewport">
+    <!-- <div id="avg-particle-viewport">
       <canvas id="avg-particle-viewport-canvas"></canvas>
       <canvas id="sakura"></canvas>
-    </div>
+    </div> -->
 
     <!-- Preload transition masks-->
-    <div class="mask-image scene-mask-transition {{transition}}" *ngFor="let transition of transitionList"></div>
+    <!-- <div class="mask-image scene-mask-transition {{ transition }}" *ngFor="let transition of transitionList"></div> -->
 
-
-    <div *ngFor="let model of scenes; index as i">
-
-
-      <!--<img class="shake-constant  background-image front layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"
-        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)">-->
-
-      <!-- <div id="bg-mask" class="mask-image" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename" [ngStyle]="model.styles"></div> -->
-
-
-      <div id="mask-layer-{{i}}" class="mask-image layer-{{i}}" *ngIf="model && model.scene&& model.scene.file && model.scene.file.filename"></div>
-      <div id="background-layer-{{i}}" class="background-image layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"></div>
-
-      <!--[src]="sanitizer.bypassSecurityTrustUrl(model && model.scene && model.scene.file && model.scene.file.filename)"-->
-
-      <!-- <div class="background-image front layer-{{i}}" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
-        [ngStyle]="model.styles"></div> -->
-      <!-- <img class="background-image back layer-{{i}}-back" *ngIf="model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename"
-        [ngStyle]="model.styles" [src]="sanitizer.bypassSecurityTrustUrl(model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename)"> -->
-    </div>
-
-
+    <!-- <div *ngFor="let model of scenes; index as i">
+      <div
+        id="mask-layer-{{ i }}"
+        class="mask-image layer-{{ i }}"
+        *ngIf="model && model.scene && model.scene.file && model.scene.file.filename"
+      ></div>
+      <div
+        id="background-layer-{{ i }}"
+        class="background-image layer-{{ i }}"
+        *ngIf="
+          model && model.incommingNewScene && model.incommingNewScene.file && model.incommingNewScene.file.filename
+        "
+      ></div>
+    </div> -->
   </div>
 </div>

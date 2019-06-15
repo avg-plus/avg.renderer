@@ -8,7 +8,7 @@ import {
   Setting,
   AVGGame,
   i18n,
-  input,
+  input
 } from "avg-engine/engine";
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
@@ -20,6 +20,7 @@ import * as avg from "avg-engine/engine";
 import { AVGEngineError } from "../../../avg.engine/engine/core/engine-errors";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
+import { app } from "electron";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -39,6 +40,13 @@ export class GameInitializer implements CanActivate {
 
   public async initErrorHandler() {
     AVGEngineError.init(window, error => {
+      alert(error.desc);
+
+      if (PlatformService.isDesktop()) {
+        window.close();
+        return;
+      }
+
       const errorTemplate = `
         <div style="padding:20px; width: 100%; height: 100%; background: #292929; user-select: auto; color: white; overflow-y: scroll">
           <h2 style="color: salmon;">${error.type}</h2>
@@ -47,27 +55,24 @@ export class GameInitializer implements CanActivate {
           <br>
           <h3 style='color: salmon;'>${i18n.lang.ERROR_HANDLER_ADDITION_INFOS}</h3>
           ${
-        error.data.file
-          ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
-          : ""
-        }
+            error.data.file
+              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
+              : ""
+          }
           ${
-        error.data.lineNumber
-          ? "<div style='color: bisque; white-space: pre; user-select: auto;'> Line: " +
-          error.data.lineNumber +
-          "</div>"
-          : ""
-        }
+            error.data.lineNumber
+              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> Line: " +
+                error.data.lineNumber +
+                "</div>"
+              : ""
+          }
 
-        ${
-        JSON.stringify(error.data)
-        }
+        ${JSON.stringify(error.data)}
         </div>
       `;
 
       $("body").html(errorTemplate);
     });
-
   }
 
   // Apply filesystem implementations to engine
@@ -93,7 +98,7 @@ export class GameInitializer implements CanActivate {
   // Init resources
   public async initResource(route: ActivatedRoute, router: Router) {
     // Get current url params to get assets directory
-    console.log("init resource", router.url)
+    console.log("init resource", router.url);
 
     // Read 'env.avd' to get game project dir and engine dir
     const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "env.avd"));
@@ -102,18 +107,16 @@ export class GameInitializer implements CanActivate {
     // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
     // let dataRootDirname = EngineSettings.get("engine.env.data_root_dirname") as string;
 
-
     let assetsRootDirname = envData.game_assets_root as string;
     let dataRootDirname = envData.engine_bundle_root as string;
 
-
     // 如果不是 HTTP URL 则使用本地路径
     if (!AVGNativePath.isHttpURL(assetsRootDirname)) {
-      assetsRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname)
+      assetsRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname);
     }
 
     if (!AVGNativePath.isHttpURL(dataRootDirname)) {
-      dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname)
+      dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname);
     }
 
     Resource.init(assetsRootDirname, dataRootDirname);
@@ -138,15 +141,15 @@ export class GameInitializer implements CanActivate {
 
   // Init settings
   public async initGameSettings() {
-
     const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
-    const settings = await AVGNativeFS.readFileSync(settingFile);
 
-    // if (PlatformService.isDesktop()) {
-    Setting.parseFromSettings(settings);
-    // } else {
-    // Setting.parseFromSettings(JSON.stringify(settings));
-    // }
+    try {
+      const settings = await AVGNativeFS.readFileSync(settingFile);
+      Setting.parseFromSettings(settings);
+    } catch (error) {
+      AVGEngineError.emit("初始化失败", "游戏配置文件初始化失败，请检查资源路径或者网络是否通畅");
+      return false;
+    }
   }
 
   public async initGlobalClickEvent() {
@@ -180,12 +183,13 @@ export class GameInitializer implements CanActivate {
         });
         win.setFullScreen(Setting.FullScreen);
       } else {
-        win.setBounds({
-          width: Setting.WindowWidth,
-          height: Setting.WindowHeight,
-          x: screen.getPrimaryDisplay().bounds.width / 2 - Setting.WindowWidth / 2,
-          y: screen.getPrimaryDisplay().bounds.height / 2 - Setting.WindowHeight / 2
-        });
+        win.setContentSize(Setting.WindowWidth, Setting.WindowHeight);
+        // win.setBounds({
+        //   width: Setting.WindowWidth,
+        //   height: Setting.WindowHeight,
+        //   x: screen.getPrimaryDisplay().bounds.width / 2 - Setting.WindowWidth / 2,
+        //   y: screen.getPrimaryDisplay().bounds.height / 2 - Setting.WindowHeight / 2
+        // });
       }
       // this.electronService.initDebugging();
     }
@@ -254,7 +258,6 @@ export class GameInitializer implements CanActivate {
           // AVGNativePath.join(Resource.getAssetsRoot(), "audio/se/explode.wav"),
           // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/living.mp3"),
           // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/lab-lighting.jpg"),
-
           // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-normal.png"),
           // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-really.png"),
           // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-normal.png"),
@@ -276,7 +279,6 @@ export class GameInitializer implements CanActivate {
 
   // Init playground communicator
   public async initWindowEventListener(router: Router) {
-
     AVGPlusIPC.init(router);
   }
 }
