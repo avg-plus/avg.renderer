@@ -29,6 +29,8 @@ export class DebugPanel {
     this.spriteFolder.add(sprite, "y", -500, 2500);
     this.spriteFolder.add(sprite, "width", 0, 2500);
     this.spriteFolder.add(sprite, "height", 0, 2500);
+    this.spriteFolder.add(sprite, "rotation", 0, 360, 0.1);
+    this.spriteFolder.add(sprite, "alpha", 0, 1, 0.01);
 
     this.spriteFolder.add(sprite, "distance", -5000, 5000);
     this.spriteFolder.add(sprite, "resizeMode", ["Default", "Stretch", "KeepRadio", "Custom"]).onChange(value => {

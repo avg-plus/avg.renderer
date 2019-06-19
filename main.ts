@@ -16,14 +16,14 @@ function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1366,
-    height: 768,
+    width: 1280,
+    height: 760,
+    minWidth: 800,
+    minHeight: 450,
     resizable: true,
     backgroundColor: "#000000",
     hasShadow: true,
-    // titleBarStyle: "hiddenInset",
     webPreferences: {
-      // offscreen: true,
       nodeIntegration: true
     }
   });
@@ -69,4 +69,6 @@ try {
       createWindow();
     }
   });
-} catch (e) {}
+} catch (e) {
+  alert(e);
+}

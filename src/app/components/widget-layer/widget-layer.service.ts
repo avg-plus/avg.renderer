@@ -137,7 +137,7 @@ export class WidgetLayerService extends AVGService {
         model = new ImageWidgetModel(<avg.ScreenImage>data, imageWidgetComponent);
 
         component.instance.data = data;
-        component.changeDetectorRef.detectChanges();
+        // component.changeDetectorRef.detectChanges();
 
         WidgetLayerService.imageWidgets.push(<ImageWidgetModel>model);
       } else if (widgetType === avg.ScreenWidgetType.Html) {

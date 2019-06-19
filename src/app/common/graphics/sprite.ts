@@ -1,15 +1,10 @@
 import * as PIXI from "pixi.js";
 import { SpriteDebugger } from "./sprite-debugger";
+import { SpriteType } from "avg-engine/engine/const/sprite-type";
 
 interface IOrderingSpirte {
   zOrder: number;
   arrivalOrder: number;
-}
-
-export enum SpriteType {
-  Normal,
-  Scene,
-  Character
 }
 
 export enum ResizeMode {

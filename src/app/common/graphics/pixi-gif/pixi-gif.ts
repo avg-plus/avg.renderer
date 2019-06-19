@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import omggif from "./lib/omggif";
-import { Sprite, SpriteType } from "../sprite";
+import { Sprite } from "../sprite";
+import { SpriteType } from "avg-engine/engine/const/sprite-type";
 
 export class PIXIGif {
   private temp: any;

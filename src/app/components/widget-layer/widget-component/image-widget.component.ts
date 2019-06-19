@@ -2,14 +2,11 @@ import { Component, Injector, ChangeDetectorRef, OnInit, AfterViewInit, Renderer
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
 import * as avg from "avg-engine/engine";
-import * as $ from "jquery";
-import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
-import { AnimationUtils } from "../../../common/animations/animation-utils";
-import { EngineUtils, MeasurementUnitPart, Dimension, AVGGame, UnitType, AVGMeasurementUnit } from "avg-engine/engine";
-import { Utils } from "../../../common/utils";
+import { DomSanitizer } from "@angular/platform-browser";
 import { GameWorld } from "app/common/graphics/world";
 import { LayerOrder } from "app/common/graphics/layer-order";
 import { ResizeMode } from "app/common/graphics/sprite";
+import { SpriteType } from "avg-engine/engine/const/sprite-type";
 
 @Component({
   selector: "image-widget",
@@ -17,10 +14,7 @@ import { ResizeMode } from "app/common/graphics/sprite";
   styleUrls: ["./image-widget.component.scss"]
 })
 export class ImageWidgetComponent extends ScreenWidgetComponent implements OnInit, AfterViewInit {
-  private bindingImageFile = "";
-  private bindingStyle: SafeStyle;
-
-  constructor(private sanitized: DomSanitizer, private injector: Injector) {
+  constructor(injector: Injector) {
     super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
   }
 
@@ -37,7 +31,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
   protected async showWidget() {
     super.showWidget();
     await this.update();
-    super.initShowAnimation();
+    // super.initShowAnimation();
   }
 
   onclicked() {
@@ -47,10 +41,10 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
   }
 
   public async updateImage() {
-    await this.update(true);
+    await this.update();
   }
 
-  public async update(isUpdateImage = false) {
+  public async update() {
     const imageData = <avg.ScreenImage>this.data;
 
     const sprite = await GameWorld.defaultScene.addFromImage(
@@ -62,7 +56,6 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     let renderer = imageData.renderer;
 
     sprite.spriteType = imageData.spriteType;
-    sprite.resizeMode = ResizeMode.Custom;
     sprite.width = renderer.width || sprite.texture.width;
     sprite.height = renderer.height || sprite.texture.height;
     sprite.x = renderer.x;
@@ -72,6 +65,13 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
     sprite.rotation = renderer.rotation || 0;
+
+    // 锁死立绘比例
+    if (sprite.spriteType === SpriteType.Character) {
+      sprite.resizeMode = ResizeMode.KeepRadio;
+    } else {
+      sprite.resizeMode = ResizeMode.Custom;
+    }
 
     // const filter = imageRenderer.filters || [];
 

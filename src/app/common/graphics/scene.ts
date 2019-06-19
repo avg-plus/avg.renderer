@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js";
+import * as Loader from "resource-loader";
 
 import { LayerOrder } from "./layer-order";
-import { Sprite, ResizeMode, SpriteType } from "./sprite";
-import { Layer } from "./layer";
+import { Sprite, ResizeMode } from "./sprite";
 import * as gsap from "gsap";
 import { findFilter } from "./pixi-utils";
 import { isNullOrUndefined } from "util";
 import { PIXIGif } from "./pixi-gif/pixi-gif";
+import { SpriteType } from "avg-engine/engine/const/sprite-type";
 
 export class Scene {
   isTilingMode = false;
@@ -22,13 +23,15 @@ export class Scene {
   protected backBufferingContainer: PIXI.Container = new PIXI.Container();
   protected mainContainer: PIXI.Container = new PIXI.Container();
 
-  private static CameraMovingRatio = 500;
+  private resourceLoader = new Loader.Loader();
 
   constructor(private width: number, private height: number, resolution: number = 1) {
     // [16: 9] - 800x450, 1024x576, 1280x760, 1920x1080
 
     const w = this.width || 1280;
     const h = this.height || 760;
+
+    this.resourceLoader.concurrency = 10;
 
     this.app = new PIXI.Application({
       width: w,
@@ -119,22 +122,21 @@ export class Scene {
       });
     });
   }
+
   /**
    * 触发尺寸变更事件，由 World 主动调用，用于调整图形比例
    *
    * @memberof Scene
    */
   public onResize() {
-    const xRatio = window.innerWidth / this.width;
-    const yRatio = window.innerHeight / this.height;
+    const xRatio = window.innerWidth / this.renderer.width;
+    const yRatio = window.innerHeight / this.renderer.width;
 
     this.children().map(sprite => {
       // 计算立绘的坐标
       if (sprite.spriteType === SpriteType.Character) {
         sprite.x = sprite.x * xRatio;
-        sprite.y = sprite.y * yRatio;
-
-        // sprite.spriteDebugger.update();
+        sprite.spriteDebugger.update();
       }
     });
   }
@@ -328,13 +330,13 @@ export class Scene {
     zOrder: number | LayerOrder = LayerOrder.TopLayer,
     type: SpriteType = SpriteType.Normal
   ): Promise<Sprite> {
-    return await new Promise<Sprite>((resolve, reject) => {
+    return new Promise<Sprite>((resolve, reject) => {
       const isGif = () => {
         return url.endsWith(".gif");
       };
 
       try {
-        const resource = PIXI.Loader.shared.resources[name];
+        const resource = this.resourceLoader.resources[name];
         let loadOptions;
         let sprite: Sprite;
 
@@ -348,7 +350,7 @@ export class Scene {
 
             sprite = new PIXIGif(type, url, resource).sprite;
           } else {
-            sprite = new Sprite(type, resource.texture);
+            sprite = new Sprite(type, PIXI.Texture.from(resource.data));
           }
 
           this.addSprite(name, sprite, zOrder);
@@ -361,13 +363,13 @@ export class Scene {
               crossOrigin: ""
             };
           }
+          this.resourceLoader.add(name, url, loadOptions).load((progress, resources) => {
+            // const texture = resources[name].data;
 
-          PIXI.Loader.shared.add(name, url, loadOptions).load((progress, resources) => {
-            const texture = resources[name].texture;
             if (isGif()) {
               sprite = new PIXIGif(type, url, resources).sprite;
             } else {
-              console.log(resources[name]);
+              const texture = PIXI.Texture.from(resources[name].data);
 
               sprite = new Sprite(type, texture);
             }

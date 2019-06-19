@@ -21,7 +21,7 @@ import {
 } from "avg-engine/engine";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
-import { SpriteType } from "app/common/graphics/sprite";
+import { SpriteType } from "avg-engine/engine/const/sprite-type";
 
 export enum DialogueBoxStatus {
   None,

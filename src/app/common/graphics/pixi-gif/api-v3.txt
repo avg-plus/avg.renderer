@@ -1,3 +1,25 @@
+// 注册一个hook
+engine.hook("hooks.character.enter", data => {
+  // data.character = {};
+
+  const animateSequence = {
+    frames: [
+      {
+        opacity: 0,
+        x: data.character.x - 50
+      },
+      {
+        duration: 3000,
+        opacity: 1,
+        x: data.character.x
+      }
+    ]
+  };
+  /*
+    []
+   */
+});
+
 // 显示单一场景
 scene.show(name, "xxxx.png");
 
@@ -29,3 +51,17 @@ scene.show(
     renderInCamera: true // 是否渲染到摄像机，默认为true
   }
 );
+
+engine.listen("event.onbefore_dialogue", () => {
+  // Did something
+});
+
+engine.slot("slot.dialogue_box", {
+  x: 303,
+  y: 444,
+  width: 1260,
+  height: 380,
+  skin: {
+    mode: "css" // image
+  }
+});

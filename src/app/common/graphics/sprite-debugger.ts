@@ -6,7 +6,7 @@ import { DebugPanel } from "../debugger/debug-panel";
 export class SpriteDebugger {
   private graphics: PIXI.Graphics;
   private sprite: Sprite;
-  private dragging: boolean = false;
+  private dragging: any;
   private draggingData: PIXI.interaction.InteractionData;
 
   constructor(sprite: Sprite) {
@@ -31,26 +31,28 @@ export class SpriteDebugger {
   private onDragStart(event) {
     this.draggingData = event.data;
 
-    const position = this.draggingData.getLocalPosition(this.sprite);
-    // this.sprite.pivot.set(position.x, position.y);
-    // this.sprite.position.set(this.draggingData.global.x, this.draggingData.global.y);
-
     this.sprite.alpha = 0.8;
+    this.dragging = this.draggingData.getLocalPosition(this.sprite.parent);
     DebugPanel.setSpritePanel(this.sprite);
-    this.dragging = true;
   }
 
   private onDragEnd() {
     this.sprite.alpha = 1;
+    this.draggingData = null;
     this.dragging = false;
   }
 
   private onDragMove() {
     if (this.dragging) {
-      const newPosition = this.draggingData.getLocalPosition(this.sprite.parent);
+      // const newPosition = this.draggingData.getLocalPosition(this.sprite.parent);
 
-      this.sprite.x = newPosition.x;
-      this.sprite.y = newPosition.y;
+      // this.sprite.x = newPosition.x;
+      // this.sprite.y = newPosition.y;
+
+      var newPosition = this.draggingData.getLocalPosition(this.sprite.parent);
+      this.sprite.position.x += newPosition.x - this.dragging.x;
+      this.sprite.position.y += newPosition.y - this.dragging.y;
+      this.dragging = newPosition;
 
       DebugPanel.update();
     }
