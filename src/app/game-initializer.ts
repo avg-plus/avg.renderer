@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 
-import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { APIImplManager } from "./common/api/api-impl-manger";
 import * as $ from "jquery";
@@ -10,12 +9,14 @@ import { AVGEngineError } from "../engine/core/engine-errors";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
 import { input } from "engine/core/input";
-import { PlatformService } from "engine/core/platform";
 import { i18n } from "engine/core/i18n";
-import { AVGNativeFS, AVGNativePath } from "engine/core/native-modules";
 import { EngineSettings } from "engine/core/engine-setting";
 import { Resource } from "engine/core/resource";
 import { Setting } from "engine/core/setting";
+import { PlatformService } from "engine/core/platform/platform-service";
+import { AVGNativeFS } from "engine/core/native-modules/avg-native-fs";
+import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
+import { APIManager } from "engine/scripting/api-manager";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -71,11 +72,8 @@ export class GameInitializer implements CanActivate {
   }
 
   // Apply filesystem implementations to engine
-  public initFileSystem() {
-    for (const m in AVGNativeFS) {
-      AVGNativeFS[m] = AVGNativeFSImpl[m];
-    }
-    AVGNativeFS.initFileSystem();
+  public async initFileSystem() {
+    await AVGNativeFS.initFileSystem();
   }
 
   // Init engine settings
@@ -83,13 +81,8 @@ export class GameInitializer implements CanActivate {
     const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "/data/engine.json"));
 
     EngineSettings.init(content);
-
-    // if (PlatformService.isDesktop()) {
-    //   EngineSettings.init(content);
-    // } else {
-    //   EngineSettings.init(JSON.stringify(content));
-    // }
   }
+
   // Init resources
   public async initResource(route: ActivatedRoute, router: Router) {
     // Get current url params to get assets directory
@@ -117,29 +110,12 @@ export class GameInitializer implements CanActivate {
     Resource.init(assetsRootDirname, dataRootDirname);
   }
 
-  // Init stylesheets
-  public async initStyleSheets() {
-    const dataRoot = AVGNativePath.join(AVGNativeFS.__dirname, "data");
-    let style = await AVGNativeFS.readFileSync(AVGNativePath.join(dataRoot, "stylesheets/mask.css.tpl"));
-
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_IN", AVGNativePath.join(dataRoot, "masks/iris-in.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_IRIS_OUT", AVGNativePath.join(dataRoot, "masks/iris-out.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WIPE", AVGNativePath.join(dataRoot, "masks/wipe.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_WINDOW_SHADES", AVGNativePath.join(dataRoot, "masks/window-shades.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH", AVGNativePath.join(dataRoot, "masks/brush.png"));
-    style = style.replace("$MASK_IMAGE_SPRITE_BRUSH_DOWN", AVGNativePath.join(dataRoot, "masks/brush-down.png"));
-
-    // $("head").append(`<style>${style}</style>`);
-
-    // console.log(style);
-  }
-
   // Init settings
   public async initGameSettings() {
     const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
 
     console.log(AVGNativeFS);
-    
+
     try {
       const settings = await AVGNativeFS.readFileSync(settingFile);
       Setting.parseFromSettings(settings);
@@ -195,6 +171,7 @@ export class GameInitializer implements CanActivate {
   // Init API implementations
   public async initAPI() {
     APIImplManager.init();
+    APIManager.Instance.init();
   }
 
   public async initLoadingService() {
@@ -203,7 +180,7 @@ export class GameInitializer implements CanActivate {
 
   // Preload resources
   public async preloadEngineAssets() {
-    const loadingBackground = EngineSettings.get("engine.loading_screen.background") as string;
+    // const loadingBackground = EngineSettings.get("engine.loading_screen.background") as string;
 
     const defaultFont = EngineSettings.get("engine.default_fonts") as string;
 

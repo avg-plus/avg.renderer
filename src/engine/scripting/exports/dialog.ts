@@ -9,7 +9,6 @@ import { Sandbox } from "../../core/sandbox";
 import { AVGArchives } from "../../core/game-archives";
 import { InputData, InputBoxResult } from "../../data/input-data";
 import { APIInputBox } from "../api/api-input-box";
-import { AVGData } from "../../data/avg-data";
 
 @APIExport("dialog", EngineAPI_Dialog)
 export class EngineAPI_Dialog extends AVGExportedAPI {

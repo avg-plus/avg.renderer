@@ -2,7 +2,7 @@ import { Archive } from "../data/archive";
 import { AVGGame, GameRunningType } from "./game";
 import { APIManager } from "../scripting/api-manager";
 import { Sandbox } from "./sandbox";
-import { AVGNativePath, AVGNativeFS } from "./native-modules";
+import { AVGNativePath } from "./native-modules/avg-native-path";
 
 export class AVGArchives {
   private static _archiveFilePath: string = "./archives";
@@ -65,10 +65,10 @@ export class AVGArchives {
     return new Promise((resolve, reject) => {
       let filePathAndName: string = AVGNativePath.join(this._archiveFilePath, index + ".te");
       try {
-          // AVGNativeFS.writeFileSync(filePathAndName, JSON.stringify(archive), { flag: "w" });
-          resolve();
+        // AVGNativeFS.writeFileSync(filePathAndName, JSON.stringify(archive), { flag: "w" });
+        resolve();
       } catch (err) {
-          reject(err);
+        reject(err);
       }
     });
   }

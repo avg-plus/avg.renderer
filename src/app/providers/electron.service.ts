@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 // the resulting javascript file will look as if you never imported the module at all.
 
 import * as childProcess from "child_process";
-import { PlatformService } from "engine/core/platform";
+import { PlatformService } from "engine/core/platform/platform-service";
 // import { DebugingService } from "app/common/debuging-service";
 
 // import {

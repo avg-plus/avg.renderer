@@ -1,13 +1,13 @@
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
 
+// 暂存导出的类，APIManager 加载后会取走
 export const preExportedSet = new Set();
 
 export function APIExport(name: string, t: any) {
   console.log("APIExport " + name);
   return function(constructor: Function) {
     preExportedSet.add({ name, t });
-    // APIManager.Instance.registerExportClass(name, t);
   };
 }
 

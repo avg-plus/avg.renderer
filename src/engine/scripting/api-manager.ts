@@ -2,7 +2,7 @@ import { AVGScriptUnit, RunnerFunction } from "./script-unit";
 import { AVGArchives } from "../core/game-archives";
 import { Sandbox } from "engine/core/sandbox";
 import { AVGGame } from "engine/core/game";
-import { preExportedSet } from "./exports";
+import { preExportedSet } from "./exports/avg-exported-api";
 
 export type OP_Runner = { op: string; runner: RunnerFunction };
 export type OP_RunnerContainer = Array<OP_Runner>;
@@ -14,9 +14,7 @@ export class APIManager {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {
-    console.log(preExportedSet);
-  }
+  private constructor() {}
 
   private _apis: APITable = new Map<string, OP_RunnerContainer>();
 
@@ -39,6 +37,10 @@ export class APIManager {
   }
 
   public init() {
+    preExportedSet.forEach(v => {
+      this.registerExportClass(v.name, v.t);
+    });
+
     this.injectExports();
   }
 

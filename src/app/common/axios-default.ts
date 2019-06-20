@@ -1,9 +1,7 @@
 import AxiosDefault from "axios";
 
-export const Axios = AxiosDefault.create({
-  validateStatus: (status) => {
-    console.log(status);
-    
+export const axios = AxiosDefault.create({
+  validateStatus: status => {
     return true;
   }
 });

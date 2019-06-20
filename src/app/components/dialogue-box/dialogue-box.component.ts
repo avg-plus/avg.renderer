@@ -11,7 +11,6 @@ import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
 import { Dialogue } from "engine/data/dialogue";
 import { Setting } from "engine/core/setting";
-import { EngineAPI_Audio } from "engine/scripting/exports";
 import { PluginManager } from "engine/plugin/plugin-manager";
 import { AVGPluginHooks } from "engine/plugin/avg-plugin";
 import { DialogueChoice } from "engine/data/dialogue-choice";
@@ -29,6 +28,7 @@ import { Renderer } from "engine/data/renderer";
 import { SpriteType } from "engine/const/sprite-type";
 import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
 import { APICharacter } from "engine/scripting/api/api-character";
+import { EngineAPI_Audio } from "engine/scripting/exports/audio";
 
 export enum DialogueBoxStatus {
   None,

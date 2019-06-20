@@ -1,5 +1,3 @@
-import { APIManager } from "./../../../engine/scripting/api-manager";
-
 import "./api-dialogue-impl";
 import "./api-sound-impl";
 import "./api-scene-impl";
@@ -19,7 +17,6 @@ import "./api-system-impl";
 export class APIImplManager {
   public static init() {
     console.log(`Register API extend implemention ...`);
-    APIManager.Instance.init();
 
     // const OP = OP;
 

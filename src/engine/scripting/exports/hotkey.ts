@@ -1,6 +1,4 @@
-import { InputKeys } from '../../core/input';
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
-import { APIManager } from '../api-manager';
 
 @APIExport("hotkey", EngineAPI_Hotkey)
 export class EngineAPI_Hotkey extends AVGExportedAPI {

@@ -1,4 +1,3 @@
-import { APIExport, AVGExportedAPI } from "../exports";
 
 import * as joi from "joi";
 import { Character } from "engine/data/character";
@@ -9,6 +8,7 @@ import { OP } from "engine/const/op";
 import { APICharacter } from "../api/api-character";
 import { APIManager } from "../api-manager";
 import { APIAnimateCharacter } from "../api/api-animate-character";
+import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 
 @APIExport("character", EngineAPI_Character)
 export class EngineAPI_Character extends AVGExportedAPI {

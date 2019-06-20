@@ -1,6 +1,4 @@
-import { InputKeys } from "../../core/input";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
-import { APIManager } from "../api-manager";
 /**
  * 用于扩展和自定义引擎的表现
  *

@@ -1,101 +1,130 @@
-export type BFSOneArgCallback = (e?: any | null) => any;
-export type BFSCallback<T> = (e: any | null | undefined, rv?: T) => any;
-
-export interface AVGNativeFSInterface {
-  isFileSystemOK(): boolean;
-  initFileSystem();
-
-  writeFile(
-    filename: string,
-    data: any,
-    options?: {
-      encoding?: string;
-      mode?: string | number;
-      flag?: string;
-    },
-    cb?: BFSOneArgCallback
-  ): void;
-  writeFileSync(
-    filename: string,
-    data: any,
-    options?: {
-      encoding?: string;
-      mode?: number | string;
-      flag?: string;
-    }
-  ): void;
-
-  readFile(
-    filename: string,
-    options: {
-      encoding: string;
-      flag?: string;
-    },
-    callback: BFSCallback<string>
-  ): void;
-
-  readFileSync(
-    filename: string,
-    options: {
-      encoding: string;
-      flag?: string;
-    }
-  ): string;
-
-  readLocalStorage(
-    filename: string,
-    options?: {
-      encoding?: string;
-      flag?: string;
-    }
-  );
-
-  writeLocalStorage(
-    filename: string,
-    options?: {
-      encoding?: string;
-      flag?: string;
-    }
-  );
-}
+import * as BrowserFS from "browserfs";
+import * as NodeFS from "fs";
+import { axios } from "app/common/axios-default";
+import { PlatformService } from "../platform/platform-service";
+import { AVGNativePath } from "./avg-native-path";
 
 export class AVGNativeFS {
-  public static __dirname = ".";
+  private static _isFileSystemOK = false;
+  private static _fs = null;
+
+  public static get __dirname() {
+    if (PlatformService.isDesktop()) {
+      if (PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
+        __dirname = __dirname.replace(/\\/g, "/");
+      }
+      return __dirname;
+    } else {
+      return ".";
+    }
+  }
+
+  public static async initFileSystem() {
+    console.log("Init Env", process.env);
+
+    // BrowserFS.install(window);
+
+    return new Promise((resolve, reject) => {
+      if (PlatformService.isDesktop()) {
+        console.log("Init FileSystem:NodeFS", NodeFS);
+
+        this._fs = NodeFS;
+        this._isFileSystemOK = true;
+      } else {
+        console.log("Init FileSystem:BrowserFS", BrowserFS);
+
+        BrowserFS.configure(
+          {
+            fs: "LocalStorage",
+            options: {}
+          },
+          e => {
+            if (e) {
+              // An error happened!
+              console.error(e);
+              reject(e);
+              this._isFileSystemOK = false;
+              throw e;
+            }
+
+            this._isFileSystemOK = true;
+            this._fs = BrowserFS.BFSRequire("fs");
+          }
+        );
+      }
+
+      resolve();
+    });
+  }
 
   public static isFileSystemOK(): boolean {
-    throw new Error("Method not implemented.");
+    return this._isFileSystemOK;
   }
 
-  public static initFileSystem() {
-    throw new Error("Method not implemented.");
-  }
   public static writeFile(
     filename: string,
     data: any,
     options?: { encoding?: string; mode?: string | number; flag?: string },
-    cb?: BFSOneArgCallback
+    cb?: (e?: any) => void
   ): void {
-    throw new Error("Method not implemented.");
+    if (PlatformService.isDesktop()) {
+      return this._fs.writeFile(filename, data, options, cb);
+    }
   }
+
   public static writeFileSync(
     filename: string,
     data: any,
     options?: { encoding?: string; mode?: string | number; flag?: string }
   ): void {
-    throw new Error("Method not implemented.");
+    if (PlatformService.isDesktop()) {
+      return this._fs.writeFileSync(filename, data, options);
+    }
   }
+
   public static readFile(
     filename: string,
-    options: { encoding?: string; flag?: string },
-    callback: BFSCallback<string>
+    options: { encoding: string; flag?: string },
+    callback: (e: any, rv?: string) => void
   ): void {
-    throw new Error("Method not implemented.");
+    if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
+      this._fs.readFile(filename, options, callback);
+    } else {
+      const response = axios.get(filename).then(value => {
+        if (callback) {
+          if (value.status !== 200) {
+            callback(null, null);
+            return;
+          }
+          callback(null, value.data);
+        }
+      });
+    }
   }
-  public static readFileSync(
+
+  public static async readFileSync(
     filename: string,
-    options?: { encoding?: string; flag?: string }
-  ): string {
-    throw new Error("Method not implemented.");
+    options?: {
+      encoding?: string;
+      flag?: string;
+    }
+  ) {
+    if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
+      const data = this._fs.readFileSync(filename, options);
+      return data.toString("utf8");
+    }
+
+    const response = await axios.get(filename, {
+      transformResponse: res => {
+        return res;
+      }
+    });
+
+    if (response.status !== 200) {
+      return "";
+    }
+
+    return response.data;
   }
 
   public static readLocalStorage(
@@ -105,7 +134,9 @@ export class AVGNativeFS {
       flag?: string;
     }
   ) {
-    throw new Error("Method not implemented.");
+    if (PlatformService.isWebBrowser()) {
+      return this._fs.readFileSync(filename, options);
+    }
   }
 
   public static writeLocalStorage(
@@ -115,6 +146,8 @@ export class AVGNativeFS {
       flag?: string;
     }
   ) {
-    throw new Error("Method not implemented.");
+    if (PlatformService.isWebBrowser()) {
+      return this._fs.readFileSync(filename, options);
+    }
   }
 }

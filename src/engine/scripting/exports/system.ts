@@ -1,7 +1,6 @@
 import { SkipOptions } from '../../data/skip-options';
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { Sandbox } from '../../core/sandbox';
-import { APIManager } from '../api-manager';
 
 @APIExport("system", EngineAPI_System)
 export class EngineAPI_System extends AVGExportedAPI {

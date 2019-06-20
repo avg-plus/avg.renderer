@@ -1,3 +1,5 @@
+import { APIManager } from "engine/scripting/api-manager";
+
 import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
@@ -5,11 +7,14 @@ import { ElectronService } from "./providers/electron.service";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { GameInitializer } from "./game-initializer";
 import { DebugPanel } from "./common/debugger/debug-panel";
-import { PlatformService } from "engine/core/platform";
 import { Resource, ResourcePath } from "engine/core/resource";
-import { AVGNativePath } from "engine/core/native-modules";
 import { EngineSettings } from "engine/core/engine-setting";
-import Axios from "axios";
+import { PlatformService } from "engine/core/platform/platform-service";
+import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
+import { APIImplManager } from "./common/api/api-impl-manger";
+
+// 初始化所有 API
+import "../engine/scripting/exports";
 
 @Component({
   selector: "game",
@@ -34,24 +39,18 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async ngOnInit() {
 
-    const a = Axios.get("http://127.0.0.1:2335/game.json").then(results => {
-      console.log(results.data);
-    });
-  }
 
-  async ngAfterViewInit() {
     await this.initializer.initErrorHandler();
     await this.initializer.initWindowEventListener(this.router);
     await this.initializer.initFileSystem();
     await this.initializer.initEngineSettings();
     await this.initializer.initResource(this.route, this.router);
-    // await this.initializer.initStyleSheets();
     await this.initializer.initGameSettings();
     await this.initializer.initHotkeys();
     await this.initializer.initDesktopWindow();
     await this.initializer.initGlobalClickEvent();
-    await this.initializer.initAPI();
     await this.initializer.initLoadingService();
+    await this.initializer.initAPI();
     this.initializer.preloadEngineAssets().then(
       v => {
         this.initializer.endInitilizing();
@@ -70,4 +69,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       _ => {}
     );
   }
+
+  async ngAfterViewInit() {}
 }

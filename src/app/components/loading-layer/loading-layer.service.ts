@@ -6,9 +6,9 @@ import * as $ from "jquery";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { EngineSettings } from "engine/core/engine-setting";
-import { AVGNativePath } from "engine/core/native-modules";
 import { Resource } from "engine/core/resource";
 import { EngineUtils } from "engine/core/engine-utils";
+import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
 
 class ResourceFileGroup {
   public tips: string;
