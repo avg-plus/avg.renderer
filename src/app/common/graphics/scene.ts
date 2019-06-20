@@ -7,7 +7,7 @@ import * as gsap from "gsap";
 import { findFilter } from "./pixi-utils";
 import { isNullOrUndefined } from "util";
 import { PIXIGif } from "./pixi-gif/pixi-gif";
-import { SpriteType } from "avg-engine/engine/const/sprite-type";
+import { SpriteType } from "engine/const/sprite-type";
 
 export class Scene {
   isTilingMode = false;

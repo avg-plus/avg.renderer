@@ -2,8 +2,8 @@ import { AnimationUtils } from "./animation-utils";
 import { TweenMax, TweenLite } from "gsap";
 import * as $ from "jquery";
 import * as dynamics from "dynamics.js";
-import * as avg from "avg-engine/engine";
-import { EngineUtils } from "avg-engine/engine";
+import { CameraData } from "engine/data/camera-data";
+import { EngineUtils } from "engine/core/engine-utils";
 
 class CameraOptions {
   public restrictedMode = true;
@@ -12,7 +12,7 @@ class CameraOptions {
 export class Camera2D {
   private targets: string[] = [];
 
-  private cameraData: avg.CameraData = new avg.CameraData();
+  private cameraData: CameraData = new CameraData();
 
   constructor(targets: string | string[]) {
     this.setTargets(targets);
@@ -26,7 +26,7 @@ export class Camera2D {
     }
   }
 
-  public setCameraData(data: avg.CameraData) {
+  public setCameraData(data: CameraData) {
     this.cameraData = data;
   }
 
@@ -60,7 +60,7 @@ export class Camera2D {
       skewX: this.cameraData.skewX,
       skewY: this.cameraData.skewY,
       scale: this.cameraData.scale,
-      rotateZ: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}`,
+      rotateZ: this.cameraData.rotation === undefined ? undefined : `${this.cameraData.rotation}`
       // filter: `blur(${this.cameraData.blur}px)`
     };
 

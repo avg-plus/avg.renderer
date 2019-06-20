@@ -2,12 +2,14 @@ import { Component, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ElectronService } from "./providers/electron.service";
 
-import * as avg from "avg-engine/engine";
-
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
-import { AVGNativePath, EngineSettings } from "avg-engine/engine";
 import { GameInitializer } from "./game-initializer";
 import { DebugPanel } from "./common/debugger/debug-panel";
+import { PlatformService } from "engine/core/platform";
+import { Resource, ResourcePath } from "engine/core/resource";
+import { AVGNativePath } from "engine/core/native-modules";
+import { EngineSettings } from "engine/core/engine-setting";
+import Axios from "axios";
 
 @Component({
   selector: "game",
@@ -22,15 +24,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     private route: ActivatedRoute,
     private elementRef: ElementRef
   ) {
-    avg.PlatformService.initFromWindow(window);
-    if (avg.PlatformService.isDesktop()) {
+    PlatformService.initFromWindow(window);
+    if (PlatformService.isDesktop()) {
       ElectronService.initDebugging();
     }
 
     DebugPanel.init();
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+
+    const a = Axios.get("http://127.0.0.1:2335/game.json").then(results => {
+      console.log(results.data);
+    });
+  }
 
   async ngAfterViewInit() {
     await this.initializer.initErrorHandler();
@@ -50,7 +57,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.initializer.endInitilizing();
 
         // Start game
-        const entryScript = AVGNativePath.join(avg.Resource.getPath(avg.ResourcePath.Scripts), EngineSettings.get(
+        const entryScript = AVGNativePath.join(Resource.getPath(ResourcePath.Scripts), EngineSettings.get(
           "engine.env.entry_script_file"
         ) as string);
 

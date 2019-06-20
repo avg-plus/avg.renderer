@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 
-import * as avg from "avg-engine/engine";
-
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 
@@ -9,19 +7,28 @@ import { TransitionLayerService } from "../transition-layer/transition-layer.ser
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 
-import {
-  ScreenWidgetType,
-  ScreenImage,
-  ResourceData,
-  WidgetAnimation_FlyInOptions,
-  WidgetAnimation_FlyOutOptions,
-  Sandbox,
-  Character,
-  Renderer
-} from "avg-engine/engine";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
-import { SpriteType } from "avg-engine/engine/const/sprite-type";
+import { Dialogue } from "engine/data/dialogue";
+import { Setting } from "engine/core/setting";
+import { EngineAPI_Audio } from "engine/scripting/exports";
+import { PluginManager } from "engine/plugin/plugin-manager";
+import { AVGPluginHooks } from "engine/plugin/avg-plugin";
+import { DialogueChoice } from "engine/data/dialogue-choice";
+import { Character } from "engine/data/character";
+import { ScreenImage } from "engine/data/screen-image";
+import { ResourceData } from "engine/data/resource-data";
+
+import {
+  WidgetAnimation_FlyInOptions,
+  ScreenWidgetType,
+  WidgetAnimation_FlyOutOptions
+} from "engine/data/screen-widget";
+import { Sandbox } from "engine/core/sandbox";
+import { Renderer } from "engine/data/renderer";
+import { SpriteType } from "engine/const/sprite-type";
+import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
+import { APICharacter } from "engine/scripting/api/api-character";
 
 export enum DialogueBoxStatus {
   None,
@@ -39,7 +46,7 @@ export enum DialogueBoxStatus {
   styleUrls: ["./dialogue-box.component.scss"]
 })
 export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
-  public dialogueData: avg.Dialogue;
+  public dialogueData: Dialogue;
 
   public animatedText = "";
   public currentStatus = DialogueBoxStatus.None;
@@ -47,9 +54,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public typewriterHandle = null;
   public autoPlayDelayHandle = null;
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
-  public choicesSubject: Subject<avg.SelectedDialogueChoice> = new Subject<avg.SelectedDialogueChoice>();
+  public choicesSubject: Subject<SelectedDialogueChoice> = new Subject<SelectedDialogueChoice>();
 
-  public dialogueChoices: avg.APIDialogueChoice;
+  public dialogueChoices: APIDialogueChoice;
   private isWaitingInput = false;
   private waitingInputTimeoutHandle = undefined;
 
@@ -59,16 +66,16 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly MAX_CHARS = 5;
 
   public character_slot: Array<any>;
-  public characters: Array<avg.Character>;
+  public characters: Array<Character>;
 
   // @ViewChild("characterContainer") characterContainer: ElementRef;
 
   constructor(public changeDetectorRef: ChangeDetectorRef, public sanitizer: DomSanitizer) {
     this.character_slot = new Array<any>(5);
-    this.characters = new Array<avg.Character>(5);
+    this.characters = new Array<Character>(5);
 
     this.dialogueData = null;
-    // const width = avg.Setting.WindowWidth / 5;
+    // const width = Setting.WindowWidth / 5;
 
     // for (let i = 0; i < 5; ++i) {
     //   this.character_slot[i] = {
@@ -91,16 +98,16 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.autoPlayDelayHandle = null;
 
     this.subject = new Subject<DialogueBoxStatus>();
-    this.choicesSubject = new Subject<avg.SelectedDialogueChoice>();
+    this.choicesSubject = new Subject<SelectedDialogueChoice>();
 
-    this.dialogueChoices = new avg.APIDialogueChoice();
+    this.dialogueChoices = new APIDialogueChoice();
     TransitionLayerService.FullScreenClickListener.observers = [];
   }
 
   ngOnInit() {
     TransitionLayerService.FullScreenClickListener.subscribe(_ => {
       // Cancel auto play when click
-      avg.Setting.AutoPlay = false;
+      Setting.AutoPlay = false;
 
       this.updateDialogueStatus();
     });
@@ -157,7 +164,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Play voice
     if (this.dialogueData.voice && this.dialogueData.voice.length > 0) {
-      avg.EngineAPI_Audio.play("_voice", <string>this.dialogueData.voice);
+      EngineAPI_Audio.play("_voice", <string>this.dialogueData.voice);
     }
 
     AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
@@ -177,7 +184,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
-  // private onCharacterEnter(index: number, character: avg.Character) {
+  // private onCharacterEnter(index: number, character: Character) {
   //   const elementID = "#character-index-" + character.slot;
 
   //   AnimationUtils.to(
@@ -214,7 +221,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   //   });
   // }
 
-  public async showCharacter(api: avg.APICharacter, isUpdate = false) {
+  public async showCharacter(api: APICharacter, isUpdate = false) {
     const character = <Character>api.data;
 
     const image = new ScreenImage();
@@ -240,19 +247,19 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (isUpdate) {
       // Remove first
-      // await WidgetLayerService.removeWidget(image, avg.ScreenWidgetType.Image, false);
+      // await WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, false);
       await WidgetLayerService.updateImage(image.name, image);
     } else {
       WidgetLayerService.addWidget(
         image,
         WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
-        avg.ScreenWidgetType.Image,
+        ScreenWidgetType.Image,
         false
       );
     }
   }
 
-  public async updateCharacter(api: avg.APICharacter) {
+  public async updateCharacter(api: APICharacter) {
     // const character = api.data;
 
     await this.showCharacter(api, true);
@@ -268,7 +275,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     // );
   }
 
-  public async hideCharacter(api: avg.APICharacter): Promise<any> {
+  public async hideCharacter(api: APICharacter): Promise<any> {
     const image = new ScreenImage();
     image.name = api.name;
     image.animation.name = "flyout";
@@ -295,7 +302,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
 
-  public updateData(data: avg.Dialogue) {
+  public updateData(data: Dialogue) {
     this.dialogueData = data;
     this.animatedText = "";
 
@@ -306,7 +313,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // @Plugin: OnBeforeShowDialogue
-    avg.PluginManager.on(avg.AVGPluginHooks.OnBeforeShowDialogue, data);
+    PluginManager.on(AVGPluginHooks.OnBeforeShowDialogue, data);
 
     if (data.character && data.name) {
       this.currentName = data.name;
@@ -320,17 +327,17 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(`Update dialogue data:`, data);
   }
 
-  public showChoices(api: avg.APIDialogueChoice) {
+  public showChoices(api: APIDialogueChoice) {
     // @Plugin: OnBeforeShowChoices
-    avg.PluginManager.on(avg.AVGPluginHooks.OnBeforeShowChoices, api);
+    PluginManager.on(AVGPluginHooks.OnBeforeShowChoices, api);
 
     this.dialogueChoices = api;
     this.changeDetectorRef.detectChanges();
     TransitionLayerService.lockPointerEvents();
   }
 
-  public onChoiceClicked(index: number, choice: avg.DialogueChoice) {
-    const result = new avg.SelectedDialogueChoice();
+  public onChoiceClicked(index: number, choice: DialogueChoice) {
+    const result = new SelectedDialogueChoice();
     result.selectedIndex = index;
     result.selectedText = choice.title;
     this.choicesSubject.next(result);
@@ -374,7 +381,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     // const waitInputIcon = `<img src="data/icons/wait-input.gif" />`;
     const spanTrimRegex = /<ruby>(.*)?<\/ruby>|<span [a-z]+="[0-9a-zA-Z-:!#; ]+"\>|<\/span>|<img.*?\/>|\<b\>|<\/b>|<i>|<\/i>|<del>|<\/del>|<br>|<wait( time="(\d+)")? ?\/>/g;
 
-    if (avg.Setting.TextSpeed > 0) {
+    if (Setting.TextSpeed > 0) {
       let match = null;
       while ((match = spanTrimRegex.exec(this.dialogueData.text)) !== null) {
         const block = {
@@ -440,7 +447,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.onAutoPlay();
         }
-      }, (100 - avg.Setting.TextSpeed) * 2 || 1);
+      }, (100 - Setting.TextSpeed) * 2 || 1);
     } else {
       this.currentStatus = DialogueBoxStatus.Complete;
       this.animatedText = this.dialogueData.text;
@@ -470,13 +477,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public onAutoPlay() {
-    if (avg.Setting.AutoPlay) {
+    if (Setting.AutoPlay) {
       clearTimeout(this.autoPlayDelayHandle);
       this.autoPlayDelayHandle = null;
 
       this.autoPlayDelayHandle = setTimeout(() => {
         this.updateDialogueStatus();
-      }, (100 - avg.Setting.AutoPlaySpeed) * 30 || 500);
+      }, (100 - Setting.AutoPlaySpeed) * 30 || 500);
     }
   }
 }

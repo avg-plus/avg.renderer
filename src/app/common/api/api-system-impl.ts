@@ -1,12 +1,15 @@
-import * as avg from "avg-engine/engine";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { Impl } from "app/common/api/impl";
-import { APICallScript, AVGStory, Sandbox } from "avg-engine/engine";
+import { Sandbox } from "engine/core/sandbox";
+import { OP } from "engine/const/op";
+import { APICallScript } from "engine/scripting/api/api-call-script";
+import { AVGScriptUnit } from "engine/scripting/script-unit";
+import { AVGStory } from "engine/scripting/story";
 
 export class APISystemImpl extends Impl {
-  @Impl.registerImpl(APICallScript, avg.OP.CallScript)
-  public static async callScript(scriptUnit: avg.AVGScriptUnit): Promise<any> {
-    const script = <avg.APICallScript>scriptUnit;
+  @Impl.registerImpl(APICallScript, OP.CallScript)
+  public static async callScript(scriptUnit: AVGScriptUnit): Promise<any> {
+    const script = <APICallScript>scriptUnit;
 
     const story = new AVGStory();
     await story.loadFromFile(script.scriptFile);
@@ -16,11 +19,11 @@ export class APISystemImpl extends Impl {
     console.log("result:", result);
 
     // return await new Promise<any>((resolve, reject) => {
-      // ScriptingDispatcher.dispatch(avg.OP.PlayEffect, script, resolve);
+    // ScriptingDispatcher.dispatch(OP.PlayEffect, script, resolve);
 
-      // setTimeout(() => {
-        // resolve("aiaiaiaia");
-      // }, 1000);
+    // setTimeout(() => {
+    // resolve("aiaiaiaia");
+    // }, 1000);
     // });
   }
 }

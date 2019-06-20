@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import * as avg from "avg-engine/engine";
+import { PlatformService } from "engine/core/platform/platform-service";
 
 @Injectable()
-export class BrowserService extends avg.PlatformService {
+export class BrowserService extends PlatformService {
   constructor() {
     super();
   }

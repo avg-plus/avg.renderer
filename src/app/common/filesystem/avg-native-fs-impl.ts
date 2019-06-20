@@ -1,19 +1,16 @@
 import { Axios } from "../../common/axios-default";
-import * as avg from "avg-engine/engine";
 import * as BrowserFS from "browserfs";
 import * as NodeFS from "fs";
-
-
-import { AVGNativePath } from "avg-engine/engine";
+import { PlatformService } from "engine/core/platform";
+import { AVGNativePath } from "engine/core/native-modules";
 
 export class AVGNativeFSImpl {
   private static _isFileSystemOK = false;
   private static _fs = null;
 
   public static get __dirname() {
-
-    if (avg.PlatformService.isDesktop()) {
-      if (avg.PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
+    if (PlatformService.isDesktop()) {
+      if (PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
         __dirname = __dirname.replace(/\\/g, "/");
       }
       return __dirname;
@@ -23,17 +20,19 @@ export class AVGNativeFSImpl {
   }
 
   public static async initFileSystem() {
-    console.log("Init FileSystem:BrowserFS", BrowserFS);
-    console.log("Init FileSystem:NodeFS", NodeFS);
     console.log("Init Env", process.env);
 
     BrowserFS.install(window);
 
     await new Promise((resolve, reject) => {
-      if (avg.PlatformService.isDesktop()) {
+      if (PlatformService.isDesktop()) {
+        console.log("Init FileSystem:NodeFS", NodeFS);
+
         this._fs = NodeFS;
         this._isFileSystemOK = true;
       } else {
+        console.log("Init FileSystem:BrowserFS", BrowserFS);
+
         BrowserFS.configure(
           {
             fs: "LocalStorage",
@@ -68,7 +67,7 @@ export class AVGNativeFSImpl {
     options?: { encoding?: string; mode?: string | number; flag?: string },
     cb?: (e?: any) => void
   ): void {
-    if (avg.PlatformService.isDesktop()) {
+    if (PlatformService.isDesktop()) {
       return this._fs.writeFile(filename, data, options, cb);
     }
   }
@@ -78,7 +77,7 @@ export class AVGNativeFSImpl {
     data: any,
     options?: { encoding?: string; mode?: string | number; flag?: string }
   ): void {
-    if (avg.PlatformService.isDesktop()) {
+    if (PlatformService.isDesktop()) {
       return this._fs.writeFileSync(filename, data, options);
     }
   }
@@ -88,7 +87,7 @@ export class AVGNativeFSImpl {
     options: { encoding: string; flag?: string },
     callback: (e: any, rv?: string) => void
   ): void {
-    if (avg.PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
+    if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       this._fs.readFile(filename, options, callback);
     } else {
       const response = Axios.get(filename).then(value => {
@@ -110,22 +109,36 @@ export class AVGNativeFSImpl {
       flag?: string;
     }
   ) {
-    if (avg.PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
+    if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       const data = this._fs.readFileSync(filename, options);
       return data.toString("utf8");
     }
 
+    // Axios.get("").then(results => {
+    //   console.log("results:", results);
+    // });
+
+    // request(filename);
+    // request(filename, function(error, response, body) {
+    //   console.log("error:", error); // Print the error if one occurred
+    //   console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+    //   console.log("body:", body); // Print the HTML for the Google homepage.
+    // });
+
     const response = await Axios.get(filename, {
-      transformResponse: (res) => {
+      headers: { "content-type": "application/json", "Cache-Control": "no-cache" },
+      transformResponse: res => {
+        console.log("results:", res);
+
         return res;
       }
     });
 
-    if (response.status !== 200) {
-      return "";
-    }
+    // if (response.status !== 200) {
+    //   return "";
+    // }
 
-    return response.data;
+    // return response.data;
   }
 
   public static readLocalStorage(
@@ -135,7 +148,7 @@ export class AVGNativeFSImpl {
       flag?: string;
     }
   ) {
-    if (avg.PlatformService.isWebBrowser()) {
+    if (PlatformService.isWebBrowser()) {
       return this._fs.readFileSync(filename, options);
     }
   }
@@ -147,7 +160,7 @@ export class AVGNativeFSImpl {
       flag?: string;
     }
   ) {
-    if (avg.PlatformService.isWebBrowser()) {
+    if (PlatformService.isWebBrowser()) {
       return this._fs.readFileSync(filename, options);
     }
   }

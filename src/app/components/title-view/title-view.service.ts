@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { TitleMenuModel } from "../../common/models/title-menu-model";
-import * as avg from "avg-engine/engine";
 import * as fs from "fs";
 import { AVGService } from "../../common/avg-service";
 
@@ -30,17 +29,17 @@ export class TitleViewService extends AVGService {
   public handleKeyboardEvents($event: KeyboardEvent) {
     console.log(`Keyboard Event:`, $event);
 
-    // if (avg.input.is(avg.core.InputKeys.ArrowUp, $event.code)) {
+    // if (input.is(core.InputKeys.ArrowUp, $event.code)) {
     //   this.lastMenuItem();
     //   return;
     // }
 
-    // if (avg.input.is(avg.core.InputKeys.ArrowDown, $event.code)) {
+    // if (input.is(core.InputKeys.ArrowDown, $event.code)) {
     //   this.nextMenuItem();
     //   return;
     // }
 
-    // if (avg.input.is(avg.core.InputKeys.Ok, $event.code)) {
+    // if (input.is(core.InputKeys.Ok, $event.code)) {
     //   const currentIndex = <TitleMenuEvent>this.currentMenuIndex;
     //   this.subject.next(currentIndex);
 

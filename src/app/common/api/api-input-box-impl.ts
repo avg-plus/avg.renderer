@@ -1,15 +1,17 @@
-import * as avg from "avg-engine/engine";
 import { Impl } from "./impl";
 import { ScriptingDispatcher } from "../manager/scripting-dispatcher";
-import { APIInputBox } from "avg-engine/engine";
+import { InputBoxResult } from "engine/data/input-data";
+import { OP } from "engine/const/op";
+import { APIInputBox } from "engine/scripting/api/api-input-box";
+import { AVGScriptUnit } from "engine/scripting/script-unit";
 
 export class APIInputBoxImpl extends Impl {
-  @Impl.registerImpl(APIInputBox, avg.OP.ShowInputBox)
-  public static op_show(scriptUnit: avg.AVGScriptUnit): Promise<avg.InputBoxResult> {
-    const script = <avg.APIInputBox>scriptUnit;
+  @Impl.registerImpl(APIInputBox, OP.ShowInputBox)
+  public static op_show(scriptUnit: AVGScriptUnit): Promise<InputBoxResult> {
+    const script = <APIInputBox>scriptUnit;
 
-    return new Promise<avg.InputBoxResult>((resolve, reject) => {
-      ScriptingDispatcher.dispatch(avg.OP.ShowInputBox, script, resolve);
+    return new Promise<InputBoxResult>((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.ShowInputBox, script, resolve);
     });
   }
 }

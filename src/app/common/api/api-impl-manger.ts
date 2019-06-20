@@ -1,4 +1,5 @@
-import * as avg from "avg-engine/engine";
+import { APIManager } from "./../../../engine/scripting/api-manager";
+
 import "./api-dialogue-impl";
 import "./api-sound-impl";
 import "./api-scene-impl";
@@ -18,48 +19,49 @@ import "./api-system-impl";
 export class APIImplManager {
   public static init() {
     console.log(`Register API extend implemention ...`);
+    APIManager.Instance.init();
 
-    const OP = avg.OP;
+    // const OP = OP;
 
-    // avg.APIManager.extendImpl(avg.APIDialogue.name, OP.ShowText, APIDialogueImpl.op_show);
-    // avg.APIManager.extendImpl(avg.APIDialogue.name, OP.HideText, APIDialogueImpl.op_hide);
-    // avg.APIManager.extendImpl(avg.APICharacter.name, OP.ShowCharacter, APICharacterImpl.op_show);
-    // avg.APIManager.extendImpl(avg.APICharacter.name, OP.HideCharacter, APICharacterImpl.op_hide);
-    // avg.APIManager.extendImpl(avg.APIDialogueChoice.name, OP.ShowChioce, APIDialogueChoicesImpl.op_show);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.PlayBGM, APISoundImpl.op_play_bgm);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.StopBGM, APISoundImpl.op_stop_bgm);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.PauseBGM, APISoundImpl.op_pause_bgm);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.ResumeBGM, APISoundImpl.op_resume_bgm);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.PlayVoice, APISoundImpl.op_play_voice);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.PlayBGS, APISoundImpl.op_play_bgs);
-    // avg.APIManager.extendImpl(avg.APISound.name, OP.PlaySE, APISoundImpl.op_play_se);
+    // APIManager.extendImpl(APIDialogue.name, OP.ShowText, APIDialogueImpl.op_show);
+    // APIManager.extendImpl(APIDialogue.name, OP.HideText, APIDialogueImpl.op_hide);
+    // APIManager.extendImpl(APICharacter.name, OP.ShowCharacter, APICharacterImpl.op_show);
+    // APIManager.extendImpl(APICharacter.name, OP.HideCharacter, APICharacterImpl.op_hide);
+    // APIManager.extendImpl(APIDialogueChoice.name, OP.ShowChioce, APIDialogueChoicesImpl.op_show);
+    // APIManager.extendImpl(APISound.name, OP.PlayBGM, APISoundImpl.op_play_bgm);
+    // APIManager.extendImpl(APISound.name, OP.StopBGM, APISoundImpl.op_stop_bgm);
+    // APIManager.extendImpl(APISound.name, OP.PauseBGM, APISoundImpl.op_pause_bgm);
+    // APIManager.extendImpl(APISound.name, OP.ResumeBGM, APISoundImpl.op_resume_bgm);
+    // APIManager.extendImpl(APISound.name, OP.PlayVoice, APISoundImpl.op_play_voice);
+    // APIManager.extendImpl(APISound.name, OP.PlayBGS, APISoundImpl.op_play_bgs);
+    // APIManager.extendImpl(APISound.name, OP.PlaySE, APISoundImpl.op_play_se);
 
-    // avg.APIManager.extendImpl(avg.APIScene.name, OP.LoadScene, APISceneImpl.op_load_scene);
+    // APIManager.extendImpl(APIScene.name, OP.LoadScene, APISceneImpl.op_load_scene);
 
-    // avg.APIManager.extendImpl(avg.APIScene.name, OP.RemoveScene, APISceneImpl.op_remove_scene);
+    // APIManager.extendImpl(APIScene.name, OP.RemoveScene, APISceneImpl.op_remove_scene);
 
-    // avg.APIManager.extendImpl(avg.APIAnimateScene.name, OP.AnimateScene, APIAnimateSceneImpl.op_animate);
-    // avg.APIManager.extendImpl(avg.APITimer.name, OP.Wait, APITimerImpl.op_wait);
-    // avg.APIManager.extendImpl(avg.APIEffect.name, OP.PlayEffect, APIEffectImpl.op_play_effect);
-    // avg.APIManager.extendImpl(avg.APIGotoTitleView.name, OP.GotoTitleView, APIGotoTitleViewImpl.op_go_to_title_view);
-    // avg.APIManager.extendImpl(avg.APIScreenSubtitle.name, OP.ShowTextWidget, APIScreenSubtitleImpl.op_show_subtitle);
+    // APIManager.extendImpl(APIAnimateScene.name, OP.AnimateScene, APIAnimateSceneImpl.op_animate);
+    // APIManager.extendImpl(APITimer.name, OP.Wait, APITimerImpl.op_wait);
+    // APIManager.extendImpl(APIEffect.name, OP.PlayEffect, APIEffectImpl.op_play_effect);
+    // APIManager.extendImpl(APIGotoTitleView.name, OP.GotoTitleView, APIGotoTitleViewImpl.op_go_to_title_view);
+    // APIManager.extendImpl(APIScreenSubtitle.name, OP.ShowTextWidget, APIScreenSubtitleImpl.op_show_subtitle);
 
-    // avg.APIManager.extendImpl(
-    //   avg.APIScreenSubtitle.name,
+    // APIManager.extendImpl(
+    //   APIScreenSubtitle.name,
     //   OP.UpdateTextWidget,
     //   APIScreenSubtitleImpl.op_update_subtitle
     // );
 
-    // avg.APIManager.extendImpl(
-    //   avg.APIScreenSubtitle.name,
+    // APIManager.extendImpl(
+    //   APIScreenSubtitle.name,
     //   OP.AnimateTextWidget,
     //   APIScreenSubtitleImpl.op_animate_subtitle
     // );
-    // avg.APIManager.extendImpl(avg.APIScreenSubtitle.name, OP.RemoveTextWidget, APIScreenSubtitleImpl.op_hide_subtitle);
-    // avg.APIManager.extendImpl(avg.APIInputBox.name, OP.ShowInputBox, APIInputBoxImpl.op_show);
-    // avg.APIManager.extendImpl(avg.APIScreenImage.name, OP.ShowImageWidget, APIScreenImageImpl.op_show_image);
-    // avg.APIManager.extendImpl(avg.APIScreenImage.name, OP.RemoveImageWidget, APIScreenImageImpl.op_remove_image);
+    // APIManager.extendImpl(APIScreenSubtitle.name, OP.RemoveTextWidget, APIScreenSubtitleImpl.op_hide_subtitle);
+    // APIManager.extendImpl(APIInputBox.name, OP.ShowInputBox, APIInputBoxImpl.op_show);
+    // APIManager.extendImpl(APIScreenImage.name, OP.ShowImageWidget, APIScreenImageImpl.op_show_image);
+    // APIManager.extendImpl(APIScreenImage.name, OP.RemoveImageWidget, APIScreenImageImpl.op_remove_image);
 
-    // avg.APIManager.extendImpl(avg.APITransitionTo.name, OP.TransitionTo, APITransitionToImpl.op_transition_to);
+    // APIManager.extendImpl(APITransitionTo.name, OP.TransitionTo, APITransitionToImpl.op_transition_to);
   }
 }

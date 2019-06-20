@@ -1,4 +1,3 @@
-import { EngineUtils } from 'avg-engine/engine';
 import { Directive, ElementRef, HostListener, Input, OnInit, Renderer, OnChanges, SimpleChanges, Renderer2, ChangeDetectorRef } from "@angular/core";
 import { ShakeStyle } from "../interface/shake"
 

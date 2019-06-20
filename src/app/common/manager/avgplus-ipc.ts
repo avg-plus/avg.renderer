@@ -1,6 +1,7 @@
 import Postmate from "Postmate";
 import { Router } from "@angular/router";
-import { AVGGame, AVGStory } from "avg-engine/engine";
+import { AVGGame } from "engine/core/game";
+import { AVGStory } from "engine/scripting/story";
 
 export class AVGPlusIPC {
   private static _parent;
@@ -12,12 +13,11 @@ export class AVGPlusIPC {
   }
 
   public static init(router: Router) {
-
     const handshake = new Postmate.Model({
-      AVGPlusIPC_ReloadPlayer: (data) => {
+      AVGPlusIPC_ReloadPlayer: data => {
         window.location.reload();
       },
-      AVGPlusIPC_RunStory: (data) => {
+      AVGPlusIPC_RunStory: data => {
         AVGGame._entryStory = new AVGStory();
         AVGGame._entryStory.loadFromString(data.data.script);
         AVGGame._entryStory.run();
@@ -27,6 +27,5 @@ export class AVGPlusIPC {
     handshake.then(parent => {
       this._parent = parent;
     });
-
   }
 }

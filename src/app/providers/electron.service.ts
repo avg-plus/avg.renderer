@@ -4,9 +4,8 @@ import { Injectable } from "@angular/core";
 // the resulting javascript file will look as if you never imported the module at all.
 
 import * as childProcess from "child_process";
+import { PlatformService } from "engine/core/platform";
 // import { DebugingService } from "app/common/debuging-service";
-import * as avg from "avg-engine/engine";
-import { PlatformService } from "avg-engine/engine";
 
 // import {
 //   TouchBarSpacer,
@@ -27,7 +26,7 @@ if (PlatformService.isDesktop()) {
 }
 
 @Injectable()
-export class ElectronService extends avg.PlatformService {
+export class ElectronService extends PlatformService {
   ipcRenderer: typeof ipcRenderer;
   childProcess: typeof childProcess;
 
@@ -38,7 +37,7 @@ export class ElectronService extends avg.PlatformService {
   constructor() {
     super();
 
-    if (avg.PlatformService.isDesktop()) {
+    if (PlatformService.isDesktop()) {
       this.ipcRenderer = window.require("electron").ipcRenderer;
       this.childProcess = window.require("child_process");
     }

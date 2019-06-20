@@ -1,38 +1,41 @@
-import * as avg from "avg-engine/engine";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { Impl } from "app/common/api/impl";
-import { APICameraMove, APICameraShake, APICameraTransitionTo } from "avg-engine/engine";
 import { TransitionLayerService } from "../../components/transition-layer/transition-layer.service";
+import { OP } from "engine/const/op";
+import { APICameraMove, APICameraShake, APICameraTransitionTo } from "engine/scripting/api/api-camera";
+import { AVGScriptUnit } from "engine/scripting/script-unit";
+import { SceneHandle } from "engine/scripting/api/api-scene";
 
 export class APICameraImpl extends Impl {
-  @Impl.registerImpl(APICameraMove, avg.OP.MoveCamera)
-  public static op_move(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APICameraMove, OP.MoveCamera)
+  public static op_move(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
     const script = <APICameraMove>scriptUnit;
 
     return new Promise((resolve, reject) => {
-      ScriptingDispatcher.dispatch(avg.OP.MoveCamera, script, resolve);
+      ScriptingDispatcher.dispatch(OP.MoveCamera, script, resolve);
     });
   }
 
-  @Impl.registerImpl(APICameraShake, avg.OP.ShakeCamera)
-  public static op_shake(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
+  @Impl.registerImpl(APICameraShake, OP.ShakeCamera)
+  public static op_shake(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
     const script = <APICameraShake>scriptUnit;
 
     return new Promise((resolve, reject) => {
-      ScriptingDispatcher.dispatch(avg.OP.ShakeCamera, script, resolve);
+      ScriptingDispatcher.dispatch(OP.ShakeCamera, script, resolve);
     });
   }
 
-  @Impl.registerImpl(APICameraTransitionTo, avg.OP.TransitionTo)
-  public static op_transition_to(
-    scriptUnit: avg.AVGScriptUnit
-  ): Promise<avg.SceneHandle> {
-    const script = <avg.APICameraTransitionTo>scriptUnit;
+  @Impl.registerImpl(APICameraTransitionTo, OP.TransitionTo)
+  public static op_transition_to(scriptUnit: AVGScriptUnit): Promise<SceneHandle> {
+    const script = <APICameraTransitionTo>scriptUnit;
 
-    return new Promise<avg.SceneHandle>((resolve, reject) => {
-      TransitionLayerService.transitionTo(script.color, script.opacity, script.duration).then(() => {
-        resolve();
-      }, _ => { });
+    return new Promise<SceneHandle>((resolve, reject) => {
+      TransitionLayerService.transitionTo(script.color, script.opacity, script.duration).then(
+        () => {
+          resolve();
+        },
+        _ => {}
+      );
     });
   }
 }

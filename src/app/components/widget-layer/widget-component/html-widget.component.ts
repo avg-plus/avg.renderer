@@ -1,8 +1,7 @@
 import { Component, Injector, ChangeDetectorRef, Renderer2, ElementRef, OnInit, AfterViewInit } from "@angular/core";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 import { DomSanitizer } from "@angular/platform-browser";
-
-import * as avg from "avg-engine/engine";
+import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
 
 @Component({
   selector: "html-widget",
@@ -11,7 +10,7 @@ import * as avg from "avg-engine/engine";
 })
 export class HtmlWidgetComponent extends ScreenWidgetComponent implements OnInit, AfterViewInit {
   constructor(private sanitizer: DomSanitizer, private injector: Injector) {
-    super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
+    super(injector.get(ChangeDetectorRef));
   }
 
   ngOnInit() {
@@ -35,7 +34,7 @@ export class HtmlWidgetComponent extends ScreenWidgetComponent implements OnInit
   }
 
   public getWidgetHTMLContent() {
-    const htmlModel = <avg.ScreenWidgetHtml>this.data;
+    const htmlModel = <ScreenWidgetHtml>this.data;
 
     return this.sanitizer.bypassSecurityTrustHtml(htmlModel.html);
   }

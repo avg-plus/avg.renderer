@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { Dimension } from "../../../../avg.engine/engine/const/model";
+import { Dimension } from "../../engine/const/model";
 
 export class Utils {
   public static async getImageDimensions(url): Promise<Dimension> {

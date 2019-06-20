@@ -1,6 +1,7 @@
 import { OnInit, AfterViewInit, Component } from "@angular/core";
 import { GameToolbarService } from "./main-scene.service";
-import { Sandbox, Setting, AVGArchives, AVGGame, EngineAPI_Flow } from "avg-engine/engine";
+import { AVGGame } from "engine/core/game";
+import { AVGArchives } from "engine/core/game-archives";
 
 @Component({
   selector: "game-toolbar",

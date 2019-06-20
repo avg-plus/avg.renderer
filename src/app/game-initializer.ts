@@ -1,26 +1,21 @@
 import { Injectable } from "@angular/core";
-import {
-  AVGNativeFS,
-  AVGNativePath,
-  PlatformService,
-  EngineSettings,
-  Resource,
-  Setting,
-  AVGGame,
-  i18n,
-  input
-} from "avg-engine/engine";
+
 import { AVGNativeFSImpl } from "./common/filesystem/avg-native-fs-impl";
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
 import { APIImplManager } from "./common/api/api-impl-manger";
 import * as $ from "jquery";
 import { CanActivate, Router, ActivatedRoute } from "@angular/router";
 
-import * as avg from "avg-engine/engine";
-import { AVGEngineError } from "../../../avg.engine/engine/core/engine-errors";
+import { AVGEngineError } from "../engine/core/engine-errors";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
-import { app } from "electron";
+import { input } from "engine/core/input";
+import { PlatformService } from "engine/core/platform";
+import { i18n } from "engine/core/i18n";
+import { AVGNativeFS, AVGNativePath } from "engine/core/native-modules";
+import { EngineSettings } from "engine/core/engine-setting";
+import { Resource } from "engine/core/resource";
+import { Setting } from "engine/core/setting";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -143,6 +138,8 @@ export class GameInitializer implements CanActivate {
   public async initGameSettings() {
     const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
 
+    console.log(AVGNativeFS);
+    
     try {
       const settings = await AVGNativeFS.readFileSync(settingFile);
       Setting.parseFromSettings(settings);
@@ -197,7 +194,6 @@ export class GameInitializer implements CanActivate {
 
   // Init API implementations
   public async initAPI() {
-    avg.APIManager.init();
     APIImplManager.init();
   }
 

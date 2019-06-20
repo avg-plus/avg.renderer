@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { SpriteDebugger } from "./sprite-debugger";
-import { SpriteType } from "avg-engine/engine/const/sprite-type";
+import { SpriteType } from "engine/const/sprite-type";
 
 interface IOrderingSpirte {
   zOrder: number;

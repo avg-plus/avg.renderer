@@ -1,32 +1,15 @@
-import {
-  OnInit,
-  Component,
-  Input,
-  AfterViewInit,
-  OnDestroy,
-  Injector,
-  ChangeDetectorRef,
-  AfterViewChecked,
-  Renderer2,
-  ElementRef
-} from "@angular/core";
-import { NgForOf } from "@angular/common";
-import {
-  Subtitle,
-  Setting,
-  MeasurementUnitPart,
-  AVGMeasurementUnit,
-  UnitType,
-  Renderer,
-  EngineUtils
-} from "avg-engine/engine";
-
-import * as avg from "avg-engine/engine";
+import { OnInit, Component, AfterViewInit, Injector, ChangeDetectorRef, AfterViewChecked } from "@angular/core";
 import * as $ from "jquery";
 
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 // import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { ScreenWidgetComponent } from "./screen-widget.component";
+import { Subtitle } from "engine/data/screen-subtitle";
+import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
+import { MeasurementUnitPart, AVGMeasurementUnit, UnitType } from "engine/core/measurement-unit";
+import { Setting } from "engine/core/setting";
+import { EngineUtils } from "engine/core/engine-utils";
+import { Renderer } from "engine/data/renderer";
 
 @Component({
   selector: "text-widget",
@@ -34,12 +17,10 @@ import { ScreenWidgetComponent } from "./screen-widget.component";
   styleUrls: ["./text-widget.component.scss"]
 })
 export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewChecked {
-  private customPositionStyle: any;
-
   public bindingSubtitleSafeHtml: SafeHtml;
 
-  constructor(private sanitizer: DomSanitizer, private injector: Injector) {
-    super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
+  constructor(private sanitizer: DomSanitizer, injector: Injector) {
+    super(injector.get(ChangeDetectorRef));
   }
 
   ngOnInit() {
@@ -63,16 +44,16 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
   }
 
   public updateText() {
-    const subtitleData = <avg.Subtitle>this.data;
+    const subtitleData = <Subtitle>this.data;
 
-    subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
+    subtitleData.text = DialogueParserPlugin.parseContent(subtitleData.text);
     this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(subtitleData.text);
 
     this.changeDetectorRef.detectChanges();
   }
 
   public update() {
-    const subtitleData = <avg.Subtitle>this.data;
+    const subtitleData = <Subtitle>this.data;
 
     const renderer = new Renderer();
 
@@ -80,7 +61,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
     // renderer.y = subtitleData.y;
 
     // Update and parse content
-    subtitleData.text = avg.DialogueParserPlugin.parseContent(subtitleData.text);
+    subtitleData.text = DialogueParserPlugin.parseContent(subtitleData.text);
     this.bindingSubtitleSafeHtml = this.sanitizer.bypassSecurityTrustHtml(subtitleData.text);
     this.changeDetectorRef.detectChanges();
 
@@ -93,14 +74,10 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
 
     const actualWidth = elementWidth;
     const actualHeight = elementHeight;
-    const screenWidth = avg.Setting.WindowWidth;
-    const screenHeight = avg.Setting.WindowHeight;
+    const screenWidth = Setting.WindowWidth;
+    const screenHeight = Setting.WindowHeight;
     const relativeWidth = actualWidth / screenWidth;
     const relativeHeight = actualHeight / screenHeight;
-
-    // Get image demension
-    let xUnit = xUnitPart.getValue();
-    let yUnit = yUnitPart.getValue();
 
     // 1. Get screen solution in pixels
     // 2. Get actual size in pixel with user specified percent
@@ -117,15 +94,12 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
         // x-axis position
         switch (left.getValue()) {
           case "left": {
-            xUnit = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "right": {
-            xUnit = 100 - relativeWidth * 100 - PADDING + UnitType.Percent;
             break;
           }
           case "center": {
-            xUnit = 100 / 2 - (relativeWidth * 100) / 2 + UnitType.Percent;
             break;
           }
         }
@@ -135,15 +109,12 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
         // y-axis position
         switch (right.getValue()) {
           case "top": {
-            yUnit = 0 + PADDING + UnitType.Percent;
             break;
           }
           case "center": {
-            yUnit = 100 / 2 - (relativeHeight * 100) / 2 + UnitType.Percent;
             break;
           }
           case "bottom": {
-            yUnit = 100 - relativeHeight * 100 - PADDING + UnitType.Percent;
             break;
           }
         }

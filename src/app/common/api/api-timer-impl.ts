@@ -1,12 +1,13 @@
-import * as avg from "avg-engine/engine";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 import { Impl } from "app/common/api/impl";
-import { APITimer } from "avg-engine/engine";
+import { OP } from "engine/const/op";
+import { APITimer } from "engine/scripting/api/api-timer";
+import { AVGScriptUnit } from "engine/scripting/script-unit";
 
 export class APITimerImpl extends Impl {
-  @Impl.registerImpl(APITimer, avg.OP.Wait)
-  public static op_wait(scriptUnit: avg.AVGScriptUnit): Promise<avg.AVGScriptUnit> {
-    const script = <avg.APITimer>scriptUnit;
+  @Impl.registerImpl(APITimer, OP.Wait)
+  public static op_wait(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APITimer>scriptUnit;
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {

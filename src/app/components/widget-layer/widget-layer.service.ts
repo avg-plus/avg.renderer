@@ -7,29 +7,30 @@ import {
   ComponentFactoryResolver
 } from "@angular/core";
 
-import * as avg from "avg-engine/engine";
-
 import { AVGService } from "../../common/avg-service";
 import { TextWidgetComponent } from "./widget-component/text-widget.component";
 import { ImageWidgetComponent } from "./widget-component/image-widget.component";
 import { ScreenWidgetComponent } from "./widget-component/screen-widget.component";
-import { Subtitle, ScreenImage, mergeDeep } from "avg-engine/engine";
 import { HtmlWidgetComponent } from "./widget-component/html-widget.component";
+import { ScreenWidget, ScreenWidgetType } from "engine/data/screen-widget";
+import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
+import { Subtitle } from "engine/data/screen-subtitle";
+import { ScreenImage } from "engine/data/screen-image";
 
 export class WidgetModel {
   public inAnimation = true;
   public shouldRemoveAfterShow = false;
-  public shouldRemoveData: avg.ScreenWidget;
+  public shouldRemoveData: ScreenWidget;
 
   public onShowAnimationFinished: () => void;
   public onRemoveAnimationFinished: () => void;
 }
 
 export class TextWidgetModel extends WidgetModel {
-  public data: avg.Subtitle;
+  public data: Subtitle;
   public component: ComponentRef<TextWidgetComponent>;
 
-  constructor(widgetModel: avg.Subtitle, component: ComponentRef<TextWidgetComponent>) {
+  constructor(widgetModel: Subtitle, component: ComponentRef<TextWidgetComponent>) {
     super();
     this.data = widgetModel;
     this.component = component;
@@ -37,10 +38,10 @@ export class TextWidgetModel extends WidgetModel {
 }
 
 export class ImageWidgetModel extends WidgetModel {
-  public data: avg.ScreenImage;
+  public data: ScreenImage;
   public component: ComponentRef<ImageWidgetComponent>;
 
-  constructor(widgetModel: avg.ScreenImage, component: ComponentRef<ImageWidgetComponent>) {
+  constructor(widgetModel: ScreenImage, component: ComponentRef<ImageWidgetComponent>) {
     super();
     this.data = widgetModel;
     this.component = component;
@@ -48,10 +49,10 @@ export class ImageWidgetModel extends WidgetModel {
 }
 
 export class HtmlWidgetModel extends WidgetModel {
-  public data: avg.ScreenWidgetHtml;
+  public data: ScreenWidgetHtml;
   public component: ComponentRef<HtmlWidgetComponent>;
 
-  constructor(widgetModel: avg.ScreenWidgetHtml, component: ComponentRef<HtmlWidgetComponent>) {
+  constructor(widgetModel: ScreenWidgetHtml, component: ComponentRef<HtmlWidgetComponent>) {
     super();
     this.data = widgetModel;
     this.component = component;
@@ -89,9 +90,9 @@ export class WidgetLayerService extends AVGService {
   }
 
   public static addWidget(
-    data: avg.ScreenWidget,
+    data: ScreenWidget,
     component: ComponentRef<ScreenWidgetComponent>,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+    widgetType: ScreenWidgetType = ScreenWidgetType.Text,
     isAsync: boolean = true
   ) {
     const isTextWidgetExists = (id: string) => {
@@ -122,28 +123,28 @@ export class WidgetLayerService extends AVGService {
         return;
       }
 
-      if (widgetType === avg.ScreenWidgetType.Text) {
+      if (widgetType === ScreenWidgetType.Text) {
         const textWidgetComponent = <ComponentRef<TextWidgetComponent>>component;
 
-        model = new TextWidgetModel(<avg.Subtitle>data, textWidgetComponent);
+        model = new TextWidgetModel(<Subtitle>data, textWidgetComponent);
 
         component.instance.data = data;
         component.changeDetectorRef.detectChanges();
 
         WidgetLayerService.textWidgets.push(<TextWidgetModel>model);
-      } else if (widgetType === avg.ScreenWidgetType.Image) {
+      } else if (widgetType === ScreenWidgetType.Image) {
         const imageWidgetComponent = <ComponentRef<ImageWidgetComponent>>component;
 
-        model = new ImageWidgetModel(<avg.ScreenImage>data, imageWidgetComponent);
+        model = new ImageWidgetModel(<ScreenImage>data, imageWidgetComponent);
 
         component.instance.data = data;
         // component.changeDetectorRef.detectChanges();
 
         WidgetLayerService.imageWidgets.push(<ImageWidgetModel>model);
-      } else if (widgetType === avg.ScreenWidgetType.Html) {
+      } else if (widgetType === ScreenWidgetType.Html) {
         const htmlWidgetComponent = <ComponentRef<HtmlWidgetComponent>>component;
 
-        model = new HtmlWidgetModel(<avg.ScreenWidgetHtml>data, htmlWidgetComponent);
+        model = new HtmlWidgetModel(<ScreenWidgetHtml>data, htmlWidgetComponent);
 
         component.instance.data = data;
         component.changeDetectorRef.detectChanges();
@@ -200,8 +201,8 @@ export class WidgetLayerService extends AVGService {
     }
   }
 
-  public static removeAllWidgets(widgetType: avg.ScreenWidgetType, isAsync: boolean = true) {
-    if (widgetType === avg.ScreenWidgetType.Text) {
+  public static removeAllWidgets(widgetType: ScreenWidgetType, isAsync: boolean = true) {
+    if (widgetType === ScreenWidgetType.Text) {
       for (let i = this.textWidgets.length - 1; i >= 0; i--) {
         this.removeWidget(this.textWidgets[i].data, widgetType, isAsync);
       }
@@ -213,18 +214,18 @@ export class WidgetLayerService extends AVGService {
   }
 
   public static removeWidget(
-    data: avg.ScreenWidget,
-    widgetType: avg.ScreenWidgetType = avg.ScreenWidgetType.Text,
+    data: ScreenWidget,
+    widgetType: ScreenWidgetType = ScreenWidgetType.Text,
     isAsync: boolean = true
   ) {
     return new Promise((resolve, reject) => {
       const widgetContainer =
-        widgetType === avg.ScreenWidgetType.Text ? WidgetLayerService.textWidgets : WidgetLayerService.imageWidgets;
+        widgetType === ScreenWidgetType.Text ? WidgetLayerService.textWidgets : WidgetLayerService.imageWidgets;
 
       let isWidgetFound = false;
       for (let i = 0; i < widgetContainer.length; ++i) {
         const widget =
-          widgetType === avg.ScreenWidgetType.Text
+          widgetType === ScreenWidgetType.Text
             ? <TextWidgetModel>widgetContainer[i]
             : <ImageWidgetModel>widgetContainer[i];
 
@@ -250,11 +251,11 @@ export class WidgetLayerService extends AVGService {
           }
 
           // Play hide animations
-          if (widgetType === avg.ScreenWidgetType.Text) {
-            component.instance.hideWidget(<avg.Subtitle>data);
+          if (widgetType === ScreenWidgetType.Text) {
+            component.instance.hideWidget(<Subtitle>data);
             WidgetLayerService.textWidgets.splice(i, 1);
           } else {
-            component.instance.hideWidget(<avg.ScreenImage>data);
+            component.instance.hideWidget(<ScreenImage>data);
             WidgetLayerService.imageWidgets.splice(i, 1);
           }
         }

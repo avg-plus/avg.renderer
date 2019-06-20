@@ -1,6 +1,4 @@
-import * as avg from "avg-engine/engine";
-import { OP } from "avg-engine/engine";
-import { APIDialogueImpl } from "app/common/api/api-dialogue-impl";
+import { APIManager } from "engine/scripting/api-manager";
 
 export class Impl {
   public static initlialize() {
@@ -19,7 +17,6 @@ export class Impl {
 
   protected static registerImpl<T>(type: new () => T, op: string) {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
-
       const originalMethod = descriptor.value;
 
       descriptor.value = function(...args: any[]) {
@@ -28,7 +25,7 @@ export class Impl {
         return result;
       };
 
-      avg.APIManager.extendImpl(type.name, op, descriptor.value);
+      APIManager.Instance.extendImpl(type.name, op, descriptor.value);
     };
 
     // return {

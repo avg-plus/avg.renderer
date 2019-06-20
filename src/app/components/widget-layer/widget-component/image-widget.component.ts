@@ -1,12 +1,12 @@
 import { Component, Injector, ChangeDetectorRef, OnInit, AfterViewInit, Renderer2, ElementRef } from "@angular/core";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
-import * as avg from "avg-engine/engine";
 import { DomSanitizer } from "@angular/platform-browser";
 import { GameWorld } from "app/common/graphics/world";
 import { LayerOrder } from "app/common/graphics/layer-order";
 import { ResizeMode } from "app/common/graphics/sprite";
-import { SpriteType } from "avg-engine/engine/const/sprite-type";
+import { ScreenImage } from "engine/data/screen-image";
+import { SpriteType } from "engine/const/sprite-type";
 
 @Component({
   selector: "image-widget",
@@ -15,7 +15,7 @@ import { SpriteType } from "avg-engine/engine/const/sprite-type";
 })
 export class ImageWidgetComponent extends ScreenWidgetComponent implements OnInit, AfterViewInit {
   constructor(injector: Injector) {
-    super(injector.get(ChangeDetectorRef), injector.get(Renderer2), injector.get(ElementRef));
+    super(injector.get(ChangeDetectorRef));
   }
 
   ngOnInit() {
@@ -35,7 +35,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
   }
 
   onclicked() {
-    const imageData = <avg.ScreenImage>this.data;
+    const imageData = <ScreenImage>this.data;
 
     console.log(imageData);
   }
@@ -45,7 +45,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
   }
 
   public async update() {
-    const imageData = <avg.ScreenImage>this.data;
+    const imageData = <ScreenImage>this.data;
 
     const sprite = await GameWorld.defaultScene.addFromImage(
       imageData.file.filename,
@@ -107,8 +107,8 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     //   actualHeight = heightUnitPart.getNumbericValue();
     // }
 
-    // const screenWidth = avg.Setting.WindowWidth;
-    // const screenHeight = avg.Setting.WindowHeight;
+    // const screenWidth = Setting.WindowWidth;
+    // const screenHeight = Setting.WindowHeight;
     // const relativeWidth = actualWidth / screenWidth;
     // const relativeHeight = actualHeight / screenHeight;
 

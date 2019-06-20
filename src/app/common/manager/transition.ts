@@ -1,7 +1,7 @@
 // import * as avg from "avg-engine/engine";
 // import * as PIXI from "pixi.js";
 
-// export class Transition implements avg.Transition {
+// export class Transition implements Transition {
 //   private _transitionScreen: PIXI.Application;
 //   private _element: any;
 //   private _graphics: PIXI.Graphics;
@@ -19,7 +19,7 @@
 
 //     this._element = element;
 
-//     const screen = avg.game.getResolution();
+//     const screen = game.getResolution();
 
 //     // Create pixi handle
 //     this._transitionScreen = new PIXI.Application(screen.width, screen.height, {

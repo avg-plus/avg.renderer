@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LoadingLayerService } from "./loading-layer.service";
-import { AVGNativeFS, EngineSettings } from "avg-engine/engine";
 
 declare var ldBar: any;
 

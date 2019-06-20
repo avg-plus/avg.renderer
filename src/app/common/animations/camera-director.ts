@@ -1,5 +1,5 @@
 import { Camera2D } from "app/common/animations/camera2d";
-import { CameraData, CameraDirectorLayers } from "avg-engine/engine";
+import { CameraDirectorLayers, CameraData } from "engine/data/camera-data";
 
 export class CameraDirector {
   private camera: Camera2D = new Camera2D([]);

@@ -88,13 +88,13 @@
 //     //         {
 //     //           label: "▶️ 播放BGM",
 //     //           click: (menuItem, browserWindow, event) => {
-//     //             avg.api.resumeBGM();
+//     //             api.resumeBGM();
 //     //           }
 //     //         },
 //     //         {
 //     //           label: "⏸ 暂停BGM",
 //     //           click: (menuItem, browserWindow, event) => {
-//     //             avg.api.stopBGM();
+//     //             api.stopBGM();
 //     //           }
 //     //         }
 //     //       ]
@@ -107,7 +107,7 @@
 //     //     {
 //     //       label: "🔚 返回标题画面",
 //     //       click: (menuItem, browserWindow, event) => {
-//     //         avg.api.callTitleView();
+//     //         api.callTitleView();
 //     //       }
 //     //     }
 //     //   ]

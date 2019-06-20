@@ -1,7 +1,7 @@
 import * as gsap from "gsap";
 import * as $ from "jquery";
-import * as avg from "avg-engine/engine";
-import { EngineUtils } from "avg-engine/engine";
+import { EngineUtils } from "engine/core/engine-utils";
+import { Filter } from "electron";
 
 export class AnimationUtils {
   public static fadeTo(target: string, duration: number = 200, to: number = 1, complete?: () => void) {
@@ -130,10 +130,10 @@ export class AnimationUtils {
     });
   }
 
-  public static applyFilters(target: string, duration: number, filter: avg.Filter[]) {
+  public static applyFilters(target: string, duration: number, filter: Filter[]) {
     if (!EngineUtils.isNullOrUndefined(filter) && Array.isArray(filter)) {
       filter.forEach(v => {
-        AnimationUtils.animateCssFilter(target, v.name, duration, v.value);
+        // AnimationUtils.animateCssFilter(target, v.name, duration, v.value);
       });
     }
   }

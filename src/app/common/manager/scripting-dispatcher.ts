@@ -1,13 +1,13 @@
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
-import * as avg from "avg-engine/engine";
+import { AVGScriptUnit } from "engine/scripting/script-unit";
 
 export class ScriptingDispatcher {
   public static subject = new Subject<any>();
 
   public static dispatch(
     op: string,
-    scriptUnit: avg.AVGScriptUnit,
+    scriptUnit: AVGScriptUnit,
     resolver?: any
   ) {
     this.subject.next({

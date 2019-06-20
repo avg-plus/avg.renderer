@@ -6,16 +6,16 @@ import { Component, OnInit, AfterViewInit, ElementRef, ChangeDetectorRef, AfterC
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
 
-// import * as PIXI from "pixi.js";
-// import * as particles from "pixi-particles";
-import * as avg from "avg-engine/engine";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Setting } from "avg-engine/engine";
+import { Scene } from "engine/data/scene";
+import { Setting } from "engine/core/setting";
+import { Effect } from "engine/data/effect";
+import { APIScene } from "engine/scripting/api/api-scene";
 
 class SceneModel {
-  public scene: avg.Scene;
-  public incommingNewScene: avg.Scene;
+  public scene: Scene;
+  public incommingNewScene: Scene;
   public maskTransitionEffect: string;
   public styles: any;
 }
@@ -58,7 +58,7 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
     // this.mainScene.removeSprite("scene");
   }
 
-  public async setBackground(scene: avg.APIScene): Promise<any> {
+  public async setBackground(scene: APIScene): Promise<any> {
     const data = scene.data;
 
     const file = data.file.filename;
@@ -86,7 +86,7 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
     }
   }
 
-  public async cssFilter(effect: avg.Effect) {
+  public async cssFilter(effect: Effect) {
     effect.duration = effect.duration || 0;
     const elementID = "#avg-viewport";
 
