@@ -1,3 +1,5 @@
+import { HookEvents } from "./../../../engine/plugin/hooks/hook-events";
+import { HookManager } from "./../../../engine/plugin/hooks/hook-manager";
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 
 import { Subject } from "rxjs/Subject";
@@ -29,6 +31,7 @@ import { SpriteType } from "engine/const/sprite-type";
 import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
 import { APICharacter } from "engine/scripting/api/api-character";
 import { EngineAPI_Audio } from "engine/scripting/exports/audio";
+import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
 
 export enum DialogueBoxStatus {
   None,
@@ -68,22 +71,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public character_slot: Array<any>;
   public characters: Array<Character>;
 
-  // @ViewChild("characterContainer") characterContainer: ElementRef;
+  private currentCharacter = null;
 
   constructor(public changeDetectorRef: ChangeDetectorRef, public sanitizer: DomSanitizer) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<Character>(5);
 
     this.dialogueData = null;
-    // const width = Setting.WindowWidth / 5;
-
-    // for (let i = 0; i < 5; ++i) {
-    //   this.character_slot[i] = {
-    //     width: width + "px",
-    //     left: width * i + "px",
-    //     bottom: "100px"
-    //   };
-    // }
   }
 
   public reset() {
@@ -156,7 +150,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reset();
   }
 
-  public showBox() {
+  public async showBox() {
     // Show character
     // if (this.dialogueData.character && this.dialogueData.character.avatar && this.dialogueData.character.avatar.file) {
     //   this.showCharacter(this.dialogueData.character);
@@ -167,6 +161,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       EngineAPI_Audio.play("_voice", <string>this.dialogueData.voice);
     }
 
+    const result = await this.onTriggerPlugin();
+
+    this.dialogueData.name = result.name;
+    this.dialogueData.text = result.text;
+
     AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
 
     if (this.currentName && this.currentName.length > 0) {
@@ -174,6 +173,18 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       AnimationUtils.fadeTo(".name-box", 0, 0);
     }
+  }
+
+  private async onTriggerPlugin() {
+    // 内部插件解析文本
+    this.dialogueData.name = DialogueParserPlugin.parseContent(this.dialogueData.name);
+    this.dialogueData.text = DialogueParserPlugin.parseContent(this.dialogueData.text);
+
+    // @ Hook 触发 DialogueShow
+    return await HookManager.triggerHook(HookEvents.DialogueShow, {
+      name: this.dialogueData.name,
+      text: this.dialogueData.text
+    });
   }
 
   public hideBox() {
@@ -230,18 +241,32 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     image.spriteType = SpriteType.Character;
     image.name = api.name;
 
-    if (isUpdate === false) {
-      image.animation.name = "flyin";
+    const hookContext = {
+      name: image.name,
+      filename: api.filename,
+      renderer: image.renderer
+    };
 
-      const options = new WidgetAnimation_FlyInOptions();
-      options.direction = "left";
-      options.duration = 500;
-      options.offset = 40;
-      image.animation.options = options;
+    // @ Hook 触发 CharacterBeforeEnter
+    const hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeEnter, hookContext);
+
+    // 重置数据
+    image.name = hookResult.name;
+    image.file = ResourceData.from(hookResult.filename);
+    image.renderer = hookResult.renderer;
+
+    if (isUpdate === false) {
+      // image.animation.name = "flyin";
+
+      // const options = new WidgetAnimation_FlyInOptions();
+      // options.direction = "left";
+      // options.duration = 500;
+      // options.offset = 40;
+      // image.animation.options = options;
 
       // 跳过模式处理，忽略时间
       if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
-        options.duration = 0;
+        // options.duration = 0;
       }
     }
 
@@ -249,8 +274,15 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       // Remove first
       // await WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, false);
       await WidgetLayerService.updateImage(image.name, image);
+
+      // @ Hook 触发 CharacterBeforeEnter
+      const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
+        before: this.currentCharacter,
+        after: hookContext
+      });
     } else {
-      WidgetLayerService.addWidget(
+      this.currentCharacter = hookContext;
+      await WidgetLayerService.addWidget(
         image,
         WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
         ScreenWidgetType.Image,
@@ -259,21 +291,19 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public async updateCharacter(api: APICharacter) {
-    // const character = api.data;
+  // public async updateCharacter(api: APICharacter) {
+  //   // @ Hook 触发 CharacterBeforeEnter
+  //   const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
+  //     before: this.currentCharacter,
+  //     after: {
+  //       name: api.name,
+  //       filename: api.filename,
+  //       renderer: api.data.renderer
+  //     }
+  //   });
 
-    await this.showCharacter(api, true);
-
-    // const image = new ScreenImage();
-    // image.file = ResourceData.from(character.avatar.file);
-    // image.renderer = character.renderer;
-    // image.position = character.position;
-    // image.id = api.id;
-
-    // const promise = await WidgetLayerService.updateImage(
-    //   image.id, image
-    // );
-  }
+  //   await this.showCharacter(api, true);
+  // }
 
   public async hideCharacter(api: APICharacter): Promise<any> {
     const image = new ScreenImage();
@@ -302,7 +332,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
 
-  public updateData(data: Dialogue) {
+  public async updateData(data: Dialogue) {
     this.dialogueData = data;
     this.animatedText = "";
 
@@ -312,8 +342,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // @Plugin: OnBeforeShowDialogue
-    PluginManager.on(AVGPluginHooks.OnBeforeShowDialogue, data);
+    // @ Hook 触发 DialogueShow
+    if (this.dialogueData) {
+      const result = await this.onTriggerPlugin();
+
+      this.dialogueData.name = result.name;
+      this.dialogueData.text = result.text;
+    }
 
     if (data.character && data.name) {
       this.currentName = data.name;

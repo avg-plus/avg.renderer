@@ -1,3 +1,4 @@
+import { DialogueParserPlugin } from "./../../../../engine/plugin/internal/dialogue-parser-plugin";
 import { OnInit, Component, AfterViewInit, Injector, ChangeDetectorRef, AfterViewChecked } from "@angular/core";
 import * as $ from "jquery";
 
@@ -5,7 +6,6 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 // import { AnimationUtils } from "../../../common/animations/animation-utils";
 import { ScreenWidgetComponent } from "./screen-widget.component";
 import { Subtitle } from "engine/data/screen-subtitle";
-import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
 import { MeasurementUnitPart, AVGMeasurementUnit, UnitType } from "engine/core/measurement-unit";
 import { Setting } from "engine/core/setting";
 import { EngineUtils } from "engine/core/engine-utils";

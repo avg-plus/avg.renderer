@@ -1,3 +1,4 @@
+import { GameWorld } from "engine/core/graphics/world";
 import * as fs from "fs";
 
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from "@angular/core";
@@ -29,6 +30,8 @@ import { APIEffect } from "engine/scripting/api/api-effect";
 import { APIGotoTitleView } from "engine/scripting/api/api-title-view";
 import { APIInputBox } from "engine/scripting/api/api-input-box";
 import { APICameraMove, APICameraShake } from "engine/scripting/api/api-camera";
+import { SpriteAnimateDirector, AnimateTargetType } from "engine/core/graphics/sprite-animate-director";
+import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character";
 
 @Component({
   selector: "app-main-scene",
@@ -105,10 +108,10 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         }
       } else if (value.api instanceof APICharacter) {
         if (value.op === OP.ShowCharacter) {
-          this.dialogueBox.showCharacter(value.api);
+          await this.dialogueBox.showCharacter(value.api);
           value.resolver();
         } else if (value.op === OP.UpdateCharacter) {
-          this.dialogueBox.updateCharacter(value.api);
+          this.dialogueBox.showCharacter(value.api, true);
           value.resolver();
         } else if (value.op === OP.HideCharacter) {
           this.dialogueBox.hideCharacter(value.api).then(
@@ -117,6 +120,18 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             },
             _ => {}
           );
+        }
+      } else if (value.api instanceof APIAnimateCharacter) {
+        if (value.op === OP.AnimateCharacter) {
+          SpriteAnimateDirector.playAnimationMacro(
+            AnimateTargetType.Sprite,
+            GameWorld.defaultScene.getSpriteByName(value.api.id),
+            value.api.animation
+          );
+
+          value.api.animation;
+
+          value.resolver();
         }
       } else if (value.api instanceof APIScene) {
         if (value.op === OP.LoadScene) {

@@ -29,7 +29,6 @@ export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
     super(texture);
 
     this.spriteType = this.spriteType;
-
     this.spriteDebugger = new SpriteDebugger(this);
   }
 
@@ -41,6 +40,13 @@ export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
 
   // 是否渲染到摄像机中
   public renderInCamera = true;
+
+  /**
+   * 是否渲染摄像机深度
+   *  - 为 true 时将会受摄像机缩放影响
+   * @memberof Sprite
+   */
+  public renderCameraDepth = true;
 
   // 平铺瓦片模式
   public isTilingMode = false;

@@ -1,3 +1,4 @@
+import { SpriteAnimateDirector, AnimateTargetType } from "./sprite-animate-director";
 import * as PIXI from "pixi.js";
 import * as Loader from "resource-loader";
 
@@ -8,6 +9,7 @@ import { findFilter } from "./pixi-utils";
 import { isNullOrUndefined } from "util";
 import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
+import { ResourceManager } from "../resource-manager";
 
 export class Scene {
   isTilingMode = false;
@@ -25,22 +27,8 @@ export class Scene {
 
   private resourceLoader = new Loader.Loader();
 
-  constructor(private width: number, private height: number, resolution: number = 1) {
-    // [16: 9] - 800x450, 1024x576, 1280x760, 1920x1080
-
-    const w = this.width || 1280;
-    const h = this.height || 760;
-
-    this.resourceLoader.concurrency = 10;
-
-    this.app = new PIXI.Application({
-      width: w,
-      height: h,
-      antialias: false,
-      transparent: false,
-      resolution
-    });
-
+  constructor(app: PIXI.Application, private width: number, private height: number) {
+    this.app = app;
     this.stage = this.app.stage;
     this.view = this.app.view;
     this.renderer = this.app.renderer;
@@ -55,6 +43,9 @@ export class Scene {
     this.stage.addChild(this.mainContainer);
 
     this.app.ticker.add(() => {
+      // 检查资源加载
+      ResourceManager.update();
+
       // 图层排序
       this.sortChildren();
 
@@ -65,17 +56,23 @@ export class Scene {
         // 拉伸图像
         switch (sprite.resizeMode) {
           case ResizeMode.Stretch: {
-            sprite.scale.x = xRadio;
-            sprite.scale.y = yRadio;
+            if (!sprite.renderInCamera) {
+              sprite.scale.x = xRadio;
+              sprite.scale.y = yRadio;
+            }
             break;
           }
           case ResizeMode.KeepRadio: {
-            const ratio = Math.min(xRadio, yRadio);
-            sprite.scale.x = sprite.scale.y = ratio;
+            if (!sprite.renderInCamera) {
+              const ratio = Math.min(xRadio, yRadio);
+              sprite.scale.x = sprite.scale.y = ratio;
+            }
             break;
           }
           case ResizeMode.Default: {
-            sprite.scale.set(1, 1);
+            if (!sprite.renderInCamera) {
+              sprite.scale.set(1, 1);
+            }
             break;
           }
           case ResizeMode.Custom: {
@@ -163,59 +160,82 @@ export class Scene {
 
   public cameraMove(x: number, y: number, duration: number = 2000) {
     this.children().map(sprite => {
-      if (!sprite.renderInCamera) {
-        return;
-      }
-
-      const moveVector = 3000;
-
-      // 取镜头距离差值转换为正整数
-      const distanceDiff = Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
-      const spriteDistance = sprite.distance + distanceDiff / 2;
-
-      const compensation = 0.5; // 移动补偿，防止最远距离的移动倍率为0
-      const moveRatio = ((distanceDiff + sprite.distance) / (distanceDiff / 2)) * (spriteDistance / distanceDiff);
-
-      const moveX = x * moveRatio + compensation;
-      const moveY = y * moveRatio + compensation;
-
-      if (sprite.isTilingMode) {
-        gsap.TweenLite.to(sprite.tilePosition, duration / 1000, {
-          x: -moveX,
-          y: -moveY
-        });
-      } else {
-        gsap.TweenLite.to(sprite.position, duration / 1000, {
-          x: -moveX,
-          y: -moveY
-        });
-      }
+      this.updateCameraMoveRendering(sprite, x, y, duration);
     });
   }
 
   public cameraZoom(distance: number, duration: number = 2000) {
+    this.children().map(sprite => {
+      this.updateCameraZoomRendering(sprite, distance, duration);
+    });
+  }
+  /**
+   * 更新摄像机移动渲染
+   *
+   * @memberof Scene
+   */
+  public updateCameraMoveRendering(sprite: Sprite, x: number, y: number, duration: number) {
+    if (!sprite.renderInCamera) {
+      return;
+    }
+
+    const moveVector = 3000;
+
+    // 取镜头距离差值转换为正整数
+    const distanceDiff = Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
+    const spriteDistance = sprite.distance + distanceDiff / 2;
+
+    const compensation = 0.5; // 移动补偿，防止最远距离的移动倍率为0
+    const moveRatio = ((distanceDiff + sprite.distance) / (distanceDiff / 2)) * (spriteDistance / distanceDiff);
+
+    const moveX = -(x * moveRatio + compensation) + sprite.x;
+    const moveY = -(y * moveRatio + compensation) + sprite.y;
+
+    if (sprite.isTilingMode) {
+      gsap.TweenLite.to(sprite.tilePosition, duration / 1000, {
+        x: moveX,
+        y: moveY
+      });
+    } else {
+      gsap.TweenLite.to(sprite.position, duration / 1000, {
+        x: moveX,
+        y: moveY
+      });
+    }
+  }
+
+  /**
+   * 更新摄像机距离渲染
+   *
+   * @param {Sprite} sprite
+   * @param {number} distance
+   * @param {number} duration
+   * @returns
+   * @memberof Scene
+   */
+  public updateCameraZoomRendering(sprite: Sprite, distance: number, duration: number) {
+    if (!sprite.renderInCamera) {
+      return;
+    }
+
+    if (!sprite.renderCameraDepth) {
+      return;
+    }
+
     const distanceDiff = Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
 
-    this.children().map(sprite => {
-      if (!sprite.renderInCamera) {
-        return;
-      }
+    const spriteDistance = sprite.distance + distanceDiff / 2;
+    const zoomDistance = distance + distanceDiff / 2;
 
-      const spriteDistance = sprite.distance + distanceDiff / 2;
-      const zoomDistance = distance + distanceDiff / 2;
+    let zoom = spriteDistance / zoomDistance;
 
-      let zoom = spriteDistance / zoomDistance;
+    if (zoom <= 0 || zoom === Infinity) {
+      zoom = 0;
+    }
 
-      console.log(zoom);
-
-      if (zoom <= 0 || zoom === Infinity) {
-        zoom = 0;
-      }
-
-      gsap.TweenLite.to(sprite.scale, duration / 1000, {
-        x: zoom,
-        y: zoom
-      });
+    gsap.TweenLite.to(sprite.scale, duration / 1000, {
+      x: zoom,
+      y: zoom
     });
   }
 
@@ -242,6 +262,40 @@ export class Scene {
 
     // 添加到主容器
     this.mainContainer.addChild(sprite);
+
+    // 触发摄像机渲染
+    // this.updateCameraMoveRendering(sprite, sprite.x, sprite.y, 1);
+    this.updateCameraZoomRendering(sprite, 0, 1);
+
+    // test
+
+    // if (name === "char1") {
+    //   setTimeout(() => {
+    //     SpriteAnimateDirector.playAnimationMacro(
+    //       AnimateTargetType.Sprite,
+    //       sprite,
+    //       {
+    //         totalDuration: 1000,
+    //         timeline: [
+    //           {
+    //             alpha: 0.5,
+    //             x: 333,
+    //             duration: 5000
+    //           },
+    //           {
+    //             x: 800,
+    //             duration: 1000
+    //           },
+    //           {
+    //             x: 0,
+    //             alpha: 1,
+    //             duration: 1000
+    //           }
+    //         ]
+    //       }
+    //     );
+    //   }, 3000);
+    // }
   }
 
   public static to(target: {}, duration: number, vars: {}, position?: any) {
@@ -260,7 +314,7 @@ export class Scene {
   }
 
   public clear() {
-    this.app.stage.removeChildren();
+    this.mainContainer.removeChildren();
   }
 
   private orderToIndex(zOrder: number | LayerOrder = LayerOrder.TopLayer) {
@@ -331,56 +385,19 @@ export class Scene {
     type: SpriteType = SpriteType.Normal
   ): Promise<Sprite> {
     return new Promise<Sprite>((resolve, reject) => {
-      const isGif = () => {
-        return url.endsWith(".gif");
-      };
-
-      try {
-        const resource = this.resourceLoader.resources[name];
-        let loadOptions;
+      ResourceManager.addLoading(name, url, resource => {
+        console.log("On resource loaded: ", resource);
         let sprite: Sprite;
 
-        if (resource) {
-          if (isGif()) {
-            loadOptions = {
-              loadType: "arraybuffer",
-              xhrType: "arraybuffer",
-              crossOrigin: ""
-            };
-
-            sprite = new PIXIGif(type, url, resource).sprite;
-          } else {
-            sprite = new Sprite(type, PIXI.Texture.from(resource.data));
-          }
-
-          this.addSprite(name, sprite, zOrder);
-          resolve(sprite);
+        if (resource.extension === "gif") {
+          sprite = new PIXIGif(type, url, resource).sprite;
         } else {
-          if (isGif()) {
-            loadOptions = {
-              loadType: "arraybuffer",
-              xhrType: "arraybuffer",
-              crossOrigin: ""
-            };
-          }
-          this.resourceLoader.add(name, url, loadOptions).load((progress, resources) => {
-            // const texture = resources[name].data;
-
-            if (isGif()) {
-              sprite = new PIXIGif(type, url, resources).sprite;
-            } else {
-              const texture = PIXI.Texture.from(resources[name].data);
-
-              sprite = new Sprite(type, texture);
-            }
-
-            this.addSprite(name, sprite, zOrder);
-            resolve(sprite);
-          });
+          sprite = new Sprite(type, PIXI.Texture.from(resource.data));
         }
-      } catch (error) {
-        console.log("PIXI loader failed: ", error);
-      }
+
+        this.addSprite(name, sprite, zOrder);
+        resolve(sprite);
+      });
     });
   }
 
@@ -393,7 +410,7 @@ export class Scene {
   }
 
   public hasSprite(name: string) {
-    const sprite = this.children().find(s => {
+    const sprite = this.mainContainer.children.find(s => {
       return s.name === name;
     });
 

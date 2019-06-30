@@ -1,4 +1,4 @@
-
+import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import * as joi from "joi";
 import { Character } from "engine/data/character";
 import { ResourceData } from "engine/data/resource-data";
@@ -9,10 +9,11 @@ import { APICharacter } from "../api/api-character";
 import { APIManager } from "../api-manager";
 import { APIAnimateCharacter } from "../api/api-animate-character";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
+import { SpriteAnimateDirector } from "engine/core/graphics/sprite-animate-director";
 
 @APIExport("character", EngineAPI_Character)
 export class EngineAPI_Character extends AVGExportedAPI {
-  public static async show(name: string, filename: string, options?: Character) {
+  public static async show(id: string, filename: string, options?: Character) {
     let model = new APICharacter();
     model.data = options;
 
@@ -23,7 +24,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
         .min(1)
         .max(255)
         .description("立绘对象标识符"),
-      name
+      id
     );
 
     model.filename = ResourceData.from(
@@ -93,33 +94,49 @@ export class EngineAPI_Character extends AVGExportedAPI {
       options
     );
 
-    // model.data.avatar = new Avatar();
-
     const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.ShowCharacter);
     return await proxy.runner(<APICharacter>model);
   }
 
-  // public static async update(id: string, filename: string, options?: Character) {
-  //   let model = new APICharacter();
-  //   model.name = EngineUtils.makeWidgetID(id);
-  //   model.data.avatar = new Avatar();
-  //   model.data = mergeDeep(model.data, options);
-  //   model.data.position = options.position;
+  public static async update(id: string, filename: string, options?: Character) {
+    // let model = new APICharacter();
+    // model.name = EngineUtils.makeWidgetID(id);
+    // model.data.avatar = new Avatar();
+    // model.data = mergeDeep(model.data, options);
+    // model.data.position = options.position;
 
-  //   model.data.avatar.file = ResourceData.from(filename, ResourcePath.Characters).filename;
+    // model.data.avatar.file = ResourceData.from(filename, ResourcePath.Characters).filename;
 
-  //   if (options && options.renderer && options.renderer.filters) {
-  //     model.data.avatar.renderer.filters = options.renderer.filters;
-  //   }
+    // if (options && options.renderer && options.renderer.filters) {
+    //   model.data.avatar.renderer.filters = options.renderer.filters;
+    // }
 
-  //   const proxy = APIManager.getImpl(APICharacter.name, OP.UpdateCharacter);
-  //   return await proxy.runner(<APICharacter>model);
-  // }
+    const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.UpdateCharacter);
+    return await this.show(id, filename, options);
+  }
 
-  public static async animate(id: string, animateName: string, options: any) {
+  public static async animate(id: string, animation: AnimationMacro) {
     const model = new APIAnimateCharacter();
     model.id = id;
-    model.animateName = animateName;
+    model.animation = super.APIParametersValidate(
+      joi.object().keys({
+        totalDuration: joi
+          .number()
+          .optional()
+          .min(1)
+          .description("时间轴总播放时长（如指定该参数，则忽略帧内的duration）"),
+        initialFrame: joi
+          .object()
+          .optional()
+          .description("初始关键帧"),
+        timeline: joi
+          .array()
+          .min(0)
+          .required()
+          .description("初始关键帧")
+      }),
+      animation
+    );
 
     const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.AnimateCharacter);
     proxy && (await proxy.runner(<APIAnimateCharacter>model));

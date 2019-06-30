@@ -1,12 +1,12 @@
+import { HookEvents } from "./hook-events";
 import { HookManager } from "./hook-manager";
 
 export interface Hook {
   defaultImpl(data: any): any;
 }
 
-export function APIHook(name: string, t: any) {
-  console.log(`Init Hook: ${name}`);
+export function APIHook(event: HookEvents, t: any) {
   return function(constructor: Function) {
-    // HookManager.registerHook(name, t);
+    HookManager.subscribeHook(event, t);
   };
 }

@@ -1,3 +1,29 @@
+
+
+起草：
+
+frames: 
+[
+      {
+        duration: 0,
+        data: {
+          opacity: 0,
+          x: data.renderer.x - 50
+        }
+      },
+      {
+        duration: 3000,
+        data: {
+          opacity: 1,
+          x: data.character.x  
+        }
+      }
+    ]
+
+
+
+
+
 // 注册一个hook
 engine.hook("hooks.character.enter", data => {
   // data.character = {};

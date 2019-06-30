@@ -4,11 +4,6 @@ export class Filter {
 }
 
 export class Renderer {
-  // public width;
-  // public height;
-  // public x: string = "0%";
-  // public y: string = "0%";
-  // public scale: number = 1;
   public x: number;
   public y: number;
   public width: number;
@@ -19,6 +14,7 @@ export class Renderer {
   public skew: number;
   public skewX: number;
   public skewY: number;
+  public alpha: number;
   public rotation: number;
 
   public filters: Filter[] = [];

@@ -36,10 +36,10 @@ export class GameInitializer implements CanActivate {
 
   public async initErrorHandler() {
     AVGEngineError.init(window, error => {
-      alert(error.desc);
+      alert("错误：" + error.desc);
 
       if (PlatformService.isDesktop()) {
-        window.close();
+        // window.close();
         return;
       }
 
@@ -175,7 +175,7 @@ export class GameInitializer implements CanActivate {
   }
 
   public async initLoadingService() {
-    LoadingLayerService.init();
+    // LoadingLayerService.init();
   }
 
   // Preload resources
@@ -202,26 +202,26 @@ export class GameInitializer implements CanActivate {
       {
         tips: "正在加载过渡效果...",
         files: [
-          AVGNativeFS.__dirname + "/data/masks/brush-down.png",
-          AVGNativeFS.__dirname + "/data/masks/brush.png",
-          AVGNativeFS.__dirname + "/data/masks/iris-in.png",
-          AVGNativeFS.__dirname + "/data/masks/iris-out.png",
-          AVGNativeFS.__dirname + "/data/masks/window-shades.png",
-          AVGNativeFS.__dirname + "/data/masks/wipe.png"
+          // AVGNativeFS.__dirname + "/data/masks/brush-down.png",
+          // AVGNativeFS.__dirname + "/data/masks/brush.png",
+          // AVGNativeFS.__dirname + "/data/masks/iris-in.png",
+          // AVGNativeFS.__dirname + "/data/masks/iris-out.png",
+          // AVGNativeFS.__dirname + "/data/masks/window-shades.png",
+          // AVGNativeFS.__dirname + "/data/masks/wipe.png"
         ]
       },
       {
         tips: "正在加载特效...",
         files: [
-          AVGNativeFS.__dirname + "/data/effects/shader/bg_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/fx_brightbuf_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/fx_common_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/fx_common_vsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/fx_dirblur_r4_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/pp_final_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/pp_final_vsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/sakura_point_fsh.shader",
-          AVGNativeFS.__dirname + "/data/effects/shader/sakura_point_vsh.shader"
+          // AVGNativeFS.__dirname + "/data/effects/shader/bg_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/fx_brightbuf_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/fx_common_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/fx_common_vsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/fx_dirblur_r4_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/pp_final_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/pp_final_vsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/sakura_point_fsh.shader",
+          // AVGNativeFS.__dirname + "/data/effects/shader/sakura_point_vsh.shader"
         ]
       },
 
@@ -244,10 +244,10 @@ export class GameInitializer implements CanActivate {
       }
     ]);
 
-    LoadingLayerService.showLoadingScreen();
+    // LoadingLayerService.showLoadingScreen();
 
-    await LoadingLayerService.startDownloadSync();
-    await LoadingLayerService.hideLoadingScreen();
+    // await LoadingLayerService.startDownloadSync();
+    // await LoadingLayerService.hideLoadingScreen();
   }
 
   // Init playground communicator

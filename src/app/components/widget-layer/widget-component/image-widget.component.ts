@@ -2,9 +2,9 @@ import { Component, Injector, ChangeDetectorRef, OnInit, AfterViewInit, Renderer
 import { ScreenWidgetComponent } from "./screen-widget.component";
 
 import { DomSanitizer } from "@angular/platform-browser";
-import { GameWorld } from "app/common/graphics/world";
-import { LayerOrder } from "app/common/graphics/layer-order";
-import { ResizeMode } from "app/common/graphics/sprite";
+import { GameWorld } from "engine/core/graphics/world";
+import { LayerOrder } from "engine/core/graphics/layer-order";
+import { ResizeMode } from "engine/core/graphics/sprite";
 import { ScreenImage } from "engine/data/screen-image";
 import { SpriteType } from "engine/const/sprite-type";
 
@@ -48,7 +48,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     const imageData = <ScreenImage>this.data;
 
     const sprite = await GameWorld.defaultScene.addFromImage(
-      imageData.file.filename,
+      imageData.name,
       imageData.file.filename,
       LayerOrder.TopLayer
     );
@@ -64,6 +64,7 @@ export class ImageWidgetComponent extends ScreenWidgetComponent implements OnIni
     sprite.scale.y = renderer.scaleY || renderer.scale || 1;
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
+    sprite.alpha = renderer.alpha || renderer.alpha || 1;
     sprite.rotation = renderer.rotation || 0;
 
     // 锁死立绘比例

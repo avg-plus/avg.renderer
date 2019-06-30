@@ -1,6 +1,6 @@
-import { Sprite } from "./../../common/graphics/sprite";
-import { LayerOrder } from "./../../common/graphics/layer-order";
-import { GameWorld } from "./../../common/graphics/world";
+import { Sprite } from "../../../engine/core/graphics/sprite";
+import { LayerOrder } from "../../../engine/core/graphics/layer-order";
+import { GameWorld } from "../../../engine/core/graphics/world";
 import { Component, OnInit, AfterViewInit, ElementRef, ChangeDetectorRef, AfterContentInit } from "@angular/core";
 
 import { Effects } from "app/common/effects/effects";

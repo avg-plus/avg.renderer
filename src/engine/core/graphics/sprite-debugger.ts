@@ -1,7 +1,7 @@
 import { GameWorld } from "./world";
 import * as PIXI from "pixi.js";
 import { Sprite } from "./sprite";
-import { DebugPanel } from "../debugger/debug-panel";
+import { DebugPanel } from "../../../app/common/debugger/debug-panel";
 
 export class SpriteDebugger {
   private graphics: PIXI.Graphics;
@@ -68,7 +68,7 @@ export class SpriteDebugger {
       this.graphics.endFill();
 
       let text = new PIXI.Text(
-        `position (${this.sprite.x},${this.sprite.y}), [${this.sprite.width}x${this.sprite.height}]`,
+        `position (${this.sprite.x.toFixed(2)},${this.sprite.y.toFixed(2)}), [${this.sprite.width.toFixed(2)}x${this.sprite.height.toFixed(2)}]`,
         new PIXI.TextStyle({
           fontFamily: "Arial",
           dropShadowDistance: 1,

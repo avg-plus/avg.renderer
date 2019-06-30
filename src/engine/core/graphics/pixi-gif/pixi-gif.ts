@@ -220,7 +220,7 @@ export class PIXIGif {
     // 文件扩展名为gif或png则返回对应的名称，其它反返回other
     exeName = exeName === "gif" ? exeName : "other";
 
-    let gifDecodeData = this.gifResourceToTextures(resources[imgSrc]);
+    let gifDecodeData = this.gifResourceToTextures(resources);
     this.textures = gifDecodeData.textures;
     this.framesDelay = gifDecodeData.delayTimes;
     this.play();

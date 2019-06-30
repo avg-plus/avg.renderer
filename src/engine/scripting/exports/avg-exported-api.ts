@@ -13,7 +13,7 @@ export function APIExport(name: string, t: any) {
 
 export class AVGExportedAPI {
   protected static APIParametersValidate(schema, data: any) {
-    console.log("Validate API Input: ", schema, data);
+    // console.log("Validate API Input: ", schema, data);
 
     const validateResult = schema.validate(data);
     if (validateResult.error) {

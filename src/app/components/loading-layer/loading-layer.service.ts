@@ -142,19 +142,19 @@ export class LoadingLayerService extends AVGService {
     if (!this._isLoaderInitialized) {
       const bg = EngineSettings.get("engine.loading_screen.background") as string;
 
-      const style = {
-        width: "100%",
-        height: "100%",
-        "z-index": 9999999,
-        background: "url(" + AVGNativePath.join(Resource.getAssetsRoot(), bg) + ")",
-        "background-size": "100% 100%",
-        "background-repeat": "no-repeat"
-      };
+      // const style = {
+      //   width: "100%",
+      //   height: "100%",
+      //   "z-index": 9999999,
+      //   background: "url(" + AVGNativePath.join(Resource.getAssetsRoot(), bg) + ")",
+      //   "background-size": "100% 100%",
+      //   "background-repeat": "no-repeat"
+      // };
 
-      const s = EngineUtils.cssObjectToStyles(style);
+      // const s = EngineUtils.cssObjectToStyles(style);
 
       $(".lds-ellipsis").remove();
-      $("#loading-layer-container").prop("style", s);
+      // $("#loading-layer-container").prop("style", s);
     }
   }
 }

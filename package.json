@@ -48,7 +48,6 @@
     "@angular/router": "4.3.0",
     "@types/joi": "^14.3.3",
     "animate.css": "^3.6.1",
-    "asn1": "^0.2.3",
     "axios": "^0.19.0",
     "browser-path": "^0.0.1",
     "browserfs": "^1.4.3",
