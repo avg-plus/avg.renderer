@@ -123,13 +123,11 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         }
       } else if (value.api instanceof APIAnimateCharacter) {
         if (value.op === OP.AnimateCharacter) {
-          SpriteAnimateDirector.playAnimationMacro(
+          await SpriteAnimateDirector.playAnimationMacro(
             AnimateTargetType.Sprite,
             GameWorld.defaultScene.getSpriteByName(value.api.id),
             value.api.animation
           );
-
-          value.api.animation;
 
           value.resolver();
         }

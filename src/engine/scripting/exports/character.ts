@@ -16,6 +16,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
   public static async show(id: string, filename: string, options?: Character) {
     let model = new APICharacter();
     model.data = options;
+    model.isAsync = arguments[arguments.length - 1];
 
     model.name = super.APIParametersValidate(
       joi
@@ -129,6 +130,11 @@ export class EngineAPI_Character extends AVGExportedAPI {
           .object()
           .optional()
           .description("初始关键帧"),
+        repeat: joi
+          .number()
+          .optional()
+          .min(-1)
+          .description("重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"),
         timeline: joi
           .array()
           .min(0)

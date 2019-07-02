@@ -32,9 +32,9 @@ export class Transpiler {
       throw Transpiler.Error.UnexpectedReservedKeyword + "await";
     }
 
-    if (code.indexOf("async ") >= 0) {
-      throw Transpiler.Error.UnexpectedReservedKeyword + "async";
-    }
+    // if (code.indexOf("async ") >= 0) {
+    //   throw Transpiler.Error.UnexpectedReservedKeyword + "async";
+    // }
 
     return this._transpile(code);
   }
@@ -53,6 +53,7 @@ export class Transpiler {
         const calleeObj = (<any>callee).object;
 
         let isRegisteredCallee = false;
+        let isAsyncAPICall = false;
 
         var BreakException = {};
 
@@ -60,6 +61,7 @@ export class Transpiler {
           APIManager.Instance.registeredClasses().forEach((value, key) => {
             if (key === calleeObj.name) {
               isRegisteredCallee = true;
+
               throw BreakException;
             }
           });
@@ -86,7 +88,27 @@ export class Transpiler {
       console.log("Starting async keyword transform AST generate ...");
       let asyncTransformAST = esprima.parse(code, { range: false, attachComment: false }, (node, meta) => {
         if (node.type === "ArrowFunctionExpression") {
+          // 默认把所有 API 调用全部设为 async
           node.async = true;
+        }
+
+        if (node.type === "CallExpression") {
+          const callee = node.callee;
+          if (callee) {
+            const property = callee["property"];
+
+            // 处理异步版本的 API 调用
+            const asyncSymbol = "_async";
+            if (property.name.endsWith(asyncSymbol)) {
+              property.name = property.name.replace(asyncSymbol, "");
+
+              // 在参数表最后添加一个新的字符串参数，用于表示异步模式
+              node.arguments.push({
+                value: "__async_call__",
+                type: "Literal"
+              });
+            }
+          }
         }
       });
 
@@ -115,9 +137,12 @@ export class Transpiler {
           attachComment: false
         },
         (node, meta) => {
-          if (node.type === "CallExpression" && node.callee && isAPICall(node)) {
-            const pos = node.callee.range[0];
-            loc_pos.push(pos);
+          if (node.type === "CallExpression" && node.callee) {
+            // 获取API调用
+            if (isAPICall(node)) {
+              const pos = node.callee.range[0];
+              loc_pos.push(pos);
+            }
           }
         }
       );
@@ -138,7 +163,6 @@ export class Transpiler {
 
       generated = `
         +(async() => {
-          // setTimeout(function() { throw new Error("Execution time limit reached!") }, 2000);
           try { 
             ${asyncTransformCode}
             this.done();
@@ -148,6 +172,8 @@ export class Transpiler {
             });
           }
         })();`;
+
+      console.log(generated);
 
       return generated;
     } catch (err) {

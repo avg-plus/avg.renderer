@@ -1,6 +1,7 @@
 import * as gsap from "gsap";
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
+import { isNull } from "../utils";
 
 export enum AnimateTargetType {
   Camera,
@@ -28,6 +29,9 @@ export class AnimationMacro {
   // 初始关键帧
   initialFrame?: SpriteMacroFrame | CameraMacroFrame;
 
+  // 重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）
+  repeat?: number = 0;
+
   // 时间轴
   timeline: Array<SpriteMacroFrame | CameraMacroFrame>;
 }
@@ -49,7 +53,12 @@ export class SpriteAnimateDirector {
     return timeline.to(target, duration / 1000, vars, position);
   }
 
-  public static playAnimationMacro(type: AnimateTargetType, target: Sprite | Scene, macroObject: AnimationMacro) {
+  public static playAnimationMacro(
+    type: AnimateTargetType,
+    target: Sprite | Scene,
+    macroObject: AnimationMacro,
+    waitingForFinished: boolean = false
+  ) {
     if (!macroObject) {
       return;
     }
@@ -61,6 +70,9 @@ export class SpriteAnimateDirector {
     }
 
     const timeline = new gsap.TimelineMax();
+    if (!isNull(macroObject.repeat)) {
+      timeline.repeat(macroObject.repeat);
+    }
 
     if (type === AnimateTargetType.Sprite) {
       // 初始关键帧
@@ -94,5 +106,17 @@ export class SpriteAnimateDirector {
         scene.cameraMove(cameraInitialFrame.x, cameraInitialFrame.y, 0.00001);
       }
     }
+
+    return new Promise((resolve, reject) => {
+      if (!waitingForFinished) {
+        resolve();
+        return;
+      }
+
+      // 播放结束回调
+      timeline.eventCallback("onComplete", () => {
+        resolve();
+      });
+    });
   }
 }

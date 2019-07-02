@@ -1,5 +1,4 @@
 import { HookEvents } from "./hook-events";
-import { Subject, Subscription, AsyncSubject } from "rxjs";
 
 type HookCallbackFunc = (params: any) => any;
 type HookCallbackContext = {

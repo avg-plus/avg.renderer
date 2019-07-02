@@ -32,6 +32,10 @@ import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/
 import { APICharacter } from "engine/scripting/api/api-character";
 import { EngineAPI_Audio } from "engine/scripting/exports/audio";
 import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
+import { GameWorld } from "engine/core/graphics/world";
+import { LayerOrder } from "engine/core/graphics/layer-order";
+import { ResizeMode } from "engine/core/graphics/sprite";
+import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
 
 export enum DialogueBoxStatus {
   None,
@@ -271,23 +275,24 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (isUpdate) {
-      // Remove first
-      // await WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, false);
-      await WidgetLayerService.updateImage(image.name, image);
-
-      // @ Hook 触发 CharacterBeforeEnter
-      const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
-        before: this.currentCharacter,
-        after: hookContext
-      });
+      // // Remove first
+      // // await WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, false);
+      // await WidgetLayerService.updateImage(image.name, image);
+      // // @ Hook 触发 CharacterBeforeEnter
+      // const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
+      //   before: this.currentCharacter,
+      //   after: hookContext
+      // });
     } else {
       this.currentCharacter = hookContext;
-      await WidgetLayerService.addWidget(
-        image,
-        WidgetLayerService.createWidgetComponent<ImageWidgetComponent>(ImageWidgetComponent),
-        ScreenWidgetType.Image,
-        false
-      );
+      if (api.isAsync) {
+        SpriteWidgetManager.addSpriteWidget(image);
+      } else {
+        await SpriteWidgetManager.addSpriteWidget(image);
+      }
+
+      // @ Hook 触发 CharacterAfterEnter
+      await HookManager.triggerHook(HookEvents.CharacterAfterEnter, hookContext);
     }
   }
 

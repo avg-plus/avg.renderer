@@ -401,12 +401,11 @@ export class Scene {
     });
   }
 
-  public removeSprite(name: string) {
-    this.children().map((sprite, index) => {
-      if (sprite.name === name) {
-        this.mainContainer.removeChild(sprite);
-      }
-    });
+  public removeSprite(id: string) {
+    const sprite = this.getSpriteByName(id);
+    if (sprite) {
+      this.mainContainer.removeChild(sprite);
+    }
   }
 
   public hasSprite(name: string) {

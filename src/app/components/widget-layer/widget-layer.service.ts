@@ -115,7 +115,7 @@ export class WidgetLayerService extends AVGService {
       return false;
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let model: WidgetModel;
 
       if (isTextWidgetExists(data.name) || isImageWidgetExists(data.name)) {
@@ -138,9 +138,12 @@ export class WidgetLayerService extends AVGService {
         model = new ImageWidgetModel(<ScreenImage>data, imageWidgetComponent);
 
         component.instance.data = data;
+        // await imageWidgetComponent.instance.update();
+
+        // resolve();
         // component.changeDetectorRef.detectChanges();
 
-        WidgetLayerService.imageWidgets.push(<ImageWidgetModel>model);
+        // WidgetLayerService.imageWidgets.push(<ImageWidgetModel>model);
       } else if (widgetType === ScreenWidgetType.Html) {
         const htmlWidgetComponent = <ComponentRef<HtmlWidgetComponent>>component;
 
@@ -152,26 +155,26 @@ export class WidgetLayerService extends AVGService {
         WidgetLayerService.htmlWdigets.push(<HtmlWidgetModel>model);
       }
 
-      component.instance.onShowAnimationCallback = () => {
-        model.inAnimation = false;
+      // component.instance.onShowAnimationCallback = () => {
+      //   model.inAnimation = false;
 
-        // Remove if call remove operation in async mode after show animation is done
-        if (model.shouldRemoveAfterShow) {
-          // Destroy component
-          component.instance.onRemoveAnimationCallback = () => {
-            component.destroy();
-            component = null;
+      //   // Remove if call remove operation in async mode after show animation is done
+      //   if (model.shouldRemoveAfterShow) {
+      //     // Destroy component
+      //     component.instance.onRemoveAnimationCallback = () => {
+      //       component.destroy();
+      //       component = null;
 
-            resolve();
-          };
+      //       resolve();
+      //     };
 
-          component.instance.hideWidget(model.shouldRemoveData);
-        }
+      //     component.instance.hideWidget(model.shouldRemoveData);
+      //   }
 
-        if (!isAsync) {
-          resolve();
-        }
-      };
+      //   if (!isAsync) {
+      //     resolve();
+      //   }
+      // };
 
       if (isAsync) {
         resolve();
@@ -188,7 +191,7 @@ export class WidgetLayerService extends AVGService {
     }
   }
 
-  public static updateImage(id: string, data: ScreenImage) {
+  public static async updateImage(id: string, data: ScreenImage) {
     for (let i = 0; i < WidgetLayerService.imageWidgets.length; ++i) {
       if (WidgetLayerService.imageWidgets[i].data.name === id) {
         WidgetLayerService.imageWidgets[i].data = data;
@@ -196,7 +199,7 @@ export class WidgetLayerService extends AVGService {
         // WidgetLayerService.imageWidgets[i].data.position = data.position;
         // WidgetLayerService.imageWidgets[i].data.size = data.size;
         // WidgetLayerService.imageWidgets[i].data.renderer = data.renderer;
-        WidgetLayerService.imageWidgets[i].component.instance.updateImage();
+        await WidgetLayerService.imageWidgets[i].component.instance.update();
       }
     }
   }
