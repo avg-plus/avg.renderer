@@ -1,3 +1,8 @@
+import {
+  SpriteAnimateDirector,
+  AnimateTargetType,
+  AnimationMacro
+} from "./../../core/graphics/sprite-animate-director";
 import { EngineAPI_Flow } from "./flow";
 
 import { APICameraShake, APICameraTransitionTo } from "../api/api-camera";
@@ -13,6 +18,7 @@ import { Sandbox } from "engine/core/sandbox";
 import { paramCompatible } from "engine/core/utils";
 import { Effect } from "engine/data/effect";
 import { APIEffect } from "../api/api-effect";
+import { GameWorld } from "engine/core/graphics/world";
 
 @APIExport("camera", EngineAPI_Camera)
 export class EngineAPI_Camera extends AVGExportedAPI {
@@ -31,49 +37,66 @@ export class EngineAPI_Camera extends AVGExportedAPI {
     proxy && (await proxy.runner(<APICameraMove>camera));
   }
 
-  public static async shake(options: CameraShakeData) {
-    const schema = joi.object().keys({
-      horizontal: joi
-        .number()
-        .min(0)
-        .default(10),
-      vertical: joi
-        .number()
-        .min(0)
-        .default(10),
-      rotation: joi
-        .number()
-        .min(0)
-        .default(5),
-      duration: joi
-        .number()
-        .min(1)
-        .default(1000)
-        .required(),
-      count: joi
-        .number()
-        .allow(["infinite"])
-        .min(-1)
-        .not(0)
-        .max(999999)
-        .default(5)
-        .required()
-    });
+  public static async moveTo(x: number, y: number) {
+    const animation: AnimationMacro = {
+      totalDuration: 4400,
+      // initialFrame: {
+      //   alpha: 0
+      // },
+      timeline: [
+        {
+          x: 100,
+          y: 0
+        }
+      ]
+    };
 
-    const validateResult = super.APIParametersValidate(schema, options);
-
-    const api = new APICameraShake();
-    api.data = validateResult;
-
-    // 跳过模式处理，跳过不执行镜头抖动
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.cameras === true) {
-      api.data.duration = 0;
-      return;
-    }
-
-    const proxy = APIManager.Instance.getImpl(APICameraShake.name, OP.ShakeCamera);
-    proxy && (await proxy.runner(<APICameraShake>api));
+    await SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Camera, GameWorld.defaultScene, animation);
   }
+
+  // public static async shake(options: CameraShakeData) {
+  //   const schema = joi.object().keys({
+  //     horizontal: joi
+  //       .number()
+  //       .min(0)
+  //       .default(10),
+  //     vertical: joi
+  //       .number()
+  //       .min(0)
+  //       .default(10),
+  //     rotation: joi
+  //       .number()
+  //       .min(0)
+  //       .default(5),
+  //     duration: joi
+  //       .number()
+  //       .min(1)
+  //       .default(1000)
+  //       .required(),
+  //     count: joi
+  //       .number()
+  //       .allow(["infinite"])
+  //       .min(-1)
+  //       .not(0)
+  //       .max(999999)
+  //       .default(5)
+  //       .required()
+  //   });
+
+  //   const validateResult = super.APIParametersValidate(schema, options);
+
+  //   const api = new APICameraShake();
+  //   api.data = validateResult;
+
+  //   // 跳过模式处理，跳过不执行镜头抖动
+  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.cameras === true) {
+  //     api.data.duration = 0;
+  //     return;
+  //   }
+
+  //   const proxy = APIManager.Instance.getImpl(APICameraShake.name, OP.ShakeCamera);
+  //   proxy && (await proxy.runner(<APICameraShake>api));
+  // }
 
   public static async stopShake() {}
 

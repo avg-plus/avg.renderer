@@ -1,7 +1,8 @@
+import { HookSlots } from "./../../../engine/plugin/hooks/hook-slots";
+import { SlotManager } from "engine/plugin/hooks/slot-manager";
 import { Sprite } from "../../../engine/core/graphics/sprite";
-import { LayerOrder } from "../../../engine/core/graphics/layer-order";
 import { GameWorld } from "../../../engine/core/graphics/world";
-import { Component, OnInit, AfterViewInit, ElementRef, ChangeDetectorRef, AfterContentInit } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ElementRef, AfterContentInit } from "@angular/core";
 
 import { Effects } from "app/common/effects/effects";
 import { GameDef } from "app/common/game-def";
@@ -12,6 +13,10 @@ import { Scene } from "engine/data/scene";
 import { Setting } from "engine/core/setting";
 import { Effect } from "engine/data/effect";
 import { APIScene } from "engine/scripting/api/api-scene";
+import { SpriteType } from "engine/const/sprite-type";
+import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
+import { ScreenImage } from "engine/data/screen-image";
+import { ResourceData } from "engine/data/resource-data";
 
 class SceneModel {
   public scene: Scene;
@@ -26,7 +31,6 @@ class SceneModel {
   styleUrls: ["./background-canvas.component.scss"]
 })
 export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterContentInit {
-  private readonly _defaultDuration = 0;
   // private mainScene: Scene;
   private currentBackgroundSprite: Sprite;
 
@@ -61,28 +65,35 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
   public async setBackground(scene: APIScene): Promise<any> {
     const data = scene.data;
 
-    const file = data.file.filename;
+    const image = new ScreenImage();
+    image.renderer = data.renderer;
+    image.file = ResourceData.from(scene.filename);
+    image.spriteType = SpriteType.Scene;
+    image.name = scene.name;
 
-    const DefaultSceneName = "scene";
+    const enterSlot = SlotManager.getSlot(HookSlots.SceneEnterAnimation);
 
     if (this.currentBackgroundSprite) {
       // 把要设置的图片先放到底层
-      const incommingSprite = await GameWorld.defaultScene.addFromImage(file, file, LayerOrder.BottomLayer);
+      const incommingSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot);
 
       // 开始淡出当前背景图
-      await AnimationUtils.animateTo(this.currentBackgroundSprite, 1000, {
-        alpha: 0
-      });
-      GameWorld.defaultScene.removeSprite(DefaultSceneName);
+      // await AnimationUtils.animateTo(this.currentBackgroundSprite, 1000, {
+      //   alpha: 0
+      // });
 
-      incommingSprite.name = DefaultSceneName;
+      // GameWorld.defaultScene.removeSprite(image.name);
+
+      incommingSprite.name = image.name;
       this.currentBackgroundSprite = incommingSprite;
     } else {
-      this.currentBackgroundSprite = await GameWorld.defaultScene.addFromImage(
-        DefaultSceneName,
-        file,
-        LayerOrder.TopLayer
-      );
+      if (scene.isAsync) {
+        SpriteWidgetManager.addSpriteWidget(image, enterSlot).then(sprite => {
+          this.currentBackgroundSprite = sprite;
+        });
+      } else {
+        this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot);
+      }
     }
   }
 

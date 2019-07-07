@@ -99,6 +99,8 @@ class GameResourceManager {
         });
 
         // 资源加载完成
+        console.log("Resource loading progress : ", result.progress);
+
         if (result.progress === 100) {
           console.log("Resources all loaded: ", result);
 

@@ -1,3 +1,5 @@
+import * as joi from "joi";
+
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { APIScene, SceneHandle } from "../api/api-scene";
 import { Scene } from "../../data/scene";
@@ -17,33 +19,24 @@ export class EngineAPI_Scene extends AVGExportedAPI {
    * @param {string} filename The background image file of scene
    * @param {Scene} [options]
    */
-  public static async load(index: number, filename: string, options?: Scene): Promise<SceneHandle> {
+  public static async load(id: string, filename: string, options: Scene): Promise<SceneHandle> {
     let model = new APIScene();
-    model.index = index;
+    model.isAsync = arguments[arguments.length - 1];
 
-    options = mergeDeep(new Scene(), options);
+    model.name = super.validateImageID(id);
+    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Backgrounds).filename;
 
-    if (filename && filename.length > 0) {
-      paramCompatible<APIScene, Scene>(model, options, {
-        field: "file",
-        value: ResourceData.from(filename, ResourcePath.Backgrounds)
-      });
-    } else {
-      model.isAsync = false;
-      paramCompatible<APIScene, Scene>(model, options, {
-        field: "file",
-        value: ResourceData.from("//:0")
-      });
+    if (!options || !(options instanceof Object)) {
+      options = new Scene();
     }
 
-    // options.duration = options.duration;
-    // options.transition = options.transition || "";
-    Object.assign(model.data, options);
+    model.data = options;
+    model.data.renderer = super.validateRenderer(model.data.renderer);
 
     // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
-      model.data.duration = 0;
-    }
+    // if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
+    //   model.data.duration = 0;
+    // }
 
     let proxy = APIManager.Instance.getImpl(APIScene.name, OP.LoadScene);
     if (proxy) {
@@ -55,7 +48,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
 
   public static async remove(index: number): Promise<SceneHandle> {
     let model = new APIScene();
-    model.index = index;
+    // model.index = index;
 
     return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
   }

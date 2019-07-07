@@ -1,4 +1,3 @@
-import { Subscription } from "rxjs";
 import { HookEvents } from "./../../plugin/hooks/hook-events";
 import { HookManager } from "./../../plugin/hooks/hook-manager";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";

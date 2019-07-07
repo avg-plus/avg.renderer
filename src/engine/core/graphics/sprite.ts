@@ -28,12 +28,31 @@ export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
   constructor(type: SpriteType, texture: PIXI.Texture, width?: number, height?: number) {
     super(texture);
 
+    this.initialX = 0;
+    this.initialY = 0;
+
     this.spriteType = this.spriteType;
     this.spriteDebugger = new SpriteDebugger(this);
   }
 
+  public get scaleX() {
+    return super.scale.x;
+  }
+
+  public set scaleX(value: number) {
+    super.scale.x = value;
+  }
+
+  public get scaleY() {
+    return super.scale.y;
+  }
+
+  public set scaleY(value: number) {
+    super.scale.y = value;
+  }
+
   // 缩放模式
-  public resizeMode: ResizeMode = ResizeMode.Stretch;
+  public resizeMode: ResizeMode = ResizeMode.Default;
 
   // 居中显示
   public center = false;
@@ -50,6 +69,15 @@ export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
 
   // 平铺瓦片模式
   public isTilingMode = false;
+
+  /**
+   * 初始坐标，作为摄像机的移动偏移参考量，只读
+   *
+   * @memberof Sprite
+   */
+
+  public initialX = 0;
+  public initialY = 0;
 
   /**
    * 设置摄像机距离

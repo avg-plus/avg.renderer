@@ -103,6 +103,8 @@ export class Transpiler {
               property.name = property.name.replace(asyncSymbol, "");
 
               // 在参数表最后添加一个新的字符串参数，用于表示异步模式
+              console.log(node);
+
               node.arguments.push({
                 value: "__async_call__",
                 type: "Literal"
@@ -165,9 +167,11 @@ export class Transpiler {
         +(async() => {
           try { 
             ${asyncTransformCode}
-            this.done();
+            
+            window.done();
           } catch (err) {
-            AVGEngineError.emit("${i18n.lang.SCRIPTING_AVS_RUNTIME_EXCEPTION}", err, {
+            console.log(err);
+            window.AVGEngineError.emit("${i18n.lang.SCRIPTING_AVS_RUNTIME_EXCEPTION}", err, {
               file: "${this._file}"
             });
           }

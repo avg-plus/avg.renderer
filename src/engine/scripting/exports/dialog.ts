@@ -1,7 +1,7 @@
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { APIDialogueChoice, SelectedDialogueChoice } from "../api/api-dialogue-choices";
 import { DialogueChoice } from "../../data/dialogue-choice";
-import { isNull, paramCompatible } from "../../core/utils";
+import { isNullOrUndefined, paramCompatible } from "../../core/utils";
 import { AVGGame } from "../../core/game";
 import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
@@ -27,7 +27,7 @@ export class EngineAPI_Dialog extends AVGExportedAPI {
 
     let result: SelectedDialogueChoice;
     const proxy = APIManager.Instance.getImpl(APIDialogueChoice.name, OP.ShowChioce);
-    if (isNull(proxy) && AVGGame.isLoading()) {
+    if (isNullOrUndefined(proxy) && AVGGame.isLoading()) {
       result = Sandbox.runtime.choices[AVGArchives.loadChoiceCount++];
     } else {
       result = <SelectedDialogueChoice>await proxy.runner(<APIDialogueChoice>model);

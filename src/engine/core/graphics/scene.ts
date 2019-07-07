@@ -10,6 +10,7 @@ import { isNullOrUndefined } from "util";
 import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
+import { isForOfStatement } from "typescript";
 
 export class Scene {
   isTilingMode = false;
@@ -26,6 +27,13 @@ export class Scene {
   protected mainContainer: PIXI.Container = new PIXI.Container();
 
   private resourceLoader = new Loader.Loader();
+
+  // 摄像机参数
+  private currentCameraData = {
+    x: 0,
+    y: 0,
+    distance: 0
+  };
 
   constructor(app: PIXI.Application, private width: number, private height: number) {
     this.app = app;
@@ -115,7 +123,9 @@ export class Scene {
           }
         }
 
-        sprite.spriteDebugger.update();
+        if (sprite.spriteDebugger) {
+          sprite.spriteDebugger.update();
+        }
       });
     });
   }
@@ -133,6 +143,8 @@ export class Scene {
       // 计算立绘的坐标
       if (sprite.spriteType === SpriteType.Character) {
         sprite.x = sprite.x * xRatio;
+        // sprite.scale.x = xRatio;
+
         sprite.spriteDebugger.update();
       }
     });
@@ -159,14 +171,19 @@ export class Scene {
   }
 
   public cameraMove(x: number, y: number, duration: number = 2000) {
+    this.currentCameraData.x = x;
+    this.currentCameraData.y = y;
+
     this.children().map(sprite => {
-      this.updateCameraMoveRendering(sprite, x, y, duration);
+      this.updateCameraMoveRendering(sprite, this.currentCameraData.x, this.currentCameraData.y, duration);
     });
   }
 
   public cameraZoom(distance: number, duration: number = 2000) {
+    this.currentCameraData.distance += distance;
+
     this.children().map(sprite => {
-      this.updateCameraZoomRendering(sprite, distance, duration);
+      this.updateCameraZoomRendering(sprite, this.currentCameraData.distance, duration);
     });
   }
   /**
@@ -254,8 +271,8 @@ export class Scene {
     sprite.name = name;
 
     // 设置为原图大小
-    sprite.width = sprite.texture.width;
-    sprite.height = sprite.texture.height;
+    // sprite.width = sprite.texture.width;
+    // sprite.height = sprite.texture.height;
 
     // 初始化滤镜为空
     sprite.filters = [];
@@ -266,36 +283,6 @@ export class Scene {
     // 触发摄像机渲染
     // this.updateCameraMoveRendering(sprite, sprite.x, sprite.y, 1);
     this.updateCameraZoomRendering(sprite, 0, 1);
-
-    // test
-
-    // if (name === "char1") {
-    //   setTimeout(() => {
-    //     SpriteAnimateDirector.playAnimationMacro(
-    //       AnimateTargetType.Sprite,
-    //       sprite,
-    //       {
-    //         totalDuration: 1000,
-    //         timeline: [
-    //           {
-    //             alpha: 0.5,
-    //             x: 333,
-    //             duration: 5000
-    //           },
-    //           {
-    //             x: 800,
-    //             duration: 1000
-    //           },
-    //           {
-    //             x: 0,
-    //             alpha: 1,
-    //             duration: 1000
-    //           }
-    //         ]
-    //       }
-    //     );
-    //   }, 3000);
-    // }
   }
 
   public static to(target: {}, duration: number, vars: {}, position?: any) {
@@ -378,12 +365,7 @@ export class Scene {
     console.log("Enabled tiling mode: ", this.children());
   }
 
-  public async addFromImage(
-    name: string,
-    url: string,
-    zOrder: number | LayerOrder = LayerOrder.TopLayer,
-    type: SpriteType = SpriteType.Normal
-  ): Promise<Sprite> {
+  public async loadFromImage(name: string, url: string, type: SpriteType = SpriteType.Normal): Promise<Sprite> {
     return new Promise<Sprite>((resolve, reject) => {
       ResourceManager.addLoading(name, url, resource => {
         console.log("On resource loaded: ", resource);
@@ -395,7 +377,7 @@ export class Scene {
           sprite = new Sprite(type, PIXI.Texture.from(resource.data));
         }
 
-        this.addSprite(name, sprite, zOrder);
+        sprite.name = name;
         resolve(sprite);
       });
     });

@@ -49,11 +49,6 @@ export class TitleViewComponent implements OnInit, AfterViewInit {
       y: 30
     });
 
-    const titleScene = new APIScene();
-    titleScene.data.file = ResourceData.from("forest-2.jpg", ResourcePath.Backgrounds);
-    titleScene.index = 0;
-    this.titleViewBackgroundCanvas.setBackground(titleScene);
-
     this.titleViewBackgroundCanvas.snow();
   }
 }

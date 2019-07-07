@@ -6,6 +6,7 @@ export class SceneHandle {
 }
 
 export class APIScene extends AVGScriptUnit {
-  public index: number = 0;
+  public name: string = "";
+  public filename: string;
   public data: Scene = new Scene();
 }

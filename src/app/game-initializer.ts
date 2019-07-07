@@ -1,3 +1,4 @@
+import { SlotManager } from "./../engine/plugin/hooks/slot-manager";
 import { Injectable } from "@angular/core";
 
 import { LoadingLayerService } from "./components/loading-layer/loading-layer.service";
@@ -74,6 +75,10 @@ export class GameInitializer implements CanActivate {
   // Apply filesystem implementations to engine
   public async initFileSystem() {
     await AVGNativeFS.initFileSystem();
+  }
+
+  public async initGameEngineData() {
+    SlotManager.init();
   }
 
   // Init engine settings

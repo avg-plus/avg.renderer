@@ -79,6 +79,7 @@ export class DebugPanel {
     this.spriteFolder.add(sprite, "center");
     this.spriteFolder.add(sprite, "isTilingMode");
     this.spriteFolder.add(sprite, "renderCameraDepth");
+    this.spriteFolder.add(sprite, "renderInCamera");
 
     this.spriteFolder.open();
   }

@@ -32,7 +32,8 @@ export class APIManager {
 
   public injectExports() {
     this.registeredClasses().forEach((value, key) => {
-      Sandbox[key] = global[key] = value;
+      Sandbox.inject(key, value);
+      // Sandbox[key] = global[key] = value;
     });
   }
 

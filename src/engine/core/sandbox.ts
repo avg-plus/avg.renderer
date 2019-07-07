@@ -5,14 +5,14 @@ import { AVGStory } from "../scripting/story";
 import { SelectedDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
 
 export class Sandbox {
-  public done: () => void;
-  public console = console;
-  // public api = (global["api"] = api);
-  public $data = (global["$data"] = {});
+  public static console = console;
   public static storyQueue: AVGStory[] = [];
 
-  AVGEngineError = (global["AVGEngineError"] = AVGEngineError);
+  public $data = (global["$data"] = {});
+  public AVGEngineError = (global["AVGEngineError"] = AVGEngineError);
   public game = global["game"];
+
+  public done: () => void;
 
   public static inject(name: string, t: any) {
     Sandbox[name] = global[name] = t;

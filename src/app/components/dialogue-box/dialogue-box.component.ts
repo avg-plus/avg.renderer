@@ -36,6 +36,9 @@ import { GameWorld } from "engine/core/graphics/world";
 import { LayerOrder } from "engine/core/graphics/layer-order";
 import { ResizeMode } from "engine/core/graphics/sprite";
 import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
+import { SlotManager } from "engine/plugin/hooks/slot-manager";
+import { HookSlots } from "engine/plugin/hooks/hook-slots";
+import { SpriteAnimateDirector } from "engine/core/graphics/sprite-animate-director";
 
 export enum DialogueBoxStatus {
   None,
@@ -239,35 +242,33 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public async showCharacter(api: APICharacter, isUpdate = false) {
     const character = <Character>api.data;
 
+    let slot = SlotManager.getSlot(HookSlots.CharacterEnterAnimation);
+
     const image = new ScreenImage();
     image.file = ResourceData.from(api.filename);
-    image.renderer = <Renderer>character;
+    image.renderer = <Renderer>character.renderer;
     image.spriteType = SpriteType.Character;
     image.name = api.name;
 
     const hookContext = {
       name: image.name,
       filename: api.filename,
-      renderer: image.renderer
+      renderer: image.renderer,
+      enterAnimation: slot
     };
 
     // @ Hook 触发 CharacterBeforeEnter
     const hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeEnter, hookContext);
 
     // 重置数据
-    image.name = hookResult.name;
-    image.file = ResourceData.from(hookResult.filename);
-    image.renderer = hookResult.renderer;
+    if (hookResult) {
+      image.name = hookResult.name;
+      image.file = ResourceData.from(hookResult.filename);
+      image.renderer = hookResult.renderer;
+      slot = hookResult.enterAnimation;
+    }
 
     if (isUpdate === false) {
-      // image.animation.name = "flyin";
-
-      // const options = new WidgetAnimation_FlyInOptions();
-      // options.direction = "left";
-      // options.duration = 500;
-      // options.offset = 40;
-      // image.animation.options = options;
-
       // 跳过模式处理，忽略时间
       if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
         // options.duration = 0;
@@ -286,13 +287,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.currentCharacter = hookContext;
       if (api.isAsync) {
-        SpriteWidgetManager.addSpriteWidget(image);
+        SpriteWidgetManager.addSpriteWidget(image, slot);
       } else {
-        await SpriteWidgetManager.addSpriteWidget(image);
+        await SpriteWidgetManager.addSpriteWidget(image, slot);
       }
 
       // @ Hook 触发 CharacterAfterEnter
-      await HookManager.triggerHook(HookEvents.CharacterAfterEnter, hookContext);
+      // await HookManager.triggerHook(HookEvents.CharacterAfterEnter, {});
     }
   }
 

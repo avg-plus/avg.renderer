@@ -5,7 +5,7 @@ export function isObject(item) {
   return item && typeof item === "object" && !Array.isArray(item);
 }
 
-export function isNull(obj) {
+export function isNullOrUndefined(obj) {
   return obj === null || obj === undefined;
 }
 

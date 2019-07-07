@@ -7,7 +7,7 @@ import { AVGGame } from "engine/core/game";
 import { i18n } from "engine/core/i18n";
 
 export class AVGStory {
-  private static sanbox: Sandbox = new Sandbox();
+  private static sandbox: Sandbox = new Sandbox();
 
   // private _scriptUnits: Array<AVGScriptUnit> = [];
   // private _cursor: number = 0;
@@ -58,12 +58,13 @@ export class AVGStory {
         };
 
         try {
-          AVGStory.sanbox.game = AVGGame.getInstance();
+          AVGStory.sandbox.game = AVGGame.getInstance();
+          AVGStory.sandbox.done = global["done"] = () => {
+            if (resolve) resolve();
+          };
+
           const context = {
-            ...AVGStory.sanbox,
-            done: () => {
-              if (resolve) resolve();
-            }
+            ...AVGStory.sandbox
           };
 
           evalInContext(this._compiled, context);

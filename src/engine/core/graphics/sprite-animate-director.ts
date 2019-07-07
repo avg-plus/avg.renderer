@@ -1,7 +1,7 @@
 import * as gsap from "gsap";
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
-import { isNull } from "../utils";
+import { isNullOrUndefined } from "../utils";
 
 export enum AnimateTargetType {
   Camera,
@@ -16,7 +16,7 @@ class SpriteMacroFrame extends MacroFrame {
   [key: string]: any;
 }
 
-class CameraMacroFrame {
+class CameraMacroFrame extends MacroFrame {
   x: number = 0;
   y: number = 0;
   zoom: number = 1;
@@ -70,7 +70,7 @@ export class SpriteAnimateDirector {
     }
 
     const timeline = new gsap.TimelineMax();
-    if (!isNull(macroObject.repeat)) {
+    if (!isNullOrUndefined(macroObject.repeat)) {
       timeline.repeat(macroObject.repeat);
     }
 
@@ -78,7 +78,7 @@ export class SpriteAnimateDirector {
       // 初始关键帧
       //  - 如初始关键帧为 null, 则从对象当前状态开始
       if (initialFrame) {
-        timeline.to(target, 0.00001, initialFrame, 0);
+        timeline.to(target, 1 / 1000, initialFrame, 0);
       }
 
       // 播放时间轴
@@ -90,7 +90,7 @@ export class SpriteAnimateDirector {
         vars.ease = null;
 
         const position = lastFrame ? `+=${lastFrame.duration / 1000}` : null;
-        timeline.to(target, duration / 1000 || 1, vars);
+        timeline.to(target, (duration || 1) / 1000, vars);
       }
 
       // 设置时间轴的总时间
@@ -100,10 +100,20 @@ export class SpriteAnimateDirector {
     } else if (type === AnimateTargetType.Camera) {
       const scene = target as Scene;
       const cameraInitialFrame = initialFrame as CameraMacroFrame;
+
       // 初始关键帧
       //  - 如初始关键帧为 null, 则从对象当前状态开始
       if (cameraInitialFrame) {
         scene.cameraMove(cameraInitialFrame.x, cameraInitialFrame.y, 0.00001);
+      }
+
+      // 播放时间轴
+      for (let i = 0; i < frames.length; ++i) {
+        const frame = frames[i] as CameraMacroFrame;
+
+        // duration 不需要转换单位
+        scene.cameraMove(frame.x, frame.x, frame.duration);
+        scene.cameraZoom(frame.zoom, frame.duration);
       }
     }
 

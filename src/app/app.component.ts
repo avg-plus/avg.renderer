@@ -46,6 +46,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initGameSettings();
     await this.initializer.initHotkeys();
     await this.initializer.initDesktopWindow();
+    await this.initializer.initGameEngineData();
     await this.initializer.initGlobalClickEvent();
     await this.initializer.initLoadingService();
     await this.initializer.initAPI();

@@ -134,16 +134,9 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
       } else if (value.api instanceof APIScene) {
         if (value.op === OP.LoadScene) {
           // Load scene didn't support sync mode anymore
-          this.backgroundCanvas.setBackground(value.api).then(
-            () => {
-              const scenHandle = new SceneHandle();
-              scenHandle.index = 0;
-              value.resolver(scenHandle);
-            },
-            _ => {}
-          );
+          await this.backgroundCanvas.setBackground(value.api);
+          value.resolver(value.api.name);
         } else if (value.op === OP.RemoveScene) {
-          const index = value.api.index;
           this.backgroundCanvas.removeBackground();
 
           value.resolver();
