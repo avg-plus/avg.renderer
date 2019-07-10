@@ -1,7 +1,8 @@
+import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import * as joi from "joi";
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
-import { Renderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/renderer";
 
 // 暂存导出的类，APIManager 加载后会取走
 export const preExportedSet = new Set();
@@ -14,6 +15,10 @@ export function APIExport(name: string, t: any) {
 }
 
 export class AVGExportedAPI {
+  protected static checkAsynchronously(args: any[]) {
+    return args[args.length - 1] === "__async_call__";
+  }
+
   protected static APIParametersValidate(schema, data: any) {
     const validateResult = schema.validate(data);
     if (validateResult.error) {
@@ -60,7 +65,34 @@ export class AVGExportedAPI {
     );
   }
 
-  protected static validateRenderer(renderer: Renderer) {
+  protected static validateSpriteAnimationMacro(animation: AnimationMacro) {
+    return this.APIParametersValidate(
+      joi.object().keys({
+        totalDuration: joi
+          .number()
+          .optional()
+          .min(1)
+          .description("时间轴总播放时长（如指定该参数，则忽略帧内的duration）"),
+        initialFrame: joi
+          .object()
+          .optional()
+          .description("初始关键帧"),
+        repeat: joi
+          .number()
+          .optional()
+          .min(-1)
+          .description("重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"),
+        timeline: joi
+          .array()
+          .min(0)
+          .required()
+          .description("初始关键帧")
+      }),
+      animation
+    );
+  }
+
+  protected static validateRenderer(renderer: AVGSpriteRenderer) {
     return this.APIParametersValidate(
       joi.object().keys({
         x: joi

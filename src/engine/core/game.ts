@@ -17,13 +17,19 @@ import { PluginManager } from "engine/plugin/plugin-manager";
 
 export enum GameRunningType {
   Normal,
-  Loading
+  Loading,
+  Editor
 }
 
 // 游戏是否加载完成
 export enum GameStatus {
   Loading, // 正在加载
   Loaded // 已进入主场景
+}
+
+export enum EngineMode {
+  Normal,
+  Editor
 }
 
 export class AVGGame {
@@ -55,17 +61,17 @@ export class AVGGame {
     return this._gameStatus;
   }
 
-  public watch(event: string, cb: (data: any) => void) {
-    this._events.on(event, cb);
-  }
+  // public watch(event: string, cb: (data: any) => void) {
+  //   this._events.on(event, cb);
+  // }
 
-  public watchOnce(event: string, cb: (data: any) => void) {
-    this._events.once(event, cb);
-  }
+  // public watchOnce(event: string, cb: (data: any) => void) {
+  //   this._events.once(event, cb);
+  // }
 
-  public emitMessage(event: string, data?: any) {
-    this._events.emit(event, data);
-  }
+  // public emitMessage(event: string, data?: any) {
+  //   this._events.emit(event, data);
+  // }
 
   public static getInstance() {
     if (!this._instance) {
@@ -75,11 +81,11 @@ export class AVGGame {
     return this._instance;
   }
 
-  public setRunningPlatform(platform: GameRunningPlatform) {}
+  // public setRunningPlatform(platform: GameRunningPlatform) {}
 
-  public setResolution(screen: Screen) {
-    this._screen = screen;
-  }
+  // public setResolution(screen: Screen) {
+  //   this._screen = screen;
+  // }
 
   public getResolution(): Screen {
     return this._screen;
@@ -123,9 +129,9 @@ export class AVGGame {
     await EngineAPI_Text.hide();
     await await EngineAPI_Camera.transitionTo("black", 1, 0);
 
-    for (let i = 0; i < 99; ++i) {
-      await EngineAPI_Scene.remove(i);
-    }
+    // for (let i = 0; i < 99; ++i) {
+    //   await EngineAPI_Scene.remove(i);
+    // }
 
     await EngineAPI_Camera.to(0, { x: 0, y: 0, scale: 1 }, 0);
 

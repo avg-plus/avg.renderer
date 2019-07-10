@@ -9,7 +9,7 @@ import { Subtitle } from "engine/data/screen-subtitle";
 import { MeasurementUnitPart, AVGMeasurementUnit, UnitType } from "engine/core/measurement-unit";
 import { Setting } from "engine/core/setting";
 import { EngineUtils } from "engine/core/engine-utils";
-import { Renderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/renderer";
 
 @Component({
   selector: "text-widget",
@@ -55,7 +55,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
   public update() {
     const subtitleData = <Subtitle>this.data;
 
-    const renderer = new Renderer();
+    const renderer = new AVGSpriteRenderer();
 
     // renderer.x = subtitleData.x;
     // renderer.y = subtitleData.y;

@@ -1,5 +1,5 @@
 import { AVGData } from "./avg-data";
-import { Renderer } from "./renderer";
+import { AVGSpriteRenderer } from "./renderer";
 
 export class Avatar extends AVGData {
 

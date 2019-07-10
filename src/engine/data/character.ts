@@ -1,6 +1,6 @@
 import { Avatar } from "./avatar";
-import { Renderer } from "./renderer";
+import { AVGSpriteRenderer } from "./renderer";
 
 export class Character {
-  public renderer?: Renderer = new Renderer();
+  public renderer?: AVGSpriteRenderer = new AVGSpriteRenderer();
 }

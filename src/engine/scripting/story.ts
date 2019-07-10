@@ -60,7 +60,11 @@ export class AVGStory {
         try {
           AVGStory.sandbox.game = AVGGame.getInstance();
           AVGStory.sandbox.done = global["done"] = () => {
-            if (resolve) resolve();
+            console.log("script execute done.");
+            
+            if (resolve) {
+              resolve();
+            }
           };
 
           const context = {

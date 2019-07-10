@@ -1,7 +1,7 @@
 import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 const characterEnterAnimationSlot: AnimationMacro = {
-  totalDuration: 1400,
+  totalDuration: 800,
   initialFrame: {
     alpha: 0
   },

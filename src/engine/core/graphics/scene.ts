@@ -11,6 +11,7 @@ import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
 import { isForOfStatement } from "typescript";
+import { SpriteDebugger } from "./sprite-debugger";
 
 export class Scene {
   isTilingMode = false;
@@ -58,6 +59,9 @@ export class Scene {
       this.sortChildren();
 
       this.children().map(sprite => {
+        if (!(sprite instanceof Sprite)) {
+          return;
+        }
         const xRadio = this.renderer.width / sprite.texture.width;
         const yRadio = this.renderer.height / sprite.texture.height;
 
@@ -209,7 +213,7 @@ export class Scene {
     const moveY = -(y * moveRatio + compensation) + sprite.y;
 
     if (sprite.isTilingMode) {
-      gsap.TweenLite.to(sprite.tilePosition, duration / 1000, {
+      gsap.TweenLite.to((<any>sprite).tilePosition, duration / 1000, {
         x: moveX,
         y: moveY
       });
@@ -280,6 +284,8 @@ export class Scene {
     // 添加到主容器
     this.mainContainer.addChild(sprite);
 
+    sprite.spriteDebugger = new SpriteDebugger(sprite);
+
     // 触发摄像机渲染
     // this.updateCameraMoveRendering(sprite, sprite.x, sprite.y, 1);
     this.updateCameraZoomRendering(sprite, 0, 1);
@@ -315,6 +321,7 @@ export class Scene {
         insertPosition = this.mainContainer.children.length + 1;
       }
     }
+
     return insertPosition;
   }
 
@@ -331,6 +338,7 @@ export class Scene {
   }
 
   private sortChildren() {
+    // TODO: 可优化，放到帧循环中进行排序
     const children: Sprite[] = <Sprite[]>this.mainContainer.children;
 
     const len = children.length;

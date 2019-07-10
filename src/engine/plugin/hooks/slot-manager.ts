@@ -1,6 +1,8 @@
 import { HookSlots } from "./hook-slots";
 import characterEnterAnimationSlot from "./slots/slot.character.enter";
 import sceneEnterAnimationSlot from "./slots/slot.scene.enter";
+import characterLeaveAnimationSlot from "./slots/slot.character.leave";
+import sceneLeaveAnimationSlot from "./slots/slot.scene.leave";
 
 export class SlotData {
   public defaultSlot: any;
@@ -12,7 +14,9 @@ export class SlotManager {
 
   public static init() {
     this.initDefaultSlot(HookSlots.CharacterEnterAnimation, characterEnterAnimationSlot);
+    this.initDefaultSlot(HookSlots.CharacterLeaveAnimation, characterLeaveAnimationSlot);
     this.initDefaultSlot(HookSlots.SceneEnterAnimation, sceneEnterAnimationSlot);
+    this.initDefaultSlot(HookSlots.SceneLeaveAnimation, sceneLeaveAnimationSlot);
   }
 
   public static getSlot(slotName: HookSlots) {

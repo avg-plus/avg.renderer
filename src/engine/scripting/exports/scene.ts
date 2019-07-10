@@ -21,7 +21,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
    */
   public static async load(id: string, filename: string, options: Scene): Promise<SceneHandle> {
     let model = new APIScene();
-    model.isAsync = arguments[arguments.length - 1];
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
     model.name = super.validateImageID(id);
     model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Backgrounds).filename;
@@ -46,8 +46,10 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     }
   }
 
-  public static async remove(index: number): Promise<SceneHandle> {
+  public static async remove(id: string): Promise<SceneHandle> {
     let model = new APIScene();
+    model.name = super.validateImageID(id);
+
     // model.index = index;
 
     return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);

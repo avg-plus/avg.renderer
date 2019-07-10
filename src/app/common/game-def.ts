@@ -1,3 +1,3 @@
-export class GameDef {
-    public static MaxBackgroundLayers = 5;
-}
+// export class GameDef {
+//     public static MaxBackgroundLayers = 5;
+// }

@@ -1,8 +1,8 @@
 import { ResourceData } from "./resource-data";
 import { WidgetAnimation } from "./screen-widget";
 import { ImageTransform } from "../const/model";
-import { Renderer } from "./renderer";
+import { AVGSpriteRenderer } from "./renderer";
 
 export class Scene {
-  public renderer?: Renderer = new Renderer();
+  public renderer?: AVGSpriteRenderer = new AVGSpriteRenderer();
 }

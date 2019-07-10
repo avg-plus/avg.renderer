@@ -4,16 +4,16 @@ import { Sprite } from "./sprite";
 import { DebugPanel } from "../../../app/common/debugger/debug-panel";
 
 export class SpriteDebugger {
-  private graphics: PIXI.Graphics;
+  private boundingBox: PIXI.Graphics;
   private sprite: Sprite;
   private dragging: any;
   private draggingData: PIXI.interaction.InteractionData;
 
   constructor(sprite: Sprite) {
     // 初始化调试信息框
-    this.graphics = new PIXI.Graphics();
-    this.graphics.lineStyle(1, 0xff0000);
-    this.graphics.interactive = true;
+    this.boundingBox = new PIXI.Graphics();
+    this.boundingBox.lineStyle(1, 0x000000);
+    this.boundingBox.interactive = true;
 
     // 信息
     this.sprite = sprite;
@@ -25,7 +25,7 @@ export class SpriteDebugger {
       .on("pointerupoutside", this.onDragEnd.bind(this))
       .on("pointermove", this.onDragMove.bind(this));
 
-    this.sprite.addChild(this.graphics);
+    this.sprite.parent.addChild(this.boundingBox);
   }
 
   private onDragStart(event) {
@@ -44,11 +44,6 @@ export class SpriteDebugger {
 
   private onDragMove() {
     if (this.dragging) {
-      // const newPosition = this.draggingData.getLocalPosition(this.sprite.parent);
-
-      // this.sprite.x = newPosition.x;
-      // this.sprite.y = newPosition.y;
-
       var newPosition = this.draggingData.getLocalPosition(this.sprite.parent);
       this.sprite.position.x += newPosition.x - this.dragging.x;
       this.sprite.position.y += newPosition.y - this.dragging.y;
@@ -59,35 +54,54 @@ export class SpriteDebugger {
   }
 
   public update() {
-    if (this.graphics) {
+    if (this.boundingBox) {
       this.debugClearInfoBox();
-      this.graphics.drawRect(0, 0, this.sprite.width, this.sprite.height);
 
-      this.graphics.beginFill(0xff0000);
-      this.graphics.drawRect(0, 0, 320, 22);
-      this.graphics.endFill();
+      const anchorX = this.sprite.anchor.x;
+      const anchorY = this.sprite.anchor.y;
 
-      let text = new PIXI.Text(
-        `position (${this.sprite.x.toFixed(2)},${this.sprite.y.toFixed(2)}), [${this.sprite.width.toFixed(2)}x${this.sprite.height.toFixed(2)}]`,
+      this.boundingBox.drawRect(
+        this.sprite.x - this.sprite.width * anchorX,
+        this.sprite.y - this.sprite.height * anchorY,
+        this.sprite.width,
+        this.sprite.height
+      );
+
+      this.boundingBox.beginFill(0x000000, 0.8);
+      this.boundingBox.drawRect(
+        this.sprite.x - this.sprite.width * anchorX,
+        this.sprite.y - this.sprite.height * anchorY,
+        160,
+        58
+      );
+      this.boundingBox.endFill();
+
+      const text = new PIXI.Text(
+        `position: (${this.sprite.x.toFixed(2)},${this.sprite.y.toFixed(2)})` +
+          "\n" +
+          `size: ${this.sprite.width.toFixed(2)}x${this.sprite.height.toFixed(2)}` +
+          "\n" +
+          `camera: ${this.sprite.renderInCamera ? "是" : "否"}`,
         new PIXI.TextStyle({
           fontFamily: "Arial",
           dropShadowDistance: 1,
-          fontWeight: "200",
-          // dropShadow: true,
-          fontSize: 18,
+          fontWeight: "100",
+          dropShadow: true,
+          fontSize: 13,
           fill: 0xffffff,
-          align: "center"
+          align: "left"
         })
       );
 
-      this.graphics.addChild(text);
+      text.position.set(this.sprite.x - this.sprite.width * anchorX, this.sprite.y - this.sprite.height * anchorY);
+      this.boundingBox.addChild(text);
     }
   }
 
   public debugClearInfoBox() {
-    if (this.graphics) {
-      this.graphics.clear();
-      this.graphics.removeChildren();
+    if (this.boundingBox) {
+      this.boundingBox.clear();
+      this.boundingBox.removeChildren();
     }
   }
 }

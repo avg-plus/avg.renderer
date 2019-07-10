@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { SpriteDebugger } from "./sprite-debugger";
 import { SpriteType } from "engine/const/sprite-type";
+import { AVGSpriteRenderer } from "engine/data/renderer";
 
 interface IOrderingSpirte {
   zOrder: number;
@@ -14,7 +15,7 @@ export enum ResizeMode {
   Custom // 自定义大小
 }
 
-export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
+export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
   private _distance = 0;
   public static MAX_CAMERA_DISTANCE = 5000;
   public static MIN_CAMERA_DISTANCE = -5000;
@@ -32,8 +33,9 @@ export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
     this.initialY = 0;
 
     this.spriteType = this.spriteType;
-    this.spriteDebugger = new SpriteDebugger(this);
   }
+
+  public renderer: AVGSpriteRenderer;
 
   public get scaleX() {
     return super.scale.x;

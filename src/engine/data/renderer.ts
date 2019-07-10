@@ -3,7 +3,7 @@ export class Filter {
   public value: number;
 }
 
-export class Renderer {
+export class AVGSpriteRenderer {
   public x: number = 0;
   public y: number = 0;
   public width: number = 0;

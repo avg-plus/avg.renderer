@@ -1,3 +1,4 @@
+import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character";
 import { HookEvents } from "./../../../engine/plugin/hooks/hook-events";
 import { HookManager } from "./../../../engine/plugin/hooks/hook-manager";
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
@@ -26,7 +27,7 @@ import {
   WidgetAnimation_FlyOutOptions
 } from "engine/data/screen-widget";
 import { Sandbox } from "engine/core/sandbox";
-import { Renderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/renderer";
 import { SpriteType } from "engine/const/sprite-type";
 import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
 import { APICharacter } from "engine/scripting/api/api-character";
@@ -246,7 +247,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const image = new ScreenImage();
     image.file = ResourceData.from(api.filename);
-    image.renderer = <Renderer>character.renderer;
+    image.renderer = <AVGSpriteRenderer>character.renderer;
     image.spriteType = SpriteType.Character;
     image.name = api.name;
 
@@ -276,20 +277,13 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (isUpdate) {
-      // // Remove first
-      // // await WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, false);
-      // await WidgetLayerService.updateImage(image.name, image);
-      // // @ Hook 触发 CharacterBeforeEnter
-      // const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
-      //   before: this.currentCharacter,
-      //   after: hookContext
-      // });
+      SpriteWidgetManager.updateSpriteWidget(image.name, image);
     } else {
       this.currentCharacter = hookContext;
       if (api.isAsync) {
-        SpriteWidgetManager.addSpriteWidget(image, slot);
+        SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, false);
       } else {
-        await SpriteWidgetManager.addSpriteWidget(image, slot);
+        await SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, true);
       }
 
       // @ Hook 触发 CharacterAfterEnter
@@ -297,37 +291,29 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // public async updateCharacter(api: APICharacter) {
-  //   // @ Hook 触发 CharacterBeforeEnter
-  //   const hookResult = await HookManager.triggerHook(HookEvents.CharacterChanged, {
-  //     before: this.currentCharacter,
-  //     after: {
-  //       name: api.name,
-  //       filename: api.filename,
-  //       renderer: api.data.renderer
-  //     }
-  //   });
-
-  //   await this.showCharacter(api, true);
-  // }
+  public async animateCharacter(api: APIAnimateCharacter): Promise<any> {}
 
   public async hideCharacter(api: APICharacter): Promise<any> {
-    const image = new ScreenImage();
-    image.name = api.name;
-    image.animation.name = "flyout";
+    const slot = SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
 
-    const options = new WidgetAnimation_FlyOutOptions();
-    options.direction = "left";
-    options.duration = 500;
-    options.offset = 40;
-    image.animation.options = options;
+    await SpriteWidgetManager.removeSpriteWidget(api.name, slot, !api.isAsync);
 
-    // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
-      options.duration = 0;
-    }
+    // const image = new ScreenImage();
+    // image.name = api.name;
+    // image.animation.name = "flyout";
 
-    WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, api.isAsync);
+    // const options = new WidgetAnimation_FlyOutOptions();
+    // options.direction = "left";
+    // options.duration = 500;
+    // options.offset = 40;
+    // image.animation.options = options;
+
+    // // 跳过模式处理，忽略时间
+    // if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
+    //   options.duration = 0;
+    // }
+
+    // WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, api.isAsync);
   }
 
   public getTrustedName() {

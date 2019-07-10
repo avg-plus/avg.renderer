@@ -1,11 +1,11 @@
+import { LayerOrder } from "engine/core/graphics/layer-order";
 import { HookSlots } from "./../../../engine/plugin/hooks/hook-slots";
 import { SlotManager } from "engine/plugin/hooks/slot-manager";
-import { Sprite } from "../../../engine/core/graphics/sprite";
+import { Sprite, ResizeMode } from "../../../engine/core/graphics/sprite";
 import { GameWorld } from "../../../engine/core/graphics/world";
 import { Component, OnInit, AfterViewInit, ElementRef, AfterContentInit } from "@angular/core";
 
 import { Effects } from "app/common/effects/effects";
-import { GameDef } from "app/common/game-def";
 
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -36,8 +36,6 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
 
   transitionList = ["iris-in", "iris-out", "wipe", "window-shades", "brush", "brush-down", "crossfade"];
 
-  public scenes: Array<SceneModel> = new Array<SceneModel>(GameDef.MaxBackgroundLayers);
-
   constructor(private elementRef: ElementRef, public sanitizer: DomSanitizer) {
     // this.stylesheetService.initMaskStylesheets();
   }
@@ -53,13 +51,11 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
 
   ngAfterContentInit() {}
 
-  public reset() {
-    this.scenes = [];
-    this.scenes = new Array<SceneModel>(GameDef.MaxBackgroundLayers);
-  }
+  public reset() {}
 
-  public async removeBackground(): Promise<any> {
-    // this.mainScene.removeSprite("scene");
+  public async removeBackground(scene: APIScene): Promise<any> {
+    const slot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    await SpriteWidgetManager.removeSpriteWidget(scene.name, slot);
   }
 
   public async setBackground(scene: APIScene): Promise<any> {
@@ -72,27 +68,26 @@ export class BackgroundCanvasComponent implements OnInit, AfterViewInit, AfterCo
     image.name = scene.name;
 
     const enterSlot = SlotManager.getSlot(HookSlots.SceneEnterAnimation);
+    const leaveSlot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
 
     if (this.currentBackgroundSprite) {
       // 把要设置的图片先放到底层
-      const incommingSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot);
+      const incommingSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false);
+      await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot);
 
-      // 开始淡出当前背景图
-      // await AnimationUtils.animateTo(this.currentBackgroundSprite, 1000, {
-      //   alpha: 0
-      // });
-
-      // GameWorld.defaultScene.removeSprite(image.name);
-
-      incommingSprite.name = image.name;
       this.currentBackgroundSprite = incommingSprite;
     } else {
       if (scene.isAsync) {
-        SpriteWidgetManager.addSpriteWidget(image, enterSlot).then(sprite => {
+        SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false).then(sprite => {
           this.currentBackgroundSprite = sprite;
         });
       } else {
-        this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot);
+        this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(
+          image,
+          enterSlot,
+          LayerOrder.TopLayer,
+          true
+        );
       }
     }
   }

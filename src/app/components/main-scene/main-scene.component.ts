@@ -114,19 +114,16 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           this.dialogueBox.showCharacter(value.api, true);
           value.resolver();
         } else if (value.op === OP.HideCharacter) {
-          this.dialogueBox.hideCharacter(value.api).then(
-            () => {
-              value.resolver();
-            },
-            _ => {}
-          );
+          await this.dialogueBox.hideCharacter(value.api);
+          value.resolver();
         }
       } else if (value.api instanceof APIAnimateCharacter) {
         if (value.op === OP.AnimateCharacter) {
           await SpriteAnimateDirector.playAnimationMacro(
             AnimateTargetType.Sprite,
-            GameWorld.defaultScene.getSpriteByName(value.api.id),
-            value.api.animation
+            GameWorld.defaultScene.getSpriteByName(value.api.name),
+            value.api.animation,
+            !value.api.isAsync
           );
 
           value.resolver();
@@ -137,8 +134,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           await this.backgroundCanvas.setBackground(value.api);
           value.resolver(value.api.name);
         } else if (value.op === OP.RemoveScene) {
-          this.backgroundCanvas.removeBackground();
-
+          await this.backgroundCanvas.removeBackground(value.api);
           value.resolver();
         }
       } else if (value.api instanceof APIEffect) {

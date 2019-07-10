@@ -1,6 +1,6 @@
 import { AVGData } from "./avg-data";
 import { ScreenWidget, ScreenWidgetType } from "./screen-widget";
-import { Renderer } from "./renderer";
+import { AVGSpriteRenderer } from "./renderer";
 
 export class Subtitle extends ScreenWidget {
   public name: string;

@@ -2,7 +2,7 @@ import { SpriteType } from "../const/sprite-type";
 import { ScreenWidget, ScreenWidgetType } from "./screen-widget";
 import { AVGMeasurementUnit } from "../core/measurement-unit";
 import { ResourceData } from "./resource-data";
-import { Renderer } from "./renderer";
+import { AVGSpriteRenderer } from "./renderer";
 
 export class ScreenImage extends ScreenWidget {
   public file: ResourceData;
@@ -13,7 +13,7 @@ export class ScreenImage extends ScreenWidget {
   public heightUnit?: string;
 
   public spriteType: SpriteType;
-  public renderer?: Renderer = new Renderer();
+  public renderer?: AVGSpriteRenderer = new AVGSpriteRenderer();
 
   // public mergeToRenderer?(renderer: Renderer) {
   //   renderer.x = renderer.x || this.x;
