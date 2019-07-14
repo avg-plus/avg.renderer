@@ -29,7 +29,7 @@ export enum ResourcePath {
   Scripts
 }
 
-export class Resource {
+export class GameResource {
   private static _paths: Map<ResourcePath, string>;
   private static _assetsRoot: string;
   private static _dataRoot: string;

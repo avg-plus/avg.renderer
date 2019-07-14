@@ -1,4 +1,5 @@
 import { AVGPlugin } from "../avg-plugin";
+import { EngineUtils } from "engine/core/engine-utils";
 
 export class Conjure {
   private _scripts: string = "";
@@ -28,10 +29,12 @@ export class Conjure {
     return instance;
   }
 
-  public loadScript(scripts: string, injectContext: any): any {
+  public async loadScript(scripts: string, injectContext: any) {
     this._scripts = scripts;
 
-    const entry = eval(scripts);
+    const entry = await EngineUtils.evalInContext(scripts, injectContext);
+
+    // const entry = eval(scripts);
     if (!entry) {
       throw new Error("No exported activate entry function.");
     }

@@ -4,26 +4,33 @@ import { GameWorld } from "./world";
 import { LayerOrder } from "./layer-order";
 import { ResizeMode, Sprite } from "./sprite";
 import { SpriteAnimateDirector, AnimateTargetType, AnimationMacro } from "./sprite-animate-director";
-import { AVGSpriteRenderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 import { isNullOrUndefined } from "../utils";
 import { Texture } from "pixi.js";
 import { SpriteType } from "engine/const/sprite-type";
+import { FilterType } from "./sprite-filters";
 
 export class SpriteWidgetManager {
   public static async addSpriteWidget(
     image: ScreenImage,
     animationMacro: AnimationMacro,
-    layerOrder: LayerOrder = LayerOrder.TopLayer,
+    layerOrder: number | LayerOrder = LayerOrder.TopLayer,
     waitForAnimation: boolean = false
   ): Promise<Sprite> {
     const sprite = await GameWorld.defaultScene.loadFromImage(image.name, image.file.filename);
+    const renderer = image.renderer || new AVGSpriteRenderer();
 
-    // Merge properties of initial frame into sprite
+    // 初始关键帧赋值
     if (animationMacro && animationMacro.initialFrame) {
       Object.assign(sprite, animationMacro.initialFrame);
     }
 
-    let renderer = image.renderer || new AVGSpriteRenderer();
+    // 渲染滤镜
+    if (renderer.filters) {
+      renderer.filters.map(filter => {
+        sprite.spriteFilters.setFilter(<FilterType>filter.name, filter.data);
+      });
+    }
 
     sprite.spriteType = image.spriteType;
     sprite.resizeMode = ResizeMode.Custom;
@@ -37,7 +44,6 @@ export class SpriteWidgetManager {
     sprite.y = isNullOrUndefined(renderer.y) ? 0 : renderer.y;
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
-    // sprite.alpha = 1;
     sprite.rotation = renderer.rotation || 0;
 
     if (sprite.spriteType === SpriteType.Scene) {
@@ -46,7 +52,7 @@ export class SpriteWidgetManager {
       sprite.anchor.set(0.5, 0.5);
     }
 
-    GameWorld.defaultScene.addSprite(sprite.name, sprite, layerOrder);
+    GameWorld.defaultScene.addSprite(image.name, sprite, layerOrder);
 
     // 设置初始坐标，给摄像机提供坐标参考
     sprite.initialX = renderer.x;
@@ -74,18 +80,18 @@ export class SpriteWidgetManager {
    * 更新sprite的纹理（不支持gif）
    *
    * @static
-   * @param {string} id
+   * @param {string} name
    * @param {ScreenImage} newSpriteImage
    * @returns
    * @memberof SpriteWidgetManager
    */
-  public static async updateSpriteWidget(id: string, newSpriteImage: ScreenImage) {
-    const sprite = GameWorld.defaultScene.getSpriteByName(id);
+  public static async updateSpriteWidget(name: string, newSpriteImage: ScreenImage) {
+    const sprite = GameWorld.defaultScene.getSpriteByName(name);
     if (!sprite) {
       return;
     }
 
-    ResourceManager.addLoading(id, newSpriteImage.file.filename, resource => {
+    ResourceManager.addLoading(name, newSpriteImage.file.filename, resource => {
       sprite.texture = Texture.from(resource.data);
     });
   }
@@ -94,26 +100,47 @@ export class SpriteWidgetManager {
     return GameWorld.defaultScene.getSpriteByName(name);
   }
 
-  public static async removeSpriteWidget(
-    id: string,
+  public static async setSpriteFilters(name: string, filterType: FilterType, data: any) {
+    const sprite = GameWorld.defaultScene.getSpriteByName(name);
+    if (!sprite) {
+      return;
+    }
+
+    sprite.spriteFilters.setFilter(filterType, data);
+  }
+
+  public static async animateSpriteWidget(
+    name: string,
     animationMacro: AnimationMacro,
     waitForAnimation: boolean = false
   ) {
-    const sprite = GameWorld.defaultScene.getSpriteByName(id);
+    const sprite = GameWorld.defaultScene.getSpriteByName(name);
     if (!sprite) {
       return;
     }
 
     return new Promise<Sprite>(resolve => {
       if (animationMacro) {
-        SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Sprite, sprite, animationMacro, true).then(() => {
-          GameWorld.defaultScene.removeSprite(id);
+        SpriteAnimateDirector.playAnimationMacro(
+          AnimateTargetType.Sprite,
+          sprite,
+          animationMacro,
+          waitForAnimation
+        ).then(() => {
           resolve();
         });
       } else {
-        GameWorld.defaultScene.removeSprite(id);
         resolve();
       }
     });
+  }
+
+  public static async removeSpriteWidget(
+    name: string,
+    animationMacro: AnimationMacro,
+    waitForAnimation: boolean = false
+  ) {
+    await this.animateSpriteWidget(name, animationMacro, waitForAnimation);
+    GameWorld.defaultScene.removeSprite(name);
   }
 }

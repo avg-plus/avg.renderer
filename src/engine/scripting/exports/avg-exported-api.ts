@@ -2,7 +2,7 @@ import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import * as joi from "joi";
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
-import { AVGSpriteRenderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 
 // 暂存导出的类，APIManager 加载后会取走
 export const preExportedSet = new Set();

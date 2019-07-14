@@ -9,7 +9,7 @@ import { Subtitle } from "engine/data/screen-subtitle";
 import { MeasurementUnitPart, AVGMeasurementUnit, UnitType } from "engine/core/measurement-unit";
 import { Setting } from "engine/core/setting";
 import { EngineUtils } from "engine/core/engine-utils";
-import { AVGSpriteRenderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 
 @Component({
   selector: "text-widget",
@@ -38,7 +38,7 @@ export class TextWidgetComponent extends ScreenWidgetComponent implements OnInit
   protected showWidget() {
     super.showWidget();
     this.update();
-    super.initShowAnimation();
+    // super.initShowAnimation();
 
     this.changeDetectorRef.detectChanges();
   }

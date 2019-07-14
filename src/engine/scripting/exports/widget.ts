@@ -1,7 +1,7 @@
+import { AVGSpriteRenderer } from "../../data/sprite-renderer";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { Subtitle } from "../../data/screen-subtitle";
 import { APIScreenSubtitle, ScreenSubtitleResult } from "../api/api-screen-subtitle";
-import { IDGenerator } from "../../core/id-generator";
 import {
   ScreenPosition,
   WidgetAnimation,
@@ -12,13 +12,14 @@ import {
 import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
 import { ScreenImage } from "../../data/screen-image";
-import { APIScreenImage, ScreenImageResult } from "../api/api-screen-image";
+import { APIScreenImage } from "../api/api-screen-image";
 import { ResourceData } from "../../data/resource-data";
 import { ResourcePath } from "../../core/resource";
 import { paramCompatible } from "../../core/utils";
-import { APIHtmlWidget, HtmlWidgetResult } from "../api/api-html-widget";
+import { APIHtmlWidget } from "../api/api-html-widget";
 import { EngineUtils } from "../../core/engine-utils";
 import { Sandbox } from "../../core/sandbox";
+import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 @APIExport("widget", EngineAPI_Widget)
 export class EngineAPI_Widget extends AVGExportedAPI {
@@ -33,9 +34,9 @@ export class EngineAPI_Widget extends AVGExportedAPI {
 
     model.data.text = text;
     model.data.position = options.position || ScreenPosition.Center;
-    model.data.animation = options.animation || new WidgetAnimation();
-    model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
-    model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
+    // model.data.animation = options.animation || new WidgetAnimation();
+    // model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
+    // model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
 
     // if (!model.data) {
     //     model.data.animation.name = ScreenWidgetAnimation.Enter_Appear;
@@ -45,7 +46,7 @@ export class EngineAPI_Widget extends AVGExportedAPI {
 
     // 跳过模式处理，跳过不执行动画
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      model.data.animation.options.duration = 0;
+      // model.data.animation.options.duration = 0;
     }
 
     return <ScreenSubtitleResult>(
@@ -53,7 +54,7 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     );
   }
 
-  public static async animateText(id: string, animation: WidgetAnimation) {
+  public static async animateText(id: string) {
     let model = new APIScreenSubtitle();
     model.data.name = EngineUtils.makeWidgetID(id);
 
@@ -71,60 +72,36 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     proxy && (await proxy.runner(<APIScreenSubtitle>model));
   }
 
-  public static async image(id: string, file: string, options: ScreenImage, isAsync: boolean = false) {
+  public static async image(name: string, filename: string, options: ScreenImage) {
     let model = new APIScreenImage();
-    model.isAsync = isAsync;
-    model.data = new ScreenImage();
-    Object.assign(model.data, options);
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
-    // model.data.id = "Image_" + IDGenerator.generate();
-    model.data.name = EngineUtils.makeWidgetID(id);
-
-    model.data.file = ResourceData.from(file, ResourcePath.Images);
-    model.data.position = options.position || ScreenPosition.Center;
-    model.data.size = options.size || "100%";
-    model.data.animation = model.data.animation || new WidgetAnimation();
-    model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
-    model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
-
-    // 跳过模式处理，跳过不执行动画
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      model.data.animation.options.duration = 0;
+    if (!options || !(options instanceof Object)) {
+      options = new ScreenImage();
     }
 
-    // paramCompatible<APIScreenImage, ScreenImage>(model, options);
+    model.data = options;
+    model.name = super.validateImageID(name);
+    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Images).filename;
+    model.data.renderer = super.validateRenderer(options.renderer || new AVGSpriteRenderer());
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
 
-    return <ScreenImageResult>(
-      await APIManager.Instance.getImpl(APIScreenImage.name, OP.ShowImageWidget).runner(<APIScreenImage>model)
-    );
+    // // 跳过模式处理，跳过不执行动画
+    // if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+    //   model.data.animation.options.duration = 0;
+    // }
+
+    const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.ShowImageWidget);
+    return await proxy.runner(<APIScreenImage>model);
   }
 
-  public static async updateImage(id: string, file: string, options: ScreenImage, isAsync: boolean = false) {
+  public static async updateImage(name: string, filename: string) {
     let model = new APIScreenImage();
-    model.isAsync = isAsync;
-    model.data = new ScreenImage();
-    Object.assign(model.data, options);
+    model.name = super.validateImageID(name);
+    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Images).filename;
 
-    // model.data.id = "Image_" + IDGenerator.generate();
-    model.data.name = EngineUtils.makeWidgetID(id);
-
-    model.data.file = ResourceData.from(file, ResourcePath.Images);
-    model.data.position = options.position || ScreenPosition.Center;
-    model.data.size = options.size || "100%";
-    model.data.animation = model.data.animation || new WidgetAnimation();
-    model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
-    model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
-
-    // 跳过模式处理，跳过不执行动画
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      model.data.animation.options.duration = 0;
-    }
-
-    // paramCompatible<APIScreenImage, ScreenImage>(model, options);
-
-    return <ScreenImageResult>(
-      await APIManager.Instance.getImpl(APIScreenImage.name, OP.UpdateImageWidget).runner(<APIScreenImage>model)
-    );
+    const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.UpdateImageWidget);
+    proxy && (await proxy.runner(<APIScreenImage>model));
   }
 
   public static async removeText(id: string, options?: { animation?: WidgetAnimation }, isAsync: boolean = false) {
@@ -133,13 +110,13 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     if (id) {
       model.isAsync = isAsync;
       model.data.name = EngineUtils.makeWidgetID(id) || undefined;
-      model.data.animation = options ? options.animation || undefined : undefined;
+      // model.data.animation = options ? options.animation || undefined : undefined;
     }
 
     // 跳过模式处理，跳过不执行动画
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
       if (options && options.animation && options.animation.options) {
-        model.data.animation.options.duration = 0;
+        // model.data.animation.options.duration = 0;
       }
     }
 
@@ -147,32 +124,23 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     proxy && (await proxy.runner(<APIScreenSubtitle>model));
   }
 
-  public static async removeImage(id: string, options: ScreenImage, isAsync: boolean = false) {
-    let model = new APIScreenImage();
-
-    if (id) {
-      model.isAsync = isAsync;
-      model.data.name = EngineUtils.makeWidgetID(id);
-
-      model.data.animation = new WidgetAnimation();
-      model.data.animation.name = ScreenWidgetAnimation.Leave_Hide;
-
-      if (!model.data.animation.options) {
-        model.data.animation.options = new WidgetAnimation_HideOptions();
-      }
+  public static async removeImage(name: string | string[], animation?: AnimationMacro) {
+    let ids = [];
+    if (Array.isArray(name)) {
+      ids = name;
+    } else {
+      ids = [name];
     }
 
-    paramCompatible<APIScreenImage, ScreenImage>(model, options);
+    ids.map(async v => {
+      let model = new APIScreenImage();
+      model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+      model.name = v;
+      model.data.animation = super.validateSpriteAnimationMacro(animation);
 
-    // 跳过模式处理，跳过不执行动画
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      if (options && options.animation && options.animation.options) {
-        model.data.animation.options.duration = 0;
-      }
-    }
-
-    const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.RemoveImageWidget);
-    proxy && (await proxy.runner(<APIScreenImage>model));
+      const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.RemoveImageWidget);
+      return await proxy.runner(<APIScreenImage>model);
+    });
   }
 
   public static async html(id: string, html: string) {

@@ -39,24 +39,24 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
       return;
     }
 
-    if (data.animation) {
-      data.animation.name = data.animation.name ? data.animation.name.toLowerCase() : "";
-    }
+    // if (data.animation) {
+    //   data.animation.name = data.animation.name ? data.animation.name.toLowerCase() : "";
+    // }
 
-    if (data.animation && data.animation.options) {
-      data.animation.options["direction"] = data.animation.options["direction"]
-        ? data.animation.options["direction"].toLowerCase()
-        : "";
-    }
+    // if (data.animation && data.animation.options) {
+    //   data.animation.options["direction"] = data.animation.options["direction"]
+    //     ? data.animation.options["direction"].toLowerCase()
+    //     : "";
+    // }
 
     data.position = data.position ? data.position.toLowerCase() : "";
   }
 
   private initWidgetData(data: ScreenWidget) {
-    data.animation = data.animation || new WidgetAnimation();
-    data.animation.name = data.animation.name || "";
-    data.animation.options = data.animation.options || new WidgetAnimationOptions();
-    data.animation.options.duration = data.animation.options.duration || 0;
+    // data.animation = data.animation || new WidgetAnimation();
+    // data.animation.name = data.animation.name || "";
+    // data.animation.options = data.animation.options || new WidgetAnimationOptions();
+    // data.animation.options.duration = data.animation.options.duration || 0;
 
     return data;
   }
@@ -108,60 +108,60 @@ export class ScreenWidgetComponent implements OnInit, AfterViewInit, AfterViewCh
     // }
   }
 
-  protected initShowAnimation() {
-    setTimeout(() => {
-      switch (this.data.animation.name) {
-        case ScreenWidgetAnimation.Enter_FadeIn:
-          this.fadeIn(this.data.animation.options);
-          break;
-        case ScreenWidgetAnimation.Enter_FlyIn:
-          this.flyIn(<WidgetAnimation_FlyInOptions>this.data.animation.options);
-          break;
-        case ScreenWidgetAnimation.Enter_Appear:
-          this.appear();
-          break;
-        case ScreenWidgetAnimation.Enter_ScaleIn:
-          break;
-        default:
-          console.warn("Could not found animation name [%s]", this.data.animation.name);
-          this.appear();
-          break;
-      }
-    }, 1);
-  }
+  // protected initShowAnimation() {
+  //   setTimeout(() => {
+  //     switch (this.data.animation.name) {
+  //       case ScreenWidgetAnimation.Enter_FadeIn:
+  //         this.fadeIn(this.data.animation.options);
+  //         break;
+  //       case ScreenWidgetAnimation.Enter_FlyIn:
+  //         this.flyIn(<WidgetAnimation_FlyInOptions>this.data.animation.options);
+  //         break;
+  //       case ScreenWidgetAnimation.Enter_Appear:
+  //         this.appear();
+  //         break;
+  //       case ScreenWidgetAnimation.Enter_ScaleIn:
+  //         break;
+  //       default:
+  //         console.warn("Could not found animation name [%s]", this.data.animation.name);
+  //         this.appear();
+  //         break;
+  //     }
+  //   }, 1);
+  // }
 
   public animateWidgetTo(vars: any, duration: number) {
     AnimationUtils.to("animateWidgetTo", this.WidgetElementID, duration, vars, this.onAnimateComplete);
   }
 
   public hideWidget(data: ScreenWidget) {
-    if (!data.animation) {
-      this.hide();
-      return;
-    }
+    // if (!data.animation) {
+    //   this.hide();
+    //   return;
+    // }
 
     this.initWidgetData(data);
     this.lowercaseDataFields(data);
 
-    setTimeout(() => {
-      switch (data.animation.name) {
-        case ScreenWidgetAnimation.Leave_FadeOut:
-          this.fadeOut(data.animation.options);
-          break;
-        case ScreenWidgetAnimation.Leave_FlyOut:
-          this.flyOut(<WidgetAnimation_FlyOutOptions>data.animation.options);
-          break;
-        case ScreenWidgetAnimation.Leave_Hide:
-          this.hide();
-          break;
-        case ScreenWidgetAnimation.Leave_ScaleOut:
-          break;
-        default:
-          console.warn("Could not found animation name [%s]", data.animation.name);
-          this.hide();
-          break;
-      }
-    }, 1);
+    // setTimeout(() => {
+    //   switch (data.animation.name) {
+    //     case ScreenWidgetAnimation.Leave_FadeOut:
+    //       this.fadeOut(data.animation.options);
+    //       break;
+    //     case ScreenWidgetAnimation.Leave_FlyOut:
+    //       this.flyOut(<WidgetAnimation_FlyOutOptions>data.animation.options);
+    //       break;
+    //     case ScreenWidgetAnimation.Leave_Hide:
+    //       this.hide();
+    //       break;
+    //     case ScreenWidgetAnimation.Leave_ScaleOut:
+    //       break;
+    //     default:
+    //       console.warn("Could not found animation name [%s]", data.animation.name);
+    //       this.hide();
+    //       break;
+    //   }
+    // }, 1);
   }
 
   protected appear() {

@@ -1,7 +1,8 @@
 import * as PIXI from "pixi.js";
 import { SpriteDebugger } from "./sprite-debugger";
 import { SpriteType } from "engine/const/sprite-type";
-import { AVGSpriteRenderer } from "engine/data/renderer";
+import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
+import { SpriteFilters } from "./sprite-filters";
 
 interface IOrderingSpirte {
   zOrder: number;
@@ -26,6 +27,8 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
 
   public spriteDebugger: SpriteDebugger;
 
+  public spriteFilters: SpriteFilters;
+
   constructor(type: SpriteType, texture: PIXI.Texture, width?: number, height?: number) {
     super(texture);
 
@@ -33,6 +36,7 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
     this.initialY = 0;
 
     this.spriteType = this.spriteType;
+    this.spriteFilters = new SpriteFilters(this);
   }
 
   public renderer: AVGSpriteRenderer;

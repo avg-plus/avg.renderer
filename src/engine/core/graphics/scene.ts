@@ -12,6 +12,7 @@ import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
 import { isForOfStatement } from "typescript";
 import { SpriteDebugger } from "./sprite-debugger";
+import { SpriteFilters } from "./sprite-filters";
 
 export class Scene {
   isTilingMode = false;
@@ -23,11 +24,8 @@ export class Scene {
   public renderer: PIXI.Renderer;
   public view: HTMLCanvasElement;
 
-  protected gameAreaContainer: PIXI.Container = new PIXI.Container();
-  protected backBufferingContainer: PIXI.Container = new PIXI.Container();
   protected mainContainer: PIXI.Container = new PIXI.Container();
-
-  private resourceLoader = new Loader.Loader();
+  protected transitionContainer: PIXI.Container = new PIXI.Container();
 
   // 摄像机参数
   private currentCameraData = {
@@ -47,8 +45,6 @@ export class Scene {
     this.view.style.overflow = "scroll";
     this.renderer.backgroundColor = 0;
 
-    this.stage.filters = [];
-
     this.stage.addChild(this.mainContainer);
 
     this.app.ticker.add(() => {
@@ -62,6 +58,7 @@ export class Scene {
         if (!(sprite instanceof Sprite)) {
           return;
         }
+
         const xRadio = this.renderer.width / sprite.texture.width;
         const yRadio = this.renderer.height / sprite.texture.height;
 
@@ -69,8 +66,13 @@ export class Scene {
         switch (sprite.resizeMode) {
           case ResizeMode.Stretch: {
             if (!sprite.renderInCamera) {
-              sprite.scale.x = xRadio;
-              sprite.scale.y = yRadio;
+              if (sprite.scale.x !== xRadio) {
+                sprite.scale.x = xRadio;
+              }
+
+              if (sprite.scale.y !== yRadio) {
+                sprite.scale.y = yRadio;
+              }
             }
             break;
           }
@@ -123,7 +125,7 @@ export class Scene {
               sprite.filters.push(blurFilter);
             }
           } else {
-            sprite.filters = [];
+            // sprite.filters = [];
           }
         }
 
@@ -147,7 +149,6 @@ export class Scene {
       // 计算立绘的坐标
       if (sprite.spriteType === SpriteType.Character) {
         sprite.x = sprite.x * xRatio;
-        // sprite.scale.x = xRatio;
 
         sprite.spriteDebugger.update();
       }
@@ -261,7 +262,7 @@ export class Scene {
   }
 
   public get(orderOrIndex: number | LayerOrder = LayerOrder.TopLayer): Sprite {
-    return <Sprite>this.stage.children[this.orderToIndex(orderOrIndex)];
+    return <Sprite>this.children()[this.orderToIndex(orderOrIndex)];
   }
 
   public getSpriteByName(name: string): Sprite {
@@ -277,9 +278,6 @@ export class Scene {
     // 设置为原图大小
     // sprite.width = sprite.texture.width;
     // sprite.height = sprite.texture.height;
-
-    // 初始化滤镜为空
-    sprite.filters = [];
 
     // 添加到主容器
     this.mainContainer.addChild(sprite);
@@ -311,14 +309,14 @@ export class Scene {
   }
 
   private orderToIndex(zOrder: number | LayerOrder = LayerOrder.TopLayer) {
-    let insertPosition = this.mainContainer.children.length;
+    let insertPosition = this.children().length;
     if (typeof zOrder === "number") {
       insertPosition = zOrder;
     } else {
       if (zOrder === LayerOrder.BottomLayer) {
         insertPosition = 0;
       } else if (zOrder === LayerOrder.TopLayer) {
-        insertPosition = this.mainContainer.children.length + 1;
+        insertPosition = this.children().length + 1;
       }
     }
 
@@ -339,7 +337,7 @@ export class Scene {
 
   private sortChildren() {
     // TODO: 可优化，放到帧循环中进行排序
-    const children: Sprite[] = <Sprite[]>this.mainContainer.children;
+    const children: Sprite[] = this.children();
 
     const len = children.length;
     let i, j, tmp;

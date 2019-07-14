@@ -45,8 +45,21 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       // },
       timeline: [
         {
-          x: 100,
-          y: 0
+          x: x,
+          y: y
+        }
+      ]
+    };
+
+    await SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Camera, GameWorld.defaultScene, animation);
+  }
+
+  public static async zoomTo(distance: number) {
+    const animation: AnimationMacro = {
+      totalDuration: 4400,
+      timeline: [
+        {
+          zoom: distance
         }
       ]
     };

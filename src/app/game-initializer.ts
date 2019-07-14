@@ -12,7 +12,7 @@ import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
 import { input } from "engine/core/input";
 import { i18n } from "engine/core/i18n";
 import { EngineSettings } from "engine/core/engine-setting";
-import { Resource } from "engine/core/resource";
+import { GameResource } from "engine/core/resource";
 import { Setting } from "engine/core/setting";
 import { PlatformService } from "engine/core/platform/platform-service";
 import { AVGNativeFS } from "engine/core/native-modules/avg-native-fs";
@@ -112,12 +112,12 @@ export class GameInitializer implements CanActivate {
       dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname);
     }
 
-    Resource.init(assetsRootDirname, dataRootDirname);
+    GameResource.init(assetsRootDirname, dataRootDirname);
   }
 
   // Init settings
   public async initGameSettings() {
-    const settingFile = AVGNativePath.join(Resource.getAssetsRoot(), "game.json");
+    const settingFile = AVGNativePath.join(GameResource.getAssetsRoot(), "game.json");
 
     console.log(AVGNativeFS);
 
@@ -197,7 +197,7 @@ export class GameInitializer implements CanActivate {
       font-family: "DefaultFont";
       font-style: normal;
       font-weight: 400;
-      src: url('${AVGNativePath.join(Resource.getAssetsRoot(), defaultFont)}');
+      src: url('${AVGNativePath.join(GameResource.getAssetsRoot(), defaultFont)}');
     }`;
 
     $("head").append("<style id='default-font'>" + fontStyle + "</style>");

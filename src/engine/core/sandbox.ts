@@ -9,6 +9,7 @@ export class Sandbox {
   public static storyQueue: AVGStory[] = [];
 
   public $data = (global["$data"] = {});
+  // public $global = (global["$global"] = {});
   public AVGEngineError = (global["AVGEngineError"] = AVGEngineError);
   public game = global["game"];
 

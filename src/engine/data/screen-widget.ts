@@ -124,7 +124,7 @@ export class ScreenWidget {
     // }
   }
 
-  public animation: WidgetAnimation = new WidgetAnimation();
+  // public animation: WidgetAnimation = new WidgetAnimation();
 
   constructor(type: ScreenWidgetType) {
     this._widgetType = type;

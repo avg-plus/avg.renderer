@@ -4,8 +4,9 @@
   <dialogue-box id="avg-dialogue-box-layer" class="dialogue-box" #dialogueBox></dialogue-box>
 
   <div id="avg-camera-viewport" [shake]="shakeStyle">
-    <!-- <character-layer #characterLayer></character-layer> -->
-    <background-canvas id="background-layer" class="background" #backgroundCanvas></background-canvas>
+    <div id="avg-viewport-layer">
+      <div id="avg-viewport"></div>
+    </div>
   </div>
   <game-toolbar></game-toolbar>
 </div>

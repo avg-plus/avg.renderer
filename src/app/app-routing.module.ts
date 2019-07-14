@@ -1,11 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { AppComponent } from "./app.component";
-import { TitleViewComponent } from "./components/title-view/title-view.component";
-import { TitleMenuComponent } from "./components/title-menu/title-menu.component";
-import { TitleMenuItemComponent } from "./components/title-menu-item/title-menu-item.component";
-import { TransitionLayerComponent } from "./components/transition-layer/transition-layer.component";
 import { MainSceneComponent } from "./components/main-scene/main-scene.component";
 import { GameInitializer } from "./game-initializer";
 
@@ -15,7 +10,7 @@ const routes: Routes = [
     path: "main-scene",
     component: MainSceneComponent,
     canActivate: [GameInitializer]
-  },
+  }
   // { path: "**", component: AppComponent }
 ];
 

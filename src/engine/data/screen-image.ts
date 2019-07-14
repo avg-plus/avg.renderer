@@ -2,17 +2,19 @@ import { SpriteType } from "../const/sprite-type";
 import { ScreenWidget, ScreenWidgetType } from "./screen-widget";
 import { AVGMeasurementUnit } from "../core/measurement-unit";
 import { ResourceData } from "./resource-data";
-import { AVGSpriteRenderer } from "./renderer";
+import { AVGSpriteRenderer } from "./sprite-renderer";
+import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 export class ScreenImage extends ScreenWidget {
   public file: ResourceData;
 
-  private _size?: string; // (640, 480), (50%, 30%), 50%
+  // private _size?: string; // (640, 480), (50%, 30%), 50%
 
-  public widthUnit?: string;
-  public heightUnit?: string;
+  // public widthUnit?: string;
+  // public heightUnit?: string;
 
   public spriteType: SpriteType;
+  public animation?: AnimationMacro;
   public renderer?: AVGSpriteRenderer = new AVGSpriteRenderer();
 
   // public mergeToRenderer?(renderer: Renderer) {
@@ -25,29 +27,29 @@ export class ScreenImage extends ScreenWidget {
   //   return renderer;
   // }
 
-  public set size(value: string) {
-    const units = AVGMeasurementUnit.fromString(value);
+  // public set size(value: string) {
+  //   const units = AVGMeasurementUnit.fromString(value);
 
-    if (units) {
-      if (units.getLeft()) {
-        this.widthUnit = units.getLeft().getValue();
-      }
+  //   if (units) {
+  //     if (units.getLeft()) {
+  //       this.widthUnit = units.getLeft().getValue();
+  //     }
 
-      if (units.getRight()) {
-        this.heightUnit = units.getRight().getValue();
-      }
+  //     if (units.getRight()) {
+  //       this.heightUnit = units.getRight().getValue();
+  //     }
 
-      this._size = units.getValue();
-    }
-  }
+  //     this._size = units.getValue();
+  //   }
+  // }
 
-  public get size(): string {
-    return this._size;
-  }
+  // public get size(): string {
+  //   return this._size;
+  // }
 
   constructor() {
     super(ScreenWidgetType.Image);
 
-    this.size = "(100%,100%)";
+  //   this.size = "(100%,100%)";
   }
 }

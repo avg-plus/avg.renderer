@@ -7,11 +7,10 @@ import { ElectronService } from "./providers/electron.service";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { GameInitializer } from "./game-initializer";
 import { DebugPanel } from "./common/debugger/debug-panel";
-import { Resource, ResourcePath } from "engine/core/resource";
+import { GameResource, ResourcePath } from "engine/core/resource";
 import { EngineSettings } from "engine/core/engine-setting";
 import { PlatformService } from "engine/core/platform/platform-service";
 import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
-import { APIImplManager } from "./common/api/api-impl-manger";
 
 // 初始化所有 API
 import "../engine/scripting/exports";
@@ -55,14 +54,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.initializer.endInitilizing();
 
         // Start game
-        const entryScript = AVGNativePath.join(Resource.getPath(ResourcePath.Scripts), EngineSettings.get(
+        const entryScript = AVGNativePath.join(GameResource.getPath(ResourcePath.Scripts), EngineSettings.get(
           "engine.env.entry_script_file"
         ) as string);
 
         this.router.navigate(["main-scene", { script: entryScript }]).then(result => {
-          if (result) {
-            TransitionLayerService.fadeTo(0, 0);
-          }
+          // if (result) {
+          //   TransitionLayerService.fadeTo(0, 0);
+          // }
         });
       },
       _ => {}
@@ -94,6 +93,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       });
     }
 
-    refreshLoop();
+    // refreshLoop();
   }
 }

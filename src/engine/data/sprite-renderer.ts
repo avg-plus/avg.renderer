@@ -1,6 +1,6 @@
 export class Filter {
   public name: string = "";
-  public value: number;
+  public data: any;
 }
 
 export class AVGSpriteRenderer {

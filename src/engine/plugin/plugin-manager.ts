@@ -34,7 +34,7 @@ export class PluginManager {
 
   public static async loadScripts(scripts: string) {
     scripts = "const exports = {};\n" + scripts;
-    const instance = this._conjure.loadScript(scripts, {});
+    const instance = await this._conjure.loadScript(scripts, {});
     if (instance) {
       const plugin = <AVGPlugin>instance;
       this.register(plugin);

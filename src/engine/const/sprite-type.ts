@@ -1,5 +1,6 @@
 export enum SpriteType {
   Normal,
   Scene,
-  Character
+  Character,
+  ImageWidget
 }

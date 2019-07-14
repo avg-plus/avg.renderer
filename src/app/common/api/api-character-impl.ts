@@ -3,7 +3,6 @@ import { Impl } from "app/common/api/impl";
 import { OP } from "engine/const/op";
 import { APICharacter } from "engine/scripting/api/api-character";
 import { AVGScriptUnit } from "engine/scripting/script-unit";
-import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character";
 
 export class APICharacterImpl extends Impl {
   @Impl.registerImpl(APICharacter, OP.ShowCharacter)
@@ -17,7 +16,7 @@ export class APICharacterImpl extends Impl {
 
   @Impl.registerImpl(APICharacter, OP.AnimateCharacter)
   public static op_animate(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
-    const script = <APIAnimateCharacter>scriptUnit;
+    const script = <APICharacter>scriptUnit;
 
     return new Promise((resolve, reject) => {
       ScriptingDispatcher.dispatch(OP.AnimateCharacter, script, resolve);

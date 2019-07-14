@@ -1,3 +1,4 @@
+import { FilterType } from "./../../core/graphics/sprite-filters";
 import * as joi from "joi";
 import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import { Character } from "engine/data/character";
@@ -6,7 +7,6 @@ import { ResourcePath } from "engine/core/resource";
 import { OP } from "engine/const/op";
 import { APICharacter } from "../api/api-character";
 import { APIManager } from "../api-manager";
-import { APIAnimateCharacter } from "../api/api-animate-character";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
 
@@ -23,6 +23,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
     model.data = options;
     model.name = super.validateImageID(name);
     model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Characters).filename;
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
     model.data.renderer = super.validateRenderer(options.renderer);
 
     const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.ShowCharacter);
@@ -39,21 +40,21 @@ export class EngineAPI_Character extends AVGExportedAPI {
   }
 
   public static async animate(name: string, animation: AnimationMacro) {
-    const model = new APIAnimateCharacter();
+    const model = new APICharacter();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
     model.name = super.validateImageID(name);
-    model.animation = super.validateSpriteAnimationMacro(animation);
+    model.data.animation = super.validateSpriteAnimationMacro(animation);
 
     const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.AnimateCharacter);
-    proxy && (await proxy.runner(<APIAnimateCharacter>model));
+    proxy && (await proxy.runner(<APICharacter>model));
   }
 
   public static async getRenderer(name: string) {
     return SpriteWidgetManager.getSprite(name);
   }
 
-  public static async hide(name: string | string[]) {
+  public static async hide(name: string | string[], animation?: AnimationMacro) {
     let ids = [];
     if (Array.isArray(name)) {
       ids = name;
@@ -65,9 +66,14 @@ export class EngineAPI_Character extends AVGExportedAPI {
       let model = new APICharacter();
       model.isAsync = arguments[arguments.length - 1] === "__async_call__";
       model.name = v;
+      model.data.animation = super.validateSpriteAnimationMacro(animation);
 
       const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.HideCharacter);
       return await proxy.runner(<APICharacter>model);
     });
+  }
+
+  public static async setFilter(name: string, filterType: FilterType, data: any) {
+    SpriteWidgetManager.setSpriteFilters(name, filterType, data);
   }
 }

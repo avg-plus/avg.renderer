@@ -26,7 +26,7 @@ export class HtmlWidgetComponent extends ScreenWidgetComponent implements OnInit
   protected showWidget() {
     super.showWidget();
     this.update();
-    super.initShowAnimation();
+    // super.initShowAnimation();
   }
 
   public update() {

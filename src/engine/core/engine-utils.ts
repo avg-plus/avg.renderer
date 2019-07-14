@@ -5,6 +5,15 @@ export class EngineUtils {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  // Universal
+  public static async evalInContext(js, context) {
+    const result = (() => {
+      return eval(js);
+    }).call(context);
+
+    return result;
+  }
+
   public static NumericRange(value: number, min: number, max: number): number {
     if (value < min) {
       value = 0;
@@ -64,14 +73,13 @@ export class EngineUtils {
     return filters;
   }
 
-
   public static makeWidgetID(id: string, type?: string) {
     if (type) {
       return `widgets-generated-${type}-${id}`;
     } else {
       return `widgets-generated-${id}`;
     }
-  };
+  }
 
   public static countTo(
     from: number,

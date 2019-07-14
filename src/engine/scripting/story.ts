@@ -5,6 +5,7 @@ import { Sandbox } from "../core/sandbox";
 import { Transpiler } from "./transpiler";
 import { AVGGame } from "engine/core/game";
 import { i18n } from "engine/core/i18n";
+import { EngineUtils } from "engine/core/engine-utils";
 
 export class AVGStory {
   private static sandbox: Sandbox = new Sandbox();
@@ -48,20 +49,11 @@ export class AVGStory {
       try {
         // AVGStory._scriptingResolver = resolve;
 
-        // Universal
-        const evalInContext = (js, context) => {
-          const result = (() => {
-            return eval(js);
-          }).call(context);
-
-          return result;
-        };
-
         try {
           AVGStory.sandbox.game = AVGGame.getInstance();
           AVGStory.sandbox.done = global["done"] = () => {
             console.log("script execute done.");
-            
+
             if (resolve) {
               resolve();
             }
@@ -71,7 +63,7 @@ export class AVGStory {
             ...AVGStory.sandbox
           };
 
-          evalInContext(this._compiled, context);
+          EngineUtils.evalInContext(this._compiled, context);
         } catch (err) {
           throw err;
         }

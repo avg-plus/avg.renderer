@@ -1,4 +1,3 @@
-import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character";
 import { HookEvents } from "./../../../engine/plugin/hooks/hook-events";
 import { HookManager } from "./../../../engine/plugin/hooks/hook-manager";
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
@@ -10,36 +9,16 @@ import { TransitionLayerService } from "../transition-layer/transition-layer.ser
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { DomSanitizer } from "@angular/platform-browser";
 
-import { WidgetLayerService } from "../widget-layer/widget-layer.service";
-import { ImageWidgetComponent } from "../widget-layer/widget-component/image-widget.component";
 import { Dialogue } from "engine/data/dialogue";
 import { Setting } from "engine/core/setting";
 import { PluginManager } from "engine/plugin/plugin-manager";
 import { AVGPluginHooks } from "engine/plugin/avg-plugin";
 import { DialogueChoice } from "engine/data/dialogue-choice";
 import { Character } from "engine/data/character";
-import { ScreenImage } from "engine/data/screen-image";
-import { ResourceData } from "engine/data/resource-data";
 
-import {
-  WidgetAnimation_FlyInOptions,
-  ScreenWidgetType,
-  WidgetAnimation_FlyOutOptions
-} from "engine/data/screen-widget";
-import { Sandbox } from "engine/core/sandbox";
-import { AVGSpriteRenderer } from "engine/data/renderer";
-import { SpriteType } from "engine/const/sprite-type";
 import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
-import { APICharacter } from "engine/scripting/api/api-character";
 import { EngineAPI_Audio } from "engine/scripting/exports/audio";
 import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
-import { GameWorld } from "engine/core/graphics/world";
-import { LayerOrder } from "engine/core/graphics/layer-order";
-import { ResizeMode } from "engine/core/graphics/sprite";
-import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
-import { SlotManager } from "engine/plugin/hooks/slot-manager";
-import { HookSlots } from "engine/plugin/hooks/hook-slots";
-import { SpriteAnimateDirector } from "engine/core/graphics/sprite-animate-director";
 
 export enum DialogueBoxStatus {
   None,
@@ -74,12 +53,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly DIALOGUE_BOX_SHOW_DURATION = 300;
   private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
 
-  private readonly MAX_CHARS = 5;
-
   public character_slot: Array<any>;
   public characters: Array<Character>;
-
-  private currentCharacter = null;
 
   constructor(public changeDetectorRef: ChangeDetectorRef, public sanitizer: DomSanitizer) {
     this.character_slot = new Array<any>(5);
@@ -239,82 +214,6 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   //     resolve();
   //   });
   // }
-
-  public async showCharacter(api: APICharacter, isUpdate = false) {
-    const character = <Character>api.data;
-
-    let slot = SlotManager.getSlot(HookSlots.CharacterEnterAnimation);
-
-    const image = new ScreenImage();
-    image.file = ResourceData.from(api.filename);
-    image.renderer = <AVGSpriteRenderer>character.renderer;
-    image.spriteType = SpriteType.Character;
-    image.name = api.name;
-
-    const hookContext = {
-      name: image.name,
-      filename: api.filename,
-      renderer: image.renderer,
-      enterAnimation: slot
-    };
-
-    // @ Hook 触发 CharacterBeforeEnter
-    const hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeEnter, hookContext);
-
-    // 重置数据
-    if (hookResult) {
-      image.name = hookResult.name;
-      image.file = ResourceData.from(hookResult.filename);
-      image.renderer = hookResult.renderer;
-      slot = hookResult.enterAnimation;
-    }
-
-    if (isUpdate === false) {
-      // 跳过模式处理，忽略时间
-      if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
-        // options.duration = 0;
-      }
-    }
-
-    if (isUpdate) {
-      SpriteWidgetManager.updateSpriteWidget(image.name, image);
-    } else {
-      this.currentCharacter = hookContext;
-      if (api.isAsync) {
-        SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, false);
-      } else {
-        await SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, true);
-      }
-
-      // @ Hook 触发 CharacterAfterEnter
-      // await HookManager.triggerHook(HookEvents.CharacterAfterEnter, {});
-    }
-  }
-
-  public async animateCharacter(api: APIAnimateCharacter): Promise<any> {}
-
-  public async hideCharacter(api: APICharacter): Promise<any> {
-    const slot = SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
-
-    await SpriteWidgetManager.removeSpriteWidget(api.name, slot, !api.isAsync);
-
-    // const image = new ScreenImage();
-    // image.name = api.name;
-    // image.animation.name = "flyout";
-
-    // const options = new WidgetAnimation_FlyOutOptions();
-    // options.direction = "left";
-    // options.duration = 500;
-    // options.offset = 40;
-    // image.animation.options = options;
-
-    // // 跳过模式处理，忽略时间
-    // if (Sandbox.isSkipMode && Sandbox.skipOptions.dialogues === true) {
-    //   options.duration = 0;
-    // }
-
-    // WidgetLayerService.removeWidget(image, ScreenWidgetType.Image, api.isAsync);
-  }
 
   public getTrustedName() {
     return this.sanitizer.bypassSecurityTrustHtml(this.currentName);

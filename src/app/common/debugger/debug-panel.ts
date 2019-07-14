@@ -1,3 +1,6 @@
+import * as PIXI from "pixi.js";
+import * as filters from "pixi-filters";
+
 import { GameWorld } from "../../../engine/core/graphics/world";
 import * as dat from "dat.gui";
 import { Sprite, ResizeMode } from "../../../engine/core/graphics/sprite";
@@ -5,6 +8,7 @@ import { Sprite, ResizeMode } from "../../../engine/core/graphics/sprite";
 export class DebugPanel {
   private static gui = new dat.GUI({ name: "Debug", autoPlace: false });
   private static spriteFolder: dat.GUI;
+  private static filterFolder: dat.GUI;
   private static cameraFolder: dat.GUI;
 
   private static cameraModel = {
@@ -43,6 +47,7 @@ export class DebugPanel {
   }
 
   public static setSpritePanel(sprite: Sprite) {
+
     if (this.spriteFolder) {
       this.gui.removeFolder(this.spriteFolder);
     }

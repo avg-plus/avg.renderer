@@ -1,9 +1,9 @@
+import { CharacterScriptingHandler } from "./../../scripting-handlers/character-handler";
 import { GameWorld } from "engine/core/graphics/world";
 import * as fs from "fs";
 
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ElementRef } from "@angular/core";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
-import { BackgroundCanvasComponent } from "app/components/background-canvas/background-canvas.component";
 import { DialogueBoxComponent, DialogueBoxStatus } from "app/components/dialogue-box/dialogue-box.component";
 
 import { MainSceneService } from "./main-scene.service";
@@ -31,7 +31,9 @@ import { APIGotoTitleView } from "engine/scripting/api/api-title-view";
 import { APIInputBox } from "engine/scripting/api/api-input-box";
 import { APICameraMove, APICameraShake } from "engine/scripting/api/api-camera";
 import { SpriteAnimateDirector, AnimateTargetType } from "engine/core/graphics/sprite-animate-director";
-import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character";
+import { SceneHandler } from "app/scripting-handlers/scene-handler";
+import { DomSanitizer } from "@angular/platform-browser";
+import { Setting } from "engine/core/setting";
 
 @Component({
   selector: "app-main-scene",
@@ -39,9 +41,6 @@ import { APIAnimateCharacter } from "engine/scripting/api/api-animate-character"
   styleUrls: ["./main-scene.component.scss"]
 })
 export class MainSceneComponent implements OnInit, AfterViewInit {
-  @ViewChild(BackgroundCanvasComponent)
-  backgroundCanvas: BackgroundCanvasComponent;
-
   @ViewChild(DialogueBoxComponent)
   dialogueBox: DialogueBoxComponent;
   @ViewChild(VariableInputComponent)
@@ -53,6 +52,8 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
 
   constructor(
     private service: MainSceneService,
+    private elementRef: ElementRef,
+    public sanitizer: DomSanitizer,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
@@ -61,9 +62,12 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // Init
     WidgetLayerService.clearAllSubtitle();
-
     this.dialogueBox.reset();
-    this.backgroundCanvas.reset();
+
+    const viewport = this.elementRef.nativeElement.querySelector("#avg-viewport");
+
+    // Init world
+    GameWorld.init(viewport, Setting.WindowWidth, Setting.WindowHeight);
 
     this.activatedRoute.params.subscribe(params => {
       console.log("Received Params:", params);
@@ -84,135 +88,117 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
 
     // game.start(this.currentScript);
 
-    ScriptingDispatcher.watch().subscribe(async (value: { api: AVGScriptUnit; op: string; resolver: any }) => {
-      if (value.api instanceof APIDialogue) {
-        this.dialogueBox.state().subscribe(state => {
-          if (state === DialogueBoxStatus.End || state === DialogueBoxStatus.Hidden) {
-            value.resolver();
-          }
-        });
-
-        if (value.op === OP.ShowText) {
-          this.dialogueBox.updateData(<Dialogue>value.api.data);
-          this.dialogueBox.showBox();
-        } else if (value.op === OP.HideText) {
-          this.dialogueBox.updateData(null);
-          this.dialogueBox.hideBox();
-        }
-      } else if (value.api instanceof APIDialogueChoice) {
-        if (value.op === OP.ShowChioce) {
-          this.dialogueBox.showChoices(value.api);
-          this.dialogueBox.choicesSubject.subscribe(result => {
-            value.resolver(result);
+    ScriptingDispatcher.watch().subscribe(
+      async (scriptingContext: { api: AVGScriptUnit; op: string; resolver: any }) => {
+        if (scriptingContext.api instanceof APIDialogue) {
+          this.dialogueBox.state().subscribe(state => {
+            if (state === DialogueBoxStatus.End || state === DialogueBoxStatus.Hidden) {
+              scriptingContext.resolver();
+            }
           });
-        }
-      } else if (value.api instanceof APICharacter) {
-        if (value.op === OP.ShowCharacter) {
-          await this.dialogueBox.showCharacter(value.api);
-          value.resolver();
-        } else if (value.op === OP.UpdateCharacter) {
-          this.dialogueBox.showCharacter(value.api, true);
-          value.resolver();
-        } else if (value.op === OP.HideCharacter) {
-          await this.dialogueBox.hideCharacter(value.api);
-          value.resolver();
-        }
-      } else if (value.api instanceof APIAnimateCharacter) {
-        if (value.op === OP.AnimateCharacter) {
-          await SpriteAnimateDirector.playAnimationMacro(
-            AnimateTargetType.Sprite,
-            GameWorld.defaultScene.getSpriteByName(value.api.name),
-            value.api.animation,
-            !value.api.isAsync
-          );
 
-          value.resolver();
-        }
-      } else if (value.api instanceof APIScene) {
-        if (value.op === OP.LoadScene) {
-          // Load scene didn't support sync mode anymore
-          await this.backgroundCanvas.setBackground(value.api);
-          value.resolver(value.api.name);
-        } else if (value.op === OP.RemoveScene) {
-          await this.backgroundCanvas.removeBackground(value.api);
-          value.resolver();
-        }
-      } else if (value.api instanceof APIEffect) {
-        if (value.op === OP.PlayEffect) {
-          const effect = value.api.data;
-
-          switch (effect.effectName) {
-            case "shake":
-              this.backgroundCanvas.shake();
-              value.resolver();
-
-              break;
-            case "rain":
-              this.backgroundCanvas.rain();
-              value.resolver();
-
-              break;
-            case "snow":
-              this.backgroundCanvas.snow();
-              value.resolver();
-
-              break;
-            case "cloud":
-              this.backgroundCanvas.cloud();
-              value.resolver();
-
-              break;
-            case "sakura":
-              this.backgroundCanvas.sakura();
-              value.resolver();
-
-              break;
-            default:
-              this.backgroundCanvas.cssFilter(effect).then(value.resolver, _ => {});
+          if (scriptingContext.op === OP.ShowText) {
+            this.dialogueBox.updateData(<Dialogue>scriptingContext.api.data);
+            this.dialogueBox.showBox();
+          } else if (scriptingContext.op === OP.HideText) {
+            this.dialogueBox.updateData(null);
+            this.dialogueBox.hideBox();
           }
+        } else if (scriptingContext.api instanceof APIDialogueChoice) {
+          if (scriptingContext.op === OP.ShowChioce) {
+            this.dialogueBox.showChoices(scriptingContext.api);
+            this.dialogueBox.choicesSubject.subscribe(result => {
+              scriptingContext.resolver(result);
+            });
+          }
+        } else if (scriptingContext.api instanceof APICharacter) {
+          if (scriptingContext.op === OP.ShowCharacter) {
+            CharacterScriptingHandler.handleShowCharacter(scriptingContext);
+          } else if (scriptingContext.op === OP.UpdateCharacter) {
+            CharacterScriptingHandler.handleUpdateCharacter(scriptingContext);
+          } else if (scriptingContext.op === OP.HideCharacter) {
+            CharacterScriptingHandler.handleHideCharacter(scriptingContext);
+          } else if (scriptingContext.op === OP.AnimateCharacter) {
+            CharacterScriptingHandler.handleAnimateCharacter(scriptingContext);
+          }
+        } else if (scriptingContext.api instanceof APIScene) {
+          if (scriptingContext.op === OP.LoadScene) {
+            // Load scene didn't support sync mode anymore
+            await SceneHandler.handleLoadScene(scriptingContext);
+          } else if (scriptingContext.op === OP.RemoveScene) {
+            await SceneHandler.handleRemoveScene(scriptingContext);
+          }
+        } else if (scriptingContext.api instanceof APIEffect) {
+          // if (scriptingContext.op === OP.PlayEffect) {
+          //   const effect = scriptingContext.api.data;
+          //   switch (effect.effectName) {
+          //     case "shake":
+          //       this.backgroundCanvas.shake();
+          //       scriptingContext.resolver();
+          //       break;
+          //     case "rain":
+          //       this.backgroundCanvas.rain();
+          //       scriptingContext.resolver();
+          //       break;
+          //     case "snow":
+          //       this.backgroundCanvas.snow();
+          //       scriptingContext.resolver();
+          //       break;
+          //     case "cloud":
+          //       this.backgroundCanvas.cloud();
+          //       scriptingContext.resolver();
+          //       break;
+          //     case "sakura":
+          //       this.backgroundCanvas.sakura();
+          //       scriptingContext.resolver();
+          //       break;
+          //     default:
+          //       this.backgroundCanvas.cssFilter(effect).then(scriptingContext.resolver, _ => {});
+          //   }
+          // }
+        } else if (scriptingContext.api instanceof APIGotoTitleView) {
+          this.router.navigate(["title-view"]);
+          scriptingContext.resolver();
+        } else if (scriptingContext.api instanceof APIInputBox) {
+          this.inputBox.show(scriptingContext.api.data, (isOk, inputValue) => {
+            console.log(isOk, inputValue);
+
+            const result = new InputBoxResult();
+            result.isOK = isOk;
+            result.value = inputValue;
+
+            scriptingContext.resolver(result);
+          });
+        } else if (scriptingContext.api instanceof APICameraMove) {
+          const director = new CameraDirector();
+          const api = <APICameraMove>scriptingContext.api;
+          director.moveTo(scriptingContext.api.layer, scriptingContext.api.data, scriptingContext.api.duration || 0);
+          scriptingContext.resolver();
+        } else if (scriptingContext.api instanceof APICameraShake) {
+          const data = <CameraShakeData>scriptingContext.api.data;
+          this.shakeStyle = {
+            horizontal: data.horizontal, // X 轴震动幅度
+            vertical: data.vertical, // Y 轴震动幅度
+            rotation: data.rotation, // 旋转幅度
+            duration: data.duration, // 每次震动持续时间
+            quantity: data.count, // 总震动次数
+            timingFunc: "ease-in-out",
+            interval: 1,
+            max: 100,
+            transformOrigin: "center center",
+            fixed: true,
+            fixedStop: false,
+            freez: false,
+            active: false,
+            trigger: ":active",
+            elem: "div"
+          };
+
+          this.changeDetectorRef.detectChanges();
+
+          scriptingContext.resolver();
         }
-      } else if (value.api instanceof APIGotoTitleView) {
-        this.router.navigate(["title-view"]);
-        value.resolver();
-      } else if (value.api instanceof APIInputBox) {
-        this.inputBox.show(value.api.data, (isOk, inputValue) => {
-          console.log(isOk, inputValue);
-
-          const result = new InputBoxResult();
-          result.isOK = isOk;
-          result.value = inputValue;
-
-          value.resolver(result);
-        });
-      } else if (value.api instanceof APICameraMove) {
-        const director = new CameraDirector();
-        const api = <APICameraMove>value.api;
-        director.moveTo(value.api.layer, value.api.data, value.api.duration || 0);
-        value.resolver();
-      } else if (value.api instanceof APICameraShake) {
-        const data = <CameraShakeData>value.api.data;
-        this.shakeStyle = {
-          horizontal: data.horizontal, // X 轴震动幅度
-          vertical: data.vertical, // Y 轴震动幅度
-          rotation: data.rotation, // 旋转幅度
-          duration: data.duration, // 每次震动持续时间
-          quantity: data.count, // 总震动次数
-          timingFunc: "ease-in-out",
-          interval: 1,
-          max: 100,
-          transformOrigin: "center center",
-          fixed: true,
-          fixedStop: false,
-          freez: false,
-          active: false,
-          trigger: ":active",
-          elem: "div"
-        };
-
-        this.changeDetectorRef.detectChanges();
-
-        value.resolver();
       }
-    });
+    );
   }
 }
