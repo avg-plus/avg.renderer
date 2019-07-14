@@ -1,5 +1,6 @@
-export class Filter {
-  public name: string = "";
+import { FilterType } from "./../core/graphics/sprite-filters";
+export class SpriteFilter {
+  public name: FilterType;
   public data: any;
 }
 
@@ -18,5 +19,5 @@ export class AVGSpriteRenderer {
   public rotation: number = 0;
   public renderInCamera: boolean = false;
 
-  public filters: Filter[] = [];
+  public filters: SpriteFilter[] = [];
 }

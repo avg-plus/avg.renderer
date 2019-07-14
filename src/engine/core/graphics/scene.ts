@@ -12,7 +12,7 @@ import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
 import { isForOfStatement } from "typescript";
 import { SpriteDebugger } from "./sprite-debugger";
-import { SpriteFilters } from "./sprite-filters";
+import { SpriteFilters, FilterType } from "./sprite-filters";
 
 export class Scene {
   isTilingMode = false;
@@ -61,6 +61,8 @@ export class Scene {
 
         const xRadio = this.renderer.width / sprite.texture.width;
         const yRadio = this.renderer.height / sprite.texture.height;
+
+        sprite.filters = sprite.spriteFilters.getFilterList();
 
         // 拉伸图像
         switch (sprite.resizeMode) {

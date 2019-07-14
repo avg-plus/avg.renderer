@@ -1,7 +1,9 @@
+import { FilterType } from "./sprite-filters";
 import * as gsap from "gsap";
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
 import { isNullOrUndefined } from "../utils";
+import { SpriteFilter } from "engine/data/sprite-renderer";
 
 export enum AnimateTargetType {
   Camera,
@@ -14,6 +16,7 @@ class MacroFrame {
 
 class SpriteMacroFrame extends MacroFrame {
   [key: string]: any;
+  filters?: SpriteFilter[] = [];
 }
 
 class CameraMacroFrame extends MacroFrame {
@@ -64,10 +67,7 @@ export class SpriteAnimateDirector {
     }
 
     let initialFrame = macroObject.initialFrame;
-    const frames = macroObject.timeline;
-    if (!frames || frames.length === 0) {
-      return;
-    }
+    const frames = macroObject.timeline || [];
 
     const timeline = new gsap.TimelineMax();
     if (!isNullOrUndefined(macroObject.repeat)) {
@@ -75,22 +75,53 @@ export class SpriteAnimateDirector {
     }
 
     if (type === AnimateTargetType.Sprite) {
+      const sprite = target as Sprite;
+      initialFrame = <SpriteMacroFrame>initialFrame;
+
       // 初始关键帧
       //  - 如初始关键帧为 null, 则从对象当前状态开始
       if (initialFrame) {
-        timeline.to(target, 1 / 1000, initialFrame, 0);
+        if (!initialFrame.filters) {
+          initialFrame.filters = [];
+        }
+
+        timeline.to(sprite, 1 / 1000, initialFrame, 0);
+        initialFrame.filters.map(v => {
+          console.log("Initial filter : ", v);
+
+          sprite.spriteFilters.setFilter(v.name as FilterType, v.data);
+        });
       }
+
+      // 记录时间轴的播放位置
+      let timelineCursorTime = 0;
 
       // 播放时间轴
       for (let i = 0; i < frames.length; ++i) {
         const frame = frames[i] as SpriteMacroFrame;
         const lastFrame = frames[i - 1] as SpriteMacroFrame;
+        let duration = (frame.duration || 1) / 1000;
 
-        const { duration, ...vars } = frame;
+        // 累加当前关键帧的时间
+        timelineCursorTime += frame.duration / 1000;
+
+        const { ...vars } = frame;
         vars.ease = null;
 
-        const position = lastFrame ? `+=${lastFrame.duration / 1000}` : null;
-        timeline.to(target, (duration || 1) / 1000, vars);
+        timeline.add(gsap.TweenLite.to(target, duration, vars), timelineCursorTime);
+
+        // 处理滤镜动画
+        if (frame && frame.filters && Array.isArray(frame.filters)) {
+          frame.filters.map(v => {
+            // 创建一个空的滤镜
+            const obj = sprite.spriteFilters.setFilter(v.name as FilterType, null);
+
+            // 直接把值写到滤镜实例里
+            const tl = gsap.TweenLite.to(obj.instance, duration, v.data);
+
+            timeline.add(tl, timelineCursorTime);
+          });
+        }
       }
 
       // 设置时间轴的总时间
@@ -118,7 +149,8 @@ export class SpriteAnimateDirector {
     }
 
     return new Promise((resolve, reject) => {
-      if (!waitingForFinished) {
+      // 异步模式或时间轴为空的情况下直接返回
+      if (!waitingForFinished || frames.length === 0) {
         resolve();
         return;
       }

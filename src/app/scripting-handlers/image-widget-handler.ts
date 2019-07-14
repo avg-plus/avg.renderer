@@ -5,6 +5,7 @@ import { ScriptingContext } from "engine/scripting/scripting-context";
 import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
 import { ResourceData } from "engine/data/resource-data";
 import { SpriteType } from "engine/const/sprite-type";
+import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 
 export class ImageWidgetScriptingHandler {
   public static async handleShowImageWidget(scriptingContext: ScriptingContext) {

@@ -20,16 +20,16 @@ export class SpriteWidgetManager {
     const sprite = await GameWorld.defaultScene.loadFromImage(image.name, image.file.filename);
     const renderer = image.renderer || new AVGSpriteRenderer();
 
-    // 初始关键帧赋值
-    if (animationMacro && animationMacro.initialFrame) {
-      Object.assign(sprite, animationMacro.initialFrame);
-    }
-
     // 渲染滤镜
     if (renderer.filters) {
       renderer.filters.map(filter => {
         sprite.spriteFilters.setFilter(<FilterType>filter.name, filter.data);
       });
+    }
+
+    // 初始关键帧赋值
+    if (animationMacro && animationMacro.initialFrame) {
+      Object.assign(sprite, animationMacro.initialFrame);
     }
 
     sprite.spriteType = image.spriteType;

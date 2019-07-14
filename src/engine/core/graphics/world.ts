@@ -2,9 +2,11 @@ import * as PIXI from "pixi.js";
 
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
+import { DebugPanel } from "app/common/debugger/debug-panel";
 
 class World {
   scenes: Scene[] = [];
+  app: PIXI.Application;
   _defaultScene: Scene;
 
   parentElement: HTMLElement;
@@ -19,21 +21,30 @@ class World {
 
     this.parentElement = parentElement;
 
-    const app = new PIXI.Application({
+    this.app = new PIXI.Application({
       width,
       height,
       antialias: false,
       transparent: false,
       resolution: 1
     });
+    GameWorld.app.ticker.speed = 2;
 
-    this._defaultScene = new Scene(app, this.worldWidth, this.worldHeight);
+    // Show FPSPanel
+    const fpsElement = document.getElementById("fps");
+    this.app.ticker.add(() => {
+      fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
+    });
+
+    DebugPanel.init();
+
+    this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
 
     window.onresize = () => {
       this.scenes.map(scene => {
+        this.app.renderer.resize(window.innerWidth, window.innerHeight);
         scene.onResize();
-        app.renderer.resize(window.innerWidth, window.innerHeight);
       });
     };
   }

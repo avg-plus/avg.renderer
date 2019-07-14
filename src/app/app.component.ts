@@ -6,7 +6,6 @@ import { ElectronService } from "./providers/electron.service";
 
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { GameInitializer } from "./game-initializer";
-import { DebugPanel } from "./common/debugger/debug-panel";
 import { GameResource, ResourcePath } from "engine/core/resource";
 import { EngineSettings } from "engine/core/engine-setting";
 import { PlatformService } from "engine/core/platform/platform-service";
@@ -32,8 +31,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     if (PlatformService.isDesktop()) {
       ElectronService.initDebugging();
     }
-
-    DebugPanel.init();
   }
 
   async ngOnInit() {

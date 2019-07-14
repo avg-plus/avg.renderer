@@ -4,8 +4,8 @@ import * as ExtraFilters from "pixi-filters";
 import { Sprite } from "./sprite";
 
 export enum FilterType {
-  BlurFilter = "BlurFilter",
-  AdjustmentFilter = "AdjustmentFilter"
+  BlurFilter = "Blur",
+  AdjustmentFilter = "Adjustment"
 }
 
 export class SpriteFilterObject {
@@ -21,6 +21,10 @@ export class SpriteFilters {
     this.sprite = sprite;
   }
 
+  public getFilter(type: FilterType) {
+    return this.filters.get(type);
+  }
+
   /**
    * 设置滤镜参数
    *
@@ -32,7 +36,6 @@ export class SpriteFilters {
     let filterObject = this.filters.get(type);
     if (!filterObject) {
       filterObject = new SpriteFilterObject();
-      filterObject.data = data;
     }
 
     if (!filterObject.instance) {
@@ -50,14 +53,16 @@ export class SpriteFilters {
       filterObject.instance.enabled = true;
     }
 
+    filterObject.data = data;
     Object.assign(filterObject.instance, filterObject.data);
 
     this.filters.set(type, filterObject);
-
     this.sprite.filters = this.getFilterList();
+
+    return filterObject;
   }
 
-  private getFilterList() {
+  public getFilterList() {
     const list = [];
     this.filters.forEach((v, k) => {
       if (!v.instance.enabled) return;
