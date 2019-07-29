@@ -270,8 +270,8 @@ module.exports = {
         // loader: "null-loader"
       },
       {
-        test: /\.(avs)$/,
-        loader: "file-loader"
+        test: /\.(glsl|vs|fs|frag|vert)$/,
+        loader: "ts-shader-loader"
       },
       {
         exclude: [path.join(process.cwd(), "src/styles.scss")],

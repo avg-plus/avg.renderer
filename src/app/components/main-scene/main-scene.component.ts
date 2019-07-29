@@ -123,10 +123,15 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           }
         } else if (scriptingContext.api instanceof APIScene) {
           if (scriptingContext.op === OP.LoadScene) {
-            // Load scene didn't support sync mode anymore
             await SceneHandler.handleLoadScene(scriptingContext);
           } else if (scriptingContext.op === OP.RemoveScene) {
             await SceneHandler.handleRemoveScene(scriptingContext);
+          } else if (scriptingContext.op === OP.SetSceneFilter) {
+            await SceneHandler.handleSetSceneFilter(scriptingContext);
+          } else if (scriptingContext.op === OP.AnimateScene) {
+            await SceneHandler.handleAnimateScene(scriptingContext);
+          } else if (scriptingContext.op === OP.ClearSceneFilter) {
+            await SceneHandler.handleClearFilters(scriptingContext);
           }
         } else if (scriptingContext.api instanceof APIEffect) {
           // if (scriptingContext.op === OP.PlayEffect) {

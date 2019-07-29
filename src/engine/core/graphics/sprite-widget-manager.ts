@@ -8,7 +8,6 @@ import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 import { isNullOrUndefined } from "../utils";
 import { Texture } from "pixi.js";
 import { SpriteType } from "engine/const/sprite-type";
-import { FilterType } from "./sprite-filters";
 
 export class SpriteWidgetManager {
   public static async addSpriteWidget(
@@ -23,7 +22,7 @@ export class SpriteWidgetManager {
     // 渲染滤镜
     if (renderer.filters) {
       renderer.filters.map(filter => {
-        sprite.spriteFilters.setFilter(<FilterType>filter.name, filter.data);
+        sprite.spriteFilters.setFilter(filter.name, filter.data);
       });
     }
 
@@ -34,7 +33,7 @@ export class SpriteWidgetManager {
 
     sprite.spriteType = image.spriteType;
     sprite.resizeMode = ResizeMode.Custom;
-    sprite.renderInCamera = image.renderer.renderInCamera;
+    sprite.renderInCamera = renderer.renderInCamera;
 
     sprite.scale.x = renderer.scaleX || renderer.scale || 1;
     sprite.scale.y = renderer.scaleY || renderer.scale || 1;
@@ -100,13 +99,22 @@ export class SpriteWidgetManager {
     return GameWorld.defaultScene.getSpriteByName(name);
   }
 
-  public static async setSpriteFilters(name: string, filterType: FilterType, data: any) {
+  public static async setSpriteFilters(name: string, filterType: string, data: any) {
     const sprite = GameWorld.defaultScene.getSpriteByName(name);
     if (!sprite) {
       return;
     }
 
     sprite.spriteFilters.setFilter(filterType, data);
+  }
+
+  public static async clearSpriteFilters(name: string) {
+    const sprite = GameWorld.defaultScene.getSpriteByName(name);
+    if (!sprite) {
+      return;
+    }
+
+    sprite.spriteFilters.clearFilters();
   }
 
   public static async animateSpriteWidget(

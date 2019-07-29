@@ -61,6 +61,10 @@ export function getRandomIntInclusive(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+export function getRandomBetween(min: number, max: number) {
+  return Math.random() * (max - min + 1) + min;
+}
+
 export function randomIn<T>(arr: T[]) {
   const min = Math.ceil(0);
   const max = Math.floor(arr.length - 1);

@@ -2,7 +2,7 @@ import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import * as joi from "joi";
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
-import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
+import { AVGSpriteRenderer, SpriteFilter } from "engine/data/sprite-renderer";
 
 // 暂存导出的类，APIManager 加载后会取走
 export const preExportedSet = new Set();
@@ -89,6 +89,16 @@ export class AVGExportedAPI {
           .description("初始关键帧")
       }),
       animation
+    );
+  }
+
+  protected static validateFilterList(filters: SpriteFilter[]) {
+    return this.APIParametersValidate(
+      joi
+        .array()
+        .optional()
+        .description("滤镜列表"),
+      filters
     );
   }
 

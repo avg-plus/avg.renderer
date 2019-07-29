@@ -22,4 +22,32 @@ export class APISceneImpl extends Impl {
       ScriptingDispatcher.dispatch(OP.RemoveScene, script, resolve);
     });
   }
+
+  @Impl.registerImpl(APIScene, OP.AnimateScene)
+  public static op_animate_scene(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APIScene>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.AnimateScene, script, resolve);
+    });
+  }
+
+
+  @Impl.registerImpl(APIScene, OP.ClearSceneFilter)
+  public static op_clear_scene_filters(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APIScene>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.ClearSceneFilter, script, resolve);
+    });
+  }
+
+  @Impl.registerImpl(APIScene, OP.SetSceneFilter)
+  public static op_set_scene_filter(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APIScene>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.SetSceneFilter, script, resolve);
+    });
+  }
 }

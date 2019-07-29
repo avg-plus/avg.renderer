@@ -1,6 +1,6 @@
 import { SpriteAnimateDirector, AnimateTargetType } from "./sprite-animate-director";
 import * as PIXI from "pixi.js";
-import * as Loader from "resource-loader";
+// import * as Loader from "resource-loader";
 
 import { LayerOrder } from "./layer-order";
 import { Sprite, ResizeMode } from "./sprite";
@@ -10,9 +10,7 @@ import { isNullOrUndefined } from "util";
 import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
-import { isForOfStatement } from "typescript";
 import { SpriteDebugger } from "./sprite-debugger";
-import { SpriteFilters, FilterType } from "./sprite-filters";
 
 export class Scene {
   isTilingMode = false;
@@ -33,6 +31,8 @@ export class Scene {
     y: 0,
     distance: 0
   };
+
+  private asa = false;
 
   constructor(app: PIXI.Application, private width: number, private height: number) {
     this.app = app;

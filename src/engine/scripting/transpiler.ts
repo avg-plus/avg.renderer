@@ -92,14 +92,14 @@ export class Transpiler {
           node.async = true;
         }
 
-        if (node.type === "CallExpression") {
+        if (node && node.type === "CallExpression") {
           const callee = node.callee;
           if (callee) {
             const property = callee["property"];
 
             // 处理异步版本的 API 调用
             const asyncSymbol = "_async";
-            if (property.name.endsWith(asyncSymbol)) {
+            if (property && property.name.endsWith(asyncSymbol)) {
               property.name = property.name.replace(asyncSymbol, "");
 
               // 在参数表最后添加一个新的字符串参数，用于表示异步模式

@@ -4,7 +4,8 @@
   - 手动预加载：可以在任意时机指定预加载的资源，并缓存
   - 自动预加载：由引擎来推测需要预加载的资源
 */
-import * as Loader from "resource-loader";
+// import * as Loader from "resource-loader";
+import * as PIXI from "pixi.js";
 import { getExtension } from "./utils";
 
 enum LoadingTaskStatus {
@@ -16,7 +17,7 @@ enum LoadingTaskStatus {
 type LoadingTask = {
   name: string;
   url: string;
-  onCompleted: (resource: Loader.Resource) => void;
+  onCompleted: (resource: PIXI.LoaderResource) => void;
   status: LoadingTaskStatus;
 };
 
@@ -28,7 +29,7 @@ type LoadingTask = {
  */
 class GameResourceManager {
   private loadingTasks: Map<string, LoadingTask> = new Map<string, LoadingTask>();
-  private resourceLoader = new Loader.Loader();
+  public resourceLoader = PIXI.Loader.shared;
 
   constructor() {
     this.resourceLoader.concurrency = 10;
@@ -40,7 +41,7 @@ class GameResourceManager {
    * @param {string} url
    * @memberof GameResourceManager
    */
-  public addLoading(name: string, url: string, onCompleted?: (resource: Loader.Resource) => void) {
+  public addLoading(name: string, url: string, onCompleted?: (resource:  PIXI.LoaderResource) => void) {
     const task: LoadingTask = {
       name,
       url,
@@ -92,7 +93,7 @@ class GameResourceManager {
         // 通知进度变更
         this.loadingTasks.forEach((value, key) => {
           const url = value.url;
-          const resource: Loader.Resource = resources[url];
+          const resource:  PIXI.LoaderResource = resources[url];
           if (value && value.onCompleted && resource) {
             value.onCompleted(resource);
           }

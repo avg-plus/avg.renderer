@@ -8,7 +8,8 @@ import { ResourcePath } from "../../core/resource";
 import { ResourceData } from "../../data/resource-data";
 import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
-import { Sandbox } from "engine/core/sandbox";
+import { SpriteFilter } from "engine/data/sprite-renderer";
+import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
 
 @APIExport("scene", EngineAPI_Scene)
 export class EngineAPI_Scene extends AVGExportedAPI {
@@ -32,6 +33,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
 
     model.data = options;
     model.data.renderer = super.validateRenderer(model.data.renderer);
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
 
     // 跳过模式处理，忽略时间
     // if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
@@ -46,6 +48,25 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     }
   }
 
+  public static async filter(name: string, filters: SpriteFilter[]) {
+    let model = new APIScene();
+    model.name = name;
+    model.data.renderer.filters = super.validateFilterList(filters);
+
+    let proxy = APIManager.Instance.getImpl(APIScene.name, OP.SetSceneFilter);
+
+    return <SceneHandle>await proxy.runner(<APIScene>model);
+  }
+
+  public static async clearFilters(name: string) {
+    let model = new APIScene();
+    model.name = name;
+
+    let proxy = APIManager.Instance.getImpl(APIScene.name, OP.ClearSceneFilter);
+
+    await proxy.runner(<APIScene>model);
+  }
+
   public static async remove(id: string): Promise<SceneHandle> {
     let model = new APIScene();
     model.name = super.validateImageID(id);
@@ -55,5 +76,28 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
   }
 
-  public static async animate(index: number, animateName: string, options: any) {}
+  public static async animate(id: string, options: Scene): Promise<SceneHandle> {
+    let model = new APIScene();
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+    model.name = super.validateImageID(id);
+
+    if (!options || !(options instanceof Object)) {
+      options = new Scene();
+    }
+
+    model.data = options;
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
+
+    // 跳过模式处理，忽略时间
+    // if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
+    //   model.data.duration = 0;
+    // }
+
+    let proxy = APIManager.Instance.getImpl(APIScene.name, OP.AnimateScene);
+    if (proxy) {
+      return <SceneHandle>await proxy.runner(<APIScene>model);
+    } else {
+      return null;
+    }
+  }
 }

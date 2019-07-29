@@ -18,17 +18,18 @@ export class SceneHandler {
 
     const image = new ScreenImage();
     image.renderer = data.renderer;
+    image.animation = data.animation;
     image.file = ResourceData.from(api.filename);
     image.spriteType = SpriteType.Scene;
     image.name = api.name;
 
-    const enterSlot = SlotManager.getSlot(HookSlots.SceneEnterAnimation);
-    const leaveSlot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation);
+    const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
 
     if (this.currentBackgroundSprite) {
       // 把要设置的图片先放到底层
       const incommingSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false);
-      await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot);
+      await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot, false);
 
       this.currentBackgroundSprite = incommingSprite;
     } else {
@@ -54,6 +55,34 @@ export class SceneHandler {
 
     const slot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
     await SpriteWidgetManager.removeSpriteWidget(api.name, slot);
+
+    scriptingContext.resolver();
+  }
+
+  public static async handleSetSceneFilter(scriptingContext: ScriptingContext) {
+    const api = <APIScene>scriptingContext.api;
+
+    for (let i = 0; i < api.data.renderer.filters.length; ++i) {
+      const filter = api.data.renderer.filters[i];
+
+      await SpriteWidgetManager.setSpriteFilters(api.name, filter.name, filter.data);
+    }
+
+    scriptingContext.resolver();
+  }
+
+  public static async handleAnimateScene(scriptingContext: ScriptingContext) {
+    const api = <APIScene>scriptingContext.api;
+
+    await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, !api.isAsync);
+
+    scriptingContext.resolver();
+  }
+
+  public static async handleClearFilters(scriptingContext: ScriptingContext) {
+    const api = <APIScene>scriptingContext.api;
+
+    await SpriteWidgetManager.clearSpriteFilters(api.name);
 
     scriptingContext.resolver();
   }

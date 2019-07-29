@@ -1,4 +1,3 @@
-import { FilterType } from "./sprite-filters";
 import * as gsap from "gsap";
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
@@ -56,7 +55,7 @@ export class SpriteAnimateDirector {
     return timeline.to(target, duration / 1000, vars, position);
   }
 
-  public static playAnimationMacro(
+  public static async playAnimationMacro(
     type: AnimateTargetType,
     target: Sprite | Scene,
     macroObject: AnimationMacro,
@@ -89,7 +88,7 @@ export class SpriteAnimateDirector {
         initialFrame.filters.map(v => {
           console.log("Initial filter : ", v);
 
-          sprite.spriteFilters.setFilter(v.name as FilterType, v.data);
+          sprite.spriteFilters.setFilter(v.name, v.data);
         });
       }
 
@@ -99,11 +98,7 @@ export class SpriteAnimateDirector {
       // 播放时间轴
       for (let i = 0; i < frames.length; ++i) {
         const frame = frames[i] as SpriteMacroFrame;
-        const lastFrame = frames[i - 1] as SpriteMacroFrame;
         let duration = (frame.duration || 1) / 1000;
-
-        // 累加当前关键帧的时间
-        timelineCursorTime += frame.duration / 1000;
 
         const { ...vars } = frame;
         vars.ease = null;
@@ -112,22 +107,28 @@ export class SpriteAnimateDirector {
 
         // 处理滤镜动画
         if (frame && frame.filters && Array.isArray(frame.filters)) {
-          frame.filters.map(v => {
+          for (let i = 0; i < frame.filters.length; ++i) {
+            const v = frame.filters[i];
             // 创建一个空的滤镜
-            const obj = sprite.spriteFilters.setFilter(v.name as FilterType, null);
+            const obj = await sprite.spriteFilters.setFilter(v.name, null);
 
             // 直接把值写到滤镜实例里
-            const tl = gsap.TweenLite.to(obj.instance, duration, v.data);
+            // const tl = ;
 
-            timeline.add(tl, timelineCursorTime);
-          });
+            timeline.add(gsap.TweenLite.to(obj.instance, duration, v.data), timelineCursorTime);
+          }
         }
+
+        // 累加当前关键帧的时间
+        timelineCursorTime += frame.duration / 1000;
       }
 
       // 设置时间轴的总时间
       if (macroObject.totalDuration) {
         timeline.duration(macroObject.totalDuration / 1000);
       }
+
+      timeline.play();
     } else if (type === AnimateTargetType.Camera) {
       const scene = target as Scene;
       const cameraInitialFrame = initialFrame as CameraMacroFrame;

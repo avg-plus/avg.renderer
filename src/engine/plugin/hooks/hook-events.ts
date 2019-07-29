@@ -3,6 +3,9 @@
  */
 
 export enum HookEvents {
+  // 系统
+  GameUpdate = "hook.game_update", // 立绘显示前
+
   // 立绘相关
   CharacterBeforeEnter = "hook.character_before_enter", // 立绘显示前
   CharacterAfterEnter = "hook.character_before_enter", // 立绘显示后

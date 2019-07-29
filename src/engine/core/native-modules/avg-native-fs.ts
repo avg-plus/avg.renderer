@@ -111,7 +111,7 @@ export class AVGNativeFS {
   ) {
     if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       const data = this._fs.readFileSync(filename, options);
-      return data.toString("utf8");
+      return data;
     }
 
     const response = await axios.get(filename, {

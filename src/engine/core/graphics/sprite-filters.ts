@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js";
 import * as ExtraFilters from "pixi-filters";
+// import * as filters from "./filters";
 
 import { Sprite } from "./sprite";
 
-export enum FilterType {
-  BlurFilter = "Blur",
-  AdjustmentFilter = "Adjustment"
-}
+// export enum FilterType {
+//   BlurFilter = "blur",
+//   AdjustmentFilter = "adjustment"
+// }
 
 export class SpriteFilterObject {
   public instance: PIXI.Filter;
@@ -14,17 +15,21 @@ export class SpriteFilterObject {
 }
 
 export class SpriteFilters {
-  private filters = new Map<FilterType, SpriteFilterObject>();
+  private filters = new Map<string, SpriteFilterObject>();
   private sprite: Sprite;
 
   constructor(sprite: Sprite) {
     this.sprite = sprite;
   }
 
-  public getFilter(type: FilterType) {
+  public getFilter(type: string) {
     return this.filters.get(type);
   }
 
+  public clearFilters() {
+    this.filters.clear();
+    this.sprite.filters = this.getFilterList();
+  }
   /**
    * 设置滤镜参数
    *
@@ -32,24 +37,16 @@ export class SpriteFilters {
    * @param {*} data
    * @memberof SpriteFilters
    */
-  public setFilter(type: FilterType, data: any) {
+  public setFilter(type: string, data: any) {
     let filterObject = this.filters.get(type);
     if (!filterObject) {
       filterObject = new SpriteFilterObject();
     }
 
     if (!filterObject.instance) {
-      switch (type) {
-        case FilterType.BlurFilter: {
-          filterObject.instance = new PIXI.filters.BlurFilter();
-          break;
-        }
-        case FilterType.AdjustmentFilter: {
-          filterObject.instance = <any>new ExtraFilters.AdjustmentFilter();
-          break;
-        }
-      }
+      const filter = require("./filters/" + type).default;
 
+      filterObject.instance = filter.instance(this.sprite);
       filterObject.instance.enabled = true;
     }
 
@@ -63,7 +60,7 @@ export class SpriteFilters {
   }
 
   public getFilterList() {
-    const list = [];
+    let list = [];
     this.filters.forEach((v, k) => {
       if (!v.instance.enabled) return;
 

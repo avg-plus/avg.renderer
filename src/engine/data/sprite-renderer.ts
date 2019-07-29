@@ -1,6 +1,5 @@
-import { FilterType } from "./../core/graphics/sprite-filters";
 export class SpriteFilter {
-  public name: FilterType;
+  public name: string;
   public data: any;
 }
 

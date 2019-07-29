@@ -24,6 +24,9 @@ export class OP {
   public static LoadScene = "LoadScene";
   public static RemoveScene = "RemoveScene";
   public static AnimateScene = "AnimateScene";
+  public static SetSceneFilter = "SetSceneFilter";
+  public static ClearSceneFilter = "ClearSceneFilter";
+
   public static Wait = "Wait";
   public static CallScript = "CallScript";
   public static PlayEffect = "PlayEffect";

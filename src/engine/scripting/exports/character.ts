@@ -1,4 +1,3 @@
-import { FilterType } from "./../../core/graphics/sprite-filters";
 import * as joi from "joi";
 import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import { Character } from "engine/data/character";
@@ -73,7 +72,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
     });
   }
 
-  public static async setFilter(name: string, filterType: FilterType, data: any) {
+  public static async setFilter(name: string, filterType: string, data: any) {
     SpriteWidgetManager.setSpriteFilters(name, filterType, data);
   }
 }

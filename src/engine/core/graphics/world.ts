@@ -3,17 +3,22 @@ import * as PIXI from "pixi.js";
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
 import { DebugPanel } from "app/common/debugger/debug-panel";
+import { HookManager } from "engine/plugin/hooks/hook-manager";
+import { HookEvents } from "engine/plugin/hooks/hook-events";
+import { DropFlakeParticle } from "./shaders/drop-flake/drop-flake";
+import { AVGNativePath } from "../native-modules/avg-native-path";
+import { GameResource } from "../resource";
 
 class World {
   scenes: Scene[] = [];
-  app: PIXI.Application;
+  public app: PIXI.Application;
   _defaultScene: Scene;
 
   parentElement: HTMLElement;
   worldWidth: number;
   worldHeight: number;
 
-  init(parentElement: HTMLElement, width: number = 1920, height: number = 1080) {
+  async init(parentElement: HTMLElement, width: number = 1920, height: number = 1080) {
     // [16: 9] - 800x450, 1024x576, 1280x760, 1920x1080
 
     this.worldWidth = width;
@@ -28,18 +33,52 @@ class World {
       transparent: false,
       resolution: 1
     });
-    GameWorld.app.ticker.speed = 2;
 
     // Show FPSPanel
     const fpsElement = document.getElementById("fps");
     this.app.ticker.add(() => {
       fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
-    });
 
-    DebugPanel.init();
+      HookManager.triggerHook(HookEvents.GameUpdate);
+    });
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
+
+    console.log(AVGNativePath.join(GameResource.getDataRoot(), "./effects/flake-texture/rain.png"));
+    
+    await DropFlakeParticle.init(
+      {
+        count: 5000, // 粒子数量
+        alpha: 0.6, // 透明系数
+        depth: 60, // 镜头深度
+        gravity: 60, // 下坠重力
+        autoWind: true,
+        wind: {
+          force: 0.1, // 风力
+          min: -0.2,
+          max: 0.1,
+          easing: 0.1
+        }
+      },
+      AVGNativePath.join(GameResource.getDataRoot(), "./effects/flake-texture/rain.png")
+    );
+
+    // setInterval(() => {
+    //   DropFlakeParticle.update({
+    //     count: 5000, // 粒子数量
+    //     alpha: 0.6, // 透明系数
+    //     depth: 60, // 镜头深度
+    //     gravity:  1100, // 下坠重力
+    //     autoWind: true,
+    //     wind: {
+    //       force: 0.01, // 风力
+    //       min: 0,
+    //       max: 0,
+    //       easing: 0.01
+    //     }
+    //   });
+    // }, 2000);
 
     window.onresize = () => {
       this.scenes.map(scene => {
@@ -47,6 +86,8 @@ class World {
         scene.onResize();
       });
     };
+
+    DebugPanel.init();
   }
 
   public get defaultScene() {
