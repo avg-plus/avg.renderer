@@ -336,7 +336,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        if (!this.dialogueData.text) {
+        if (!this.dialogueData || !this.dialogueData.text) {
           return;
         }
 
