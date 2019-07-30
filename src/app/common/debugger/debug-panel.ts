@@ -55,57 +55,65 @@ export class DebugPanel {
   }
 
   public static initParticlesPanel() {
-    if (!this.particlesFolder) {
-      this.particlesFolder = this.gui.addFolder("全屏粒子");
-
-      this.particlesFolder
-        .add({ 贴图: "" }, "贴图", {
-          雨: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/rain.png"),
-          雪: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/snow.png"),
-          樱花: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/sakura.png")
-        })
-        .onChange(async v => {
-          await DropFlakeParticle.init(
-            {
-              count: 5000, // 粒子数量
-              alpha: 0.6, // 透明系数
-              depth: 60, // 镜头深度
-              gravity: 60, // 下坠重力
-              autoWind: true,
-              wind: {
-                force: 0.1, // 风力
-                min: -0.2,
-                max: 0.1,
-                easing: 0.1
-              }
-            },
-            v,
-            "avg-particle-viewport-2"
-          );
-        });
-
-      [
-        this.particlesFolder.add(DropFlakeParticle.params, "count", 1, 40000, 1),
-        this.particlesFolder.add(DropFlakeParticle.params, "alpha", 0, 1, 0.01),
-        this.particlesFolder.add(DropFlakeParticle.params, "depth", -80, 80, 0.1),
-        this.particlesFolder.add(DropFlakeParticle.params, "gravity", 0, 2000, 1)
-      ].map(v => {
-        v.onChange(value => {
-          window.dispatchEvent(new Event("resize"));
-        });
-      });
-
-      const windFolder = this.particlesFolder.addFolder("风力");
-
-      [
-        windFolder.add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01),
-        windFolder.add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01)
-      ].map(v => {
-        v.onChange(value => {
-          window.dispatchEvent(new Event("resize"));
-        });
-      });
+    if (this.particlesFolder) {
+      this.particlesFolder.destroy();
+      this.particlesFolder = null;
     }
+    this.particlesFolder = this.gui.addFolder("全屏粒子");
+    this.particlesFolder.open();
+
+    this.particlesFolder
+      .add({ 贴图: "" }, "贴图", {
+        雨: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/rain.png"),
+        雪: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/snow.png"),
+        樱花: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/sakura.png")
+      })
+      .onChange(v => {
+        DropFlakeParticle.init(v, DropFlakeParticle.params);
+      });
+
+    [
+      this.particlesFolder.add(DropFlakeParticle.params, "count", 1, 40000, 1).name("粒子数量"),
+      this.particlesFolder.add(DropFlakeParticle.params, "alpha", 0, 1, 0.01).name("透明度"),
+      this.particlesFolder.add(DropFlakeParticle.params, "depth", -80, 80, 0.1).name("镜头深度"),
+      this.particlesFolder.add(DropFlakeParticle.params, "gravity", -500, 500, 0.01).name("下坠重力")
+    ].map(v => {
+      v.onChange(value => {
+        window.dispatchEvent(new Event("resize"));
+        DropFlakeParticle.update(DropFlakeParticle.params);
+      });
+    });
+
+    const rotationFolder = this.particlesFolder.addFolder("旋转");
+
+    [
+      rotationFolder.add(DropFlakeParticle.params.rotation, "enabled", true).name("转转转"),
+      rotationFolder.add(DropFlakeParticle.params.rotation, "randomize", true).name("随机因素"),
+      rotationFolder.add(DropFlakeParticle.params.rotation, "angle", 0.1, 100, 0.1).name("旋转角度"),
+      rotationFolder.add(DropFlakeParticle.params.rotation, "speed", 0.1, 100, 0.1).name("旋转速度")
+    ].map(v => {
+      v.onChange(value => {
+        window.dispatchEvent(new Event("resize"));
+        DropFlakeParticle.update(DropFlakeParticle.params);
+      });
+    });
+
+    const windFolder = this.particlesFolder.addFolder("风力");
+
+    [
+      windFolder.add(DropFlakeParticle.params.wind, "enabled", true).name("吹吹吹"),
+      windFolder.add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01).name("风力"),
+      windFolder.add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01).name("平滑度")
+    ].map(v => {
+      v.onChange(value => {
+        window.dispatchEvent(new Event("resize"));
+        DropFlakeParticle.update(DropFlakeParticle.params);
+      });
+    });
+
+    this.particlesFolder.open();
+    windFolder.open();
+    rotationFolder.open();
   }
 
   public static setSpritePanel(sprite: Sprite) {

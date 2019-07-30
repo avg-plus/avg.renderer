@@ -13,8 +13,14 @@ export class DropFlakeParams {
   alpha? = 0.6; // 透明系数
   depth? = 30; // 镜头深度
   gravity? = 100; // 下坠重力
-  autoWind? = false;
+  rotation? = {
+    enabled: false,
+    randomize: true,
+    angle: 2,
+    speed: 10
+  };
   wind? = {
+    enabled: false,
     force: 0.1, // 风力
     min: 0.1,
     max: 0.3,
@@ -24,19 +30,26 @@ export class DropFlakeParams {
 
 export class DropFlakeParticle {
   public static params: DropFlakeParams;
-  private static program: ShaderProgram;
+  public static program: ShaderProgram;
 
-  public static async init(params: DropFlakeParams = new DropFlakeParams(), texture: string, element: string = "") {
+  public static async init(texture: string, params: DropFlakeParams = new DropFlakeParams()) {
     DropFlakeParticle.params = params;
 
     let currentForce = 0;
     let currentWindForce = 0;
     let currentDirection = 0;
 
-    const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
-    this.program = null;
+    const parent = document.getElementById("avg-particle-viewport");
+    parent.innerHTML = "";
 
-    this.program = new ShaderProgram(document.getElementById(element || "avg-particle-viewport"), {
+    // var cNode = parent.cloneNode(false);
+    // parent.parentNode.replaceChild(cNode, parent);
+
+    const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
+
+    delete DropFlakeParticle.program;
+
+    const options = {
       depthTest: false, //打开镜头深度调试，不同深度的粒子会互相覆盖
       texture: `data:image/png;base64,${flakeTexture}`,
       params: DropFlakeParticle.params,
@@ -78,8 +91,18 @@ export class DropFlakeParticle {
             Math.random() * 100
           ); // x, y, sinusoid
 
-          rotation.push(Math.random() * 2 * Math.PI, Math.random() * 10, 0); // angle, speed, sinusoid
-          // rotation.push(0, 0, 0); // angle, speed, sinusoid
+          const r = DropFlakeParticle.params.rotation;
+
+          if (r.enabled) {
+            rotation.push(
+              (r.randomize ? Math.random() : 0.5) * r.angle * Math.PI,
+              (r.randomize ? Math.random() : 0.5) * r.speed,
+              0
+            ); // angle, speed, sinusoid
+            // rotation.push(0, 0, 0); // angle, speed, sinusoid
+          } else {
+            rotation.push(0, 0, 0);
+          }
 
           color.push(1, 1, 1, 0.1 + Math.random() * DropFlakeParticle.params.alpha);
 
@@ -93,12 +116,12 @@ export class DropFlakeParticle {
         this.buffers.rotation = rotation;
         this.buffers.size = size;
         this.buffers.speed = speed;
-        this.uniforms.wind = currentWindForce;
+        // this.uniforms.wind = currentWindForce;
       },
       onUpdate(delta) {
         const wind = DropFlakeParticle.params.wind;
 
-        if (DropFlakeParticle.params.autoWind) {
+        if (DropFlakeParticle.params.wind.enabled) {
           // wind.direction = getRandomBetween(wind.min, wind.max); //  wind.min + Math.random() * (wind.max - wind.min);
           currentDirection = (wind.min + Math.random() * (wind.max - wind.min)) * (Math.random() > 0.5 ? -1 : 1);
         }
@@ -109,14 +132,16 @@ export class DropFlakeParticle {
         this.uniforms.wind = currentWindForce;
         this.uniforms.gravity = DropFlakeParticle.params.gravity;
       }
-    });
+    };
+
+    DropFlakeParticle.program = new ShaderProgram(parent, options);
   }
 
-  public static async setTexture(filename: string) {
-    this.init(this.params, filename);
-  }
+  // public static async setTexture(filename: string) {
+  //   await this.init(filename, this.params);
+  // }
 
   public static update(params: any) {
-    Object.assign(DropFlakeParticle.params, params);
+    DropFlakeParticle.params = params;
   }
 }
