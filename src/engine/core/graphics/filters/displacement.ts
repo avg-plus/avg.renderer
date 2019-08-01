@@ -6,9 +6,34 @@ import { Sprite } from "../sprite";
 class DisplacementFilter extends FilterBase {
   name: "DisplacementFilter";
   //   args: [displacementSprite, this.initWidth, this.initHeight],
-  public instance(sprite: Sprite) {
-    sprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
-    const filter = new PIXI.filters.DisplacementFilter(sprite, 1);
+  public instance(displacementSprite: PIXI.Sprite) {
+    if (!displacementSprite) {
+      return null;
+    }
+    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+    const filter = new PIXI.filters.DisplacementFilter(displacementSprite, 1);
+
+    Object.defineProperty(filter, "px", {
+      get: function() {
+        console.log("get px: ", displacementSprite.position.x);
+
+        return displacementSprite.position.x;
+      },
+      set: function(value) {
+        console.log("set px: ", value);
+
+        displacementSprite.position.x = value;
+      }
+    });
+
+    Object.defineProperty(filter, "py", {
+      get: function() {
+        return displacementSprite.position.y;
+      },
+      set: function(value) {
+        displacementSprite.position.y = value;
+      }
+    });
 
     Object.defineProperty(filter, "scaleX", {
       get: function() {

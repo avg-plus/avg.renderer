@@ -46,7 +46,9 @@ export class SpriteWidgetManager {
     sprite.rotation = renderer.rotation || 0;
 
     if (sprite.spriteType === SpriteType.Scene) {
-      sprite.resizeMode = ResizeMode.Stretch;
+      // sprite.resizeMode = ResizeMode.Stretch;
+      sprite.anchor.set(0.5, 0.5);
+      sprite.center = true;
     } else if (sprite.spriteType === SpriteType.Character) {
       sprite.anchor.set(0.5, 0.5);
     }

@@ -98,11 +98,14 @@ export class Scene {
 
         // 处理居中
         if (sprite.center) {
-          const actualWidth = (sprite.width * sprite.scale.x) / 2;
-          const actualHeight = (sprite.height * sprite.scale.y) / 2;
+          // const actualWidth = (sprite.width * sprite.scale.x) / 2;
+          // const actualHeight = (sprite.height * sprite.scale.y) / 2;
 
-          const x = this.renderer.width / 2 - actualWidth;
-          const y = this.renderer.height / 2 - actualHeight;
+          // const x = this.renderer.width / 2 - actualWidth;
+          // const y = this.renderer.height / 2 - actualHeight;
+
+          const x = this.renderer.width * sprite.anchor.x;
+          const y = this.renderer.height * sprite.anchor.y;
           sprite.position.set(x, y);
         }
 

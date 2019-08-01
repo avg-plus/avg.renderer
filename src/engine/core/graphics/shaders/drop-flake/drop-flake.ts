@@ -1,6 +1,7 @@
 // const fragment = require("./fragment.frag").default;
 // import { vertex } from "../tools";
 // import * as PIXI from "pixi.js";
+import * as $ from "jquery";
 
 import { ShaderProgram } from "../shader-program.js";
 import { getRandomBetween } from "engine/core/utils";
@@ -10,7 +11,7 @@ const fragment = require("./fragment.frag").default;
 
 export class DropFlakeParams {
   count? = 5000; // 粒子数量
-  alpha? = 0.6; // 透明系数
+  alpha? = 0; // 透明系数
   depth? = 30; // 镜头深度
   gravity? = 100; // 下坠重力
   rotation? = {
@@ -32,7 +33,11 @@ export class DropFlakeParticle {
   public static params: DropFlakeParams;
   public static program: ShaderProgram;
 
-  public static async init(texture: string, params: DropFlakeParams = new DropFlakeParams()) {
+  public static async start(
+    texture: string,
+    params: DropFlakeParams = new DropFlakeParams(),
+    enterDuration: number = 1000
+  ) {
     DropFlakeParticle.params = params;
 
     let currentForce = 0;
@@ -40,10 +45,10 @@ export class DropFlakeParticle {
     let currentDirection = 0;
 
     const parent = document.getElementById("avg-particle-viewport");
-    parent.innerHTML = "";
+    // parent.innerHTML = "";
 
-    // var cNode = parent.cloneNode(false);
-    // parent.parentNode.replaceChild(cNode, parent);
+    var cNode = parent.cloneNode(false);
+    parent.parentNode.replaceChild(cNode, parent);
 
     const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
 
@@ -104,7 +109,7 @@ export class DropFlakeParticle {
             rotation.push(0, 0, 0);
           }
 
-          color.push(1, 1, 1, 0.1 + Math.random() * DropFlakeParticle.params.alpha);
+          color.push(1, 1, 1, Math.random() * DropFlakeParticle.params.alpha);
 
           size.push(5 * Math.random() * 5 * ((h * dpi) / 1000));
         });
@@ -133,15 +138,19 @@ export class DropFlakeParticle {
         this.uniforms.gravity = DropFlakeParticle.params.gravity;
       }
     };
+    $(<Element>cNode).fadeTo(0, 0);
+    $(<Element>cNode).fadeTo(enterDuration, 1);
 
-    DropFlakeParticle.program = new ShaderProgram(parent, options);
+    DropFlakeParticle.program = new ShaderProgram(cNode, options);
   }
 
+  public static async stop() {}
   // public static async setTexture(filename: string) {
   //   await this.init(filename, this.params);
   // }
 
   public static update(params: any) {
+    DropFlakeParticle.params.alpha += 0.01;
     DropFlakeParticle.params = params;
   }
 }

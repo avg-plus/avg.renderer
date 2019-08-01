@@ -12,3 +12,4 @@ export * from './scene';
 export * from './system';
 export * from './text';
 export * from './widget';
+export * from './particle';

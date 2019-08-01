@@ -67,49 +67,49 @@ export class EngineAPI_Camera extends AVGExportedAPI {
     await SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Camera, GameWorld.defaultScene, animation);
   }
 
-  // public static async shake(options: CameraShakeData) {
-  //   const schema = joi.object().keys({
-  //     horizontal: joi
-  //       .number()
-  //       .min(0)
-  //       .default(10),
-  //     vertical: joi
-  //       .number()
-  //       .min(0)
-  //       .default(10),
-  //     rotation: joi
-  //       .number()
-  //       .min(0)
-  //       .default(5),
-  //     duration: joi
-  //       .number()
-  //       .min(1)
-  //       .default(1000)
-  //       .required(),
-  //     count: joi
-  //       .number()
-  //       .allow(["infinite"])
-  //       .min(-1)
-  //       .not(0)
-  //       .max(999999)
-  //       .default(5)
-  //       .required()
-  //   });
+  public static async shake(options: CameraShakeData) {
+    const schema = joi.object().keys({
+      horizontal: joi
+        .number()
+        .min(0)
+        .default(10),
+      vertical: joi
+        .number()
+        .min(0)
+        .default(10),
+      rotation: joi
+        .number()
+        .min(0)
+        .default(5),
+      duration: joi
+        .number()
+        .min(1)
+        .default(1000)
+        .required(),
+      count: joi
+        .number()
+        .allow(["infinite"])
+        .min(-1)
+        .not(0)
+        .max(999999)
+        .default(5)
+        .required()
+    });
 
-  //   const validateResult = super.APIParametersValidate(schema, options);
+    const validateResult = super.APIParametersValidate(schema, options);
 
-  //   const api = new APICameraShake();
-  //   api.data = validateResult;
+    const api = new APICameraShake();
+    api.data = validateResult;
 
-  //   // 跳过模式处理，跳过不执行镜头抖动
-  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.cameras === true) {
-  //     api.data.duration = 0;
-  //     return;
-  //   }
+    // 跳过模式处理，跳过不执行镜头抖动
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.cameras === true) {
+      api.data.duration = 0;
+      return;
+    }
 
-  //   const proxy = APIManager.Instance.getImpl(APICameraShake.name, OP.ShakeCamera);
-  //   proxy && (await proxy.runner(<APICameraShake>api));
-  // }
+    const proxy = APIManager.Instance.getImpl(APICameraShake.name, OP.ShakeCamera);
+    proxy && (await proxy.runner(<APICameraShake>api));
+  }
 
   public static async stopShake() {}
 

@@ -69,7 +69,7 @@ export class DebugPanel {
         樱花: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/sakura.png")
       })
       .onChange(v => {
-        DropFlakeParticle.init(v, DropFlakeParticle.params);
+        DropFlakeParticle.start(v, DropFlakeParticle.params);
       });
 
     [
