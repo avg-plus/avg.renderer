@@ -46,33 +46,9 @@ export class SpriteFilters {
 
     if (!filterObject.instance) {
       const filter = require("./filters/" + type).default;
-      let mapSprite: PIXI.Sprite = null;
 
       // 处理特殊参数，部分滤镜需要mapTexture
-
-      console.log(data.map);
-
-      if (data.map) {
-        mapSprite = PIXI.TilingSprite.from(
-          "/Users/angrypowman/Workspace/Programming/Revisions/pixi-filters/tools/demo/images/displacement_map.png"
-        );
-
-        // mapSprite.width = 1000;
-        // mapSprite.height = 1000;
-        // mapSprite.x = 0;
-        // mapSprite.y = 0;
-        // mapSprite.scale.set(3, 3);
-        
-        // setInterval(() => {
-        //   mapSprite.x += 100;
-        //   console.log(mapSprite);
-          
-        // }, 100);
-
-        // console.log("mapSprite", mapSprite);
-      }
-
-      filterObject.instance = filter.instance(data.map);
+      filterObject.instance = filter.instance(this.sprite, data && data.map ? data.map : null);
       filterObject.instance.enabled = true;
     }
 

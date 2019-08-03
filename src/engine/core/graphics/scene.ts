@@ -87,26 +87,13 @@ export class Scene {
           }
           case ResizeMode.Default: {
             if (!sprite.renderInCamera) {
-              sprite.scale.set(1, 1);
+              // sprite.scale.set(1, 1);
             }
             break;
           }
           case ResizeMode.Custom: {
             break;
           }
-        }
-
-        // 处理居中
-        if (sprite.center) {
-          // const actualWidth = (sprite.width * sprite.scale.x) / 2;
-          // const actualHeight = (sprite.height * sprite.scale.y) / 2;
-
-          // const x = this.renderer.width / 2 - actualWidth;
-          // const y = this.renderer.height / 2 - actualHeight;
-
-          const x = this.renderer.width * sprite.anchor.x;
-          const y = this.renderer.height * sprite.anchor.y;
-          sprite.position.set(x, y);
         }
 
         // 处理镜头焦距
@@ -158,6 +145,15 @@ export class Scene {
         sprite.spriteDebugger.update();
       }
     });
+  }
+
+  public centerSprite(sprite: Sprite) {
+    // 处理居中
+    if (sprite.center) {
+      const x = this.renderer.width * sprite.anchor.x;
+      const y = this.renderer.height * sprite.anchor.y;
+      sprite.position.set(x, y);
+    }
   }
 
   /**
@@ -261,8 +257,8 @@ export class Scene {
     }
 
     gsap.TweenLite.to(sprite.scale, duration / 1000, {
-      x: zoom,
-      y: zoom
+      x: zoom * (sprite.scaleX > 0 ? 1 : -1),
+      y: zoom * (sprite.scaleY > 0 ? 1 : -1)
     });
   }
 
@@ -287,7 +283,7 @@ export class Scene {
     // 添加到主容器
     this.mainContainer.addChild(sprite);
 
-    sprite.spriteDebugger = new SpriteDebugger(sprite);
+    // sprite.spriteDebugger = new SpriteDebugger(sprite);
 
     // 触发摄像机渲染
     // this.updateCameraMoveRendering(sprite, sprite.x, sprite.y, 1);

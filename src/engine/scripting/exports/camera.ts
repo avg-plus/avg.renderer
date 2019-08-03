@@ -37,9 +37,9 @@ export class EngineAPI_Camera extends AVGExportedAPI {
     proxy && (await proxy.runner(<APICameraMove>camera));
   }
 
-  public static async moveTo(x: number, y: number) {
+  public static async moveTo(x: number, y: number, duration: number) {
     const animation: AnimationMacro = {
-      totalDuration: 4400,
+      totalDuration: duration,
       // initialFrame: {
       //   alpha: 0
       // },

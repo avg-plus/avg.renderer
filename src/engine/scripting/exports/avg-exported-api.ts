@@ -163,7 +163,17 @@ export class AVGExportedAPI {
           .boolean()
           .optional()
           .default(false)
-          .description("是否渲染到摄像机")
+          .description("是否渲染到摄像机"),
+        cameraDistance: joi
+          .number()
+          .optional()
+          .default(0)
+          .description("摄像机距离"),
+        renderCameraDepth: joi
+          .boolean()
+          .optional()
+          .default(false)
+          .description("是否渲染摄像机距离深度（不处理缩放）")
       }),
       renderer
     );

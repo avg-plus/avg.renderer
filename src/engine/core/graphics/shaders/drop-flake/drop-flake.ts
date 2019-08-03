@@ -144,10 +144,11 @@ export class DropFlakeParticle {
     DropFlakeParticle.program = new ShaderProgram(cNode, options);
   }
 
-  public static async stop() {}
-  // public static async setTexture(filename: string) {
-  //   await this.init(filename, this.params);
-  // }
+  public static async stop() {
+    const parent = document.getElementById("avg-particle-viewport");
+
+    delete DropFlakeParticle.program;
+  }
 
   public static update(params: any) {
     DropFlakeParticle.params.alpha += 0.01;

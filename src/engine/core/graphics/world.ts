@@ -44,42 +44,6 @@ class World {
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
-    // await DropFlakeParticle.init(AVGNativePath.join(GameResource.getDataRoot(), "./effects/flake-texture/rain.png"), {
-    //   count: 5000, // 粒子数量
-    //   alpha: 0.6, // 透明系数
-    //   depth: 60, // 镜头深度
-    //   gravity: 10, // 下坠重力
-    //   rotation: {
-    //     enabled: false,
-    //     randomize: true,
-    //     angle: 2,
-    //     speed: 10
-    //   },
-    //   wind: {
-    //     enabled: true,
-    //     force: 0.1, // 风力
-    //     min: -0.2,
-    //     max: 0.1,
-    //     easing: 0.1
-    //   }
-    // });
-
-    // setInterval(() => {
-    //   DropFlakeParticle.update({
-    //     count: 5000, // 粒子数量
-    //     alpha: 0.6, // 透明系数
-    //     depth: 60, // 镜头深度
-    //     gravity:  1100, // 下坠重力
-    //     autoWind: true,
-    //     wind: {
-    //       force: 0.01, // 风力
-    //       min: 0,
-    //       max: 0,
-    //       easing: 0.01
-    //     }
-    //   });
-    // }, 2000);
-
     window.onresize = () => {
       this.scenes.map(scene => {
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -87,7 +51,7 @@ class World {
       });
     };
 
-    DebugPanel.init();
+    // DebugPanel.init();
   }
 
   public get defaultScene() {

@@ -64,11 +64,11 @@ export class EngineAPI_Character extends AVGExportedAPI {
     ids.map(async v => {
       let model = new APICharacter();
       model.isAsync = arguments[arguments.length - 1] === "__async_call__";
-      model.name = v;
+      model.name = super.validateImageID(v);
       model.data.animation = super.validateSpriteAnimationMacro(animation);
 
       const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.HideCharacter);
-      return await proxy.runner(<APICharacter>model);
+      await proxy.runner(<APICharacter>model);
     });
   }
 

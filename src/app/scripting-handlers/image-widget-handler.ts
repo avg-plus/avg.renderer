@@ -39,4 +39,12 @@ export class ImageWidgetScriptingHandler {
 
     scriptingContext.resolver();
   }
+
+  public static async handleAnimateImageWidget(scriptingContext: ScriptingContext) {
+    const api = <APIScreenImage>scriptingContext.api;
+
+    await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, !api.isAsync);
+
+    scriptingContext.resolver();
+  }
 }

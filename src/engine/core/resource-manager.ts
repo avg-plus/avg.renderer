@@ -41,7 +41,7 @@ class GameResourceManager {
    * @param {string} url
    * @memberof GameResourceManager
    */
-  public addLoading(name: string, url: string, onCompleted?: (resource:  PIXI.LoaderResource) => void) {
+  public addLoading(name: string, url: string, onCompleted?: (resource: PIXI.LoaderResource) => void) {
     const task: LoadingTask = {
       name,
       url,
@@ -50,6 +50,10 @@ class GameResourceManager {
     };
 
     this.loadingTasks.set(name, task);
+  }
+
+  public addPreload(url: string) {
+    this.resourceLoader.add(url, url).load();
   }
 
   public update() {
@@ -93,7 +97,7 @@ class GameResourceManager {
         // 通知进度变更
         this.loadingTasks.forEach((value, key) => {
           const url = value.url;
-          const resource:  PIXI.LoaderResource = resources[url];
+          const resource: PIXI.LoaderResource = resources[url];
           if (value && value.onCompleted && resource) {
             value.onCompleted(resource);
           }

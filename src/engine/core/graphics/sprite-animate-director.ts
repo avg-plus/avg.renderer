@@ -101,7 +101,7 @@ export class SpriteAnimateDirector {
         let duration = (frame.duration || 1) / 1000;
 
         const { ...vars } = frame;
-        vars.ease = null;
+        vars.ease = vars.ease || gsap.Power0.easeNone;
 
         timeline.add(gsap.TweenLite.to(target, duration, vars), timelineCursorTime);
 
@@ -115,7 +115,11 @@ export class SpriteAnimateDirector {
             // 直接把值写到滤镜实例里
             // const tl = ;
 
-            timeline.add(gsap.TweenLite.to(obj.instance, duration, v.data), timelineCursorTime);
+            // 两边都有同一属性的情况下才能开始过渡
+            timeline.add(
+              gsap.TweenLite.to(obj.instance, duration, { ease: v.data.ease || gsap.Power0.easeNone, ...v.data }),
+              timelineCursorTime
+            );
           }
         }
 

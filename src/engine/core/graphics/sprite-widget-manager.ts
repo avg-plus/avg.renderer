@@ -44,13 +44,16 @@ export class SpriteWidgetManager {
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
     sprite.rotation = renderer.rotation || 0;
+    sprite.distance = renderer.cameraDistance || 0;
+    sprite.renderCameraDepth = renderer.renderCameraDepth || false;
 
     if (sprite.spriteType === SpriteType.Scene) {
       // sprite.resizeMode = ResizeMode.Stretch;
       sprite.anchor.set(0.5, 0.5);
       sprite.center = true;
+      GameWorld.defaultScene.centerSprite(sprite);
     } else if (sprite.spriteType === SpriteType.Character) {
-      sprite.anchor.set(0.5, 0.5);
+      // sprite.anchor.set(0.5, 0.5);
     }
 
     GameWorld.defaultScene.addSprite(image.name, sprite, layerOrder);

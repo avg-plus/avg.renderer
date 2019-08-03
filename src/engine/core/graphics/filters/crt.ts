@@ -6,12 +6,7 @@ class CRTFilter extends FilterBase {
   name: "CRTFilter";
 
   public instance() {
-    return new ExtraFilters.CRTFilter({
-      lineWidth: 3,
-      lineContrast: 0.3,
-      noise: 0.2,
-      time: 0.5
-    });
+    return new ExtraFilters.CRTFilter();
   }
 
   public validate(folder) {

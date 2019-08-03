@@ -87,11 +87,36 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     model.data.animation = super.validateSpriteAnimationMacro(options.animation);
 
     // // 跳过模式处理，跳过不执行动画
-    // if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-    //   model.data.animation.options.duration = 0;
-    // }
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      // model.data.animation.options.duration = 0;
+    }
 
     const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.ShowImageWidget);
+    return await proxy.runner(<APIScreenImage>model);
+  }
+
+  public static async animateImage(name: string, options: ScreenImage) {
+    let model = new APIScreenImage();
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+
+    if (!options || !(options instanceof Object)) {
+      options = new ScreenImage();
+    }
+
+    model.data = options;
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
+
+    model.data = options;
+    model.name = super.validateImageID(name);
+    model.data.renderer = super.validateRenderer(options.renderer || new AVGSpriteRenderer());
+    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
+
+    // // 跳过模式处理，跳过不执行动画
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      // model.data.animation.options.duration = 0;
+    }
+
+    const proxy = APIManager.Instance.getImpl(APIScreenImage.name, OP.AnimateImageWidget);
     return await proxy.runner(<APIScreenImage>model);
   }
 

@@ -36,6 +36,10 @@ export class EngineAPI_Particle extends AVGExportedAPI {
     );
   }
 
+  public static async stop() {
+    await DropFlakeParticle.stop();
+  }
+
   public static async rain(params: DropFlakeParams) {
     const snowParams = Object.assign(
       {},

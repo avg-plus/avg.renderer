@@ -8,10 +8,10 @@ export enum HookEvents {
 
   // 立绘相关
   CharacterBeforeEnter = "hook.character_before_enter", // 立绘显示前
-  CharacterAfterEnter = "hook.character_before_enter", // 立绘显示后
-  // CharacterBeforeLeave = "hook.character_before_leave", // 立绘消失前
-  // CharacterAfterLeave = "hook.character_after_leave", // 立绘消失后
-  // CharacterChanged = "hook.character_changed", // 立绘更新
+  CharacterAfterEnter = "hook.character_after_enter", // 立绘显示后
+  CharacterBeforeLeave = "hook.character_before_leave", // 立绘消失前
+  CharacterAfterLeave = "hook.character_after_leave", // 立绘消失后
+  CharacterChanged = "hook.character_changed", // 立绘更新
 
   // // 对话框相关
   DialogueShow = "hook.dialogue_show", // 对话框显示

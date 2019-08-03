@@ -6,6 +6,8 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 const postcssUrl = require("postcss-url");
 var glob = require("glob");
+const CompressionPlugin = require("compression-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
@@ -57,6 +59,12 @@ function getPlugins() {
   );
 
   plugins.push(new NoEmitOnErrorsPlugin());
+  // plugins.push(new BundleAnalyzerPlugin());
+  plugins.push(
+    new CompressionPlugin({
+      deleteOriginalAssets: false
+    })
+  );
 
   plugins.push(
     new GlobCopyWebpackPlugin({

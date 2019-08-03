@@ -61,7 +61,7 @@ export class CharacterScriptingHandler {
     }
 
     // @ Hook 触发 CharacterAfterEnter
-    // await HookManager.triggerHook(HookEvents.CharacterAfterEnter, {});
+    await HookManager.triggerHook(HookEvents.CharacterAfterEnter);
 
     scriptingContext.resolver();
   }
@@ -72,19 +72,36 @@ export class CharacterScriptingHandler {
     image.file = ResourceData.from(api.filename);
 
     await SpriteWidgetManager.updateSpriteWidget(api.name, image);
+
+    // @ Hook 触发 CharacterChanged
+    await HookManager.triggerHook(HookEvents.CharacterChanged);
+
     scriptingContext.resolver();
   }
 
   public static async handleHideCharacter(scriptingContext: ScriptingContext) {
     const api = <APICharacter>scriptingContext.api;
-    const animation = <AnimationMacro>api.data;
+    let data = api.data;
+
+    let slot = SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
+
+    let hookContext = {
+      animation: data.animation || slot
+    };
+
+    // @ Hook 触发 CharacterBeforeLeave
+    let hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeLeave, hookContext);
+    let animation = data.animation || hookResult.animation; // 优先使用指定的animation
 
     // 跳过模式处理，忽略时间
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      animation.totalDuration = 0;
+      slot.totalDuration = 0;
     }
 
-    await SpriteWidgetManager.removeSpriteWidget(api.name, animation);
+    await SpriteWidgetManager.removeSpriteWidget(api.name, animation, !api.isAsync);
+
+    // @ Hook 触发 CharacterChanged
+    await HookManager.triggerHook(HookEvents.CharacterAfterLeave);
 
     scriptingContext.resolver();
   }
@@ -102,18 +119,18 @@ export class CharacterScriptingHandler {
     scriptingContext.resolver();
   }
 
-  public static async hideCharacter(scriptingContext: ScriptingContext) {
-    const api = <APICharacter>scriptingContext.api;
-    const animation = <AnimationMacro>api.data;
+  // public static async hideCharacter(scriptingContext: ScriptingContext) {
+  //   const api = <APICharacter>scriptingContext.api;
+  //   const animation = <AnimationMacro>api.data;
 
-    const slot = api.data.animation || SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
+  //   const slot = api.data.animation || SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
 
-    // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      slot.totalDuration = 0;
-    }
+  //   // 跳过模式处理，忽略时间
+  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+  //     slot.totalDuration = 0;
+  //   }
 
-    await SpriteWidgetManager.removeSpriteWidget(api.name, slot, !api.isAsync);
-    scriptingContext.resolver();
-  }
+  //   await SpriteWidgetManager.removeSpriteWidget(api.name, slot, !api.isAsync);
+  //   scriptingContext.resolver();
+  // }
 }

@@ -87,7 +87,7 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
 
   /**
    * 设置摄像机距离
-   *  - 取值 5000 ~ -5000, 数字越大表示距离摄像机越远
+   *  - 取值 5000 ~ -5000, 数字越小表示距离摄像机越远
    *  - 摄像机位移时的增量和距离有关，距离越远增量越小，反之亦然
    *  - 如距离为负数，则摄像机拉近时会对物体做模糊以及半透明处理
    * @memberof Sprite

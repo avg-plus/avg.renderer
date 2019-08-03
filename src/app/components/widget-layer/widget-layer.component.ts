@@ -103,27 +103,13 @@ export class WidgetLayerComponent implements OnInit {
             break;
           case OP.UpdateImageWidget:
             ImageWidgetScriptingHandler.handleUpdateImageWidget(scriptingContext);
-            // const updatePromise = WidgetLayerService.updateImage(image.name, image);
-
-            // const result = new ScreenImageResult();
-            // result.id = image.id;
-
-            // this.onAsyncResolveHandler(value, null, result);
             break;
           case OP.RemoveImageWidget:
             ImageWidgetScriptingHandler.handleRemoveImageWidget(scriptingContext);
-            // if (scriptingContext.api.data.name === undefined) {
-            //   WidgetLayerService.removeAllWidgets(ScreenWidgetType.Image, scriptingContext.api.isAsync);
 
-            //   scriptingContext.resolver();
-            // } else {
-            //   const promise = WidgetLayerService.removeWidget(
-            //     image,
-            //     ScreenWidgetType.Image,
-            //     scriptingContext.api.isAsync
-            //   );
-            //   this.onAsyncResolveHandler(scriptingContext, promise);
-            // }
+            break;
+          case OP.AnimateImageWidget:
+            ImageWidgetScriptingHandler.handleAnimateImageWidget(scriptingContext);
 
             break;
         }
