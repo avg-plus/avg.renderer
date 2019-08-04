@@ -24,33 +24,14 @@ export class SceneHandler {
     image.name = api.name;
 
     const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation);
-    const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    // const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
 
-    // if (this.currentBackgroundSprite) {
-    //   // 把要设置的图片先放到底层
-    const incommingSprite = await SpriteWidgetManager.addSpriteWidget(
-      image,
-      enterSlot,
-      LayerOrder.TopLayer,
-      !api.isAsync
-    );
-    //   await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot, false);
-
-    //   this.currentBackgroundSprite = incommingSprite;
-    // } else {
-    // if (api.isAsync) {
-    //   SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false).then(sprite => {
-    //     this.currentBackgroundSprite = sprite;
-    //   });
-    // } else {
-    //   this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(
-    //     image,
-    //     enterSlot,
-    //     LayerOrder.TopLayer,
-    //     true
-    //   );
-    // }
-    // }
+    const sprite = await SpriteWidgetManager.getSprite(api.name);
+    if (sprite) {
+      await SpriteWidgetManager.updateSpriteWidget(image.name, image);
+    } else {
+      await SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, !api.isAsync);
+    }
 
     scriptingContext.resolver();
   }
@@ -59,7 +40,15 @@ export class SceneHandler {
     const api = <APIScene>scriptingContext.api;
 
     const slot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
-    await SpriteWidgetManager.removeSpriteWidget(api.name, slot);
+
+    if (api.isAsync) {
+      SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, false).then(() => {
+        SpriteWidgetManager.removeSpriteWidget(api.name, slot);
+      });
+    } else {
+      await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, true);
+      await SpriteWidgetManager.removeSpriteWidget(api.name, slot);
+    }
 
     scriptingContext.resolver();
   }
