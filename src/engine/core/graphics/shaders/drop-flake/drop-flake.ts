@@ -146,6 +146,8 @@ export class DropFlakeParticle {
 
   public static async stop() {
     const parent = document.getElementById("avg-particle-viewport");
+    var cNode = parent.cloneNode(false);
+    parent.parentNode.replaceChild(cNode, parent);
 
     delete DropFlakeParticle.program;
   }
