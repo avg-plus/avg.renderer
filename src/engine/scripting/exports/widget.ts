@@ -175,9 +175,5 @@ export class EngineAPI_Widget extends AVGExportedAPI {
 
     const proxy = APIManager.Instance.getImpl(APIHtmlWidget.name, OP.ShowHtmlWidget);
     proxy && (await proxy.runner(<APIHtmlWidget>model));
-
-    // return <HtmlWidgetResult>(
-    //   await APIManager.getImpl(APIHtmlWidget.name, OP.ShowHtmlWidget).runner(<APIHtmlWidget>model)
-    // );
   }
 }

@@ -46,6 +46,7 @@ export class SpriteWidgetManager {
     sprite.rotation = renderer.rotation || 0;
     sprite.distance = renderer.cameraDistance || 0;
     sprite.renderCameraDepth = renderer.renderCameraDepth || false;
+    sprite.alpha = renderer.alpha;
 
     if (sprite.spriteType === SpriteType.Scene) {
       // sprite.resizeMode = ResizeMode.Stretch;

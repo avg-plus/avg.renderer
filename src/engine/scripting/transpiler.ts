@@ -131,6 +131,25 @@ export class Transpiler {
         }
       });
 
+      // 递归查找CallExpression
+      const searchCallExpression = node => {
+        if (node.type === "CallExpression" && node.callee) {
+          // 获取API调用
+          if (isAPICall(node)) {
+            const pos = node.callee.range[0];
+            loc_pos.push(pos);
+
+            // 遍历参数
+            if (node.arguments) {
+              const functionArguments = node.arguments;
+              functionArguments.map(argNode => {
+                searchCallExpression(argNode);
+              });
+            }
+          }
+        }
+      };
+
       // Add 'await' keyword before every api calls
       let program = esprima.parse(
         asyncTransformCode,
@@ -139,13 +158,7 @@ export class Transpiler {
           attachComment: false
         },
         (node, meta) => {
-          if (node.type === "CallExpression" && node.callee) {
-            // 获取API调用
-            if (isAPICall(node)) {
-              const pos = node.callee.range[0];
-              loc_pos.push(pos);
-            }
-          }
+          searchCallExpression(node);
         }
       );
 
