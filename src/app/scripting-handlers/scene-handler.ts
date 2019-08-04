@@ -26,26 +26,31 @@ export class SceneHandler {
     const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation);
     const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
 
-    if (this.currentBackgroundSprite) {
-      // 把要设置的图片先放到底层
-      const incommingSprite = await SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false);
-      await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot, false);
+    // if (this.currentBackgroundSprite) {
+    //   // 把要设置的图片先放到底层
+    const incommingSprite = await SpriteWidgetManager.addSpriteWidget(
+      image,
+      enterSlot,
+      LayerOrder.TopLayer,
+      !api.isAsync
+    );
+    //   await SpriteWidgetManager.removeSpriteWidget(this.currentBackgroundSprite.name, leaveSlot, false);
 
-      this.currentBackgroundSprite = incommingSprite;
-    } else {
-      if (api.isAsync) {
-        SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false).then(sprite => {
-          this.currentBackgroundSprite = sprite;
-        });
-      } else {
-        this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(
-          image,
-          enterSlot,
-          LayerOrder.TopLayer,
-          true
-        );
-      }
-    }
+    //   this.currentBackgroundSprite = incommingSprite;
+    // } else {
+    // if (api.isAsync) {
+    //   SpriteWidgetManager.addSpriteWidget(image, enterSlot, LayerOrder.TopLayer, false).then(sprite => {
+    //     this.currentBackgroundSprite = sprite;
+    //   });
+    // } else {
+    //   this.currentBackgroundSprite = await SpriteWidgetManager.addSpriteWidget(
+    //     image,
+    //     enterSlot,
+    //     LayerOrder.TopLayer,
+    //     true
+    //   );
+    // }
+    // }
 
     scriptingContext.resolver();
   }
