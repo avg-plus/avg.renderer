@@ -26,11 +26,6 @@ export class SpriteWidgetManager {
       });
     }
 
-    // 初始关键帧赋值
-    if (animationMacro && animationMacro.initialFrame) {
-      Object.assign(sprite, animationMacro.initialFrame);
-    }
-
     sprite.spriteType = image.spriteType;
     sprite.resizeMode = ResizeMode.Custom;
     sprite.renderInCamera = renderer.renderInCamera;
@@ -47,6 +42,11 @@ export class SpriteWidgetManager {
     sprite.distance = renderer.cameraDistance || 0;
     sprite.renderCameraDepth = renderer.renderCameraDepth || false;
     sprite.alpha = renderer.alpha;
+
+    // 初始关键帧赋值
+    if (animationMacro && animationMacro.initialFrame) {
+      Object.assign(sprite, animationMacro.initialFrame);
+    }
 
     if (sprite.spriteType === SpriteType.Scene) {
       // sprite.resizeMode = ResizeMode.Stretch;
