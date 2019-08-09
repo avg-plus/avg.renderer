@@ -4,9 +4,12 @@ import { Setting } from "engine/core/setting";
 import { OP } from "engine/const/op";
 import { APISound } from "engine/scripting/api/api-sound";
 import { AVGScriptUnit } from "engine/scripting/script-unit";
+import { Howl, Howler } from "howler";
 
 export class APISoundImpl extends Impl {
-  public static tracks: any = {};
+  public static tracks: {
+    [track: string]: Howl;
+  } = {};
 
   @Impl.registerImpl(APISound, OP.PlayAudio)
   public static playAudio(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
@@ -45,7 +48,7 @@ export class APISoundImpl extends Impl {
 
     return new Promise((resolve, reject) => {
       if (track in APISoundImpl.tracks) {
-        APISoundImpl.tracks[track].volume = Setting.getVolume(track) / 100;
+        APISoundImpl.tracks[track].volume(Setting.getVolume(track) / 100);
       }
 
       resolve();
@@ -62,13 +65,17 @@ export class APISoundImpl extends Impl {
         delete APISoundImpl.tracks[track];
       }
 
-      APISoundImpl.tracks[track] = new Audio();
-      APISoundImpl.tracks[track].src = script.data.file.filename;
+      var sound = new Howl({
+        src: [script.data.file.filename],
+        autoplay: true,
+        loop: script.data.loop,
+        volume: Setting.getVolume(track) / 100,
+        onend: () => {
+          console.log("Sound play finished");
+        }
+      });
 
-      APISoundImpl.tracks[track].loop = script.data.loop;
-      APISoundImpl.tracks[track].volume = Setting.getVolume(track) / 100;
-
-      APISoundImpl.tracks[track].load();
+      APISoundImpl.tracks[track] = sound;
       APISoundImpl.tracks[track].play();
 
       resolve();

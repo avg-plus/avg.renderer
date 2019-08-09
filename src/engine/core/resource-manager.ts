@@ -41,19 +41,28 @@ class GameResourceManager {
    * @param {string} url
    * @memberof GameResourceManager
    */
-  public addLoading(name: string, url: string, onCompleted?: (resource: PIXI.LoaderResource) => void) {
+  public addLoading(url: string, onCompleted?: (resource: PIXI.LoaderResource) => void) {
+    // 这里用 URL 作为 key，便于检索资源缓存
+    const resource = this.resourceLoader.resources[url];
+
+    // 资源存在则直接返回
+    if (resource) {
+      console.log("Resource load from cached: ", url);
+
+      if (onCompleted) {
+        onCompleted(resource);
+      }
+      return;
+    }
+
     const task: LoadingTask = {
-      name,
+      name: url,
       url,
       onCompleted,
       status: LoadingTaskStatus.Pending
     };
 
-    this.loadingTasks.set(name, task);
-  }
-
-  public addPreload(url: string) {
-    this.resourceLoader.add(url, url).load();
+    this.loadingTasks.set(url, task);
   }
 
   public update() {
@@ -76,23 +85,26 @@ class GameResourceManager {
           loadOptions = {
             loadType: "arraybuffer",
             xhrType: "arraybuffer",
-            crossOrigin: ""
+            crossOrigin: "*"
           };
         }
 
         // 这里用 URL 作为 key，便于检索资源缓存
         const resource = this.resourceLoader.resources[task.url];
+
         if (!resource) {
           console.log("Add pending download task: ", task);
           this.resourceLoader.add(task.url, task.url, loadOptions);
+        } else {
+          console.log("Resource load from cached: ", task);
         }
 
         task.status = LoadingTaskStatus.Loading;
       }
 
-      this.resourceLoader.load((result, resources) => {
-        console.log("Loading process: ", result);
-        this.resourceLoader.reset();
+      this.resourceLoader.load((loader: PIXI.Loader, resources: PIXI.LoaderResource) => {
+        console.log("Loading process: ", loader);
+        // this.resourceLoader.reset();
 
         // 通知进度变更
         this.loadingTasks.forEach((value, key) => {
@@ -104,10 +116,8 @@ class GameResourceManager {
         });
 
         // 资源加载完成
-        console.log("Resource loading progress : ", result.progress);
-
-        if (result.progress === 100) {
-          console.log("Resources all loaded: ", result);
+        if (loader.progress === 100) {
+          console.log("Resources all loaded: ", loader);
 
           pendingTasks.forEach((task: LoadingTask) => {
             this.loadingTasks.delete(task.name);

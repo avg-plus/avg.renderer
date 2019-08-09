@@ -33,6 +33,7 @@ import { APIScreenSubtitle, ScreenSubtitleResult } from "engine/scripting/api/ap
 import { APIScreenImage, ScreenImageResult } from "engine/scripting/api/api-screen-image";
 import { APIHtmlWidget, HtmlWidgetResult } from "engine/scripting/api/api-html-widget";
 import { ScriptingContext } from "engine/scripting/scripting-context";
+import { HTMLWidgetScriptingHandler } from "app/scripting-handlers/html-widget-handler";
 
 @Component({
   selector: "widget-layer",
@@ -116,19 +117,7 @@ export class WidgetLayerComponent implements OnInit {
       } else if (scriptingContext.api instanceof APIHtmlWidget) {
         switch (scriptingContext.op) {
           case OP.ShowHtmlWidget:
-            const model = (<APIHtmlWidget>scriptingContext.api).data;
-
-            const promise = WidgetLayerService.addWidget(
-              model,
-              WidgetLayerService.createWidgetComponent<HtmlWidgetComponent>(HtmlWidgetComponent),
-              ScreenWidgetType.Html,
-              scriptingContext.api.isAsync
-            );
-
-            const result = new HtmlWidgetResult();
-            result.id = model.name;
-
-            this.onAsyncResolveHandler(scriptingContext, promise, result);
+            HTMLWidgetScriptingHandler.handleAddHTMLWidget(scriptingContext);
             break;
         }
       }

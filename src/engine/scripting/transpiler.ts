@@ -102,9 +102,6 @@ export class Transpiler {
             if (property && property.name.endsWith(asyncSymbol)) {
               property.name = property.name.replace(asyncSymbol, "");
 
-              // 在参数表最后添加一个新的字符串参数，用于表示异步模式
-              console.log(node);
-
               node.arguments.push({
                 value: "__async_call__",
                 type: "Literal"
@@ -190,7 +187,7 @@ export class Transpiler {
           }
         })();`;
 
-      console.log(generated);
+        console.log(generated);
 
       return generated;
     } catch (err) {

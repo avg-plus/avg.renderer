@@ -35,7 +35,8 @@ export class MeasurementUnitPart {
             this.unit = UnitType.Percent;
             break;
           case "px":
-            this.unit = UnitType.Percent;
+          case "":
+            this.unit = UnitType.Pixel;
             break;
           default:
             this.unit = UnitType.Custom;

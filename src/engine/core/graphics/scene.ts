@@ -374,7 +374,7 @@ export class Scene {
 
   public async loadFromImage(name: string, url: string, type: SpriteType = SpriteType.Normal): Promise<Sprite> {
     return new Promise<Sprite>((resolve, reject) => {
-      ResourceManager.addLoading(name, url, resource => {
+      ResourceManager.addLoading(url, resource => {
         console.log("On resource loaded: ", resource);
         let sprite: Sprite;
 

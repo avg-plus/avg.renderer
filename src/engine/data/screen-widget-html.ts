@@ -6,6 +6,7 @@ export class ScreenWidgetHtml extends ScreenWidget {
   public width: string;
   public height: string;
   public html: string;
+  public styles: string;
 
   public set size(value: string) {
     this._size = value.replace(" ", "");

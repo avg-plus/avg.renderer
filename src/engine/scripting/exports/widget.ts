@@ -20,57 +20,59 @@ import { APIHtmlWidget } from "../api/api-html-widget";
 import { EngineUtils } from "../../core/engine-utils";
 import { Sandbox } from "../../core/sandbox";
 import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { TransformConverter } from "engine/core/transform-converter";
+import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
 
 @APIExport("widget", EngineAPI_Widget)
 export class EngineAPI_Widget extends AVGExportedAPI {
-  public static async text(id: string, text: string, options?: Subtitle, isAsync: boolean = false) {
-    let model = new APIScreenSubtitle();
-    model.isAsync = isAsync;
-    model.data = new Subtitle();
-    Object.assign(model.data, options);
+  // public static async text(id: string, text: string, options?: Subtitle, isAsync: boolean = false) {
+  //   let model = new APIScreenSubtitle();
+  //   model.isAsync = isAsync;
+  //   model.data = new Subtitle();
+  //   Object.assign(model.data, options);
 
-    // model.data.id = "Text_" + IDGenerator.generate();
-    model.data.name = EngineUtils.makeWidgetID(id);
+  //   // model.data.id = "Text_" + IDGenerator.generate();
+  //   model.data.name = EngineUtils.makeWidgetID(id);
 
-    model.data.text = text;
-    model.data.position = options.position || ScreenPosition.Center;
-    // model.data.animation = options.animation || new WidgetAnimation();
-    // model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
-    // model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
+  //   model.data.text = text;
+  //   model.data.position = options.position || ScreenPosition.Center;
+  //   // model.data.animation = options.animation || new WidgetAnimation();
+  //   // model.data.animation.name = model.data.animation.name || ScreenWidgetAnimation.Enter_Appear;
+  //   // model.data.animation.options = model.data.animation.options || new WidgetAnimation_FadeInOptions();
 
-    // if (!model.data) {
-    //     model.data.animation.name = ScreenWidgetAnimation.Enter_Appear;
-    // }
+  //   // if (!model.data) {
+  //   //     model.data.animation.name = ScreenWidgetAnimation.Enter_Appear;
+  //   // }
 
-    // paramCompatible<APIScreenSubtitle, Subtitle>(model, options);
+  //   // paramCompatible<APIScreenSubtitle, Subtitle>(model, options);
 
-    // 跳过模式处理，跳过不执行动画
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      // model.data.animation.options.duration = 0;
-    }
+  //   // 跳过模式处理，跳过不执行动画
+  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+  //     // model.data.animation.options.duration = 0;
+  //   }
 
-    return <ScreenSubtitleResult>(
-      await APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.ShowTextWidget).runner(<APIScreenSubtitle>model)
-    );
-  }
+  //   return <ScreenSubtitleResult>(
+  //     await APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.ShowTextWidget).runner(<APIScreenSubtitle>model)
+  //   );
+  // }
 
-  public static async animateText(id: string) {
-    let model = new APIScreenSubtitle();
-    model.data.name = EngineUtils.makeWidgetID(id);
+  // public static async animateText(id: string) {
+  //   let model = new APIScreenSubtitle();
+  //   model.data.name = EngineUtils.makeWidgetID(id);
 
-    const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.AnimateTextWidget);
-    proxy && (await proxy.runner(<APIScreenSubtitle>model));
-  }
+  //   const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.AnimateTextWidget);
+  //   proxy && (await proxy.runner(<APIScreenSubtitle>model));
+  // }
 
-  public static async updateText(id: string, text: string) {
-    let model = new APIScreenSubtitle();
-    model.data.name = EngineUtils.makeWidgetID(id);
-    model.data.text = text;
+  // public static async updateText(id: string, text: string) {
+  //   let model = new APIScreenSubtitle();
+  //   model.data.name = EngineUtils.makeWidgetID(id);
+  //   model.data.text = text;
 
-    const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.UpdateTextWidget);
+  //   const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.UpdateTextWidget);
 
-    proxy && (await proxy.runner(<APIScreenSubtitle>model));
-  }
+  //   proxy && (await proxy.runner(<APIScreenSubtitle>model));
+  // }
 
   public static async image(name: string, filename: string, options: ScreenImage) {
     let model = new APIScreenImage();
@@ -129,25 +131,25 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     proxy && (await proxy.runner(<APIScreenImage>model));
   }
 
-  public static async removeText(id: string, options?: { animation?: WidgetAnimation }, isAsync: boolean = false) {
-    let model = new APIScreenSubtitle();
+  // public static async removeText(id: string, options?: { animation?: WidgetAnimation }, isAsync: boolean = false) {
+  //   let model = new APIScreenSubtitle();
 
-    if (id) {
-      model.isAsync = isAsync;
-      model.data.name = EngineUtils.makeWidgetID(id) || undefined;
-      // model.data.animation = options ? options.animation || undefined : undefined;
-    }
+  //   if (id) {
+  //     model.isAsync = isAsync;
+  //     model.data.name = EngineUtils.makeWidgetID(id) || undefined;
+  //     // model.data.animation = options ? options.animation || undefined : undefined;
+  //   }
 
-    // 跳过模式处理，跳过不执行动画
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      if (options && options.animation && options.animation.options) {
-        // model.data.animation.options.duration = 0;
-      }
-    }
+  //   // 跳过模式处理，跳过不执行动画
+  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+  //     if (options && options.animation && options.animation.options) {
+  //       // model.data.animation.options.duration = 0;
+  //     }
+  //   }
 
-    const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.RemoveTextWidget);
-    proxy && (await proxy.runner(<APIScreenSubtitle>model));
-  }
+  //   const proxy = APIManager.Instance.getImpl(APIScreenSubtitle.name, OP.RemoveTextWidget);
+  //   proxy && (await proxy.runner(<APIScreenSubtitle>model));
+  // }
 
   public static async removeImage(name: string | string[], animation?: AnimationMacro) {
     let ids = [];
@@ -168,9 +170,17 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     });
   }
 
-  public static async html(id: string, html: string) {
+  public static async html(id: string, html: string, styles: string, options?: ScreenWidgetHtml) {
     let model = new APIHtmlWidget();
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+
+    if (!options || !(options instanceof Object)) {
+      options = new ScreenWidgetHtml();
+    }
+
+    model.data = options;
     model.data.html = html;
+    model.data.styles = styles;
     model.data.name = EngineUtils.makeWidgetID(id);
 
     const proxy = APIManager.Instance.getImpl(APIHtmlWidget.name, OP.ShowHtmlWidget);

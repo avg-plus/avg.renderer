@@ -6,6 +6,7 @@ import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager"
 import { ResourceData } from "engine/data/resource-data";
 import { SpriteType } from "engine/const/sprite-type";
 import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
+import { Sandbox } from "engine/core/sandbox";
 
 export class ImageWidgetScriptingHandler {
   public static async handleShowImageWidget(scriptingContext: ScriptingContext) {
@@ -14,6 +15,13 @@ export class ImageWidgetScriptingHandler {
     image.name = api.name;
     image.spriteType = SpriteType.ImageWidget;
     image.file = ResourceData.from(api.filename);
+
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      if (image.animation) {
+        image.animation.totalDuration = 0;
+      }
+    }
 
     await SpriteWidgetManager.addSpriteWidget(image, image.animation, LayerOrder.TopLayer, !api.isAsync);
 
@@ -35,13 +43,23 @@ export class ImageWidgetScriptingHandler {
   public static async handleRemoveImageWidget(scriptingContext: ScriptingContext) {
     const api = <APIScreenImage>scriptingContext.api;
 
-    await SpriteWidgetManager.removeSpriteWidget(api.name, null);
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      api.data.animation.totalDuration = 0;
+    }
+
+    await SpriteWidgetManager.removeSpriteWidget(api.name, api.data.animation);
 
     scriptingContext.resolver();
   }
 
   public static async handleAnimateImageWidget(scriptingContext: ScriptingContext) {
     const api = <APIScreenImage>scriptingContext.api;
+
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      api.data.animation.totalDuration = 0;
+    }
 
     await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, !api.isAsync);
 

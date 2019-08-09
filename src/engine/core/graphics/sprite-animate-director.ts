@@ -34,6 +34,9 @@ export class AnimationMacro {
   // 重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）
   repeat?: number = 0;
 
+  // 播放进度回调
+  onProgress?: (progress: number) => void;
+
   // 时间轴
   timeline: Array<SpriteMacroFrame | CameraMacroFrame>;
 }
@@ -69,6 +72,7 @@ export class SpriteAnimateDirector {
     const frames = macroObject.timeline || [];
 
     const timeline = new gsap.TimelineMax();
+    timeline.pause();
     if (!isNullOrUndefined(macroObject.repeat)) {
       timeline.repeat(macroObject.repeat);
     }
@@ -112,9 +116,6 @@ export class SpriteAnimateDirector {
             // 创建一个空的滤镜
             const obj = await sprite.spriteFilters.setFilter(v.name, null);
 
-            // 直接把值写到滤镜实例里
-            // const tl = ;
-
             // 两边都有同一属性的情况下才能开始过渡
             timeline.add(
               gsap.TweenLite.to(obj.instance, duration, { ease: v.data.ease || gsap.Power0.easeNone, ...v.data }),
@@ -128,9 +129,15 @@ export class SpriteAnimateDirector {
       }
 
       // 设置时间轴的总时间
-      if (macroObject.totalDuration) {
-        timeline.duration(macroObject.totalDuration / 1000);
+      if (macroObject.totalDuration !== undefined) {
+        timeline.duration(macroObject.totalDuration / 1000 || 0.01);
       }
+
+      timeline.eventCallback("onUpdate", () => {
+        if (macroObject.onProgress) {
+          macroObject.onProgress(timeline.totalProgress());
+        }
+      });
 
       timeline.play();
     } else if (type === AnimateTargetType.Camera) {

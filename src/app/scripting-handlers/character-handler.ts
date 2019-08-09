@@ -49,11 +49,11 @@ export class CharacterScriptingHandler {
     }
 
     // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.characters === true) {
       slot.totalDuration = 0;
     }
 
-    this.currentCharacter = hookContext;
+    CharacterScriptingHandler.currentCharacter = hookContext;
     if (api.isAsync) {
       SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, false);
     } else {
@@ -94,7 +94,7 @@ export class CharacterScriptingHandler {
     let animation = data.animation || hookResult.animation; // 优先使用指定的animation
 
     // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.characters === true) {
       slot.totalDuration = 0;
     }
 
@@ -111,7 +111,7 @@ export class CharacterScriptingHandler {
     const animation = api.data.animation;
 
     // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.characters === true) {
       animation.totalDuration = 0;
     }
 
@@ -126,7 +126,7 @@ export class CharacterScriptingHandler {
   //   const slot = api.data.animation || SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
 
   //   // 跳过模式处理，忽略时间
-  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+  //   if (Sandbox.isSkipMode && Sandbox.skipOptions.characters === true) {
   //     slot.totalDuration = 0;
   //   }
 

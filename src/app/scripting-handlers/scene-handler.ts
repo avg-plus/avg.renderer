@@ -8,6 +8,7 @@ import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager"
 import { LayerOrder } from "engine/core/graphics/layer-order";
 import { ScreenImage } from "engine/data/screen-image";
 import { Sprite } from "engine/core/graphics/sprite";
+import { Sandbox } from "engine/core/sandbox";
 
 export class SceneHandler {
   private static currentBackgroundSprite: Sprite;
@@ -26,6 +27,13 @@ export class SceneHandler {
     const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation);
     // const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
 
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      if (image.animation) {
+        image.animation.totalDuration = 0;
+      }
+    }
+
     const sprite = await SpriteWidgetManager.getSprite(api.name);
     if (sprite) {
       await SpriteWidgetManager.updateSpriteWidget(image.name, image);
@@ -38,15 +46,23 @@ export class SceneHandler {
 
   public static async handleRemoveScene(scriptingContext: ScriptingContext) {
     const api = <APIScene>scriptingContext.api;
+    const animation = api.data.animation;
 
-    const slot = SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    const slot = animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      if (animation) {
+        animation.totalDuration = 0;
+      }
+    }
 
     if (api.isAsync) {
-      SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, false).then(() => {
+      SpriteWidgetManager.animateSpriteWidget(api.name, animation, false).then(() => {
         SpriteWidgetManager.removeSpriteWidget(api.name, slot);
       });
     } else {
-      await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, true);
+      await SpriteWidgetManager.animateSpriteWidget(api.name, animation, true);
       await SpriteWidgetManager.removeSpriteWidget(api.name, slot);
     }
 
@@ -67,8 +83,16 @@ export class SceneHandler {
 
   public static async handleAnimateScene(scriptingContext: ScriptingContext) {
     const api = <APIScene>scriptingContext.api;
+    const animation = api.data.animation;
 
-    await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, !api.isAsync);
+    // 跳过模式处理，忽略时间
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+      if (animation) {
+        animation.totalDuration = 0;
+      }
+    }
+
+    await SpriteWidgetManager.animateSpriteWidget(api.name, animation, !api.isAsync);
 
     scriptingContext.resolver();
   }

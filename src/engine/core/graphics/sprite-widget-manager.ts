@@ -54,7 +54,7 @@ export class SpriteWidgetManager {
       sprite.center = true;
       GameWorld.defaultScene.centerSprite(sprite);
     } else if (sprite.spriteType === SpriteType.Character) {
-      // sprite.anchor.set(0.5, 0.5);
+      sprite.anchor.set(0.5, 0.5);
     }
 
     GameWorld.defaultScene.addSprite(image.name, sprite, layerOrder);
@@ -96,7 +96,7 @@ export class SpriteWidgetManager {
       return;
     }
 
-    ResourceManager.addLoading(name, newSpriteImage.file.filename, resource => {
+    ResourceManager.addLoading(newSpriteImage.file.filename, resource => {
       sprite.texture = Texture.from(resource.data);
     });
   }

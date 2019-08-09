@@ -82,10 +82,17 @@ export class AVGExportedAPI {
           .optional()
           .min(-1)
           .description("重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"),
+        onProgress: joi
+          .func()
+          .optional()
+          .description(
+            "动画播放进度。返回一个0-1区间的小数，表示播放进度的百分比。0为时间轴的开始，0.5为时间轴中间，1为结束."
+          ),
         timeline: joi
           .array()
           .min(0)
-          .required()
+          .optional()
+          .default([])
           .description("初始关键帧")
       }),
       animation
