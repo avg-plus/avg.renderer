@@ -10,6 +10,7 @@ import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
 import { SpriteFilter } from "engine/data/sprite-renderer";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
+import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 @APIExport("scene", EngineAPI_Scene)
 export class EngineAPI_Scene extends AVGExportedAPI {
@@ -67,19 +68,37 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     await proxy.runner(<APIScene>model);
   }
 
-  public static async remove(id: string): Promise<SceneHandle> {
-    let model = new APIScene();
-    model.name = super.validateImageID(id);
+  // public static async remove(name: string): Promise<SceneHandle> {
+  //   let model = new APIScene();
+  //   model.name = super.validateImageID(name);
 
-    // model.index = index;
+  //   // model.index = index;
 
-    return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
+  //   return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
+  // }
+
+  public static async remove(name: string | string[], animation?: AnimationMacro) {
+    let ids = [];
+    if (Array.isArray(name)) {
+      ids = name;
+    } else {
+      ids = [name];
+    }
+
+    ids.map(async v => {
+      let model = new APIScene();
+      model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+      model.name = super.validateImageID(v);
+      model.data.animation = super.validateSpriteAnimationMacro(animation);
+
+      await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
+    });
   }
 
-  public static async animate(id: string, options: Scene): Promise<SceneHandle> {
+  public static async animate(name: string, options: Scene): Promise<SceneHandle> {
     let model = new APIScene();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
-    model.name = super.validateImageID(id);
+    model.name = super.validateImageID(name);
 
     if (!options || !(options instanceof Object)) {
       options = new Scene();
