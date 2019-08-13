@@ -13,7 +13,6 @@ import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
 import { CameraDirector } from "../../common/animations/camera-director";
-import { ShakeStyle } from "../../common/effects/shake/interface/shake";
 import { AVGPlusIPC } from "../../common/manager/avgplus-ipc";
 import { AVGGame, GameStatus } from "engine/core/game";
 
@@ -30,7 +29,6 @@ import { APIEffect } from "engine/scripting/api/api-effect";
 import { APIGotoTitleView } from "engine/scripting/api/api-title-view";
 import { APIInputBox } from "engine/scripting/api/api-input-box";
 import { APICameraMove, APICameraShake } from "engine/scripting/api/api-camera";
-import { SpriteAnimateDirector, AnimateTargetType } from "engine/core/graphics/sprite-animate-director";
 import { SceneHandler } from "app/scripting-handlers/scene-handler";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Setting } from "engine/core/setting";
@@ -47,8 +45,6 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
   inputBox: VariableInputComponent;
 
   private currentScript: string;
-
-  shakeStyle: ShakeStyle = null;
 
   constructor(
     private service: MainSceneService,
@@ -181,25 +177,25 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           scriptingContext.resolver();
         } else if (scriptingContext.api instanceof APICameraShake) {
           const data = <CameraShakeData>scriptingContext.api.data;
-          this.shakeStyle = {
-            horizontal: data.horizontal, // X 轴震动幅度
-            vertical: data.vertical, // Y 轴震动幅度
-            rotation: data.rotation, // 旋转幅度
-            duration: data.duration, // 每次震动持续时间
-            quantity: data.count, // 总震动次数
-            timingFunc: "ease-in-out",
-            interval: 1,
-            max: 100,
-            transformOrigin: "center center",
-            fixed: true,
-            fixedStop: false,
-            freez: false,
-            active: false,
-            trigger: ":active",
-            elem: "div"
-          };
+          // this.shakeStyle = {
+          //   horizontal: data.horizontal, // X 轴震动幅度
+          //   vertical: data.vertical, // Y 轴震动幅度
+          //   rotation: data.rotation, // 旋转幅度
+          //   duration: data.duration, // 每次震动持续时间
+          //   quantity: data.count, // 总震动次数
+          //   timingFunc: "ease-in-out",
+          //   interval: 1,
+          //   max: 100,
+          //   transformOrigin: "center center",
+          //   fixed: true,
+          //   fixedStop: false,
+          //   freez: false,
+          //   active: false,
+          //   trigger: ":active",
+          //   elem: "div"
+          // };
 
-          this.changeDetectorRef.detectChanges();
+          // this.changeDetectorRef.detectChanges();
 
           scriptingContext.resolver();
         }

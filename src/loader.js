@@ -115,6 +115,7 @@ loadjs = (function() {
 
 // Preload scripts
 const bundles = [
+  "inline.bundle.js",
   "polyfills.bundle.js",
   "styles.bundle.js",
   "vendor.bundle.js",
@@ -138,7 +139,7 @@ for (let i = 0; i < bundles.length; ++i) {
       "]\n 首次加载可能需要等待几分钟...";
 
     if (loadedCount === bundles.length) {
-      document.getElementById("loading-tips").hidden = true;
+      document.getElementById("loading-tips").remove()// .hidden = true;
     }
   });
 }

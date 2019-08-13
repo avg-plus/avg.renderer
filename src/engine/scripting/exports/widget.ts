@@ -19,7 +19,7 @@ import { paramCompatible } from "../../core/utils";
 import { APIHtmlWidget } from "../api/api-html-widget";
 import { EngineUtils } from "../../core/engine-utils";
 import { Sandbox } from "../../core/sandbox";
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 import { TransformConverter } from "engine/core/transform-converter";
 import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
 
@@ -151,7 +151,7 @@ export class EngineAPI_Widget extends AVGExportedAPI {
   //   proxy && (await proxy.runner(<APIScreenSubtitle>model));
   // }
 
-  public static async removeImage(name: string | string[], animation?: AnimationMacro) {
+  public static async removeImage(name: string | string[], animation?: SpriteAnimationMacro) {
     let ids = [];
     if (Array.isArray(name)) {
       ids = name;
@@ -170,7 +170,7 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     });
   }
 
-  public static async html(id: string, html: string, styles: string, options?: ScreenWidgetHtml) {
+  public static async html(name: string, html: string, styles: string, options?: ScreenWidgetHtml) {
     let model = new APIHtmlWidget();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
@@ -178,12 +178,14 @@ export class EngineAPI_Widget extends AVGExportedAPI {
       options = new ScreenWidgetHtml();
     }
 
-    model.data = options;
+    model.data = Object.assign({}, model.data, options);
     model.data.html = html;
     model.data.styles = styles;
-    model.data.name = EngineUtils.makeWidgetID(id);
+    model.data.name = EngineUtils.makeWidgetID(name);
 
     const proxy = APIManager.Instance.getImpl(APIHtmlWidget.name, OP.ShowHtmlWidget);
     proxy && (await proxy.runner(<APIHtmlWidget>model));
   }
+
+  public static updateHTMLWidgetOption(name: string) {}
 }

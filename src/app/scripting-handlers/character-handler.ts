@@ -1,4 +1,4 @@
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 import { APICharacter } from "engine/scripting/api/api-character";
 import { Character } from "engine/data/character";
 import { ScreenImage } from "engine/data/screen-image";

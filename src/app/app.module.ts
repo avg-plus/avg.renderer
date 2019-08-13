@@ -31,13 +31,8 @@ import { GameToolbarService } from "./components/game-toolbar/main-scene.service
 import { GameInitializer } from "./game-initializer";
 import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/html-widget.component";
 
-import { ShakeDirective } from "./common/effects/shake/directive/shake.directive";
-
 @NgModule({
   declarations: [
-    // ShakeComponent,
-    ShakeDirective,
-
     AppComponent,
     TitleMenuComponent,
     TitleMenuItemComponent,

@@ -3,7 +3,7 @@ import { ScreenImage } from "engine/data/screen-image";
 import { GameWorld } from "./world";
 import { LayerOrder } from "./layer-order";
 import { ResizeMode, Sprite } from "./sprite";
-import { SpriteAnimateDirector, AnimateTargetType, AnimationMacro } from "./sprite-animate-director";
+import { SpriteAnimateDirector, AnimateTargetType, SpriteAnimationMacro } from "./sprite-animate-director";
 import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 import { isNullOrUndefined } from "../utils";
 import { Texture } from "pixi.js";
@@ -12,7 +12,7 @@ import { SpriteType } from "engine/const/sprite-type";
 export class SpriteWidgetManager {
   public static async addSpriteWidget(
     image: ScreenImage,
-    animationMacro: AnimationMacro,
+    animationMacro: SpriteAnimationMacro,
     layerOrder: number | LayerOrder = LayerOrder.TopLayer,
     waitForAnimation: boolean = false
   ): Promise<Sprite> {
@@ -125,7 +125,7 @@ export class SpriteWidgetManager {
 
   public static async animateSpriteWidget(
     name: string,
-    animationMacro: AnimationMacro,
+    animationMacro: SpriteAnimationMacro,
     waitForAnimation: boolean = false
   ) {
     const sprite = GameWorld.defaultScene.getSpriteByName(name);
@@ -151,10 +151,12 @@ export class SpriteWidgetManager {
 
   public static async removeSpriteWidget(
     name: string,
-    animationMacro: AnimationMacro,
+    animationMacro: SpriteAnimationMacro,
     waitForAnimation: boolean = false
   ) {
     await this.animateSpriteWidget(name, animationMacro, waitForAnimation);
+
+    this.clearSpriteFilters(name);
     GameWorld.defaultScene.removeSprite(name);
   }
 }

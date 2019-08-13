@@ -13,6 +13,8 @@ export class OP {
   public static StopAudio = "StopAudio";
   public static GetAllTracks = "GetAllTracks";
   public static SetVolume = "SetVolume";
+  public static MuteAudio = "MuteAudio";
+  public static UnmuteAudio = "UnmuteAudio";
 
   // public static PlayBGM = "PlayBGM";
   // public static StopBGM = "StopBGM";

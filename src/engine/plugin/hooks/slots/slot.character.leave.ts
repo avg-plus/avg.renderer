@@ -1,6 +1,6 @@
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
-const characterLeaveAnimationSlot: AnimationMacro = {
+const characterLeaveAnimationSlot: SpriteAnimationMacro = {
   totalDuration: 800,
   timeline: [
     {

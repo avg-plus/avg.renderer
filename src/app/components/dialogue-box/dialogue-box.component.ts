@@ -403,6 +403,8 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public onAutoPlay() {
+    console.log("Setting.AutoPlay", Setting.AutoPlay);
+    
     if (Setting.AutoPlay) {
       clearTimeout(this.autoPlayDelayHandle);
       this.autoPlayDelayHandle = null;

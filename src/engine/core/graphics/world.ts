@@ -36,11 +36,11 @@ class World {
 
     // Show FPSPanel
     const fpsElement = document.getElementById("fps");
-    this.app.ticker.add(() => {
-      fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
+    // this.app.ticker.add(() => {
+    //   fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
 
-      HookManager.triggerHook(HookEvents.GameUpdate);
-    });
+    //   HookManager.triggerHook(HookEvents.GameUpdate);
+    // });
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);

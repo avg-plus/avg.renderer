@@ -114,10 +114,11 @@ body,
 
 #avg-widget-layer {
   position: absolute;
+  pointer-events: none;
   z-index: $_LAYER_INDEX_WIDGETS;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  background-color: rgba($color: #000000, $alpha: 0);
   will-change: transform, left, top, right, bottom;
 }
 
@@ -131,7 +132,10 @@ body,
 }
 
 // 弹幕相关
-#danmuku-contianer {
+#danmaku-contianer {
+  z-index: $_LAYER_INDEX_DANMUKU;
+  pointer-events: none;
+
   width: 100%;
   height: 100%;
 

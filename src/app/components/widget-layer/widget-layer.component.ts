@@ -50,7 +50,7 @@ export class WidgetLayerComponent implements OnInit {
   ngOnInit() {
     WidgetLayerService.setWidgetLayer(this.resolver, this.container);
 
-    ScriptingDispatcher.watch().subscribe((scriptingContext: ScriptingContext) => {
+    ScriptingDispatcher.watch().subscribe(async (scriptingContext: ScriptingContext) => {
       if (scriptingContext.api instanceof APIScreenSubtitle) {
         const subtitle = (<APIScreenSubtitle>scriptingContext.api).data;
 

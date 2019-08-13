@@ -5,6 +5,10 @@ import { AVGNativeFS } from "engine/core/native-modules/avg-native-fs";
 import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
 import { ResourcePath, GameResource } from "engine/core/resource";
 import { PluginManager } from "engine/plugin/plugin-manager";
+import { SkipOptions } from "engine/data/skip-options";
+import { Sandbox } from "engine/core/sandbox";
+import { ResourceManager } from "engine/core/resource-manager";
+import { DanmakuManager } from "engine/core/danmaku-mananger";
 /**
  * 用于扩展和自定义引擎的表现
  *
@@ -31,4 +35,25 @@ export class EngineAPI_Engine extends AVGExportedAPI {
   }
 
   public static async unloadPlugin() {}
+
+  public static async enableSkipMode(options?: SkipOptions) {
+    Sandbox.isSkipMode = true;
+    Sandbox.skipOptions = options || new SkipOptions();
+  }
+
+  public static async disableSkipMode() {
+    Sandbox.isSkipMode = false;
+  }
+
+  public static async enableDanmaku() {
+    await DanmakuManager.enableDanmaku();
+  }
+
+  public static async disableDanmaku() {
+    await DanmakuManager.disableDanmaku();
+  }
+
+  public static preload(url: string) {
+    ResourceManager.addLoading(url);
+  }
 }

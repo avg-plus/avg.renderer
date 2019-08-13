@@ -16,8 +16,26 @@ export class APISoundImpl extends Impl {
     return APISoundImpl._play((<Sound>scriptUnit.data).track, scriptUnit);
   }
 
+  @Impl.registerImpl(APISound, OP.MuteAudio)
+  public static mute(scriptUnit: AVGScriptUnit) {
+    const tracks = APISoundImpl.tracks;
+
+    Object.keys(tracks).map(t => {
+      tracks[t].mute(true);
+    });
+  }
+
+  @Impl.registerImpl(APISound, OP.UnmuteAudio)
+  public static unmute(scriptUnit: AVGScriptUnit) {
+    const tracks = APISoundImpl.tracks;
+
+    Object.keys(tracks).map(t => {
+      tracks[t].mute(false);
+    });
+  }
+
   @Impl.registerImpl(APISound, OP.StopAudio)
-  public static stopAudio(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+  public static stopAudio(scriptUnit: AVGScriptUnit) {
     return APISoundImpl._stop((<Sound>scriptUnit.data).track, scriptUnit);
   }
 
@@ -48,6 +66,8 @@ export class APISoundImpl extends Impl {
 
     return new Promise((resolve, reject) => {
       if (track in APISoundImpl.tracks) {
+        console.log(Setting.getVolume(track));
+
         APISoundImpl.tracks[track].volume(Setting.getVolume(track) / 100);
       }
 

@@ -81,7 +81,8 @@ export class WidgetAnimation {
 
 export class ScreenWidget {
   private _widgetType: ScreenWidgetType;
-  private _position: string = new AVGMeasurementUnit("0%", "0%").getValue();
+  protected _position: string = new AVGMeasurementUnit("0%", "0%").getValue();
+  protected _size: string = new AVGMeasurementUnit("100%", "100%").getValue();
 
   public name: string;
   private x: number;
@@ -93,6 +94,10 @@ export class ScreenWidget {
     return this._position;
   }
 
+  public get size() {
+    return this._size;
+  }
+
   public set position(value: string) {
     const units = AVGMeasurementUnit.fromString(value);
 
@@ -102,10 +107,7 @@ export class ScreenWidget {
 
       // If not a pair, make it a pair
       if (!units.isPairUnit()) {
-        this._position = new AVGMeasurementUnit(
-          units.getLeft().getValue(),
-          "0%"
-        ).getValue();
+        this._position = new AVGMeasurementUnit(units.getLeft().getValue(), "0%").getValue();
       } else {
         this._position = units.getValue();
       }
@@ -122,6 +124,25 @@ export class ScreenWidget {
       // this.x = matches[1] + (matches[1].substr(-1) === "%" ? "" : "px");
       // this.y = matches[2] + (matches[2].substr(-1) === "%" ? "" : "px");
     }
+  }
+
+  public set size(value: string) {
+    const units = AVGMeasurementUnit.fromString(value);
+
+    if (units) {
+      this.xUnit = units.getLeft() ? units.getLeft().getValue() : "0%";
+      this.yUnit = units.getRight() ? units.getRight().getValue() : "0%";
+
+      // If not a pair, make it a pair
+      if (!units.isPairUnit()) {
+        this._size = new AVGMeasurementUnit(units.getLeft().getValue(), "0%").getValue();
+      } else {
+        this._size = units.getValue();
+      }
+    }
+
+    // Ignore spaces
+    this._size = value.replace(" ", "").toLowerCase();
   }
 
   // public animation: WidgetAnimation = new WidgetAnimation();

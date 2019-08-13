@@ -73,24 +73,24 @@ export class AppComponent implements AfterViewInit, OnInit {
     const fpsOut = document.getElementById("fps");
 
     let last = 0;
-    function refreshLoop() {
-      window.requestAnimationFrame(function() {
-        const now = performance.now();
+    // function refreshLoop() {
+    //   window.requestAnimationFrame(function() {
+    //     const now = performance.now();
 
-        while (times.length > 0 && times[0] <= now - 1000) {
-          times.shift();
-        }
-        times.push(now);
-        fps = times.length;
+    //     while (times.length > 0 && times[0] <= now - 1000) {
+    //       times.shift();
+    //     }
+    //     times.push(now);
+    //     fps = times.length;
 
-        if (now - last > 100) {
-          fpsOut.innerHTML = fps + " fps";
-          last = now;
-        }
+    //     if (now - last > 100) {
+    //       fpsOut.innerHTML = fps + " fps";
+    //       last = now;
+    //     }
 
-        refreshLoop();
-      });
-    }
+    //     refreshLoop();
+    //   });
+    // }
 
     // refreshLoop();
   }

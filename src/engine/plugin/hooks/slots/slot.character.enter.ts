@@ -1,6 +1,6 @@
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
-const characterEnterAnimationSlot: AnimationMacro = {
+const characterEnterAnimationSlot: SpriteAnimationMacro = {
   totalDuration: 800,
   initialFrame: {
     alpha: 0

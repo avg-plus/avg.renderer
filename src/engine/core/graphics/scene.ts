@@ -393,6 +393,7 @@ export class Scene {
   public removeSprite(id: string) {
     const sprite = this.getSpriteByName(id);
     if (sprite) {
+      console.log("Removed Scene: ", id);
       this.mainContainer.removeChild(sprite);
     }
   }

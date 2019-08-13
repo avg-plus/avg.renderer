@@ -1,7 +1,7 @@
 import {
   SpriteAnimateDirector,
   AnimateTargetType,
-  AnimationMacro
+  SpriteAnimationMacro
 } from "./../../core/graphics/sprite-animate-director";
 import { EngineAPI_Flow } from "./flow";
 
@@ -38,7 +38,7 @@ export class EngineAPI_Camera extends AVGExportedAPI {
   }
 
   public static async moveTo(x: number, y: number, duration: number) {
-    const animation: AnimationMacro = {
+    const animation: SpriteAnimationMacro = {
       totalDuration: duration,
       // initialFrame: {
       //   alpha: 0
@@ -55,7 +55,7 @@ export class EngineAPI_Camera extends AVGExportedAPI {
   }
 
   public static async zoomTo(distance: number) {
-    const animation: AnimationMacro = {
+    const animation: SpriteAnimationMacro = {
       totalDuration: 4400,
       timeline: [
         {

@@ -10,7 +10,7 @@ import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
 import { SpriteFilter } from "engine/data/sprite-renderer";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 @APIExport("scene", EngineAPI_Scene)
 export class EngineAPI_Scene extends AVGExportedAPI {
@@ -77,7 +77,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
   //   return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
   // }
 
-  public static async remove(name: string | string[], animation?: AnimationMacro) {
+  public static async remove(name: string | string[], animation?: SpriteAnimationMacro) {
     let ids = [];
     if (Array.isArray(name)) {
       ids = name;

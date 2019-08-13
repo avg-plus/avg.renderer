@@ -1,5 +1,5 @@
 import * as joi from "joi";
-import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import { Character } from "engine/data/character";
 import { ResourceData } from "engine/data/resource-data";
 import { ResourcePath } from "engine/core/resource";
@@ -38,7 +38,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
     proxy && (await proxy.runner(<APICharacter>model));
   }
 
-  public static async animate(name: string, animation: AnimationMacro) {
+  public static async animate(name: string, animation: SpriteAnimationMacro) {
     const model = new APICharacter();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
@@ -53,7 +53,7 @@ export class EngineAPI_Character extends AVGExportedAPI {
     return SpriteWidgetManager.getSprite(name);
   }
 
-  public static async hide(name: string | string[], animation?: AnimationMacro) {
+  public static async hide(name: string | string[], animation?: SpriteAnimationMacro) {
     let ids = [];
     if (Array.isArray(name)) {
       ids = name;

@@ -80,92 +80,16 @@ export class EngineAPI_Audio extends AVGExportedAPI {
     return Setting.getVolume(track);
   }
 
-  // public static async playBGM(filename: string, options?: SoundBGM) {
-  //   let model = new APISound();
-  //   model.data = new SoundBGM();
-  //   model.data.track = SoundTrack.BGM;
+  public static async mute() {
+    let model = new APISound();
+    model.data = new Sound();
 
-  //   paramCompatible<APISound, SoundBGM>(model, options, {
-  //     field: "file",
-  //     value: ResourceData.from(filename, ResourcePath.BGM)
-  //   });
+    const proxy = APIManager.Instance.getImpl(APISound.name, OP.MuteAudio);
+    proxy && (await proxy.runner(<APISound>model));
+  }
 
-  //   const proxy = APIManager.getImpl(APISound.name, OP.PlayBGM);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // public static async stopBGM(options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.BGM;
-
-  //   paramCompatible<APISound, SoundBGM>(model, options);
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.StopBGM);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // public static async pauseBGM(options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.BGM;
-
-  //   paramCompatible<APISound, SoundBGM>(model, options);
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.PauseBGM);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // /**
-  //  * Represents a book.
-  //  * @constructor
-  //  * @param {string} title - The title of the book.
-  //  * @param {string} author - The author of the book.
-  //  */
-  // public static async resumeBGM(options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.BGM;
-
-  //   paramCompatible<APISound, SoundBGM>(model, options);
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.ResumeBGM);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // public static async playVoice(filename: string, options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.Voice;
-
-  //   paramCompatible<APISound, Sound>(model, options, {
-  //     field: "file",
-  //     value: ResourceData.from(filename, ResourcePath.Voice)
-  //   });
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.PlayVoice);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // public static async playSE(filename: string, options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.Voice;
-
-  //   paramCompatible<APISound, Sound>(model, options, {
-  //     field: "file",
-  //     value: ResourceData.from(filename, ResourcePath.SE)
-  //   });
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.PlaySE);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
-
-  // public static async playBGS(filename: string, options?: Sound) {
-  //   let model = new APISound();
-  //   model.data.track = SoundTrack.Voice;
-
-  //   paramCompatible<APISound, Sound>(model, options, {
-  //     field: "file",
-  //     value: ResourceData.from(filename, ResourcePath.BGS)
-  //   });
-
-  //   const proxy = APIManager.getImpl(APISound.name, OP.PlayBGS);
-  //   proxy && (await proxy.runner(<APISound>model));
-  // }
+  public static async unmute() {
+    const proxy = APIManager.Instance.getImpl(APISound.name, OP.UnmuteAudio);
+    proxy.runner(new APISound());
+  }
 }

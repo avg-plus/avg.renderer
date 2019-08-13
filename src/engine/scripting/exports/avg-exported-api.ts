@@ -1,4 +1,4 @@
-import { AnimationMacro } from "./../../core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "./../../core/graphics/sprite-animate-director";
 import * as joi from "joi";
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
@@ -65,7 +65,7 @@ export class AVGExportedAPI {
     );
   }
 
-  protected static validateSpriteAnimationMacro(animation: AnimationMacro) {
+  protected static validateSpriteAnimationMacro(animation: SpriteAnimationMacro) {
     return this.APIParametersValidate(
       joi.object().keys({
         totalDuration: joi

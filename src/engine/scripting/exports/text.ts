@@ -5,6 +5,7 @@ import { APIManager } from "../api-manager";
 import { OP } from "../../const/op";
 import { mergeDeep, paramCompatible } from "../../core/utils";
 import { AVGExportedAPI, APIExport } from "./avg-exported-api";
+import { Setting } from "engine/core/setting";
 
 @APIExport("text", EngineAPI_Text)
 export class EngineAPI_Text extends AVGExportedAPI {
@@ -89,5 +90,13 @@ export class EngineAPI_Text extends AVGExportedAPI {
 
     const proxy = APIManager.Instance.getImpl(APIDialogue.name, OP.HideText);
     proxy && (await proxy.runner(<APIDialogue>model));
+  }
+
+  public static async auto(auto: boolean) {
+    Setting.AutoPlay = true;
+  }
+
+  public static async textSpeed(value: number) {
+    Setting.TextSpeed = value;
   }
 }

@@ -1,6 +1,6 @@
-import { AnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
-const sceneEnterAnimationSlot: AnimationMacro = {
+const sceneEnterAnimationSlot: SpriteAnimationMacro = {
   initialFrame: {
     alpha: 1
   },
