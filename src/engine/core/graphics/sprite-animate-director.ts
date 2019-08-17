@@ -178,7 +178,8 @@ export class SpriteAnimateDirector {
     }
 
     // 记录时间轴的播放位置
-    let timelineCursorTime = 0;
+    // 时间轴比0大一点，防止后续序列帧的播放位置覆盖初始化帧
+    let timelineCursorTime = 0.00001;
 
     // 播放时间轴
     for (let i = 0; i < frames.length; ++i) {
@@ -230,14 +231,22 @@ export class SpriteAnimateDirector {
     initialFrame = <CSSMacroFrame>initialFrame;
     const frames = macroObject.timeline || [];
 
+    target.change((...args) => {
+      console.log("HTML Widget changed", args);
+    })
+    timeline.eventCallback("onUpdate", () => {
+
+    });
+
     // 初始关键帧
     //  - 如初始关键帧为 null, 则从对象当前状态开始
     if (initialFrame) {
-      timeline.to(target, 1 / 1000, { css: { ...initialFrame } }, 0);
+      timeline.to(target, 0.000001, { css: { ...initialFrame } }, 0);
     }
 
     // 记录时间轴的播放位置
-    let timelineCursorTime = 0;
+    // 时间轴比0大一点，防止后续序列帧的播放位置覆盖初始化帧
+    let timelineCursorTime = 0.00001;
 
     // 播放时间轴
     for (let i = 0; i < frames.length; ++i) {
@@ -245,12 +254,12 @@ export class SpriteAnimateDirector {
       let duration = (frame.duration || 1) / 1000;
 
       const { ...vars } = frame;
-      vars.ease = vars.ease || gsap.Power0.easeNone;
+      let ease = vars.ease || gsap.Power0.easeNone;
 
-      timeline.add(gsap.TweenLite.to(target, duration, vars), timelineCursorTime);
+      timeline.add(gsap.TweenLite.to(target, duration, { ease, css: { ...vars } }), timelineCursorTime);
 
       // 累加当前关键帧的时间
-      timelineCursorTime += frame.duration / 1000;
+      timelineCursorTime += duration;
     }
 
     // 设置时间轴的总时间

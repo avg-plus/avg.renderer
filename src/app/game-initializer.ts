@@ -211,7 +211,7 @@ export class GameInitializer implements CanActivate {
       src: url('${AVGNativePath.join(GameResource.getAssetsRoot(), defaultFont)}');
     }`;
 
-    $("head").append("<style id='default-font'>" + fontStyle + "</style>");
+    // $("head").append("<style id='default-font'>" + fontStyle + "</style>");
 
     // Load necessary assets for engine
     LoadingLayerService.addToSyncList([

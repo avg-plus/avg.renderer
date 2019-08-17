@@ -3,7 +3,6 @@ import "./api-sound-impl";
 import "./api-scene-impl";
 import "./api-timer-impl";
 import "./api-effect-impl";
-import "./api-goto-titleview-impl";
 import "./api-screen-subtitle-impl";
 import "./api-character-impl";
 import "./api-dialogue-choices-impl";

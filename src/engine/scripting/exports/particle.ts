@@ -1,7 +1,10 @@
+import {
+  DropFlakeParams,
+  DropFlakeParticle
+} from "./../../core/graphics/shaders/drop-flake/drop-flake";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
-import { DropFlakeParams, DropFlakeParticle } from "engine/core/graphics/shaders/drop-flake/drop-flake";
-import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
-import { GameResource } from "engine/core/resource";
+import { GameResource } from "../../core/resource";
+import { AVGNativePath } from "../../core/native-modules/avg-native-path";
 
 @APIExport("particle", EngineAPI_Particle)
 export class EngineAPI_Particle extends AVGExportedAPI {
@@ -31,7 +34,10 @@ export class EngineAPI_Particle extends AVGExportedAPI {
     );
 
     await DropFlakeParticle.start(
-      AVGNativePath.join(GameResource.getDataRoot(), "./effects/flake-texture/snow.png"),
+      AVGNativePath.join(
+        GameResource.getDataRoot(),
+        "./effects/flake-texture/snow.png"
+      ),
       snowParams
     );
   }
@@ -65,8 +71,19 @@ export class EngineAPI_Particle extends AVGExportedAPI {
       params
     );
 
+    console.log(
+      "particle texture: ",
+      AVGNativePath.join(
+        GameResource.getDataRoot(),
+        "./effects/flake-texture/snow.png"
+      )
+    );
+
     await DropFlakeParticle.start(
-      AVGNativePath.join(GameResource.getDataRoot(), "./effects/flake-texture/rain.png"),
+      AVGNativePath.join(
+        GameResource.getDataRoot(),
+        "effects/flake-texture/rain.png"
+      ),
       snowParams
     );
   }

@@ -1,8 +1,10 @@
+import Sass from "sass.js/dist/sass.sync";
+import * as $ from "jquery";
+
 import { AnimateTargetType } from "./../../engine/core/graphics/sprite-animate-director";
 import { EngineAPI_Text } from "./../../engine/scripting/exports/text";
 import { HTMLWidgetManager } from "./../common/manager/html-widget-manager";
 import { AVGEngineError } from "./../../engine/core/engine-errors";
-import Sass from "sass.js/dist/sass.sync";
 import { ScriptingContext } from "engine/scripting/scripting-context";
 import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
 import { TransformConverter } from "engine/core/transform-converter";
@@ -18,7 +20,7 @@ export class HTMLWidgetScriptingHandler {
     let styles = data.styles;
 
     const position = TransformConverter.toActual(data.position || "(0%, 0%)");
-    const size = TransformConverter.toActual(data.size || "(100%, 100%)");
+    const size = TransformConverter.toActual(data.size || "(auto, auto)");
 
     // "(100%, 100%)")
     // 尝试编译 styles
@@ -34,16 +36,17 @@ export class HTMLWidgetScriptingHandler {
       styles = result.text;
 
       var shadow = HTMLWidgetManager.getShadowRoot();
+      var save = $(shadow).children().detach();
 
-      shadow.innerHTML += `
+      shadow.innerHTML = `
       <style>
         #${name} {
           position: absolute;
-          pointer-events: ${data.pointerEvents ? "auto" : "none"};
-          left: ${position[0]};
-          top: ${position[1]};
-          width: ${size[0]};
-          height: ${size[1]};
+          pointer-events: ${data.pointerEvents ? "all" : "none"};
+          left: ${position[0]}px;
+          top: ${position[1]}px;
+          width: ${size[0]}px;
+          height: ${size[1]}px;
         }
 
       ${styles}
@@ -53,7 +56,8 @@ export class HTMLWidgetScriptingHandler {
       ${html}
       </div>`;
 
-      console.log(shadow.getElementById(name));
+
+      $(shadow).append(save);
 
       if (data.events) {
         Object.keys(data.events).map(k => {
@@ -74,13 +78,16 @@ export class HTMLWidgetScriptingHandler {
       }
 
       // 处理动画
-      // await SpriteAnimateDirector.playAnimationMacro(
-      //   AnimateTargetType.HTMLElement,
-      //   shadow.getElementById(name),
-      //   data.animation
-      // );
+      await SpriteAnimateDirector.playAnimationMacro(
+        AnimateTargetType.HTMLElement,
+        shadow.getElementById(name),
+        data.animation
+      );
     });
 
     scriptingContext.resolver();
+  }
+
+  public static handleRemoveHTMLWidget(scriptingContext: ScriptingContext) {
   }
 }

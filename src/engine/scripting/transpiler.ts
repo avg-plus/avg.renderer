@@ -187,7 +187,7 @@ export class Transpiler {
           }
         })();`;
 
-        console.log(generated);
+        // console.log(generated);
 
       return generated;
     } catch (err) {

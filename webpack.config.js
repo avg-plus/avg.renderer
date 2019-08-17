@@ -196,11 +196,11 @@ function getPlugins() {
       })
     );
 
-    plugins.push(
-      new UglifyJsPlugin({
-        test: /\.js($|\?)/i
-      })
-    );
+    // plugins.push(
+    //   new UglifyJsPlugin({
+    //     test: /\.js($|\?)/i
+    //   })
+    // );
   } else {
     plugins.push(
       new AotPlugin({

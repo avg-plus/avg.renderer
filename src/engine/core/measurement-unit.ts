@@ -24,12 +24,22 @@ export class MeasurementUnitPart {
     }
     const matches = value.match(ScalarRegex);
     if (!EngineUtils.isNullOrUndefined(matches)) {
+
       // Is custom
       if (matches[3]) {
-        this.value = matches[3];
-        this.unit = UnitType.Custom;
+        var parsed = Number.parseInt(matches[3]);
+        console.log("parsed", parsed)
+        if (Number.isNaN(parsed)) {
+          this.value = matches[3];
+          this.unit = UnitType.Custom;
+        } else {
+          this.value = matches[3];
+          this.unit = UnitType.Pixel;
+        }
+
       } else {
         this.value = matches[1];
+        matches[2] = matches[2] || "";
         switch (matches[2]) {
           case "%":
             this.unit = UnitType.Percent;
@@ -46,6 +56,7 @@ export class MeasurementUnitPart {
         // this.unit = matches[2] === "%" ? UnitType.Percent : UnitType.Pixel;
       }
     }
+
   }
 
   public getNumbericValue() {
@@ -90,7 +101,7 @@ export class AVGMeasurementUnit {
       return null;
     }
 
-    value = value.replace(" ", "");
+    value = value.replace(/ /g, "");
 
     let matches = value.match(VectorRegex);
     if (!EngineUtils.isNullOrUndefined(matches)) {

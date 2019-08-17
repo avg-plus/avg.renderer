@@ -28,11 +28,7 @@ export class EngineAPI_Flow extends AVGExportedAPI {
 
     let model = new APITimer();
     model.data.time = time;
-    // paramCompatible<APITimer, Timer>(model, {}, {
-    //   field: "time",
-    //   value: time
-    // });
-
+    
     const proxy = APIManager.Instance.getImpl(APITimer.name, OP.Wait);
     await proxy.runner(<APITimer>model);
   }
@@ -147,7 +143,10 @@ export class EngineAPI_Flow extends AVGExportedAPI {
     let model = new APICallScript();
     model.scriptFile = ResourceData.from(file, ResourcePath.Scripts).filename;
 
-    const r = await APIManager.Instance.getImpl(APICallScript.name, OP.CallScript).runner(<APICallScript>model);
+    const r = await APIManager.Instance.getImpl(
+      APICallScript.name,
+      OP.CallScript
+    ).runner(<APICallScript>model);
 
     return r;
   }

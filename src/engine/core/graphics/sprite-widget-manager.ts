@@ -3,11 +3,16 @@ import { ScreenImage } from "engine/data/screen-image";
 import { GameWorld } from "./world";
 import { LayerOrder } from "./layer-order";
 import { ResizeMode, Sprite } from "./sprite";
-import { SpriteAnimateDirector, AnimateTargetType, SpriteAnimationMacro } from "./sprite-animate-director";
+import {
+  SpriteAnimateDirector,
+  AnimateTargetType,
+  SpriteAnimationMacro
+} from "./sprite-animate-director";
 import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 import { isNullOrUndefined } from "../utils";
 import { Texture } from "pixi.js";
 import { SpriteType } from "engine/const/sprite-type";
+import { TransformConverter } from "engine/core/transform-converter";
 
 export class SpriteWidgetManager {
   public static async addSpriteWidget(
@@ -16,8 +21,17 @@ export class SpriteWidgetManager {
     layerOrder: number | LayerOrder = LayerOrder.TopLayer,
     waitForAnimation: boolean = false
   ): Promise<Sprite> {
-    const sprite = await GameWorld.defaultScene.loadFromImage(image.name, image.file.filename);
+    const sprite = await GameWorld.defaultScene.loadFromImage(
+      image.name,
+      image.file.filename
+    );
     const renderer = image.renderer || new AVGSpriteRenderer();
+
+    const position = TransformConverter.toActual(
+      image.position || `(${renderer.x}px, ${renderer.y})`
+    );
+
+    const size = TransformConverter.toActual(image.size || "(100%, 100%)");
 
     // 渲染滤镜
     if (renderer.filters) {
@@ -34,8 +48,8 @@ export class SpriteWidgetManager {
     sprite.scale.y = renderer.scaleY || renderer.scale || 1;
     sprite.width = renderer.width || sprite.texture.width;
     sprite.height = renderer.height || sprite.texture.height;
-    sprite.x = isNullOrUndefined(renderer.x) ? 0 : renderer.x;
-    sprite.y = isNullOrUndefined(renderer.y) ? 0 : renderer.y;
+    sprite.x = position[0]; //isNullOrUndefined(renderer.x) ? 0 : renderer.x;
+    sprite.y = position[1]; // isNullOrUndefined(renderer.y) ? 0 : renderer.y;
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
     sprite.rotation = renderer.rotation || 0;
@@ -49,11 +63,13 @@ export class SpriteWidgetManager {
     }
 
     if (sprite.spriteType === SpriteType.Scene) {
-      // sprite.resizeMode = ResizeMode.Stretch;
-      sprite.anchor.set(0.5, 0.5);
-      sprite.center = true;
+      sprite.resizeMode = ResizeMode.Stretch;
+      // sprite.anchor.set(0.5, 0.5);
+      // sprite.center = true;
       GameWorld.defaultScene.centerSprite(sprite);
     } else if (sprite.spriteType === SpriteType.Character) {
+      sprite.anchor.set(0.5, 0.5);
+    } else if (sprite.spriteType === SpriteType.ImageWidget) {
       sprite.anchor.set(0.5, 0.5);
     }
 
@@ -90,7 +106,10 @@ export class SpriteWidgetManager {
    * @returns
    * @memberof SpriteWidgetManager
    */
-  public static async updateSpriteWidget(name: string, newSpriteImage: ScreenImage) {
+  public static async updateSpriteWidget(
+    name: string,
+    newSpriteImage: ScreenImage
+  ) {
     const sprite = GameWorld.defaultScene.getSpriteByName(name);
     if (!sprite) {
       return;
@@ -105,7 +124,11 @@ export class SpriteWidgetManager {
     return GameWorld.defaultScene.getSpriteByName(name);
   }
 
-  public static async setSpriteFilters(name: string, filterType: string, data: any) {
+  public static async setSpriteFilters(
+    name: string,
+    filterType: string,
+    data: any
+  ) {
     const sprite = GameWorld.defaultScene.getSpriteByName(name);
     if (!sprite) {
       return;
