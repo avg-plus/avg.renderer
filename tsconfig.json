@@ -13,24 +13,11 @@
     "allowJs": true,
     "target": "es6",
     "paths": {
-      "environments": [
-        "./environments"
-      ]
+      "environments": ["./environments"]
     },
-    "types": [
-      "node",
-      "jasmine"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es5",
-      "es6",
-      "es7",
-      "es2016",
-      "esnext",
-      "dom"
-    ]
-  }
+    "types": ["node", "jasmine"],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es5", "es6", "es7", "es2016", "esnext", "dom"]
+  },
+  "exclude": ["**/node_modules/*", "**/dist/*", "**/app-builds/*"]
 }
