@@ -1,6 +1,7 @@
 import { EngineUtils } from "./engine-utils";
 
 export enum UnitType {
+  None = "",
   Percent = "%",
   Pixel = "px",
   Custom = ""
@@ -24,11 +25,10 @@ export class MeasurementUnitPart {
     }
     const matches = value.match(ScalarRegex);
     if (!EngineUtils.isNullOrUndefined(matches)) {
-
       // Is custom
       if (matches[3]) {
         var parsed = Number.parseInt(matches[3]);
-        console.log("parsed", parsed)
+        console.log("parsed", parsed);
         if (Number.isNaN(parsed)) {
           this.value = matches[3];
           this.unit = UnitType.Custom;
@@ -36,7 +36,6 @@ export class MeasurementUnitPart {
           this.value = matches[3];
           this.unit = UnitType.Pixel;
         }
-
       } else {
         this.value = matches[1];
         matches[2] = matches[2] || "";
@@ -56,7 +55,6 @@ export class MeasurementUnitPart {
         // this.unit = matches[2] === "%" ? UnitType.Percent : UnitType.Pixel;
       }
     }
-
   }
 
   public getNumbericValue() {

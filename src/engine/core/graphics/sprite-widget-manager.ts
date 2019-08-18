@@ -1,3 +1,4 @@
+import { UnitType } from "engine/core/measurement-unit";
 import { ResourceManager } from "./../resource-manager";
 import { ScreenImage } from "engine/data/screen-image";
 import { GameWorld } from "./world";
@@ -27,11 +28,17 @@ export class SpriteWidgetManager {
     );
     const renderer = image.renderer || new AVGSpriteRenderer();
 
-    const position = TransformConverter.toActual(
-      image.position || `(${renderer.x}px, ${renderer.y})`
+    const position = TransformConverter.toActualPosition(
+      image.position || `(${renderer.x}px, ${renderer.y}px)`,
+      AnimateTargetType.Sprite
     );
 
-    const size = TransformConverter.toActual(image.size || "(100%, 100%)");
+    const size = TransformConverter.toActualSzie(
+      image.size || "(100%, 100%)",
+      AnimateTargetType.Sprite,
+      sprite.texture.width,
+      sprite.texture.height
+    );
 
     // 渲染滤镜
     if (renderer.filters) {
@@ -46,10 +53,12 @@ export class SpriteWidgetManager {
 
     sprite.scale.x = renderer.scaleX || renderer.scale || 1;
     sprite.scale.y = renderer.scaleY || renderer.scale || 1;
-    sprite.width = renderer.width || sprite.texture.width;
-    sprite.height = renderer.height || sprite.texture.height;
-    sprite.x = position[0]; //isNullOrUndefined(renderer.x) ? 0 : renderer.x;
-    sprite.y = position[1]; // isNullOrUndefined(renderer.y) ? 0 : renderer.y;
+    sprite.width =
+      Number.parseInt(size.left) || renderer.width || sprite.texture.width;
+    sprite.height =
+      Number.parseInt(size.right) || renderer.height || sprite.texture.height;
+    sprite.x = Number.parseInt(position.left); //isNullOrUndefined(renderer.x) ? 0 : renderer.x;
+    sprite.y = Number.parseInt(position.right); // isNullOrUndefined(renderer.y) ? 0 : renderer.y;
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
     sprite.rotation = renderer.rotation || 0;

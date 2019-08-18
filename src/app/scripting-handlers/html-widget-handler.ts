@@ -1,3 +1,4 @@
+import { UnitType } from "engine/core/measurement-unit";
 import Sass from "sass.js/dist/sass.sync";
 import * as $ from "jquery";
 
@@ -19,8 +20,15 @@ export class HTMLWidgetScriptingHandler {
     const html = data.html;
     let styles = data.styles;
 
-    const position = TransformConverter.toActual(data.position || "(0%, 0%)");
-    const size = TransformConverter.toActual(data.size || "(auto, auto)");
+    const position = TransformConverter.toActualPosition(
+      data.position || "(0%, 0%)",
+      AnimateTargetType.HTMLElement
+    );
+
+    const size = TransformConverter.toActualSzie(
+      data.size || "(auto, auto)",
+      AnimateTargetType.HTMLElement
+    );
 
     // "(100%, 100%)")
     // 尝试编译 styles
@@ -29,24 +37,31 @@ export class HTMLWidgetScriptingHandler {
       console.log("Sass Compiled: ", result);
 
       if (result.status !== 0) {
-        AVGEngineError.emit("HTML 加载错误", "样式编译失败。", { name, html, styles, result });
+        AVGEngineError.emit("HTML 加载错误", "样式编译失败。", {
+          name,
+          html,
+          styles,
+          result
+        });
         return;
       }
 
       styles = result.text;
 
       var shadow = HTMLWidgetManager.getShadowRoot();
-      var save = $(shadow).children().detach();
+      var save = $(shadow)
+        .children()
+        .detach();
 
       shadow.innerHTML = `
       <style>
         #${name} {
           position: absolute;
           pointer-events: ${data.pointerEvents ? "all" : "none"};
-          left: ${position[0]}px;
-          top: ${position[1]}px;
-          width: ${size[0]}px;
-          height: ${size[1]}px;
+          left: ${position.left};
+          top: ${position.right};
+          width: ${size.left};
+          height: ${size.right};
         }
 
       ${styles}
@@ -55,7 +70,6 @@ export class HTMLWidgetScriptingHandler {
       <div id="${name}">
       ${html}
       </div>`;
-
 
       $(shadow).append(save);
 
@@ -88,6 +102,5 @@ export class HTMLWidgetScriptingHandler {
     scriptingContext.resolver();
   }
 
-  public static handleRemoveHTMLWidget(scriptingContext: ScriptingContext) {
-  }
+  public static handleRemoveHTMLWidget(scriptingContext: ScriptingContext) {}
 }
