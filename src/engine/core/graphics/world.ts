@@ -18,7 +18,11 @@ class World {
   worldWidth: number;
   worldHeight: number;
 
-  async init(parentElement: HTMLElement, width: number = 1920, height: number = 1080) {
+  async init(
+    parentElement: HTMLElement,
+    width: number = 1920,
+    height: number = 1080
+  ) {
     // [16: 9] - 800x450, 1024x576, 1280x760, 1920x1080
 
     this.worldWidth = width;
@@ -30,28 +34,31 @@ class World {
       width,
       height,
       antialias: false,
+      preserveDrawingBuffer: true,
       transparent: false,
+      resizeTo: this.parentElement,
       resolution: 1
     });
 
     // Show FPSPanel
-    const fpsElement = document.getElementById("fps");
-    // this.app.ticker.add(() => {
-    //   fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
+    // const fpsElement = document.getElementById("fps");
+    this.app.ticker.add(() => {
+      //   fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
 
-    //   HookManager.triggerHook(HookEvents.GameUpdate);
-    // });
+      HookManager.triggerHook(HookEvents.GameUpdate);
+    });
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
     window.onresize = () => {
+      this.app.resize();
+      
       this.scenes.map(scene => {
-        this.app.renderer.resize(window.innerWidth, window.innerHeight);
         scene.onResize();
       });
     };
 
-    // DebugPanel.init();
+    DebugPanel.init();
   }
 
   public get defaultScene() {

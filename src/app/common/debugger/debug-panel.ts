@@ -26,7 +26,9 @@ export class DebugPanel {
 
   public static init(parentElement?: HTMLElement) {
     if (!parentElement) {
-      parentElement = <HTMLElement>document.getElementsByTagName("game").item(0);
+      parentElement = <HTMLElement>(
+        document.getElementsByTagName("game").item(0)
+      );
     }
 
     this.gui.domElement.style.position = "absolute";
@@ -42,15 +44,21 @@ export class DebugPanel {
   public static initCameraPanel() {
     if (!this.cameraFolder) {
       this.cameraFolder = this.gui.addFolder("摄像机");
-      this.cameraFolder.add(this.cameraModel, "x", -2000, 2000, 1).onChange((value: any) => {
-        GameWorld.defaultScene.cameraMove(value, this.cameraModel.y, 2000);
-      });
-      this.cameraFolder.add(this.cameraModel, "y", -2000, 2000, 1).onChange((value: any) => {
-        GameWorld.defaultScene.cameraMove(this.cameraModel.x, value, 2000);
-      });
-      this.cameraFolder.add(this.cameraModel, "zoom", -5000, 5000, 10).onChange((value: any) => {
-        GameWorld.defaultScene.cameraZoom(this.cameraModel.zoom, 2000);
-      });
+      this.cameraFolder
+        .add(this.cameraModel, "x", -2000, 2000, 1)
+        .onChange((value: any) => {
+          GameWorld.defaultScene.cameraMove(value, this.cameraModel.y, 2000);
+        });
+      this.cameraFolder
+        .add(this.cameraModel, "y", -2000, 2000, 1)
+        .onChange((value: any) => {
+          GameWorld.defaultScene.cameraMove(this.cameraModel.x, value, 2000);
+        });
+      this.cameraFolder
+        .add(this.cameraModel, "zoom", -5000, 5000, 10)
+        .onChange((value: any) => {
+          GameWorld.defaultScene.cameraZoom(this.cameraModel.zoom, 2000);
+        });
     }
   }
 
@@ -64,19 +72,36 @@ export class DebugPanel {
 
     this.particlesFolder
       .add({ 贴图: "" }, "贴图", {
-        雨: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/rain.png"),
-        雪: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/snow.png"),
-        樱花: AVGNativePath.join(GameResource.getDataRoot(), "effects/flake-texture/sakura.png")
+        雨: AVGNativePath.join(
+          GameResource.getDataRoot(),
+          "effects/flake-texture/rain.png"
+        ),
+        雪: AVGNativePath.join(
+          GameResource.getDataRoot(),
+          "effects/flake-texture/snow.png"
+        ),
+        樱花: AVGNativePath.join(
+          GameResource.getDataRoot(),
+          "effects/flake-texture/sakura.png"
+        )
       })
       .onChange(v => {
         DropFlakeParticle.start(v, DropFlakeParticle.params);
       });
 
     [
-      this.particlesFolder.add(DropFlakeParticle.params, "count", 1, 40000, 1).name("粒子数量"),
-      this.particlesFolder.add(DropFlakeParticle.params, "alpha", 0, 1, 0.01).name("透明度"),
-      this.particlesFolder.add(DropFlakeParticle.params, "depth", -80, 80, 0.1).name("镜头深度"),
-      this.particlesFolder.add(DropFlakeParticle.params, "gravity", -500, 500, 0.01).name("下坠重力")
+      this.particlesFolder
+        .add(DropFlakeParticle.params, "count", 1, 40000, 1)
+        .name("粒子数量"),
+      this.particlesFolder
+        .add(DropFlakeParticle.params, "alpha", 0, 1, 0.01)
+        .name("透明度"),
+      this.particlesFolder
+        .add(DropFlakeParticle.params, "depth", -80, 80, 0.1)
+        .name("镜头深度"),
+      this.particlesFolder
+        .add(DropFlakeParticle.params, "gravity", -500, 500, 0.01)
+        .name("下坠重力")
     ].map(v => {
       v.onChange(value => {
         window.dispatchEvent(new Event("resize"));
@@ -87,10 +112,18 @@ export class DebugPanel {
     const rotationFolder = this.particlesFolder.addFolder("旋转");
 
     [
-      rotationFolder.add(DropFlakeParticle.params.rotation, "enabled", true).name("转转转"),
-      rotationFolder.add(DropFlakeParticle.params.rotation, "randomize", true).name("随机因素"),
-      rotationFolder.add(DropFlakeParticle.params.rotation, "angle", 0.1, 100, 0.1).name("旋转角度"),
-      rotationFolder.add(DropFlakeParticle.params.rotation, "speed", 0.1, 100, 0.1).name("旋转速度")
+      rotationFolder
+        .add(DropFlakeParticle.params.rotation, "enabled", true)
+        .name("转转转"),
+      rotationFolder
+        .add(DropFlakeParticle.params.rotation, "randomize", true)
+        .name("随机因素"),
+      rotationFolder
+        .add(DropFlakeParticle.params.rotation, "angle", 0.1, 100, 0.1)
+        .name("旋转角度"),
+      rotationFolder
+        .add(DropFlakeParticle.params.rotation, "speed", 0.1, 100, 0.1)
+        .name("旋转速度")
     ].map(v => {
       v.onChange(value => {
         window.dispatchEvent(new Event("resize"));
@@ -101,9 +134,15 @@ export class DebugPanel {
     const windFolder = this.particlesFolder.addFolder("风力");
 
     [
-      windFolder.add(DropFlakeParticle.params.wind, "enabled", true).name("吹吹吹"),
-      windFolder.add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01).name("风力"),
-      windFolder.add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01).name("平滑度")
+      windFolder
+        .add(DropFlakeParticle.params.wind, "enabled", true)
+        .name("吹吹吹"),
+      windFolder
+        .add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01)
+        .name("风力"),
+      windFolder
+        .add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01)
+        .name("平滑度")
     ].map(v => {
       v.onChange(value => {
         window.dispatchEvent(new Event("resize"));
@@ -117,6 +156,8 @@ export class DebugPanel {
   }
 
   public static setSpritePanel(sprite: Sprite) {
+    console.log(sprite);
+
     if (this.spriteFolder) {
       this.gui.removeFolder(this.spriteFolder);
     }
@@ -134,22 +175,24 @@ export class DebugPanel {
 
     this.spriteFolder.add(sprite, "distance", -5000, 5000);
 
-    this.spriteFolder.add(sprite, "resizeMode", ["Default", "Stretch", "KeepRadio", "Custom"]).onChange(value => {
-      switch (value) {
-        case "Default":
-          sprite.resizeMode = ResizeMode.Default;
-          break;
-        case "Stretch":
-          sprite.resizeMode = ResizeMode.Stretch;
-          break;
-        case "KeepRadio":
-          sprite.resizeMode = ResizeMode.KeepRadio;
-          break;
-        case "Custom":
-          sprite.resizeMode = ResizeMode.Custom;
-          break;
-      }
-    });
+    this.spriteFolder
+      .add(sprite, "resizeMode", ["Default", "Stretch", "KeepRadio", "Custom"])
+      .onChange(value => {
+        switch (value) {
+          case "Default":
+            sprite.resizeMode = ResizeMode.Default;
+            break;
+          case "Stretch":
+            sprite.resizeMode = ResizeMode.Stretch;
+            break;
+          case "KeepRadio":
+            sprite.resizeMode = ResizeMode.KeepRadio;
+            break;
+          case "Custom":
+            sprite.resizeMode = ResizeMode.Custom;
+            break;
+        }
+      });
     this.spriteFolder.add(sprite, "center");
     this.spriteFolder.add(sprite, "isTilingMode");
     this.spriteFolder.add(sprite, "renderCameraDepth");

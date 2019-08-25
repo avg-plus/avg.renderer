@@ -6,7 +6,10 @@ class GodrayFilter extends FilterBase {
   name: "GodrayFilter";
 
   public instance() {
-    return new ExtraFilters.GodrayFilter();
+    const instance =  new ExtraFilters.GodrayFilter();
+    instance.parallel = false;
+
+    return instance;
   }
 
   public validate(folder) {

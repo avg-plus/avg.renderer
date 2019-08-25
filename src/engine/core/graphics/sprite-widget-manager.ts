@@ -57,8 +57,9 @@ export class SpriteWidgetManager {
       Number.parseInt(size.left) || renderer.width || sprite.texture.width;
     sprite.height =
       Number.parseInt(size.right) || renderer.height || sprite.texture.height;
-    sprite.x = Number.parseInt(position.left); //isNullOrUndefined(renderer.x) ? 0 : renderer.x;
-    sprite.y = Number.parseInt(position.right); // isNullOrUndefined(renderer.y) ? 0 : renderer.y;
+
+    sprite.x = Number.parseInt(position.left) || renderer.x || 0;
+    sprite.y = Number.parseInt(position.right) || renderer.y || 0;
     sprite.skew.x = renderer.skewX || renderer.skew || 0;
     sprite.skew.y = renderer.skewY || renderer.skew || 0;
     sprite.rotation = renderer.rotation || 0;
@@ -72,9 +73,9 @@ export class SpriteWidgetManager {
     }
 
     if (sprite.spriteType === SpriteType.Scene) {
-      sprite.resizeMode = ResizeMode.Stretch;
-      // sprite.anchor.set(0.5, 0.5);
-      // sprite.center = true;
+      // sprite.resizeMode = ResizeMode.Stretch;
+      sprite.anchor.set(0.5, 0.5);
+      sprite.center = true;
       GameWorld.defaultScene.centerSprite(sprite);
     } else if (sprite.spriteType === SpriteType.Character) {
       sprite.anchor.set(0.5, 0.5);
@@ -186,9 +187,9 @@ export class SpriteWidgetManager {
     animationMacro: SpriteAnimationMacro,
     waitForAnimation: boolean = false
   ) {
-    await this.animateSpriteWidget(name, animationMacro, waitForAnimation);
-
     this.clearSpriteFilters(name);
-    GameWorld.defaultScene.removeSprite(name);
+    await GameWorld.defaultScene.removeSprite(name);
+
+    console.log("Removed Sprite Widget: ", name, waitForAnimation);
   }
 }

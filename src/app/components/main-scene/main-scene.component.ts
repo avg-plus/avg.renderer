@@ -2,13 +2,28 @@ import { CharacterScriptingHandler } from "./../../scripting-handlers/character-
 import { GameWorld } from "engine/core/graphics/world";
 import * as fs from "fs";
 
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ElementRef
+} from "@angular/core";
 import { ScriptingDispatcher } from "app/common/manager/scripting-dispatcher";
-import { DialogueBoxComponent, DialogueBoxStatus } from "app/components/dialogue-box/dialogue-box.component";
+import {
+  DialogueBoxComponent,
+  DialogueBoxStatus
+} from "app/components/dialogue-box/dialogue-box.component";
 
 import { MainSceneService } from "./main-scene.service";
 
-import { Router, ActivatedRoute, NavigationEnd, CanActivate } from "@angular/router";
+import {
+  Router,
+  ActivatedRoute,
+  NavigationEnd,
+  CanActivate
+} from "@angular/router";
 import { WidgetLayerService } from "../widget-layer/widget-layer.service";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { VariableInputComponent } from "../variable-input-box/variable-input-box.component";
@@ -32,6 +47,8 @@ import { APICameraMove, APICameraShake } from "engine/scripting/api/api-camera";
 import { SceneHandler } from "app/scripting-handlers/scene-handler";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Setting } from "engine/core/setting";
+import { APIScreenImage } from "engine/scripting/api/api-screen-image";
+import { ImageWidgetScriptingHandler } from "app/scripting-handlers/image-widget-handler";
 
 @Component({
   selector: "app-main-scene",
@@ -60,7 +77,9 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     WidgetLayerService.clearAllSubtitle();
     this.dialogueBox.reset();
 
-    const viewport = this.elementRef.nativeElement.querySelector("#avg-viewport");
+    const viewport = this.elementRef.nativeElement.querySelector(
+      "#avg-viewport"
+    );
 
     // Init world
     GameWorld.init(viewport, Setting.WindowWidth, Setting.WindowHeight);
@@ -85,10 +104,17 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     // game.start(this.currentScript);
 
     ScriptingDispatcher.watch().subscribe(
-      async (scriptingContext: { api: AVGScriptUnit; op: string; resolver: any }) => {
+      async (scriptingContext: {
+        api: AVGScriptUnit;
+        op: string;
+        resolver: any;
+      }) => {
         if (scriptingContext.api instanceof APIDialogue) {
           this.dialogueBox.state().subscribe(state => {
-            if (state === DialogueBoxStatus.End || state === DialogueBoxStatus.Hidden) {
+            if (
+              state === DialogueBoxStatus.End ||
+              state === DialogueBoxStatus.Hidden
+            ) {
               scriptingContext.resolver();
             }
           });
@@ -173,7 +199,11 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
         } else if (scriptingContext.api instanceof APICameraMove) {
           const director = new CameraDirector();
           const api = <APICameraMove>scriptingContext.api;
-          director.moveTo(scriptingContext.api.layer, scriptingContext.api.data, scriptingContext.api.duration || 0);
+          director.moveTo(
+            scriptingContext.api.layer,
+            scriptingContext.api.data,
+            scriptingContext.api.duration || 0
+          );
           scriptingContext.resolver();
         } else if (scriptingContext.api instanceof APICameraShake) {
           const data = <CameraShakeData>scriptingContext.api.data;
@@ -198,6 +228,33 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           // this.changeDetectorRef.detectChanges();
 
           scriptingContext.resolver();
+        } else if (scriptingContext.api instanceof APIScreenImage) {
+          const image = (<APIScreenImage>scriptingContext.api).data;
+
+          switch (scriptingContext.op) {
+            case OP.ShowImageWidget:
+              await ImageWidgetScriptingHandler.handleShowImageWidget(
+                scriptingContext
+              );
+              break;
+            case OP.UpdateImageWidget:
+              await ImageWidgetScriptingHandler.handleUpdateImageWidget(
+                scriptingContext
+              );
+              break;
+            case OP.RemoveImageWidget:
+              await ImageWidgetScriptingHandler.handleRemoveImageWidget(
+                scriptingContext
+              );
+
+              break;
+            case OP.AnimateImageWidget:
+              await ImageWidgetScriptingHandler.handleAnimateImageWidget(
+                scriptingContext
+              );
+
+              break;
+          }
         }
       }
     );

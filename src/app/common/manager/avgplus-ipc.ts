@@ -1,4 +1,4 @@
-import Postmate from "Postmate";
+import Postmate from "postmate";
 import { Router } from "@angular/router";
 import { AVGGame } from "engine/core/game";
 import { AVGStory } from "engine/scripting/story";

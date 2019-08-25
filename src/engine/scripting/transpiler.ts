@@ -73,7 +73,12 @@ export class Transpiler {
         // }
 
         if (isRegisteredCallee) {
-          return calleeObj && node.type === "CallExpression" && calleeObj.name && isRegisteredCallee;
+          return (
+            calleeObj &&
+            node.type === "CallExpression" &&
+            calleeObj.name &&
+            isRegisteredCallee
+          );
         }
 
         return false;
@@ -86,30 +91,34 @@ export class Transpiler {
       // 'async' keyword transform
       console.time("Compile Script Elapsed");
       console.log("Starting async keyword transform AST generate ...");
-      let asyncTransformAST = esprima.parse(code, { range: false, attachComment: false }, (node, meta) => {
-        if (node.type === "ArrowFunctionExpression") {
-          // 默认把所有 API 调用全部设为 async
-          node.async = true;
-        }
+      let asyncTransformAST = esprima.parse(
+        code,
+        { range: false, attachComment: false },
+        (node, meta) => {
+          if (node.type === "ArrowFunctionExpression") {
+            // 默认把所有 API 调用全部设为 async
+            node.async = true;
+          }
 
-        if (node && node.type === "CallExpression") {
-          const callee = node.callee;
-          if (callee) {
-            const property = callee["property"];
+          if (node && node.type === "CallExpression") {
+            const callee = node.callee;
+            if (callee) {
+              const property = callee["property"];
 
-            // 处理异步版本的 API 调用
-            const asyncSymbol = "_async";
-            if (property && property.name.endsWith(asyncSymbol)) {
-              property.name = property.name.replace(asyncSymbol, "");
+              // 处理异步版本的 API 调用
+              const asyncSymbol = "_async";
+              if (property && property.name.endsWith(asyncSymbol)) {
+                property.name = property.name.replace(asyncSymbol, "");
 
-              node.arguments.push({
-                value: "__async_call__",
-                type: "Literal"
-              });
+                node.arguments.push({
+                  value: "__async_call__",
+                  type: "Literal"
+                });
+              }
             }
           }
         }
-      });
+      );
 
       console.log("Regenerating async keyword transform code ...");
       let asyncTransformCode = escodegen.generate(asyncTransformAST, {
@@ -181,21 +190,27 @@ export class Transpiler {
             window.done();
           } catch (err) {
             console.log(err);
-            window.AVGEngineError.emit("${i18n.lang.SCRIPTING_AVS_RUNTIME_EXCEPTION}", err, {
+            window.AVGEngineError.emit("${
+              i18n.lang.SCRIPTING_AVS_RUNTIME_EXCEPTION
+            }", err, {
               file: "${this._file}"
             });
           }
         })();`;
 
-        // console.log(generated);
+      // console.log(generated);
 
       return generated;
     } catch (err) {
-      AVGEngineError.emit(i18n.lang.SCRIPTING_TRANSPILER_EXCEPTION, err.description, {
-        code: generated,
-        index: err.index,
-        lineNumber: err.lineNumber
-      });
+      AVGEngineError.emit(
+        i18n.lang.SCRIPTING_TRANSPILER_EXCEPTION,
+        err.description,
+        {
+          code: generated,
+          index: err.index,
+          lineNumber: err.lineNumber
+        }
+      );
     }
   }
 

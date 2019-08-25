@@ -29,99 +29,101 @@ import { ScreenWidgetType } from "engine/data/screen-widget";
 import { AVGEngineError } from "engine/core/engine-errors";
 import { i18n } from "engine/core/i18n";
 import { AVGScriptUnit } from "engine/scripting/script-unit";
-import { APIScreenSubtitle, ScreenSubtitleResult } from "engine/scripting/api/api-screen-subtitle";
-import { APIScreenImage, ScreenImageResult } from "engine/scripting/api/api-screen-image";
-import { APIHtmlWidget, HtmlWidgetResult } from "engine/scripting/api/api-html-widget";
+import {
+  APIScreenSubtitle,
+  ScreenSubtitleResult
+} from "engine/scripting/api/api-screen-subtitle";
+import {
+  APIScreenImage,
+  ScreenImageResult
+} from "engine/scripting/api/api-screen-image";
+import {
+  APIHtmlWidget,
+  HtmlWidgetResult
+} from "engine/scripting/api/api-html-widget";
 import { ScriptingContext } from "engine/scripting/scripting-context";
 import { HTMLWidgetScriptingHandler } from "app/scripting-handlers/html-widget-handler";
 
 @Component({
   selector: "widget-layer",
   templateUrl: "./widget-layer.component.html",
-  entryComponents: [TextWidgetComponent, ImageWidgetComponent, HtmlWidgetComponent],
+  entryComponents: [
+    TextWidgetComponent,
+    ImageWidgetComponent,
+    HtmlWidgetComponent
+  ],
   styleUrls: ["./widget-layer.component.scss"]
 })
 export class WidgetLayerComponent implements OnInit {
   @ViewChild("widgetContainer", { read: ViewContainerRef })
   container;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private resolver: ComponentFactoryResolver) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private resolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit() {
     WidgetLayerService.setWidgetLayer(this.resolver, this.container);
 
-    ScriptingDispatcher.watch().subscribe(async (scriptingContext: ScriptingContext) => {
-      if (scriptingContext.api instanceof APIScreenSubtitle) {
-        const subtitle = (<APIScreenSubtitle>scriptingContext.api).data;
+    ScriptingDispatcher.watch().subscribe(
+      async (scriptingContext: ScriptingContext) => {
+        if (scriptingContext.api instanceof APIScreenSubtitle) {
+          const subtitle = (<APIScreenSubtitle>scriptingContext.api).data;
 
-        switch (scriptingContext.op) {
-          case OP.ShowTextWidget:
-            const promise = WidgetLayerService.addWidget(
-              subtitle,
-              WidgetLayerService.createWidgetComponent<TextWidgetComponent>(TextWidgetComponent),
-              ScreenWidgetType.Text,
-              scriptingContext.api.isAsync
-            );
+          switch (scriptingContext.op) {
+            case OP.ShowTextWidget:
+              const promise = WidgetLayerService.addWidget(
+                subtitle,
+                WidgetLayerService.createWidgetComponent<TextWidgetComponent>(
+                  TextWidgetComponent
+                ),
+                ScreenWidgetType.Text,
+                scriptingContext.api.isAsync
+              );
 
-            const result = new ScreenSubtitleResult();
-            result.id = subtitle.name;
+              const result = new ScreenSubtitleResult();
+              result.id = subtitle.name;
 
-            this.onAsyncResolveHandler(scriptingContext, promise, result);
+              this.onAsyncResolveHandler(scriptingContext, promise, result);
 
-            break;
-          case OP.UpdateTextWidget:
-            WidgetLayerService.updateSubtitle(subtitle.name, subtitle.text);
-            scriptingContext.resolver();
-            break;
-          case OP.AnimateTextWidget:
-            break;
-          case OP.RemoveTextWidget:
-            {
-              if (subtitle.name === undefined) {
-                WidgetLayerService.removeAllWidgets(ScreenWidgetType.Text, scriptingContext.api.isAsync);
-                scriptingContext.resolver();
-                // this.onAsyncResolveHandler(value, promise);
-              } else {
-                const promise = WidgetLayerService.removeWidget(
-                  subtitle,
-                  ScreenWidgetType.Text,
-                  scriptingContext.api.isAsync
-                );
+              break;
+            case OP.UpdateTextWidget:
+              WidgetLayerService.updateSubtitle(subtitle.name, subtitle.text);
+              scriptingContext.resolver();
+              break;
+            case OP.AnimateTextWidget:
+              break;
+            case OP.RemoveTextWidget:
+              {
+                if (subtitle.name === undefined) {
+                  WidgetLayerService.removeAllWidgets(
+                    ScreenWidgetType.Text,
+                    scriptingContext.api.isAsync
+                  );
+                  scriptingContext.resolver();
+                  // this.onAsyncResolveHandler(value, promise);
+                } else {
+                  const promise = WidgetLayerService.removeWidget(
+                    subtitle,
+                    ScreenWidgetType.Text,
+                    scriptingContext.api.isAsync
+                  );
 
-                this.onAsyncResolveHandler(scriptingContext, promise);
+                  this.onAsyncResolveHandler(scriptingContext, promise);
+                }
               }
-            }
-            break;
-        }
-      } else if (scriptingContext.api instanceof APIScreenImage) {
-        const image = (<APIScreenImage>scriptingContext.api).data;
-
-        switch (scriptingContext.op) {
-          case OP.ShowImageWidget:
-            {
-              ImageWidgetScriptingHandler.handleShowImageWidget(scriptingContext);
-            }
-            break;
-          case OP.UpdateImageWidget:
-            ImageWidgetScriptingHandler.handleUpdateImageWidget(scriptingContext);
-            break;
-          case OP.RemoveImageWidget:
-            ImageWidgetScriptingHandler.handleRemoveImageWidget(scriptingContext);
-
-            break;
-          case OP.AnimateImageWidget:
-            ImageWidgetScriptingHandler.handleAnimateImageWidget(scriptingContext);
-
-            break;
-        }
-      } else if (scriptingContext.api instanceof APIHtmlWidget) {
-        switch (scriptingContext.op) {
-          case OP.ShowHtmlWidget:
-            HTMLWidgetScriptingHandler.handleAddHTMLWidget(scriptingContext);
-            break;
+              break;
+          }
+        } else if (scriptingContext.api instanceof APIHtmlWidget) {
+          switch (scriptingContext.op) {
+            case OP.ShowHtmlWidget:
+              HTMLWidgetScriptingHandler.handleAddHTMLWidget(scriptingContext);
+              break;
+          }
         }
       }
-    });
+    );
   }
 
   private onAsyncResolveHandler(

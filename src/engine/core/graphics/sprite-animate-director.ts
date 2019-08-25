@@ -118,7 +118,10 @@ export class SpriteAnimateDirector {
     });
   }
 
-  private static animateCamera(target: Scene, macroObject: SpriteAnimationMacro) {
+  private static animateCamera(
+    target: Scene,
+    macroObject: SpriteAnimationMacro
+  ) {
     let initialFrame = macroObject.initialFrame;
     const frames = macroObject.timeline || [];
 
@@ -150,7 +153,10 @@ export class SpriteAnimateDirector {
     return timeline;
   }
 
-  private static animateSprite(target: Sprite, macroObject: SpriteAnimationMacro) {
+  private static animateSprite(
+    target: Sprite,
+    macroObject: SpriteAnimationMacro
+  ) {
     let initialFrame = macroObject.initialFrame;
     const frames = macroObject.timeline || [];
 
@@ -189,7 +195,10 @@ export class SpriteAnimateDirector {
       const { ...vars } = frame;
       vars.ease = vars.ease || gsap.Power0.easeNone;
 
-      timeline.add(gsap.TweenLite.to(target, duration, vars), timelineCursorTime);
+      timeline.add(
+        gsap.TweenLite.to(target, duration, vars),
+        timelineCursorTime
+      );
 
       // 处理滤镜动画
       if (frame && frame.filters && Array.isArray(frame.filters)) {
@@ -200,7 +209,10 @@ export class SpriteAnimateDirector {
 
           // 两边都有同一属性的情况下才能开始过渡
           timeline.add(
-            gsap.TweenLite.to(obj.instance, duration, { ease: v.data.ease || gsap.Power0.easeNone, ...v.data }),
+            gsap.TweenLite.to(obj.instance, duration, {
+              ease: v.data.ease || gsap.Power0.easeNone,
+              ...v.data
+            }),
             timelineCursorTime
           );
         }
@@ -218,7 +230,10 @@ export class SpriteAnimateDirector {
     return timeline;
   }
 
-  private static animateHTMLElement(targetElment: HTMLElement, macroObject: CSSAnimationMacro) {
+  private static animateHTMLElement(
+    targetElment: HTMLElement,
+    macroObject: CSSAnimationMacro
+  ) {
     let initialFrame = macroObject.initialFrame;
     const target = $(targetElment);
 
@@ -233,10 +248,8 @@ export class SpriteAnimateDirector {
 
     target.change((...args) => {
       console.log("HTML Widget changed", args);
-    })
-    timeline.eventCallback("onUpdate", () => {
-
     });
+    timeline.eventCallback("onUpdate", () => {});
 
     // 初始关键帧
     //  - 如初始关键帧为 null, 则从对象当前状态开始
@@ -256,7 +269,10 @@ export class SpriteAnimateDirector {
       const { ...vars } = frame;
       let ease = vars.ease || gsap.Power0.easeNone;
 
-      timeline.add(gsap.TweenLite.to(target, duration, { ease, css: { ...vars } }), timelineCursorTime);
+      timeline.add(
+        gsap.TweenLite.to(target, duration, { ease, css: { ...vars } }),
+        timelineCursorTime
+      );
 
       // 累加当前关键帧的时间
       timelineCursorTime += duration;

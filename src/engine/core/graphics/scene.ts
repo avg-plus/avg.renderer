@@ -1,4 +1,7 @@
-import { SpriteAnimateDirector, AnimateTargetType } from "./sprite-animate-director";
+import {
+  SpriteAnimateDirector,
+  AnimateTargetType
+} from "./sprite-animate-director";
 import * as PIXI from "pixi.js";
 // import * as Loader from "resource-loader";
 
@@ -32,9 +35,11 @@ export class Scene {
     distance: 0
   };
 
-  private asa = false;
-
-  constructor(app: PIXI.Application, private width: number, private height: number) {
+  constructor(
+    app: PIXI.Application,
+    private width: number,
+    private height: number
+  ) {
     this.app = app;
     this.stage = this.app.stage;
     this.view = this.app.view;
@@ -50,9 +55,6 @@ export class Scene {
     this.app.ticker.add(() => {
       // 检查资源加载
       ResourceManager.update();
-
-      // 图层排序
-      this.sortChildren();
 
       this.children().map(sprite => {
         if (!(sprite instanceof Sprite)) {
@@ -105,7 +107,9 @@ export class Scene {
             // 透明系数
             sprite.alpha = 1 - zoom * 0.02;
 
-            let blurFilter = <PIXI.filters.BlurFilter>findFilter(sprite, "BlurFilter");
+            let blurFilter = <PIXI.filters.BlurFilter>(
+              findFilter(sprite, "BlurFilter")
+            );
 
             const blurRatio = zoom * this.focalVisibility;
 
@@ -135,7 +139,7 @@ export class Scene {
    */
   public onResize() {
     const xRatio = window.innerWidth / this.renderer.width;
-    const yRatio = window.innerHeight / this.renderer.width;
+    const yRatio = window.innerHeight / this.renderer.height;
 
     this.children().map(sprite => {
       // 计算立绘的坐标
@@ -145,6 +149,8 @@ export class Scene {
         sprite.spriteDebugger.update();
       }
     });
+
+    console.log("On Scene resized.", xRatio, yRatio);
   }
 
   public centerSprite(sprite: Sprite) {
@@ -181,7 +187,12 @@ export class Scene {
     this.currentCameraData.y = y;
 
     this.children().map(sprite => {
-      this.updateCameraMoveRendering(sprite, this.currentCameraData.x, this.currentCameraData.y, duration);
+      this.updateCameraMoveRendering(
+        sprite,
+        this.currentCameraData.x,
+        this.currentCameraData.y,
+        duration
+      );
     });
   }
 
@@ -189,7 +200,11 @@ export class Scene {
     this.currentCameraData.distance += distance;
 
     this.children().map(sprite => {
-      this.updateCameraZoomRendering(sprite, this.currentCameraData.distance, duration);
+      this.updateCameraZoomRendering(
+        sprite,
+        this.currentCameraData.distance,
+        duration
+      );
     });
   }
   /**
@@ -197,7 +212,12 @@ export class Scene {
    *
    * @memberof Scene
    */
-  public updateCameraMoveRendering(sprite: Sprite, x: number, y: number, duration: number) {
+  public updateCameraMoveRendering(
+    sprite: Sprite,
+    x: number,
+    y: number,
+    duration: number
+  ) {
     if (!sprite.renderInCamera) {
       return;
     }
@@ -205,11 +225,14 @@ export class Scene {
     const moveVector = 3000;
 
     // 取镜头距离差值转换为正整数
-    const distanceDiff = Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
+    const distanceDiff =
+      Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
     const spriteDistance = sprite.distance + distanceDiff / 2;
 
     const compensation = 0.5; // 移动补偿，防止最远距离的移动倍率为0
-    const moveRatio = ((distanceDiff + sprite.distance) / (distanceDiff / 2)) * (spriteDistance / distanceDiff);
+    const moveRatio =
+      ((distanceDiff + sprite.distance) / (distanceDiff / 2)) *
+      (spriteDistance / distanceDiff);
 
     const moveX = -(x * moveRatio + compensation) + sprite.x;
     const moveY = -(y * moveRatio + compensation) + sprite.y;
@@ -236,7 +259,11 @@ export class Scene {
    * @returns
    * @memberof Scene
    */
-  public updateCameraZoomRendering(sprite: Sprite, distance: number, duration: number) {
+  public updateCameraZoomRendering(
+    sprite: Sprite,
+    distance: number,
+    duration: number
+  ) {
     if (!sprite.renderInCamera) {
       return;
     }
@@ -245,7 +272,8 @@ export class Scene {
       return;
     }
 
-    const distanceDiff = Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
+    const distanceDiff =
+      Sprite.MAX_CAMERA_DISTANCE - Sprite.MIN_CAMERA_DISTANCE;
 
     const spriteDistance = sprite.distance + distanceDiff / 2;
     const zoomDistance = distance + distanceDiff / 2;
@@ -272,7 +300,11 @@ export class Scene {
     });
   }
 
-  public addSprite(name: string, sprite: Sprite, zOrder: number | LayerOrder = LayerOrder.TopLayer) {
+  public addSprite(
+    name: string,
+    sprite: Sprite,
+    zOrder: number | LayerOrder = LayerOrder.TopLayer
+  ) {
     sprite.zOrder = this.orderToIndex(zOrder);
     sprite.name = name;
 
@@ -283,7 +315,10 @@ export class Scene {
     // 添加到主容器
     this.mainContainer.addChild(sprite);
 
-    // sprite.spriteDebugger = new SpriteDebugger(sprite);
+    sprite.spriteDebugger = new SpriteDebugger(sprite);
+
+    // 图层排序
+    this.sortChildren();
 
     // 触发摄像机渲染
     // this.updateCameraMoveRendering(sprite, sprite.x, sprite.y, 1);
@@ -349,7 +384,10 @@ export class Scene {
       while (j >= 0) {
         if (tmp.zOrder < children[j].zOrder) {
           children[j + 1] = children[j];
-        } else if (tmp.zOrder === children[j].zOrder && tmp.arrivalOrder < children[j].arrivalOrder) {
+        } else if (
+          tmp.zOrder === children[j].zOrder &&
+          tmp.arrivalOrder < children[j].arrivalOrder
+        ) {
           children[j + 1] = children[j];
         } else {
           break;
@@ -372,7 +410,11 @@ export class Scene {
     console.log("Enabled tiling mode: ", this.children());
   }
 
-  public async loadFromImage(name: string, url: string, type: SpriteType = SpriteType.Normal): Promise<Sprite> {
+  public async loadFromImage(
+    name: string,
+    url: string,
+    type: SpriteType = SpriteType.Normal
+  ): Promise<Sprite> {
     return new Promise<Sprite>((resolve, reject) => {
       ResourceManager.addLoading(url, resource => {
         console.log("On resource loaded: ", resource);
@@ -393,7 +435,6 @@ export class Scene {
   public removeSprite(id: string) {
     const sprite = this.getSpriteByName(id);
     if (sprite) {
-      console.log("Removed Scene: ", id);
       this.mainContainer.removeChild(sprite);
     }
   }

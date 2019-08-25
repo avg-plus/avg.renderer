@@ -9,7 +9,9 @@ import { AVGSpriteRenderer } from "engine/data/sprite-renderer";
 import { Sandbox } from "engine/core/sandbox";
 
 export class ImageWidgetScriptingHandler {
-  public static async handleShowImageWidget(scriptingContext: ScriptingContext) {
+  public static async handleShowImageWidget(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APIScreenImage>scriptingContext.api;
     const image = api.data;
     image.name = api.name;
@@ -23,12 +25,19 @@ export class ImageWidgetScriptingHandler {
       }
     }
 
-    await SpriteWidgetManager.addSpriteWidget(image, image.animation, LayerOrder.TopLayer, !api.isAsync);
+    await SpriteWidgetManager.addSpriteWidget(
+      image,
+      image.animation,
+      LayerOrder.TopLayer,
+      !api.isAsync
+    );
 
     scriptingContext.resolver();
   }
 
-  public static async handleUpdateImageWidget(scriptingContext: ScriptingContext) {
+  public static async handleUpdateImageWidget(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APIScreenImage>scriptingContext.api;
     const image = api.data;
     image.name = api.name;
@@ -40,20 +49,34 @@ export class ImageWidgetScriptingHandler {
     scriptingContext.resolver();
   }
 
-  public static async handleRemoveImageWidget(scriptingContext: ScriptingContext) {
+  public static async handleRemoveImageWidget(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APIScreenImage>scriptingContext.api;
 
     // 跳过模式处理，忽略时间
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
-      api.data.animation.totalDuration = 0;
+      // api.data.animation.totalDuration = 0;
     }
 
-    await SpriteWidgetManager.removeSpriteWidget(api.name, api.data.animation);
+    await SpriteWidgetManager.animateSpriteWidget(
+      api.name,
+      api.data.animation,
+      !api.isAsync
+    );
+
+    await SpriteWidgetManager.removeSpriteWidget(
+      api.name,
+      api.data.animation,
+      !api.isAsync
+    );
 
     scriptingContext.resolver();
   }
 
-  public static async handleAnimateImageWidget(scriptingContext: ScriptingContext) {
+  public static async handleAnimateImageWidget(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APIScreenImage>scriptingContext.api;
 
     // 跳过模式处理，忽略时间
@@ -61,7 +84,11 @@ export class ImageWidgetScriptingHandler {
       api.data.animation.totalDuration = 0;
     }
 
-    await SpriteWidgetManager.animateSpriteWidget(api.name, api.data.animation, !api.isAsync);
+    await SpriteWidgetManager.animateSpriteWidget(
+      api.name,
+      api.data.animation,
+      !api.isAsync
+    );
 
     scriptingContext.resolver();
   }
