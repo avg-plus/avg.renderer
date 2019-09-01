@@ -35,14 +35,13 @@
     "electron:mac": "npm run build:prod && node package.js --platform=darwin --arch=x64 --asar"
   },
   "dependencies": {
-    "@angular-devkit/build-angular": "^0.8.2",
+    "@angular-devkit/build-angular": "~0.803.2",
     "@angular-devkit/core": "^0.8.2",
     "@angular/animations": "^5.0.0",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
     "@angular/core": "^5.0.0",
     "@angular/forms": "^5.0.0",
-    "@angular/http": "^5.0.0",
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/platform-server": "^5.0.0",
@@ -78,11 +77,13 @@
     "rxjs": "^5.5.2",
     "sass.js": "^0.11.0",
     "ts-bc": "^0.0.1",
+    "tslib": "^1.10.0",
     "urljoin": "^0.1.5",
     "verror": "^1.10.0",
-    "zone.js": "0.8.12"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "~0.803.2",
     "@angular-devkit/core": "^0.8.2",
     "@angular/cli": "^8.3.2",
     "@angular/compiler-cli": "^5.0.0",
@@ -100,7 +101,7 @@
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "autoprefixer": "7.1.1",
-    "codelyzer": "3.1.1",
+    "codelyzer": "^5.0.1",
     "compression-webpack-plugin": "1.1.12",
     "copy-webpack-plugin": "^4.5.2",
     "copyfiles": "1.2.0",

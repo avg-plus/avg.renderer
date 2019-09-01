@@ -1,7 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "module": "commonjs",
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "module": "esnext",
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
     "sourceMap": true,
@@ -11,7 +13,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "target": "es6",
+    "target": "es2015",
     "paths": {
       "environments": ["./environments"]
     },
