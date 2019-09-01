@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import { UIAnimation } from "../../common/animations/ui-animation";
 import { TransitionLayerService } from "./transition-layer.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 
 import * as $ from "jquery";
 
