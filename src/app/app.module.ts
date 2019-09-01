@@ -47,7 +47,12 @@ import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/
     VariableInputComponent,
     GameToolbarComponent
   ],
-  imports: [BrowserModule, FormsModule, HttpModule, AppRoutingModule, BrowserAnimationsModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule
+  ],
   providers: [
     ElectronService,
     MainSceneService,
