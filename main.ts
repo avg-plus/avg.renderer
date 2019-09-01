@@ -1,4 +1,12 @@
-import { app, BrowserWindow, screen, Menu, MenuItem, autoUpdater, dialog } from "electron";
+import {
+  app,
+  BrowserWindow,
+  screen,
+  Menu,
+  MenuItem,
+  autoUpdater,
+  dialog
+} from "electron";
 
 import * as path from "path";
 import * as url from "url";
@@ -24,6 +32,7 @@ function createWindow() {
     backgroundColor: "#000000",
     hasShadow: true,
     webPreferences: {
+      backgroundThrottling: false,
       nodeIntegration: true
     }
   });

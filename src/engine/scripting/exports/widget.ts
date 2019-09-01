@@ -215,5 +215,20 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     proxy && (await proxy.runner(<APIHtmlWidget>model));
   }
 
+  static async removeHTML(name: string, animation: SpriteAnimationMacro) {
+    let model = new APIHtmlWidget();
+    model.isAsync = arguments[arguments.length - 1] === "__async_call__";
+    model.data = new ScreenWidgetHtml();
+    model.data.name = EngineUtils.makeWidgetID(name);
+    model.data.animation = animation;
+
+    const proxy = APIManager.Instance.getImpl(
+      APIHtmlWidget.name,
+      OP.RemoveHtmlWidget
+    );
+
+    proxy && (await proxy.runner(<APIHtmlWidget>model));
+  }
+
   public static updateHTMLWidgetOption(name: string) {}
 }

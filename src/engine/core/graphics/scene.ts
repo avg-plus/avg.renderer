@@ -218,6 +218,8 @@ export class Scene {
     y: number,
     duration: number
   ) {
+    console.log("updateCameraMoveRendering", x, y);
+
     if (!sprite.renderInCamera) {
       return;
     }
@@ -237,16 +239,20 @@ export class Scene {
     const moveX = -(x * moveRatio + compensation) + sprite.x;
     const moveY = -(y * moveRatio + compensation) + sprite.y;
 
+    let moveData: any = {};
+
+    if (x) {
+      moveData["x"] = moveX;
+    }
+
+    if (y) {
+      moveData["y"] = moveY;
+    }
+
     if (sprite.isTilingMode) {
-      gsap.TweenLite.to((<any>sprite).tilePosition, duration / 1000, {
-        x: moveX,
-        y: moveY
-      });
+      gsap.TweenLite.to((<any>sprite).tilePosition, duration / 1000, moveData);
     } else {
-      gsap.TweenLite.to(sprite.position, duration / 1000, {
-        x: moveX,
-        y: moveY
-      });
+      gsap.TweenLite.to(sprite.position, duration / 1000, moveData);
     }
   }
 

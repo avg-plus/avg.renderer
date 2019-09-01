@@ -83,6 +83,11 @@ export class SpriteWidgetManager {
       sprite.anchor.set(0.5, 0.5);
     }
 
+    if (renderer.stretch) {
+      sprite.width = GameWorld.worldWidth;
+      sprite.height = GameWorld.worldHeight;
+    }
+
     GameWorld.defaultScene.addSprite(image.name, sprite, layerOrder);
 
     // 设置初始坐标，给摄像机提供坐标参考

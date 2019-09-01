@@ -58,7 +58,7 @@ class World {
       });
     };
 
-    DebugPanel.init();
+    // DebugPanel.init();
   }
 
   public get defaultScene() {

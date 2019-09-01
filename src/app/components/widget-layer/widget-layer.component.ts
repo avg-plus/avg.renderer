@@ -120,6 +120,11 @@ export class WidgetLayerComponent implements OnInit {
             case OP.ShowHtmlWidget:
               HTMLWidgetScriptingHandler.handleAddHTMLWidget(scriptingContext);
               break;
+            case OP.RemoveHtmlWidget:
+              HTMLWidgetScriptingHandler.handleRemoveHTMLWidget(
+                scriptingContext
+              );
+              break;
           }
         }
       }

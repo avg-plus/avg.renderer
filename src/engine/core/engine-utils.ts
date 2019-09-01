@@ -1,4 +1,6 @@
 import { Dimension } from "../const/model";
+import VirtualMachine from "ts-bc/libs/vm";
+import { gen } from "ts-bc/libs";
 
 export class EngineUtils {
   public static async wait(ms: number) {
@@ -7,6 +9,15 @@ export class EngineUtils {
 
   // Universal
   public static async evalInContext(js, context) {
+    // console.log(js);;
+
+
+    // const [op, value] = gen(js);
+    // const vm = new VirtualMachine(op, value);
+    // console.log("ts-bc debug: ", vm.exec(false).value.debugValue());
+
+    
+
     const result = (() => {
       return eval(js);
     }).call(context);

@@ -19,6 +19,7 @@ export class AVGSpriteRenderer {
   public renderInCamera: boolean = false;
   public renderCameraDepth: boolean = false;
   public cameraDistance: number = 0;
+  public stretch: boolean = false;
 
   public filters: SpriteFilter[] = [];
 }
