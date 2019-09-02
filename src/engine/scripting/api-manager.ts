@@ -38,14 +38,18 @@ export class APIManager {
   }
 
   public init() {
-    preExportedSet.forEach(v => {
+    preExportedSet.forEach((v: any) => {
       this.registerExportClass(v.name, v.t);
     });
 
     this.injectExports();
   }
 
-  public extendImpl<T extends AVGScriptUnit>(typename: string, op: string, implRunner: RunnerFunction): void {
+  public extendImpl<T extends AVGScriptUnit>(
+    typename: string,
+    op: string,
+    implRunner: RunnerFunction
+  ): void {
     if (!op) {
       throw new Error("Invalid OP or runmer");
     }

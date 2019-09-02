@@ -7,8 +7,6 @@ import { AVGGame } from "engine/core/game";
 import { i18n } from "engine/core/i18n";
 import { EngineUtils } from "engine/core/engine-utils";
 
-import VirtualMachine, { gen } from "ts-bc";
-
 export class AVGStory {
   private static sandbox: Sandbox = new Sandbox();
 

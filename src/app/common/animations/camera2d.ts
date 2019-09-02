@@ -1,7 +1,6 @@
 import { AnimationUtils } from "./animation-utils";
 import { TweenMax, TweenLite } from "gsap";
 import * as $ from "jquery";
-import * as dynamics from "dynamics.js";
 import { CameraData } from "engine/data/camera-data";
 import { EngineUtils } from "engine/core/engine-utils";
 
@@ -71,19 +70,19 @@ export class Camera2D {
     });
     console.log("Camera Data:", data);
 
-    for (let i = 0; i < this.targets.length; ++i) {
-      animationQueue.push(
-        new Promise((resolve, reject) => {
-          const e = $(this.targets[i]);
-          dynamics.animate(e[0], data, {
-            type: dynamics.easeInOut,
-            friction: 500,
-            duration: duration,
-            complete: () => resolve()
-          });
-        })
-      );
-    }
+    // for (let i = 0; i < this.targets.length; ++i) {
+    //   animationQueue.push(
+    //     new Promise((resolve, reject) => {
+    //       const e = $(this.targets[i]);
+    //       dynamics.animate(e[0], data, {
+    //         type: dynamics.easeInOut,
+    //         friction: 500,
+    //         duration: duration,
+    //         complete: () => resolve()
+    //       });
+    //     })
+    //   );
+    // }
 
     return await Promise.all(animationQueue);
 

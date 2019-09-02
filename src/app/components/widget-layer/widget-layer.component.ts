@@ -55,7 +55,7 @@ import { HTMLWidgetScriptingHandler } from "app/scripting-handlers/html-widget-h
   styleUrls: ["./widget-layer.component.scss"]
 })
 export class WidgetLayerComponent implements OnInit {
-  @ViewChild("widgetContainer", { read: ViewContainerRef })
+  @ViewChild("widgetContainer", { read: ViewContainerRef, static: false })
   container;
 
   constructor(

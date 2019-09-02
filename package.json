@@ -52,9 +52,7 @@
     "browserfs": "^1.4.3",
     "comment-core-library": "0.9.3",
     "core-js": "2.4.1",
-    "csshake": "^1.5.3",
     "dat.gui": "^0.7.6",
-    "dynamics.js": "^1.1.5",
     "enhanced-resolve": "3.3.0",
     "escodegen": "^1.9.1",
     "esprima": "^4.0.1",
@@ -75,13 +73,12 @@
     "recast": "^0.18.2",
     "resource-loader": "^2.2.4",
     "rxjs": "^6.5.2",
+    "rxjs-compat": "^6.0.0-rc.0",
     "sass.js": "^0.11.0",
-    "ts-bc": "^0.0.1",
     "tslib": "^1.10.0",
     "urljoin": "^0.1.5",
     "verror": "^1.10.0",
-    "zone.js": "~0.9.1",
-    "rxjs-compat": "^6.0.0-rc.0"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.2",
@@ -102,6 +99,7 @@
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "autoprefixer": "7.1.1",
+    "base-href-webpack-plugin": "^2.0.0",
     "codelyzer": "^5.0.1",
     "compression-webpack-plugin": "1.1.12",
     "copy-webpack-plugin": "^4.5.2",
@@ -161,8 +159,9 @@
     "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "0.5.9",
     "webdriver-manager": "12.0.6",
-    "webpack": "3.3.0",
+    "webpack": "4.9.0",
     "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.7",
     "webpack-dev-server": "2.5.0"
   },
   "license": "SEE LICENSE IN LICENSE.md"
