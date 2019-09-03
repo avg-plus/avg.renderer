@@ -15,7 +15,7 @@ Get renderer source and run the following shell in `avg.renderer` folder:
 ```shell
 git clone https://github.com/avg-plus/avg.renderer
 cd avg.renderer
-yarn install
+yarn
 yarn start  # Watch mode to compile code
 ```
 
@@ -24,6 +24,12 @@ Open another terminal session to launch game window:
 ```shell
 yarn electron:test # Launch game in desktop mode
 ```
+
+## Setup game assets server
+During you can launch game, you should setup a project of game assets that provide access for your game.
+
+### 1. Modify `env.avd`
+
 
 ## Features & Todo
 
@@ -37,5 +43,5 @@ yarn electron:test # Launch game in desktop mode
 - [x] Advanced Animations
 - [x] Plugins & Rendering Extensions
 - [x] Archive
-- [ ] Camera Effects & Particle Effects (In Progress)
-- [ ] WebGL Support (In Progress)
+- [x] Camera Effects & Particle Effects
+- [x] WebGL Support

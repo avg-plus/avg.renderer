@@ -225,19 +225,19 @@ export class Transpiler {
       //   searchCallExpression(n);
       // });
 
-      // const keyword = "await ";
-      // for (let pos of loc_pos.reverse()) {
-      //   if (pos > 0) {
-      //     const a_part = asyncTransformCode.slice(0, pos);
-      //     const b_part = asyncTransformCode.slice(pos);
+      const keyword = "await ";
+      for (let pos of loc_pos.reverse()) {
+        if (pos > 0) {
+          const a_part = asyncTransformCode.slice(0, pos);
+          const b_part = asyncTransformCode.slice(pos);
 
-      //     asyncTransformCode = [a_part, keyword, b_part].join("");
+          asyncTransformCode = [a_part, keyword, b_part].join("");
 
-      //     console.log("keyword", a_part, keyword, b_part);
-      //   } else {
-      //     asyncTransformCode = [keyword, asyncTransformCode].join("");
-      //   }
-      // }
+          console.log("keyword", a_part, keyword, b_part);
+        } else {
+          asyncTransformCode = [keyword, asyncTransformCode].join("");
+        }
+      }
 
       // let cur = 0;
       // for (let pos of loc_pos) {

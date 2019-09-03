@@ -56,9 +56,9 @@ import { ImageWidgetScriptingHandler } from "app/scripting-handlers/image-widget
   styleUrls: ["./main-scene.component.scss"]
 })
 export class MainSceneComponent implements OnInit, AfterViewInit {
-  @ViewChild(DialogueBoxComponent, { static: false })
+  @ViewChild(DialogueBoxComponent, { static: true })
   dialogueBox: DialogueBoxComponent;
-  @ViewChild(VariableInputComponent, { static: false })
+  @ViewChild(VariableInputComponent, { static: true })
   inputBox: VariableInputComponent;
 
   private currentScript: string;

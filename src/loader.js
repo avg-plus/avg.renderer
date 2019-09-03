@@ -114,12 +114,21 @@ loadjs = (function() {
 })();
 
 // Preload scripts
+// const bundles = [
+//   "inline.bundle.js",
+//   "polyfills.bundle.js",
+//   "styles.bundle.js",
+//   "vendor.bundle.js",
+//   "main.bundle.js"
+// ];
+
 const bundles = [
-  "inline.bundle.js",
-  "polyfills.bundle.js",
-  "styles.bundle.js",
-  "vendor.bundle.js",
-  "main.bundle.js"
+  "polyfills-es5.js",
+  "runtime-es5.js",
+  "scripts.js",
+  "styles-es5.js",
+  "vendor-es2015.js",
+  "main-es5.js",
 ];
 
 let loadedCount = 0;
