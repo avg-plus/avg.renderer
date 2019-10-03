@@ -95,7 +95,7 @@ export class Transpiler {
       console.log("Starting async keyword transform AST generate ...");
       let asyncTransformAST = esprima.parse(
         code,
-        { range: false, attachComment: false },
+        { range: true, attachComment: false },
         (node, meta) => {
           if (node.type === "ArrowFunctionExpression") {
             // 默认把所有 API 调用全部设为 async
@@ -163,15 +163,15 @@ export class Transpiler {
           // node = awaitExpr;
 
           // console.log("await transpile: ", JSON.stringify(node));
-          console.log("await transpile: ", node);
+          // console.log("await transpile: ", node);
         }
 
         if (node.type === "CallExpression" && isAPICall(node) && node.callee) {
           // 获取API调用
           if (node.callee && node.callee.object) {
-            // const pos = node.callee.object.range[0];
+            const pos = node.callee.object.range[0];
 
-            // loc_pos.push(pos);
+            loc_pos.push(pos);
 
             // 遍历参数
             if (node.arguments) {
@@ -197,15 +197,16 @@ export class Transpiler {
       let program = esprima.parse(
         asyncTransformCode,
         {
-          range: false,
+          range: true,
           attachComment: false
         },
-        (node, meta) => {}
+        (node, meta) => {
+          searchCallExpression(node);
+        }
       );
 
       // 搜索树
-      console.log(program.body);
-
+      // console.log(program.body);
 
       // Let's turn this function declaration into a variable declaration.
       const scode = [
@@ -215,11 +216,10 @@ export class Transpiler {
         "    b;",
         "}"
       ].join("\n");
-      
+
       // Parse the code using an interface similar to require("esprima").parse.
-      const ast = recast.parse(scode);
-      console.log("ast", ast);
-      
+      // const ast = recast.parse(scode);
+      // console.log("ast", ast);
 
       // program.body.forEach(n => {
       //   searchCallExpression(n);
@@ -233,7 +233,7 @@ export class Transpiler {
 
           asyncTransformCode = [a_part, keyword, b_part].join("");
 
-          console.log("keyword", a_part, keyword, b_part);
+          // console.log("keyword", a_part, keyword, b_part);
         } else {
           asyncTransformCode = [keyword, asyncTransformCode].join("");
         }
@@ -254,7 +254,7 @@ export class Transpiler {
       //   }
       // }
 
-      console.log("generted", escodegen.generate(program));
+      // console.log("generted", escodegen.generate(program));
 
       console.timeEnd("Compile Script Elapsed");
 
@@ -272,7 +272,7 @@ export class Transpiler {
           }
         })();`;
 
-      console.log(generated);
+      // console.log("generated", generated);
 
       return generated;
     } catch (err) {

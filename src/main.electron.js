@@ -1,15 +1,6 @@
-import {
-  app,
-  BrowserWindow,
-  screen,
-  Menu,
-  MenuItem,
-  autoUpdater,
-  dialog
-} from "electron";
-
-import * as path from "path";
-import * as url from "url";
+import { app, BrowserWindow, screen } from "electron";
+import { join } from "path";
+import { format } from "url";
 
 let win, serve;
 
@@ -33,18 +24,19 @@ function createWindow() {
     hasShadow: true,
     webPreferences: {
       backgroundThrottling: false,
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
+
 
   win.webContents.setFrameRate(60);
 
   win.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "index.html"),
+    format({
+      pathname: join(__dirname, "index.html"),
       protocol: "file:",
-      slashes: true
-    })
+      slashes: true,
+    }),
   );
 
   // and load the index.html of the app.

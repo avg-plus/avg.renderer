@@ -9,7 +9,7 @@ fs.readFile(config, "utf8", (err, data) => {
 
   const result = data.replace(
     /node: false/g,
-    "node: { crypto: true, fs: 'empty', net: 'empty' }"
+    "node: { path: true, url: true, crypto: true, fs: true, net: 'empty' }"
   );
 
   fs.writeFile(config, result, "utf8", function(err) {

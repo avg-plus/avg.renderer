@@ -10,27 +10,27 @@
   "keywords": [
     "avg"
   ],
-  "main": "main.js",
+  "main": "main.electron.js",
   "private": true,
   "scripts": {
     "ng": "ng",
     "lint": "ng lint",
-    "start": "npm run start:desktop",
-    "start:desktop": "tsc -p tsconfig.main.json --outDir dist/desktop && cross-env GAME_PLATFORM=desktop NODE_ENV=development webpack --watch",
+    "start": "cross-env GAME_PLATFORM=desktop NODE_ENV=development && node --max_old_space_size=15048 ./node_modules/@angular/cli/bin/ng build -c=desktop-dev --watch",
+    "//start:desktop": "tsc -p tsconfig.electron.json --outDir dist/desktop && cross-env GAME_PLATFORM=desktop NODE_ENV=development webpack --watch",
     "start:desktop:prod": "cross-env NODE_ENV=production npm run start:desktop",
     "start:web": "npm run serve",
     "start:web:prod": "cross-env NODE_ENV=production npm run serve",
-    "serve": "cross-env GAME_PLATFORM=browser webpack-dev-server --public --host 0.0.0.0 --content-base ./dist/web --port 2333 --inline",
-    "build:electron:main": "tsc -p tsconfig.main.json --outDir dist/desktop && cross-env GAME_PLATFORM=desktop",
+    "serve": "cross-env GAME_PLATFORM=browser webpack-dev-server --public --host 0.0.0.0 --content-base ./dist --port 2333 --inline",
+    "build:electron:main": "tsc -p tsconfig.electron.json --outDir dist/desktop && cross-env GAME_PLATFORM=desktop",
     "build": "webpack --display-error-details && npm run build:electron:main",
     "build:web": "mkdir -p ./dist/web ./dist/web && cross-env GAME_PLATFORM=browser NODE_ENV=production webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build",
-    "game": "electron ./dist/desktop/main.js --serve $*",
+    "game": "electron ./dist/desktop/main.electron.js --serve $*",
     "postinstall": "node tools/ng-webpack-patch.js",
     "electron:serve": "npm run build:electron:main && electron ./dist/desktop/main.js --serve",
-    "electron:test": "electron ./dist/desktop/main.js --serve",
-    "electron:dev": "npm run build && electron ./dist/desktop/main.js",
-    "electron:prod": "npm run build:prod && electron ./dist/desktop/main.js",
+    "electron:test": "electron ./dist/desktop/main.electron.js --serve",
+    "electron:dev": "npm run build && electron ./dist/desktop/main.electron.js",
+    "electron:prod": "npm run build:prod && electron ./dist/desktop/main.electron.js",
     "electron:linux": "npm run build:prod && node package.js --asar --platform=linux --arch=x64",
     "electron:windows": "npm run build && node package.js --platform=win32 --arch=ia32",
     "electron:mac": "npm run build:prod && node package.js --platform=darwin --arch=x64 --asar"
@@ -79,7 +79,7 @@
     "tslib": "^1.10.0",
     "urljoin": "^0.1.5",
     "verror": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.8.29"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.2",
@@ -163,7 +163,7 @@
     "webpack": "4.9.0",
     "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "2.5.0"
+    "webpack-dev-server": "3.0.0"
   },
   "license": "SEE LICENSE IN LICENSE.md"
 }

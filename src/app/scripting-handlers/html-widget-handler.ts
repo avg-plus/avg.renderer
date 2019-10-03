@@ -1,5 +1,5 @@
 import { UnitType } from "engine/core/measurement-unit";
-import Sass from "sass.js/dist/sass.sync";
+import Sass from "sass.js";
 import * as $ from "jquery";
 
 import { AnimateTargetType } from "./../../engine/core/graphics/sprite-animate-director";
