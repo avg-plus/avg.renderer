@@ -14,6 +14,7 @@ import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
 import { SpriteDebugger } from "./sprite-debugger";
+import { TestFilterObj } from './filters/avg-extras/test';
 
 export class Scene {
   isTilingMode = false;
@@ -65,6 +66,7 @@ export class Scene {
         const yRadio = this.renderer.height / sprite.texture.height;
 
         sprite.filters = sprite.spriteFilters.getFilterList();
+        // sprite.filters = [TestFilterObj];
 
         // 拉伸图像
         switch (sprite.resizeMode) {
@@ -433,6 +435,7 @@ export class Scene {
         }
 
         sprite.name = name;
+
         resolve(sprite);
       });
     });

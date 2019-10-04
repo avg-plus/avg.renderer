@@ -14,8 +14,12 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./tools/extra-webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -39,24 +43,6 @@
             ]
           },
           "configurations": {
-            "desktop-dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/index.ts",
-                  "with": "src/environments/desktop.ts"
-                }
-              ],
-              "outputPath": "dist/desktop",
-              "optimization": false,
-              "outputHashing": "none",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false
-            },
             "desktop": {
               "fileReplacements": [
                 {
@@ -74,6 +60,24 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "desktop-dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/index.ts",
+                  "with": "src/environments/desktop.ts"
+                }
+              ],
+              "outputPath": "dist/desktop",
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
             },
             "browser": {
               "fileReplacements": [
@@ -96,13 +100,17 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "AVGPlus:build"
+            "browserTarget": "AVGPlus:build",
+            "customWebpackConfig": {
+              "path": "./tools/extra-webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
           },
           "configurations": {
             "debug": {
-              "browserTarget": "AVGPlus:build:browser",
+              "browserTarget": "AVGPlus:build:desktop-dev",
               "optimization": false,
               "sourceMap": true,
               "aot": false,

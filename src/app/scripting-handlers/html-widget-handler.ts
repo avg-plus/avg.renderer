@@ -1,5 +1,5 @@
 import { UnitType } from "engine/core/measurement-unit";
-import Sass from "sass.js";
+const Sass  = require("sass.js");
 import * as $ from "jquery";
 
 import { AnimateTargetType } from "./../../engine/core/graphics/sprite-animate-director";
@@ -33,6 +33,8 @@ export class HTMLWidgetScriptingHandler {
     // "(100%, 100%)")
     // 尝试编译 styles
 
+    console.log(Sass.compile);
+     
     Sass.compile(styles, async result => {
       console.log("Sass Compiled: ", result);
 
