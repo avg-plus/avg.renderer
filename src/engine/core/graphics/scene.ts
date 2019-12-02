@@ -51,6 +51,9 @@ export class Scene {
     this.view.style.overflow = "scroll";
     this.renderer.backgroundColor = 0;
 
+    this.mainContainer.width = width;
+    this.mainContainer.height = height;
+
     this.stage.addChild(this.mainContainer);
 
     this.app.ticker.add(() => {
@@ -66,7 +69,6 @@ export class Scene {
         const yRadio = this.renderer.height / sprite.texture.height;
 
         sprite.filters = sprite.spriteFilters.getFilterList();
-        // sprite.filters = [TestFilterObj];
 
         // 拉伸图像
         switch (sprite.resizeMode) {
@@ -140,23 +142,48 @@ export class Scene {
    * @memberof Scene
    */
   public onResize() {
-    const xRatio = window.innerWidth / this.renderer.width;
-    const yRatio = window.innerHeight / this.renderer.height;
+    const xRatio = this.renderer.width / this.width;
+    const yRatio = this.renderer.height / this.height;
+
+    console.log("On Scene Resized: ", xRatio, yRatio);
+
 
     this.children().map(sprite => {
+
       // 计算立绘的坐标
       if (sprite.spriteType === SpriteType.Character) {
-        sprite.x = sprite.x * xRatio;
-
+        sprite.x = sprite.initialX * xRatio;
         sprite.spriteDebugger.update();
+
+      } else if (sprite.spriteType === SpriteType.Scene) {
+        this.stretch(sprite);
+        this.centerSprite(sprite);
       }
     });
 
     console.log("On Scene resized.", xRatio, yRatio);
   }
 
+  /**
+   * 拉伸
+   *
+   * @param {Sprite} sprite
+   * @memberof Scene
+   */
+  public stretch(sprite: Sprite) {
+    if (sprite.renderer.stretch) {
+      sprite.width = this.renderer.width;
+      sprite.height = this.renderer.height;
+    }
+  }
+
+  /**
+   * 处理居中
+   *
+   * @param {Sprite} sprite
+   * @memberof Scene
+   */
   public centerSprite(sprite: Sprite) {
-    // 处理居中
     if (sprite.center) {
       const x = this.renderer.width * sprite.anchor.x;
       const y = this.renderer.height * sprite.anchor.y;

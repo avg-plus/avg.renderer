@@ -22,12 +22,12 @@ function createWindow() {
     resizable: true,
     backgroundColor: "#000000",
     hasShadow: true,
+    defaultEncoding: "utf-8",
     webPreferences: {
       backgroundThrottling: false,
       nodeIntegration: true,
     },
   });
-
 
   win.webContents.setFrameRate(60);
 
@@ -38,6 +38,9 @@ function createWindow() {
       slashes: true,
     }),
   );
+
+  // 隐藏窗口，等待游戏加载完成之后确认尺寸再显示窗口
+  win.hide();
 
   // and load the index.html of the app.
   // win.loadURL("file://" + __dirname + "/index.html");

@@ -75,7 +75,7 @@
               "extractCss": true,
               "namedChunks": false,
               "aot": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false
             },
@@ -87,8 +87,26 @@
                 }
               ],
               "outputPath": "dist/browser",
-              "optimization": false,
+              "optimization": true,
               "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "browser-dev": {
+              // "fileReplacements": [
+              //   {
+              //     "replace": "src/environments/index.ts",
+              //     "with": "src/environments/browser.production.ts"
+              //   }
+              // ],
+              "outputPath": "dist/browser",
+              "optimization": false,
+              "outputHashing": "none",
               "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
@@ -110,7 +128,7 @@
           },
           "configurations": {
             "debug": {
-              "browserTarget": "AVGPlus:build:desktop-dev",
+              "browserTarget": "AVGPlus:build:browser-dev",
               "optimization": false,
               "sourceMap": true,
               "aot": false,
