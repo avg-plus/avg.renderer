@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <meta charset="utf-8" />
+    <title>AVG Demo</title>
+    <base href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- <link rel="stylesheet" type="text/css" href="./libs/danmaku/css/style.css" /> -->
+
+    <script type="application/javascript" src="loader.js"></script>
+    <!-- <script type="application/javascript" src="inline.bundle.js"></script> -->
+    <script
+      type="application/javascript"
+      src="./libs/danmaku/CommentCoreLibrary.min.js"
+    ></script>
+
+    <script>
+      document.addEventListener("dragover", event => event.preventDefault());
+      document.addEventListener("drop", event => event.preventDefault());
+    </script>
+
+    <style>
+      * {
+        font-family: Helvetica, Tahoma, Arial;
+        font-family: PingFang SC, "Microsoft YaHei";
+        font-family: PingFang SC, "华文细黑", "Microsoft YaHei", "微软雅黑";
+      }
+    </style>
   </head>
+
   <body>
-    Well hey there!!!
+    <div
+      class="engine-loader"
+      style="
+        z-index: 9999999;
+        position: fixed;
+        text-align: center;
+        z-index: 999999;
+        color: whitesmoke;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);"
+    >
+      <span id="loading-tips">正在初始化引擎</span>
+    </div>
+    <game></game>
   </body>
 </html>

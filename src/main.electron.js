@@ -29,8 +29,6 @@ function createWindow() {
     },
   });
 
-  win.webContents.setFrameRate(60);
-
   win.loadURL(
     format({
       pathname: join(__dirname, "index.html"),
