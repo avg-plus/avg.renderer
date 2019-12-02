@@ -27,9 +27,9 @@ loadjs = (function() {
           ((o = e.createElement("link")).rel = "stylesheet"),
           (o.href = a))
         : /(^img!|\.(png|gif|jpg|svg)$)/.test(t)
-          ? ((o = e.createElement("img")).src = a)
-          : (((o = e.createElement("script")).src = t),
-            (o.async = void 0 === n || n)),
+        ? ((o = e.createElement("img")).src = a)
+        : (((o = e.createElement("script")).src = t),
+          (o.async = void 0 === n || n)),
       !(o.onload = o.onerror = o.onbeforeload = function(e) {
         var n = e.type[0];
         if (s && "hideFocus" in o)
@@ -114,12 +114,21 @@ loadjs = (function() {
 })();
 
 // Preload scripts
+// const bundles = [
+//   "inline.bundle.js",
+//   "polyfills.bundle.js",
+//   "styles.bundle.js",
+//   "vendor.bundle.js",
+//   "main.bundle.js"
+// ];
+
 const bundles = [
-  "inline.bundle.js",
-  "polyfills.bundle.js",
-  "styles.bundle.js",
-  "vendor.bundle.js",
-  "main.bundle.js"
+  "scripts.js",
+  "polyfills.js",
+  "runtime.js",
+  // "styles.js",
+  // "vendor.js",
+  "main.js"
 ];
 
 let loadedCount = 0;
@@ -139,7 +148,7 @@ for (let i = 0; i < bundles.length; ++i) {
       "]\n 首次加载可能需要等待几分钟...";
 
     if (loadedCount === bundles.length) {
-      document.getElementById("loading-tips").remove()// .hidden = true;
+      document.getElementById("loading-tips").remove(); // .hidden = true;
     }
   });
 }

@@ -102,7 +102,7 @@ class GameResourceManager {
         task.status = LoadingTaskStatus.Loading;
       }
 
-      this.resourceLoader.load((loader: PIXI.Loader, resources: PIXI.LoaderResource) => {
+      this.resourceLoader.load((loader: PIXI.Loader, resources: Partial<Record<string, PIXI.LoaderResource>>) => {
         console.log("Loading process: ", loader);
         // this.resourceLoader.reset();
 

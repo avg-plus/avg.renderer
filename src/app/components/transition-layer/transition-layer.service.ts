@@ -1,7 +1,7 @@
 import { Injectable, Output } from "@angular/core";
 import { AVGService } from "../../common/avg-service";
 import { EventEmitter } from "events";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 
 import * as gsap from "gsap";
 import { AnimationUtils } from "../../common/animations/animation-utils";

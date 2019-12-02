@@ -2,8 +2,7 @@ import { HookEvents } from "./../../../engine/plugin/hooks/hook-events";
 import { HookManager } from "./../../../engine/plugin/hooks/hook-manager";
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
+import { Subject ,  Observable } from "rxjs";
 
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";

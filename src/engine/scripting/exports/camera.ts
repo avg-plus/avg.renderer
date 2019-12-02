@@ -22,7 +22,11 @@ import { GameWorld } from "engine/core/graphics/world";
 
 @APIExport("camera", EngineAPI_Camera)
 export class EngineAPI_Camera extends AVGExportedAPI {
-  public static async to(layer: CameraDirectorLayers, data: CameraData, duration: number = 1000) {
+  public static async to(
+    layer: CameraDirectorLayers,
+    data: CameraData,
+    duration: number = 1000
+  ) {
     const camera = new APICameraMove();
     camera.layer = layer;
     camera.duration = duration;
@@ -33,7 +37,10 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       camera.duration = 0;
     }
 
-    const proxy = APIManager.Instance.getImpl(APICameraMove.name, OP.MoveCamera);
+    const proxy = APIManager.Instance.getImpl(
+      APICameraMove.name,
+      OP.MoveCamera
+    );
     proxy && (await proxy.runner(<APICameraMove>camera));
   }
 
@@ -51,20 +58,48 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       ]
     };
 
-    await SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Camera, GameWorld.defaultScene, animation);
+    await SpriteAnimateDirector.playAnimationMacro(
+      AnimateTargetType.Camera,
+      GameWorld.defaultScene,
+      animation
+    );
   }
 
-  public static async zoomTo(distance: number) {
+  public static async moveX(x: number, duration: number) {
     const animation: SpriteAnimationMacro = {
-      totalDuration: 4400,
+      totalDuration: duration,
       timeline: [
         {
+          x: x
+        }
+      ]
+    };
+
+    await SpriteAnimateDirector.playAnimationMacro(
+      AnimateTargetType.Camera,
+      GameWorld.defaultScene,
+      animation
+    );
+  }
+
+  public static async zoomTo(distance: number, duration: number = 1000) {
+    const isAsync = arguments[arguments.length - 1] === "__async_call__";
+
+    const animation: SpriteAnimationMacro = {
+      timeline: [
+        {
+          duration,
           zoom: distance
         }
       ]
     };
 
-    await SpriteAnimateDirector.playAnimationMacro(AnimateTargetType.Camera, GameWorld.defaultScene, animation);
+    await SpriteAnimateDirector.playAnimationMacro(
+      AnimateTargetType.Camera,
+      GameWorld.defaultScene,
+      animation,
+      !isAsync
+    );
   }
 
   public static async shake(options: CameraShakeData) {
@@ -107,13 +142,20 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       return;
     }
 
-    const proxy = APIManager.Instance.getImpl(APICameraShake.name, OP.ShakeCamera);
+    const proxy = APIManager.Instance.getImpl(
+      APICameraShake.name,
+      OP.ShakeCamera
+    );
     proxy && (await proxy.runner(<APICameraShake>api));
   }
 
   public static async stopShake() {}
 
-  public static async transitionTo(color: string, opacity: number, duration: number) {
+  public static async transitionTo(
+    color: string,
+    opacity: number,
+    duration: number
+  ) {
     const api = new APICameraTransitionTo();
     api.color = color || "#FFFFFF";
     api.opacity = opacity;
@@ -125,11 +167,19 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       return;
     }
 
-    const proxy = APIManager.Instance.getImpl(APICameraTransitionTo.name, OP.TransitionTo);
+    const proxy = APIManager.Instance.getImpl(
+      APICameraTransitionTo.name,
+      OP.TransitionTo
+    );
     proxy && (await proxy.runner(<APICameraTransitionTo>api));
   }
 
-  public static async flash(color: string, opacity: number, duration: number, count: number = 1) {
+  public static async flash(
+    color: string,
+    opacity: number,
+    duration: number,
+    count: number = 1
+  ) {
     const schema = joi.object().keys({
       color: joi.string().required(),
       opacity: joi
@@ -161,7 +211,11 @@ export class EngineAPI_Camera extends AVGExportedAPI {
       for (let i = 0; i < validateResult.count; ++i) {
         const timing = validateResult.duration / 4;
 
-        await this.transitionTo(validateResult.color, validateResult.opacity, timing);
+        await this.transitionTo(
+          validateResult.color,
+          validateResult.opacity,
+          timing
+        );
         await EngineAPI_Flow.wait(timing);
         await this.transitionTo(validateResult.color, 0, timing);
         await EngineAPI_Flow.wait(timing);

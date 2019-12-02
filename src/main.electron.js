@@ -1,7 +1,6 @@
-import { app, BrowserWindow, screen, Menu, MenuItem, autoUpdater, dialog } from "electron";
-
-import * as path from "path";
-import * as url from "url";
+import { app, BrowserWindow, screen } from "electron";
+import { join } from "path";
+import { format } from "url";
 
 let win, serve;
 
@@ -23,20 +22,25 @@ function createWindow() {
     resizable: true,
     backgroundColor: "#000000",
     hasShadow: true,
+    defaultEncoding: "utf-8",
     webPreferences: {
-      nodeIntegration: true
-    }
+      backgroundThrottling: false,
+      nodeIntegration: true,
+    },
   });
 
   win.webContents.setFrameRate(60);
 
   win.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "index.html"),
+    format({
+      pathname: join(__dirname, "index.html"),
       protocol: "file:",
-      slashes: true
-    })
+      slashes: true,
+    }),
   );
+
+  // 隐藏窗口，等待游戏加载完成之后确认尺寸再显示窗口
+  win.hide();
 
   // and load the index.html of the app.
   // win.loadURL("file://" + __dirname + "/index.html");

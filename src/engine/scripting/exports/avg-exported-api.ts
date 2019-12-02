@@ -65,14 +65,18 @@ export class AVGExportedAPI {
     );
   }
 
-  protected static validateSpriteAnimationMacro(animation: SpriteAnimationMacro) {
+  protected static validateSpriteAnimationMacro(
+    animation: SpriteAnimationMacro
+  ) {
     return this.APIParametersValidate(
       joi.object().keys({
         totalDuration: joi
           .number()
           .optional()
           .min(1)
-          .description("时间轴总播放时长（如指定该参数，则忽略帧内的duration）"),
+          .description(
+            "时间轴总播放时长（如指定该参数，则忽略帧内的duration）"
+          ),
         initialFrame: joi
           .object()
           .optional()
@@ -81,7 +85,9 @@ export class AVGExportedAPI {
           .number()
           .optional()
           .min(-1)
-          .description("重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"),
+          .description(
+            "重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"
+          ),
         onProgress: joi
           .func()
           .optional()
@@ -180,7 +186,12 @@ export class AVGExportedAPI {
           .boolean()
           .optional()
           .default(false)
-          .description("是否渲染摄像机距离深度（不处理缩放）")
+          .description("是否渲染摄像机距离深度（不处理缩放）"),
+        stretch: joi
+          .boolean()
+          .optional()
+          .default(false)
+          .description("是否拉伸至适应屏幕")
       }),
       renderer
     );

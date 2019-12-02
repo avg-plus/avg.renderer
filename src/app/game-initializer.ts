@@ -163,16 +163,16 @@ export class GameInitializer implements CanActivate {
 
       const win = remote.getCurrentWindow();
       if (Setting.FullScreen) {
-        console.log(screen.getPrimaryDisplay());
-        win.setBounds({
-          width: screen.getPrimaryDisplay().bounds.width,
-          height: screen.getPrimaryDisplay().bounds.height,
-          x: 0,
-          y: 0
-        });
+        // win.setBounds({
+        //   width: screen.getPrimaryDisplay().bounds.width,
+        //   height: screen.getPrimaryDisplay().bounds.height,
+        //   x: 0,
+        //   y: 0
+        // });
         win.setFullScreen(Setting.FullScreen);
       } else {
         win.setContentSize(Setting.WindowWidth, Setting.WindowHeight);
+        win.show();
         // win.setBounds({
         //   width: Setting.WindowWidth,
         //   height: Setting.WindowHeight,

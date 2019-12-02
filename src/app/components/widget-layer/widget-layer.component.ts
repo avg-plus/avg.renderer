@@ -55,7 +55,7 @@ import { HTMLWidgetScriptingHandler } from "app/scripting-handlers/html-widget-h
   styleUrls: ["./widget-layer.component.scss"]
 })
 export class WidgetLayerComponent implements OnInit {
-  @ViewChild("widgetContainer", { read: ViewContainerRef })
+  @ViewChild("widgetContainer", { read: ViewContainerRef, static: false })
   container;
 
   constructor(
@@ -119,6 +119,11 @@ export class WidgetLayerComponent implements OnInit {
           switch (scriptingContext.op) {
             case OP.ShowHtmlWidget:
               HTMLWidgetScriptingHandler.handleAddHTMLWidget(scriptingContext);
+              break;
+            case OP.RemoveHtmlWidget:
+              HTMLWidgetScriptingHandler.handleRemoveHTMLWidget(
+                scriptingContext
+              );
               break;
           }
         }

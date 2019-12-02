@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "./main.electron.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "dist/.temp"
+  }
+}

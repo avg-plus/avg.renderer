@@ -1,5 +1,5 @@
 import { UnitType } from "engine/core/measurement-unit";
-import Sass from "sass.js/dist/sass.sync";
+const Sass  = require("sass.js");
 import * as $ from "jquery";
 
 import { AnimateTargetType } from "./../../engine/core/graphics/sprite-animate-director";
@@ -33,6 +33,8 @@ export class HTMLWidgetScriptingHandler {
     // "(100%, 100%)")
     // 尝试编译 styles
 
+    console.log(Sass.compile);
+     
     Sass.compile(styles, async result => {
       console.log("Sass Compiled: ", result);
 
@@ -74,17 +76,16 @@ export class HTMLWidgetScriptingHandler {
       $(shadow).append(save);
 
       if (data.events) {
-        Object.keys(data.events).map(k => {
-          const target = data.events[k];
-
-          const selector = `#${name} ${k}`;
+        data.events.map(e => {
+          const selector = `#${name} ${e.selector}`;
           const elements = shadow.querySelectorAll(selector);
+          // const target = e.selector;
 
           Array.from(elements).forEach((v, k, parent) => {
-            v.addEventListener(target.event, event => {
+            v.addEventListener(e.event, event => {
               // 延时防止瞬间触发全屏点击事件，导致下一次点击操作被响应
               setTimeout(() => {
-                target.callback(event, v);
+                e.callback(event, v);
               }, 0);
             });
           });
@@ -95,12 +96,33 @@ export class HTMLWidgetScriptingHandler {
       await SpriteAnimateDirector.playAnimationMacro(
         AnimateTargetType.HTMLElement,
         shadow.getElementById(name),
-        data.animation
+        data.animation,
+        !scriptingContext.api.isAsync
       );
     });
 
     scriptingContext.resolver();
   }
 
-  public static handleRemoveHTMLWidget(scriptingContext: ScriptingContext) {}
+  public static async handleRemoveHTMLWidget(
+    scriptingContext: ScriptingContext
+  ) {
+    const data = <ScreenWidgetHtml>scriptingContext.api.data;
+    const name = data.name;
+
+    var shadow = HTMLWidgetManager.getShadowRoot();
+
+    // 处理动画
+    await SpriteAnimateDirector.playAnimationMacro(
+      AnimateTargetType.HTMLElement,
+      shadow.getElementById(name),
+      data.animation,
+      !scriptingContext.api.isAsync
+    );
+
+    const t = $(shadow).find(`#${name}`);
+    t.remove();
+
+    scriptingContext.resolver();
+  }
 }

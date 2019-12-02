@@ -33,9 +33,10 @@ class World {
     this.app = new PIXI.Application({
       width,
       height,
-      antialias: false,
+      antialias: true,
       preserveDrawingBuffer: true,
-      transparent: false,
+      transparent: true,
+      backgroundColor: 0,
       resizeTo: this.parentElement,
       resolution: 1
     });
@@ -58,7 +59,7 @@ class World {
       });
     };
 
-    DebugPanel.init();
+    // DebugPanel.init();
   }
 
   public get defaultScene() {

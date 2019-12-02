@@ -1,3 +1,4 @@
+import { GameWorld } from "./../../core/graphics/world";
 import { HookEvents } from "./../../plugin/hooks/hook-events";
 import { HookManager } from "./../../plugin/hooks/hook-manager";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
@@ -55,5 +56,23 @@ export class EngineAPI_Engine extends AVGExportedAPI {
 
   public static preload(url: string) {
     ResourceManager.addLoading(url);
+  }
+
+  public static getScreenWidth() {
+    return GameWorld.worldWidth;
+  }
+
+  public static getScreenHeight() {
+    return GameWorld.worldHeight;
+  }
+
+  public static getMousePosition() {
+    var mouse = GameWorld.app.renderer.plugins.interaction.mouse.global;
+
+    return mouse;
+  }
+
+  public static getBaseURL() {
+    return GameResource.getAssetsRoot();
   }
 }

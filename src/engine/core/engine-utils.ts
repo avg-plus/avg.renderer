@@ -1,5 +1,3 @@
-import { Dimension } from "../const/model";
-
 export class EngineUtils {
   public static async wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -7,6 +5,12 @@ export class EngineUtils {
 
   // Universal
   public static async evalInContext(js, context) {
+    // console.log(js);;
+
+    // const [op, value] = gen(js);
+    // const vm = new VirtualMachine(op, value);
+    // console.log("ts-bc debug: ", vm.exec(false).value.debugValue());
+
     const result = (() => {
       return eval(js);
     }).call(context);

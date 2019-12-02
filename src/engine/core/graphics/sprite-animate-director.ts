@@ -146,7 +146,7 @@ export class SpriteAnimateDirector {
       const frame = frames[i] as CameraMacroFrame;
 
       // duration 不需要转换单位
-      target.cameraMove(frame.x, frame.x, frame.duration);
+      target.cameraMove(frame.x, frame.y, frame.duration);
       target.cameraZoom(frame.zoom, frame.duration);
     }
 

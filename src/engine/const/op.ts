@@ -43,6 +43,7 @@ export class OP {
   public static UpdateImageWidget = "UpdateImageWidget";
   public static AnimateImageWidget = "AnimateImageWidget";
   public static ShowHtmlWidget = "ShowHtmlWidget";
+  public static RemoveHtmlWidget = "RemoveHtmlWidget";
   public static ShowInputBox = "ShowInputBox";
   public static TransitionTo = "TransitionTo";
   public static StartSkip = "StartSkip";

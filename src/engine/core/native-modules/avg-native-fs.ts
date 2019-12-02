@@ -1,19 +1,24 @@
 import * as BrowserFS from "browserfs";
-import * as NodeFS from "fs";
 import { axios } from "app/common/axios-default";
 import { PlatformService } from "../platform/platform-service";
 import { AVGNativePath } from "./avg-native-path";
+
+// const NodeFS = window.require('fs');
+import * as NodeFS from 'fs';
+
 
 export class AVGNativeFS {
   private static _isFileSystemOK = false;
   private static _fs = null;
 
   public static get __dirname() {
+    let dirname = window["__dirname"];
+
     if (PlatformService.isDesktop()) {
-      if (PlatformService.isWindowsDesktop() && __dirname.indexOf("\\") !== -1) {
-        __dirname = __dirname.replace(/\\/g, "/");
+      if (PlatformService.isWindowsDesktop() && dirname.indexOf("\\") !== -1) {
+        dirname = dirname.replace(/\\/g, "/");
       }
-      return __dirname;
+      return dirname;
     } else {
       return ".";
     }
@@ -22,7 +27,6 @@ export class AVGNativeFS {
   public static async initFileSystem() {
     console.log("Init Env", process.env);
 
-    // BrowserFS.install(window);
 
     return new Promise((resolve, reject) => {
       if (PlatformService.isDesktop()) {
@@ -89,6 +93,7 @@ export class AVGNativeFS {
   ): void {
     if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       this._fs.readFile(filename, options, callback);
+      // this._ipc.send()
     } else {
       const response = axios.get(filename).then(value => {
         if (callback) {

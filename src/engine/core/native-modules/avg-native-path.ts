@@ -1,4 +1,4 @@
-import urljoin from "urljoin";
+// import urljoin from "urljoin";
 
 export class AVGNativePath {
   public static isHttpURL(url: string): boolean {
@@ -24,7 +24,9 @@ export class AVGNativePath {
         }
       }
 
-      const fullURL = urljoin(paths).join("");
+      // const fullURL = urljoin(paths).join("");
+      const fullURL = paths.join("");
+
       return fullURL;
     }
 

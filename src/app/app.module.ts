@@ -4,7 +4,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, enableProdMode } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
+// import { HttpModule } from "@angular/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from "./app.component";
@@ -47,7 +47,12 @@ import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/
     VariableInputComponent,
     GameToolbarComponent
   ],
-  imports: [BrowserModule, FormsModule, HttpModule, AppRoutingModule, BrowserAnimationsModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule
+  ],
   providers: [
     ElectronService,
     MainSceneService,

@@ -106,7 +106,9 @@ export class PIXIGif {
           }
 
           // 记录缩放和坐标
-          const scale = this.sprite.scale.clone();
+          let scale: PIXI.IPoint;
+          this.sprite.scale.copyTo(scale);
+
 
           // 修改精灵纹理材质与当前的帧率相匹配
           this.sprite.texture = this.textures[status.frame];
