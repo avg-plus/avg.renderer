@@ -2738,11 +2738,6 @@ ast-types-flow@0.0.7:
   resolved "https://registry.npm.taobao.org/ast-types-flow/download/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
   integrity sha1-9wtzXGvKGlycItmCw+Oef+ujva0=
 
-ast-types@0.13.2:
-  version "0.13.2"
-  resolved "https://registry.npm.taobao.org/ast-types/download/ast-types-0.13.2.tgz#df39b677a911a83f3a049644fb74fdded23cea48"
-  integrity sha1-3zm2d6kRqD86BJZE+3T93tI86kg=
-
 ast-types@0.9.6:
   version "0.9.6"
   resolved "https://registry.npm.taobao.org/ast-types/download/ast-types-0.9.6.tgz#102c9e9e9005d3e7e3829bf0c4fa24ee862ee9b9"
@@ -6580,16 +6575,6 @@ engine.io@1.8.3:
     engine.io-parser "1.3.2"
     ws "1.1.2"
 
-enhanced-resolve@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-3.3.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-3.3.0.tgz#950964ecc7f0332a42321b673b38dc8ff15535b3"
-  integrity sha1-lQlk7MfwMypCMhtnOzjcj/FVNbM=
-  dependencies:
-    graceful-fs "^4.1.2"
-    memory-fs "^0.4.0"
-    object-assign "^4.0.1"
-    tapable "^0.2.5"
-
 enhanced-resolve@4.1.0:
   version "4.1.0"
   resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.1.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-4.1.0.tgz#41c7e0bfdfe74ac1ffe1e57ad6a5c6c9f3742a7f"
@@ -6972,7 +6957,7 @@ esprima@^3.1.3, esprima@~3.1.0:
   resolved "https://registry.npm.taobao.org/esprima/download/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
   integrity sha1-/cpRzuYTOJXjyI1TXOSdv/YqRjM=
 
-esprima@^4.0.0, esprima@^4.0.1, esprima@~4.0.0:
+esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npm.taobao.org/esprima/download/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha1-E7BM2z5sXRnfkatph6hpVhmwqnE=
@@ -11598,7 +11583,7 @@ node-releases@^1.1.25, node-releases@^1.1.41:
   dependencies:
     semver "^6.3.0"
 
-node-sass@^4.5.3:
+node-sass@^4.13.0:
   version "4.13.0"
   resolved "https://registry.npm.taobao.org/node-sass/download/node-sass-4.13.0.tgz?cache=0&sync_timestamp=1571899977221&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-sass%2Fdownload%2Fnode-sass-4.13.0.tgz#b647288babdd6a1cb726de4545516b31f90da066"
   integrity sha1-tkcoi6vdahy3Jt5FRVFrMfkNoGY=
@@ -12658,11 +12643,6 @@ pixi-filters@^3.0.3:
     "@pixi/filter-twist" "^3.0.3"
     "@pixi/filter-zoom-blur" "^3.0.3"
 
-pixi-live2d@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npm.taobao.org/pixi-live2d/download/pixi-live2d-1.2.1.tgz#8fc554057e2e2786352a334fefad1eafe6f653b1"
-  integrity sha1-j8VUBX4uJ4Y1KjNP760er+b2U7E=
-
 pixi-particles@^2.1.5:
   version "2.1.9"
   resolved "https://registry.npm.taobao.org/pixi-particles/download/pixi-particles-2.1.9.tgz#4150b9208b7e39e82896797fe4c1d7e61387baf6"
@@ -13715,16 +13695,6 @@ readdirp@~3.2.0:
   integrity sha1-wwwzNSsSyW37S4lUIaSf1alZODk=
   dependencies:
     picomatch "^2.0.4"
-
-recast@^0.18.2:
-  version "0.18.5"
-  resolved "https://registry.npm.taobao.org/recast/download/recast-0.18.5.tgz#9d5adbc07983a3c8145f3034812374a493e0fe4d"
-  integrity sha1-nVrbwHmDo8gUXzA0gSN0pJPg/k0=
-  dependencies:
-    ast-types "0.13.2"
-    esprima "~4.0.0"
-    private "^0.1.8"
-    source-map "~0.6.1"
 
 recast@~0.11.12:
   version "0.11.23"
@@ -15621,7 +15591,7 @@ tabtab@^2.2.1:
     npmlog "^2.0.3"
     object-assign "^4.1.0"
 
-tapable@^0.2.5, tapable@^0.2.7:
+tapable@^0.2.7:
   version "0.2.9"
   resolved "https://registry.npm.taobao.org/tapable/download/tapable-0.2.9.tgz#af2d8bbc9b04f74ee17af2b4d9048f807acd18a8"
   integrity sha1-ry2LvJsE907hevK02QSPgHrNGKg=

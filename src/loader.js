@@ -123,12 +123,12 @@ loadjs = (function() {
 // ];
 
 const bundles = [
-  "scripts.js",
-  "polyfills.js",
-  "runtime.js",
+  // "scripts.js",
+  // "polyfills.js",
+  // "runtime.js",
   // "styles.js",
   // "vendor.js",
-  "main.js"
+  // "main.js"
 ];
 
 let loadedCount = 0;

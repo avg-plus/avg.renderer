@@ -3,6 +3,8 @@ import { TransitionLayerService } from "app/components/transition-layer/transiti
 export class HTMLWidgetManager {
   static shadow: ShadowRoot;
   static init() {
+    console.log("Init shadow root");
+    
     if (!this.shadow) {
       this.shadow = document
         .querySelector("#avg-widget-layer #widget-layer")
