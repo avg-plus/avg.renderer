@@ -107,7 +107,7 @@ Open a terminal session to run the following command in `avg.renderer`:
 yarn dev
 ```
 
-This command is used for building engine bundles and keep the development wactch mode, you could open `dist` directory to see the outputs.
+This command is used for building engine bundles and keep the development in watching mode, you could open `dist` directory to see the outputs.
 
 ### 4. Run the game
 Open another terminal session to launch game window:

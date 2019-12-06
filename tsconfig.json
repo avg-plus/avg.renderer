@@ -6,7 +6,7 @@
     "module": "commonjs",
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "skipLibCheck": true,
     "moduleResolution": "node",

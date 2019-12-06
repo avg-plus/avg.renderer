@@ -53,7 +53,7 @@
               "outputPath": "dist/desktop",
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -68,7 +68,7 @@
                   "with": "src/environments/desktop.ts"
                 }
               ],
-              "outputPath": "dist/desktop",
+              "outputPath": "dist/desktop-dev",
               "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
@@ -98,13 +98,13 @@
               "buildOptimizer": true
             },
             "browser-dev": {
-              // "fileReplacements": [
-              //   {
-              //     "replace": "src/environments/index.ts",
-              //     "with": "src/environments/browser.production.ts"
-              //   }
-              // ],
-              "outputPath": "dist/browser",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/index.ts",
+                  "with": "src/environments/browser.ts"
+                }
+              ],
+              "outputPath": "dist/browser-dev",
               "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
