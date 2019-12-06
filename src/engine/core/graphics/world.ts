@@ -8,6 +8,7 @@ import { HookEvents } from "engine/plugin/hooks/hook-events";
 import { DropFlakeParticle } from "./shaders/drop-flake/drop-flake";
 import { AVGNativePath } from "../native-modules/avg-native-path";
 import { GameResource } from "../resource";
+import { ScalingSystem } from "./scaling-system";
 
 class World {
   scenes: Scene[] = [];
@@ -17,6 +18,8 @@ class World {
   parentElement: HTMLElement;
   worldWidth: number;
   worldHeight: number;
+
+  frameBuffer: PIXI.Framebuffer;
 
   async init(
     parentElement: HTMLElement,
@@ -41,6 +44,35 @@ class World {
       resolution: 1
     });
 
+    this.app.renderer.addSystem(ScalingSystem as any, 'scaling');
+
+    /*this.frameBuffer = new PIXI.Framebuffer(width, height);
+    this.frameBuffer.addColorTexture(1, PIXI.Texture.fromBuffer(null, width, height));
+    this.app.renderer.framebuffer.bind(this.frameBuffer);
+    this.frameBuffer = PIXI.RenderTexture.create({width: width, height: height});
+    this.app.renderer.renderTexture.bind(this.frameBuffer);
+    this.app.renderer.runners.postrender.add({
+      postrender:
+        function(){
+          let color = new Date().getTime() % 65536;
+          let colorCode = "";
+          let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          colorCode = hex[color % 16] + colorCode;
+          color = color / 16;
+          document.body.style.backgroundColor = "#" + colorCode;
+        }
+    });*/
+
     // Show FPSPanel
     // const fpsElement = document.getElementById("fps");
     this.app.ticker.add(() => {
@@ -51,13 +83,13 @@ class World {
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
-    window.onresize = () => {
+    /*window.onresize = () => {
       this.app.resize();
       
       this.scenes.map(scene => {
         scene.onResize();
       });
-    };
+    };*/
 
     // DebugPanel.init();
   }
