@@ -6,7 +6,7 @@
     "module": "commonjs",
     "outDir": "./dist/out-tsc",
     "baseUrl": "src",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
@@ -17,9 +17,10 @@
     "paths": {
       "environments": ["./environments"]
     },
-    "types": ["node", "jasmine"],
+    "types": ["node"],
     "typeRoots": ["node_modules/@types"],
     "lib": ["es5", "es6", "es7", "es2016", "esnext", "dom"]
   },
+  "include": ["**/*.ts"],
   "exclude": ["**/node_modules/*", "**/dist/*", "**/app-builds/*"]
 }

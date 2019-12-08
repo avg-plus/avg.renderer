@@ -38,8 +38,8 @@ export class ElectronService extends PlatformService {
     super();
 
     if (PlatformService.isDesktop()) {
-      this.ipcRenderer = window.require("electron").ipcRenderer;
-      this.childProcess = window.require("child_process");
+      // this.ipcRenderer = window.require("electron").ipcRenderer;
+      // this.childProcess = window.require("child_process");
     }
   }
 
