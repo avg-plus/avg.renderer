@@ -5,8 +5,8 @@
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
 
-defaults
-not > 0.5%
+# not defaults
+> 0.5%
 not last 2 versions
 not Firefox ESR
 not dead

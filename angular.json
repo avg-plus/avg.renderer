@@ -28,7 +28,7 @@
               "src/index.html",
               "src/main.electron.js",
               "src/loader.js",
-              "src/env.avd",
+              "src/engine.json",
               "src/data",
               "src/favicon.ico"
             ],
@@ -68,6 +68,9 @@
                   "with": "src/environments/desktop.ts"
                 }
               ],
+              "customWebpackConfig": {
+                "path": "./tools/webpack.desktop.config.js"
+              },
               "outputPath": "dist/desktop-dev",
               "optimization": false,
               "outputHashing": "none",

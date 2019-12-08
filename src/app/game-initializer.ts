@@ -105,7 +105,7 @@ export class GameInitializer implements CanActivate {
     console.log("init resource", router.url);
 
     // Read 'env.avd' to get game project dir and engine dir
-    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "env.avd"));
+    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "engine.json"));
     const envData = JSON.parse(content);
 
     // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;

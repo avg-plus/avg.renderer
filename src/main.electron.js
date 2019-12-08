@@ -1,6 +1,4 @@
 import { app, BrowserWindow, screen } from "electron";
-import { join } from "path";
-import { format } from "url";
 
 let win, serve;
 
@@ -8,11 +6,10 @@ const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
 app.commandLine.appendSwitch("in-process-gpu");
-app.commandLine.appendSwitch("allow-insecure-localhost", "true");
+// app.commandLine.appendSwitch("allow-insecure-localhost", "true");
 
 function createWindow() {
   const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -26,9 +23,9 @@ function createWindow() {
     defaultEncoding: "utf-8",
     webPreferences: {
       backgroundThrottling: false,
-      webSecurity: false,
-      allowRunningInsecureContent: true,
-      nodeIntegrationInWorker: true,
+      webSecurity: true,
+      // allowRunningInsecureContent: true,
+      // nodeIntegrationInWorker: true,
       nodeIntegration: true
     }
   });

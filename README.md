@@ -67,8 +67,8 @@ D:\GameProjects\hello-avg
   └── game.json
 ```
 
-### 2. Modify `env.avd` on `avg.renderer`
-Open `env.avd` file you can see:
+### 2. Modify `engine.json` on `avg.renderer`
+Open `engine.json` file you can see:
 ```json
 {
   "game_assets_root": "http://127.0.0.1:2335",
