@@ -9,6 +9,7 @@ import { DropFlakeParticle } from "./shaders/drop-flake/drop-flake";
 import { AVGNativePath } from "../native-modules/avg-native-path";
 import { GameResource } from "../resource";
 import { ScalingAdaptor } from "./scaling-adaptor";
+import ThermalDistortFilter from "./filters/thermal-distort"
 
 class World {
   scenes: Scene[] = [];
@@ -20,6 +21,7 @@ class World {
   worldHeight: number;
 
   adaptor: ScalingAdaptor;
+  filter;
 
   async init(
     parentElement: HTMLElement,
@@ -45,11 +47,15 @@ class World {
     });
 
     this.adaptor = new ScalingAdaptor();
+    this.filter = ThermalDistortFilter;
+    this.app.stage.filters = [this.filter.instance()];
 
     // Show FPSPanel
     // const fpsElement = document.getElementById("fps");
     this.app.ticker.add(() => {
       //   fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
+      this.filter.updateUniform();
+
       this.adaptor.beginBuffer();
       HookManager.triggerHook(HookEvents.GameUpdate);
       this.adaptor.endBuffer();
