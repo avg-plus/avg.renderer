@@ -8,24 +8,24 @@ import { GameWorld } from "./world";
  */
 
 export class ScalingAdaptor {
-    frameBuffer: PIXI.RenderTexture;
-    preStage: PIXI.Container;
-    postStage: PIXI.Sprite;
+  frameBuffer: PIXI.RenderTexture;
+  preStage: PIXI.Container;
+  postStage: PIXI.Sprite;
 
-    constructor() {
-        this.frameBuffer = PIXI.RenderTexture.create({width: GameWorld.worldWidth, height: GameWorld.worldHeight});
-        this.preStage = GameWorld.app.stage;
-        this.postStage = new PIXI.Sprite(this.frameBuffer);
-    }
+  constructor() {
+    this.frameBuffer = PIXI.RenderTexture.create({ width: GameWorld.worldWidth, height: GameWorld.worldHeight });
+    this.preStage = GameWorld.app.stage;
+    this.postStage = new PIXI.Sprite(this.frameBuffer);
+  }
 
-    beginBuffer() {
-        GameWorld.app.stage = this.preStage;
-    }
+  beginBuffer() {
+    GameWorld.app.stage = this.preStage;
+  }
 
-    endBuffer() {
-        GameWorld.app.renderer.render(GameWorld.app.stage, this.frameBuffer);
-        GameWorld.app.stage = this.postStage;
-    }
+  endBuffer() {
+    GameWorld.app.renderer.render(GameWorld.app.stage, this.frameBuffer);
+    GameWorld.app.stage = this.postStage;
+  }
 
     resize(width: number, height: number, method: ScalingMethod = ScalingMethod.AUTO) {
         let baseWidth = GameWorld.worldWidth;
@@ -58,7 +58,7 @@ export class ScalingAdaptor {
 }
 
 export const enum ScalingMethod {
-	AUTO,                                       // 保证显示完全的前提下自动选择
-	ACCORDING_TO_WIDTH,                         // 按照宽度确定缩放比例
-	ACCORDING_TO_HEIGHT                         // 按照高度确定缩放比例
+  AUTO,                                       // 保证显示完全的前提下自动选择
+  ACCORDING_TO_WIDTH,                         // 按照宽度确定缩放比例
+  ACCORDING_TO_HEIGHT                         // 按照高度确定缩放比例
 }

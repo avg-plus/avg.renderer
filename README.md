@@ -67,8 +67,8 @@ D:\GameProjects\hello-avg
   └── game.json
 ```
 
-### 2. Modify `env.avd` on `avg.renderer`
-Open `env.avd` file you can see:
+### 2. Modify `engine.json` on `avg.renderer`
+Open `engine.json` file you can see:
 ```json
 {
   "game_assets_root": "http://127.0.0.1:2335",
@@ -107,7 +107,7 @@ Open a terminal session to run the following command in `avg.renderer`:
 yarn dev
 ```
 
-This command is used for building engine bundles and keep the development wactch mode, you could open `dist` directory to see the outputs.
+This command is used for building engine bundles and keep the development in watching mode, you could open `dist` directory to see the outputs.
 
 ### 4. Run the game
 Open another terminal session to launch game window:

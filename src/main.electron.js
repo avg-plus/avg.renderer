@@ -1,6 +1,4 @@
 import { app, BrowserWindow, screen } from "electron";
-import { join } from "path";
-import { format } from "url";
 
 let win, serve;
 
@@ -8,10 +6,10 @@ const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
 app.commandLine.appendSwitch("in-process-gpu");
+// app.commandLine.appendSwitch("allow-insecure-localhost", "true");
 
 function createWindow() {
   const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -25,23 +23,28 @@ function createWindow() {
     defaultEncoding: "utf-8",
     webPreferences: {
       backgroundThrottling: false,
-      nodeIntegration: true,
-    },
+      webSecurity: true,
+      // allowRunningInsecureContent: true,
+      // nodeIntegrationInWorker: true,
+      nodeIntegration: true
+    }
   });
 
-  win.loadURL(
-    format({
-      pathname: join(__dirname, "index.html"),
-      protocol: "file:",
-      slashes: true,
-    }),
-  );
+  // win.loadURL(
+  //   format({
+  //     pathname: join(__dirname, "index.html"),
+  //     protocol: "file:",
+  //     slashes: true,
+  //   }),
+  // );
+
+  // win.loadFile("./index.html");
 
   // 隐藏窗口，等待游戏加载完成之后确认尺寸再显示窗口
   win.hide();
 
   // and load the index.html of the app.
-  // win.loadURL("file://" + __dirname + "/index.html");
+  win.loadURL("file://" + __dirname + "/index.html");
 
   // Open the DevTools.
   if (serve) {

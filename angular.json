@@ -16,10 +16,6 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "customWebpackConfig": {
-              "path": "./tools/extra-webpack.config.js",
-              "replaceDuplicatePlugins": true
-            },
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -32,9 +28,9 @@
               "src/index.html",
               "src/main.electron.js",
               "src/loader.js",
-              "src/env.avd",
+              "src/engine.json",
               "src/data",
-              "src/favicon.ico",
+              "src/favicon.ico"
             ],
             "styles": ["src/styles.scss"],
             "scripts": [
@@ -50,10 +46,14 @@
                   "with": "src/environments/desktop.production.ts"
                 }
               ],
+              "customWebpackConfig": {
+                "path": "./tools/webpack.desktop.config.js",
+                "replaceDuplicatePlugins": true
+              },
               "outputPath": "dist/desktop",
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -68,7 +68,10 @@
                   "with": "src/environments/desktop.ts"
                 }
               ],
-              "outputPath": "dist/desktop",
+              "customWebpackConfig": {
+                "path": "./tools/webpack.desktop.config.js"
+              },
+              "outputPath": "dist/desktop-dev",
               "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
@@ -86,25 +89,31 @@
                   "with": "src/environments/browser.production.ts"
                 }
               ],
+              "customWebpackConfig": {
+                "path": "./tools/webpack.browser.config.js"
+              },
               "outputPath": "dist/browser",
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "aot": false,
+              "extractLicenses": false,
+              "vendorChunk": true,
+              "buildOptimizer": false
             },
             "browser-dev": {
-              // "fileReplacements": [
-              //   {
-              //     "replace": "src/environments/index.ts",
-              //     "with": "src/environments/browser.production.ts"
-              //   }
-              // ],
-              "outputPath": "dist/browser",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/index.ts",
+                  "with": "src/environments/browser.ts"
+                }
+              ],
+              "customWebpackConfig": {
+                "path": "./tools/webpack.browser.config.js"
+              },
+              "outputPath": "dist/browser-dev",
               "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
@@ -114,25 +123,6 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
-          "options": {
-            "browserTarget": "AVGPlus:build",
-            "customWebpackConfig": {
-              "path": "./tools/extra-webpack.config.js",
-              "replaceDuplicatePlugins": true
-            },
-          },
-          "configurations": {
-            "debug": {
-              "browserTarget": "AVGPlus:build:browser-dev",
-              "optimization": false,
-              "sourceMap": true,
-              "aot": false,
-              "vendorChunk": false
             }
           }
         }
