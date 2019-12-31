@@ -1,7 +1,7 @@
 import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 
 const characterLeaveAnimationSlot: SpriteAnimationMacro = {
-  totalDuration: 800,
+  totalDuration: 500,
   timeline: [
     {
       alpha: 0
