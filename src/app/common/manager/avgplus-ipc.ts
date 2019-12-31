@@ -1,7 +1,9 @@
+import { EngineAPI_Flow } from "./../../../engine/scripting/exports/flow";
 import Postmate from "postmate";
 import { Router } from "@angular/router";
 import { AVGGame } from "engine/core/game";
 import { AVGStory } from "engine/scripting/story";
+import { Sandbox } from 'engine/core/sandbox';
 
 export class AVGPlusIPC {
   private static _parent;
@@ -15,12 +17,14 @@ export class AVGPlusIPC {
   public static init(router: Router) {
     const handshake = new Postmate.Model({
       AVGPlusIPC_ReloadPlayer: data => {
+        console.log("Received IPC Message (AVGPlusIPC_ReloadPlayer): ", data);
+
         window.location.reload();
       },
-      AVGPlusIPC_RunStory: data => {
-        AVGGame._entryStory = new AVGStory();
-        AVGGame._entryStory.loadFromString(data.data.script);
-        AVGGame._entryStory.run();
+      AVGPlusIPC_RunStory: async data => {
+        console.log("Received IPC Message (AVGPlusIPC_RunStory): ", data);
+
+        await EngineAPI_Flow.executeScript(data.data.script);
       }
     });
 
