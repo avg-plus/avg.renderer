@@ -6,7 +6,6 @@ import { SelectedDialogueChoice } from "engine/scripting/api/api-dialogue-choice
 
 export class Sandbox {
   public static console = console;
-  public static storyQueue: AVGStory[] = [];
 
   public $data = (global["$data"] = {});
   // public $global = (global["$global"] = {});
