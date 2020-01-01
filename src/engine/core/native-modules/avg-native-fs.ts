@@ -15,7 +15,7 @@ export class AVGNativeFS {
     let dirname = window["__dirname"];
 
     if (PlatformService.isDesktop()) {
-      if (PlatformService.isWindowsDesktop() && dirname.indexOf("\\") !== -1) {
+      if (PlatformService.runOnWindows() && dirname.indexOf("\\") !== -1) {
         dirname = dirname.replace(/\\/g, "/");
       }
       return dirname;

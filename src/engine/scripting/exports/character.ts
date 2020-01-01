@@ -65,7 +65,9 @@ export class EngineAPI_Character extends AVGExportedAPI {
       let model = new APICharacter();
       model.isAsync = arguments[arguments.length - 1] === "__async_call__";
       model.name = super.validateImageID(v);
-      model.data.animation = super.validateSpriteAnimationMacro(animation);
+      if (animation) {
+        model.data.animation = super.validateSpriteAnimationMacro(animation);
+      }
 
       const proxy = APIManager.Instance.getImpl(APICharacter.name, OP.HideCharacter);
       await proxy.runner(<APICharacter>model);

@@ -49,7 +49,7 @@ import { HTMLWidgetScriptingHandler } from "app/scripting-handlers/html-widget-h
   templateUrl: "./widget-layer.component.html",
   entryComponents: [
     TextWidgetComponent,
-    ImageWidgetComponent,
+    // ImageWidgetComponent,
     HtmlWidgetComponent
   ],
   styleUrls: ["./widget-layer.component.scss"]

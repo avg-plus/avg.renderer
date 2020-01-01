@@ -100,7 +100,7 @@
               "namedChunks": false,
               "aot": false,
               "extractLicenses": false,
-              "vendorChunk": true,
+              "vendorChunk": false,
               "buildOptimizer": false
             },
             "browser-dev": {

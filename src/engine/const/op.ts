@@ -31,6 +31,7 @@ export class OP {
 
   public static Wait = "Wait";
   public static CallScript = "CallScript";
+  public static ExecuteScript = "ExecuteScript";
   public static PlayEffect = "PlayEffect";
   public static StopEffect = "StopEffect";
   public static GotoTitleView = "GotoTitleView";

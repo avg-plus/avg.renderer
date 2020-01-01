@@ -41,31 +41,12 @@ export class EngineAPI_Text extends AVGExportedAPI {
     const _show = async (content: string, showOptions: Dialogue) => {
       console.log("first model options", model);
 
-      // paramCompatible<APIDialogue, Dialogue>(model, showOptions, {
-      //   field: "text",
-      //   value: content
-      // });
-
-      // model.data.text = content;
       model.data = mergeDeep(model.data, showOptions);
-      // Object.assign(model.data, showOptions);
-
-      // if (model.data.character && model.data.character.avatar && model.data.character.avatar.file) {
-      //   if (originAvatarFile === "") {
-      //     originAvatarFile = model.data.character.avatar.file;
-      //   }
-
-      //   const fullpath = ResourceData.from(originAvatarFile, ResourcePath.Characters).filename;
-
-      //   model.data.character.avatar.file = fullpath;
-      // }
-
       console.log("model options", model);
 
       const proxy = APIManager.Instance.getImpl(APIDialogue.name, OP.ShowText);
       proxy && (await proxy.runner(<APIDialogue>model));
     };
-    // options = mergeDeep(new Dialogue(), options);
 
     if (Array.isArray(text)) {
       for (let i = 0; i < text.length; ++i) {

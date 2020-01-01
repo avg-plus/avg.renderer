@@ -34,16 +34,16 @@ import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/
 @NgModule({
   declarations: [
     AppComponent,
-    TitleMenuComponent,
-    TitleMenuItemComponent,
-    TransitionLayerComponent,
+    // TitleMenuComponent,
+    // TitleMenuItemComponent,
+    // TransitionLayerComponent,
     MainSceneComponent,
     DialogueBoxComponent,
     WidgetLayerComponent,
     TextWidgetComponent,
-    ImageWidgetComponent,
+    // ImageWidgetComponent,
     HtmlWidgetComponent,
-    LoadingLayerComponent,
+    // LoadingLayerComponent,
     VariableInputComponent,
     GameToolbarComponent
   ],
@@ -51,7 +51,7 @@ import { HtmlWidgetComponent } from "./components/widget-layer/widget-component/
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    // BrowserAnimationsModule
   ],
   providers: [
     ElectronService,

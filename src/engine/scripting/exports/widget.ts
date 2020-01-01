@@ -25,6 +25,7 @@ import { Sandbox } from "../../core/sandbox";
 import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 import { TransformConverter } from "engine/core/transform-converter";
 import { ScreenWidgetHtml } from "engine/data/screen-widget-html";
+import { SpriteWidgetManager } from 'engine/core/graphics/sprite-widget-manager';
 
 @APIExport("widget", EngineAPI_Widget)
 export class EngineAPI_Widget extends AVGExportedAPI {
@@ -112,6 +113,10 @@ export class EngineAPI_Widget extends AVGExportedAPI {
       OP.ShowImageWidget
     );
     return await proxy.runner(<APIScreenImage>model);
+  }
+
+  public static async getRenderer(name: string) {
+    return SpriteWidgetManager.getSprite(name);
   }
 
   public static async animateImage(name: string, options: ScreenImage) {
@@ -230,5 +235,5 @@ export class EngineAPI_Widget extends AVGExportedAPI {
     proxy && (await proxy.runner(<APIHtmlWidget>model));
   }
 
-  public static updateHTMLWidgetOption(name: string) {}
+  public static updateHTMLWidgetOption(name: string) { }
 }

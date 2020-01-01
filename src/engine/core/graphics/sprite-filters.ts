@@ -1,3 +1,5 @@
+import { ResourcePath } from "engine/core/resource";
+import { GameResource } from "./../resource";
 import * as PIXI from "pixi.js";
 import * as ExtraFilters from "pixi-filters";
 // import * as filters from "./filters";
@@ -39,6 +41,9 @@ export class SpriteFilters {
    * @memberof SpriteFilters
    */
   public setFilter(type: string, data: any) {
+
+    console.log("setFilter: ", type, data);
+
     let filterObject = this.filters.get(type);
     if (!filterObject) {
       filterObject = new SpriteFilterObject();
@@ -48,7 +53,14 @@ export class SpriteFilters {
       const filter = require("./filters/" + type).default;
 
       // 处理特殊参数，部分滤镜需要mapTexture
-      filterObject.instance = filter.instance(this.sprite, data && data.map ? data.map : null);
+
+
+      let dmap = null;
+      if (data && data.map) {
+        dmap = GameResource.getPath(ResourcePath.DMaps, data.map);
+      }
+
+      filterObject.instance = filter.instance(this.sprite, dmap);
       filterObject.instance.enabled = true;
     }
 

@@ -3,15 +3,15 @@ import { AVGGame } from "../game";
 
 export class PlatformService {
   private static _platform: GameRunningPlatform;
-  
+
   public static initFromWindow(window: any) {
     // Conditional imports
     const process = window.process;
     let platform = GameRunningPlatform.WebBrowser;
 
-    const isElectron = window && window.process && window.process.type;
+    const isDesktop = window && window.process && window.process.type;
 
-    if (isElectron) {
+    if (isDesktop) {
       if (process.platform === "linux") {
         platform = GameRunningPlatform.Linux;
       } else if (process.platform === "darwin") {
@@ -44,7 +44,11 @@ export class PlatformService {
     );
   }
 
-  public static isWindowsDesktop() {
-    return this._platform === GameRunningPlatform.Windows ;
+  public static runOnWindows() {
+    return this._platform === GameRunningPlatform.Windows;
+  }
+
+  public static runOnMacOS() {
+    return this._platform === GameRunningPlatform.MacOS;
   }
 }

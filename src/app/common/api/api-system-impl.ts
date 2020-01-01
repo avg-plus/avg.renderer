@@ -14,7 +14,7 @@ export class APISystemImpl extends Impl {
     const story = new AVGStory();
     await story.loadFromFile(script.scriptFile);
 
-    Sandbox.storyQueue.push(story);
+    // Sandbox.storyQueue.push(story);
     const result = await story.run();
     console.log("result:", result);
 
@@ -25,5 +25,16 @@ export class APISystemImpl extends Impl {
     // resolve("aiaiaiaia");
     // }, 1000);
     // });
+  }
+
+  @Impl.registerImpl(APICallScript, OP.ExecuteScript)
+  public static async executeScript(scriptUnit: AVGScriptUnit): Promise<any> {
+    const script = <APICallScript>scriptUnit;
+
+    const story = new AVGStory();
+    await story.loadFromString(script.code);
+
+    const result = await story.run();
+    console.log("result:", result);
   }
 }

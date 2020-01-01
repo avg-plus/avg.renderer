@@ -105,6 +105,7 @@ export class SpriteAnimateDirector {
     timeline.play();
 
     return new Promise((resolve, reject) => {
+
       // 异步模式或时间轴为空的情况下直接返回
       if (!waitingForFinished || frames.length === 0) {
         resolve();
@@ -249,7 +250,7 @@ export class SpriteAnimateDirector {
     target.change((...args) => {
       console.log("HTML Widget changed", args);
     });
-    timeline.eventCallback("onUpdate", () => {});
+    timeline.eventCallback("onUpdate", () => { });
 
     // 初始关键帧
     //  - 如初始关键帧为 null, 则从对象当前状态开始

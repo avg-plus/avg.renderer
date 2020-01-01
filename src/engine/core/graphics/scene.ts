@@ -350,7 +350,7 @@ export class Scene {
     // 添加到主容器
     this.mainContainer.addChild(sprite);
 
-    sprite.spriteDebugger = new SpriteDebugger(sprite);
+    // sprite.spriteDebugger = new SpriteDebugger(sprite);
 
     // 图层排序
     this.sortChildren();

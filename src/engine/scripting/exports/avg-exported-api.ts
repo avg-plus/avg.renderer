@@ -9,7 +9,7 @@ export const preExportedSet = new Set();
 
 export function APIExport(name: string, t: any) {
   console.log("APIExport " + name);
-  return function(constructor: Function) {
+  return function (constructor: Function) {
     preExportedSet.add({ name, t });
   };
 }
@@ -69,7 +69,7 @@ export class AVGExportedAPI {
     animation: SpriteAnimationMacro
   ) {
     return this.APIParametersValidate(
-      joi.object().keys({
+      joi.object().empty().optional().keys({
         totalDuration: joi
           .number()
           .optional()

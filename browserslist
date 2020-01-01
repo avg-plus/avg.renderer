@@ -6,8 +6,8 @@
 #   npx browserslist
 
 # not defaults
-> 0.5%
-not last 2 versions
-not Firefox ESR
-not dead
-not IE 9-11 # For IE 9-11 support, remove 'not'.
+#> 0.5%
+#not last 2 versions
+#not Firefox ESR
+#not dead
+#not IE 9-11 # For IE 9-11 support, remove 'not'.

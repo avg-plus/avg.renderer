@@ -12,6 +12,7 @@ export enum ResourcePath {
 
   // Graphics
   Backgrounds,
+  DMaps,
   Images,
   Characters,
   Masks,
@@ -76,6 +77,10 @@ export class GameResource {
       [
         ResourcePath.Images,
         AVGNativePath.join(this._assetsRoot, "graphics/images")
+      ],
+      [
+        ResourcePath.DMaps,
+        AVGNativePath.join(this._assetsRoot, "graphics/d-maps")
       ],
       [
         ResourcePath.Characters,

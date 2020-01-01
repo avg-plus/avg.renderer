@@ -8,9 +8,9 @@ export class AVGSpriteRenderer {
   public y: number = 0;
   public width: number = 0;
   public height: number = 0;
-  public scale: number = 1;
-  public scaleX: number = 1;
-  public scaleY: number = 1;
+  public scale: number;
+  public scaleX: number;
+  public scaleY: number;
   public skew: number = 0;
   public skewX: number = 0;
   public skewY: number = 0;
