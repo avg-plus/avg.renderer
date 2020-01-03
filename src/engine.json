@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
   "game_assets_root": "http://127.0.0.1:2336",
+=======
+  "game_assets_root": "http://127.0.0.1/tutorials",
+>>>>>>> framebuffer
   "engine_bundle_root": "data"
 }

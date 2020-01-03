@@ -56,7 +56,7 @@ export class HTMLWidgetScriptingHandler {
         .detach();
 
       shadow.innerHTML = `
-      <style>
+      <style id="${name}-style">
         #${name} {
           position: absolute;
           pointer-events: ${data.pointerEvents ? "all" : "none"};
@@ -122,6 +122,8 @@ export class HTMLWidgetScriptingHandler {
 
     const t = $(shadow).find(`#${name}`);
     t.remove();
+    const s = $(shadow).find(`#${name}-style`);
+    s.remove();
 
     scriptingContext.resolver();
   }
