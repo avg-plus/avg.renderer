@@ -5793,7 +5793,7 @@ di@^0.0.1:
   resolved "https://registry.npm.taobao.org/di/download/di-0.0.1.tgz#806649326ceaa7caa3306d75d985ea2748ba913c"
   integrity sha1-gGZJMmzqp8qjMG112YXqJ0i6kTw=
 
-diff@^3.1.0, diff@^3.2.0:
+diff@^3.2.0:
   version "3.5.0"
   resolved "https://registry.npm.taobao.org/diff/download/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
   integrity sha1-gAwN0eCov7yVg1wgKtIg/jF+WhI=
@@ -14890,7 +14890,7 @@ source-map-support@0.5.13:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
 
-source-map-support@^0.4.0, source-map-support@^0.4.15, source-map-support@~0.4.0:
+source-map-support@^0.4.15, source-map-support@~0.4.0:
   version "0.4.18"
   resolved "https://registry.npm.taobao.org/source-map-support/download/source-map-support-0.4.18.tgz?cache=0&sync_timestamp=1572389965235&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsource-map-support%2Fdownload%2Fsource-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
   integrity sha1-Aoam3ovkJkEzhZTpfM6nXwosWF8=
@@ -15309,7 +15309,7 @@ strip-indent@^1.0.0, strip-indent@^1.0.1:
   dependencies:
     get-stdin "^4.0.1"
 
-strip-json-comments@^2.0.0, strip-json-comments@^2.0.1, strip-json-comments@~2.0.1:
+strip-json-comments@^2.0.1, strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.npm.taobao.org/strip-json-comments/download/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
@@ -15910,23 +15910,7 @@ tryer@^1.0.1:
   resolved "https://registry.npm.taobao.org/tryer/download/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha1-8shUBoALmw90yfdGW4HqrSQSUvg=
 
-ts-node@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npm.taobao.org/ts-node/download/ts-node-3.1.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fts-node%2Fdownload%2Fts-node-3.1.0.tgz#a75ec5aeb48f3058b1b945dba765f1150ba88f8c"
-  integrity sha1-p17FrrSPMFixuUXbp2XxFQuoj4w=
-  dependencies:
-    arrify "^1.0.0"
-    chalk "^1.1.1"
-    diff "^3.1.0"
-    make-error "^1.1.1"
-    minimist "^1.2.0"
-    mkdirp "^0.5.1"
-    source-map-support "^0.4.0"
-    tsconfig "^6.0.0"
-    v8flags "^2.0.11"
-    yn "^2.0.0"
-
-ts-node@^8.5.2:
+ts-node@^8.5.2, ts-node@^8.5.4:
   version "8.5.4"
   resolved "https://registry.npm.taobao.org/ts-node/download/ts-node-8.5.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fts-node%2Fdownload%2Fts-node-8.5.4.tgz#a152add11fa19c221d0b48962c210cf467262ab2"
   integrity sha1-oVKt0R+hnCIdC0iWLCEM9GcmKrI=
@@ -15943,14 +15927,6 @@ ts-shader-loader@^1.0.5:
   integrity sha1-Xf+GClF5uQu0101CJlUZyYpavdI=
   dependencies:
     loader-utils "^1.1.0"
-
-tsconfig@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.npm.taobao.org/tsconfig/download/tsconfig-6.0.0.tgz#6b0e8376003d7af1864f8df8f89dd0059ffcd032"
-  integrity sha1-aw6DdgA9evGGT434+J3QBZ/80DI=
-  dependencies:
-    strip-bom "^3.0.0"
-    strip-json-comments "^2.0.0"
 
 tslib@1.10.0, tslib@^1.10.0, tslib@^1.7.1, tslib@^1.8.1, tslib@^1.9.0:
   version "1.10.0"
@@ -16436,7 +16412,7 @@ v8-compile-cache@2.0.3:
   resolved "https://registry.npm.taobao.org/v8-compile-cache/download/v8-compile-cache-2.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fv8-compile-cache%2Fdownload%2Fv8-compile-cache-2.0.3.tgz#00f7494d2ae2b688cfe2899df6ed2c54bef91dbe"
   integrity sha1-APdJTSritojP4omd9u0sVL75Hb4=
 
-v8flags@^2.0.11, v8flags@^2.0.2:
+v8flags@^2.0.2:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/v8flags/download/v8flags-2.1.1.tgz#aab1a1fa30d45f88dd321148875ac02c0b55e5b4"
   integrity sha1-qrGh+jDUX4jdMhFIh1rALAtV5bQ=
@@ -17470,11 +17446,6 @@ yeast@0.1.2:
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/yeast/download/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
   integrity sha1-AI4G2AlDIMNy28L47XagymyKxBk=
-
-yn@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npm.taobao.org/yn/download/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
-  integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
 yn@^3.0.0:
   version "3.1.1"

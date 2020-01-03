@@ -141,7 +141,7 @@
     "source-map-loader": "0.2.1",
     "style-loader": "0.18.2",
     "stylus-loader": "3.0.1",
-    "ts-node": "3.1.0",
+    "ts-node": "^8.5.4",
     "ts-shader-loader": "^1.0.5",
     "tslint": "5.4.3",
     "typescript": "3.5.3",

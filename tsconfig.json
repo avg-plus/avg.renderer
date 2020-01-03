@@ -22,5 +22,5 @@
     "lib": ["es5", "es6", "es7", "es2016", "esnext", "dom"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/node_modules/*", "**/dist/*", "**/app-builds/*"]
+  "exclude": ["**/node_modules/*", "**/dist/*", "**/tools/*", "**/app-builds/*"]
 }
