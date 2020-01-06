@@ -1,6 +1,6 @@
 {
   "name": "avg-plus",
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "Powerful AVG Engine",
   "homepage": "http://avg-engine.com",
   "author": {
@@ -86,6 +86,7 @@
     "babel-preset-react": "^6.24.1",
     "base-href-webpack-plugin": "^2.0.0",
     "codelyzer": "^5.0.1",
+    "commander": "^4.1.0",
     "compression-webpack-plugin": "1.1.12",
     "copy-webpack-plugin": "^4.5.2",
     "copyfiles": "1.2.0",
