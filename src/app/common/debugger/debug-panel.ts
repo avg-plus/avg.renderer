@@ -73,15 +73,15 @@ export class DebugPanel {
     this.particlesFolder
       .add({ 贴图: "" }, "贴图", {
         雨: AVGNativePath.join(
-          GameResource.getDataRoot(),
+          GameResource.getEngineDataRoot(),
           "effects/flake-texture/rain.png"
         ),
         雪: AVGNativePath.join(
-          GameResource.getDataRoot(),
+          GameResource.getEngineDataRoot(),
           "effects/flake-texture/snow.png"
         ),
         樱花: AVGNativePath.join(
-          GameResource.getDataRoot(),
+          GameResource.getEngineDataRoot(),
           "effects/flake-texture/sakura.png"
         )
       })

@@ -129,7 +129,12 @@ export class AVGNativeFS {
       return "";
     }
 
-    return response.data;
+    let data = response.data;
+    if (options && options.encoding) {
+      data = Buffer.from(response.data, 'binary').toString(options.encoding);;
+    }
+
+    return data;
   }
 
   public static readLocalStorage(

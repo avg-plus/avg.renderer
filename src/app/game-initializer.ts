@@ -92,9 +92,9 @@ export class GameInitializer implements CanActivate {
     DanmakuManager.initDanmaku();
   }
 
-  // Init engine settings
+  // Init engine environment settings
   public async initEngineSettings() {
-    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "/data/engine.json"));
+    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json"));
 
     EngineSettings.init(content);
   }
@@ -104,7 +104,7 @@ export class GameInitializer implements CanActivate {
     // Get current url params to get assets directory
     console.log("init resource", router.url);
 
-    // Read 'env.avd' to get game project dir and engine dir
+    // Read 'engine.json' to get game project dir and engine dir
     const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "engine.json"));
     const envData = JSON.parse(content);
 

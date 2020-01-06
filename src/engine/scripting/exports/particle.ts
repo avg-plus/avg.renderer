@@ -8,7 +8,8 @@ import { AVGNativePath } from "../../core/native-modules/avg-native-path";
 
 @APIExport("particle", EngineAPI_Particle)
 export class EngineAPI_Particle extends AVGExportedAPI {
-  public static async snow(params: DropFlakeParams) {
+  public static async snow(params: DropFlakeParams & { texture: string }) {
+
     const snowParams = Object.assign(
       {},
       {
@@ -33,11 +34,19 @@ export class EngineAPI_Particle extends AVGExportedAPI {
       params
     );
 
+
+    const defaultSnowTexture = AVGNativePath.join(
+      GameResource.getEngineDataRoot(),
+      "effects/flake-texture/snow.png"
+    );
+
+    if (!params.texture) {
+      // 默认用内置材质
+      snowParams.texture = defaultSnowTexture;
+    }
+
     await DropFlakeParticle.start(
-      AVGNativePath.join(
-        GameResource.getDataRoot(),
-        "./effects/flake-texture/snow.png"
-      ),
+      snowParams.texture,
       snowParams
     );
   }
@@ -74,14 +83,14 @@ export class EngineAPI_Particle extends AVGExportedAPI {
     console.log(
       "particle texture: ",
       AVGNativePath.join(
-        GameResource.getDataRoot(),
+        GameResource.getEngineDataRoot(),
         "./effects/flake-texture/snow.png"
       )
     );
 
     await DropFlakeParticle.start(
       AVGNativePath.join(
-        GameResource.getDataRoot(),
+        GameResource.getEngineDataRoot(),
         "effects/flake-texture/rain.png"
       ),
       snowParams

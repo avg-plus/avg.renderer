@@ -1,6 +1,3 @@
-// const fragment = require("./fragment.frag").default;
-// import { vertex } from "../tools";
-// import * as PIXI from "pixi.js";
 import * as $ from "jquery";
 
 import { ShaderProgram } from "../shader-program.js";
@@ -10,17 +7,17 @@ const vertex = require("./vertex.frag").default;
 const fragment = require("./fragment.frag").default;
 
 export class DropFlakeParams {
-  count? = 5000; // 粒子数量
-  alpha? = 0; // 透明系数
-  depth? = 30; // 镜头深度
-  gravity? = 100; // 下坠重力
-  rotation? = {
+  count?= 5000; // 粒子数量
+  alpha?= 0; // 透明系数
+  depth?= 30; // 镜头深度
+  gravity?= 100; // 下坠重力
+  rotation?= {
     enabled: false,
     randomize: true,
     angle: 2,
     speed: 10
   };
-  wind? = {
+  wind?= {
     enabled: false,
     force: 0.1, // 风力
     min: 0.1,
@@ -45,18 +42,21 @@ export class DropFlakeParticle {
     let currentDirection = 0;
 
     const parent = document.getElementById("avg-particle-viewport");
-    // parent.innerHTML = "";
 
     var cNode = parent.cloneNode(false);
     parent.parentNode.replaceChild(cNode, parent);
 
-    const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
+
+    // console.log("Loading Texture: ", texture);
+    // const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
+    // console.log("Texture: ", flakeTexture);
 
     delete DropFlakeParticle.program;
 
     const options = {
       depthTest: false, //打开镜头深度调试，不同深度的粒子会互相覆盖
-      texture: `data:image/png;base64,${flakeTexture}`,
+      // texture: `data:image/png;base64,${flakeTexture}`,
+      texture: texture,
       params: DropFlakeParticle.params,
       uniforms: {
         worldSize: { type: "vec3", value: [0, 0, 0] },

@@ -105,7 +105,7 @@ export class GameResource {
     return this._assetsRoot;
   }
 
-  public static getDataRoot(): string {
+  public static getEngineDataRoot(): string {
     return this._dataRoot;
   }
 

@@ -53,8 +53,6 @@ export class SpriteFilters {
       const filter = require("./filters/" + type).default;
 
       // 处理特殊参数，部分滤镜需要mapTexture
-
-
       let dmap = null;
       if (data && data.map) {
         dmap = GameResource.getPath(ResourcePath.DMaps, data.map);
