@@ -95,7 +95,7 @@ Example config for browser:
 Example config for PC (You can also use a relative path):
 ```json
 {
-  "game_assets_root": "D:\GameProjects\hello-avg",
+  "game_assets_root": "D:\\GameProjects\\hello-avg",
   "engine_bundle_root": "data"
 }
 ```
@@ -136,3 +136,17 @@ If your game assets folder is addressable, you can see a game window launched an
 - [ ] Save & Load
 - [ ] UI Designer
 - [ ] Packaging Tools
+
+
+## Buiding Problems
+
+- `electron` & `node-sass` install failed or takes a long time
+Due to `electron-prebuilt` and `node-sass` deploy on Github, it causing a problem of downloading. Especially in China, it will take a long time when you run `yarn`. To resolve the problem, you could use the following solution:
+
+```
+ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/" yarn add electron -D
+SASS_BINARY_SITE=https://npm.taobao.org/mirrors/node-sass/ yarn add node-sass -D
+```
+
+This changes the downloading mirror to `Taobao` in China. 
+But it should be noted this solution is **different** from changing the registry of `yarn`.

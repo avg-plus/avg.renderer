@@ -1,6 +1,6 @@
 {
   "name": "avg-plus",
-  "version": "0.1.13",
+  "version": "0.1.22",
   "description": "Powerful AVG Engine",
   "homepage": "http://avg-engine.com",
   "author": {
@@ -80,6 +80,7 @@
     "@types/jquery": "^3.3.2",
     "@types/node": "7.0.7",
     "@types/pixi.js": "^4.8.8",
+    "@types/semver": "^6.2.0",
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "adm-zip": "^0.4.13",
@@ -142,6 +143,7 @@
     "raw-loader": "0.5.1",
     "sass-loader": "6.0.6",
     "script-loader": "0.7.0",
+    "semver": "^7.1.1",
     "shelljs": "^0.7.8",
     "source-map-loader": "0.2.1",
     "style-loader": "0.18.2",

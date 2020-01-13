@@ -1577,6 +1577,13 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@types/adm-zip@^0.4.32":
+  version "0.4.32"
+  resolved "https://registry.npm.taobao.org/@types/adm-zip/download/@types/adm-zip-0.4.32.tgz#6de01309af60677065d2e52b417a023303220931"
+  integrity sha1-beATCa9gZ3Bl0uUrQXoCMwMiCTE=
+  dependencies:
+    "@types/node" "*"
+
 "@types/bluebird@3.5.8":
   version "3.5.8"
   resolved "https://registry.npm.taobao.org/@types/bluebird/download/@types/bluebird-3.5.8.tgz#242a83379f06c90f96acf6d1aeab3af6faebdb98"
@@ -1623,6 +1630,13 @@
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha1-KGLz9Yqaf3w+eNefEw3U1xwlwqc=
+
+"@types/fs-extra@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.npm.taobao.org/@types/fs-extra/download/@types/fs-extra-8.0.1.tgz#a2378d6e7e8afea1564e44aafa2e207dadf77686"
+  integrity sha1-ojeNbn6K/qFWTkSq+i4gfa33doY=
+  dependencies:
+    "@types/node" "*"
 
 "@types/glob@*", "@types/glob@^7.1.1":
   version "7.1.1"
@@ -1714,6 +1728,11 @@
   version "2.53.43"
   resolved "https://registry.npm.taobao.org/@types/selenium-webdriver/download/@types/selenium-webdriver-2.53.43.tgz#2de3d718819bc20165754c4a59afb7e9833f6707"
   integrity sha1-LePXGIGbwgFldUxKWa+36YM/Zwc=
+
+"@types/semver@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.npm.taobao.org/@types/semver/download/@types/semver-6.2.0.tgz#d688d574400d96c5b0114968705366f431831e1a"
+  integrity sha1-1ojVdEANlsWwEUlocFNm9DGDHho=
 
 "@types/sizzle@*":
   version "2.3.2"
@@ -2164,7 +2183,7 @@ adm-zip@0.4.4:
   resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.4.tgz#a61ed5ae6905c3aea58b3a657d25033091052736"
   integrity sha1-ph7VrmkFw66lizplfSUDMJEFJzY=
 
-adm-zip@^0.4.7, adm-zip@^0.4.9:
+adm-zip@^0.4.13, adm-zip@^0.4.7, adm-zip@^0.4.9:
   version "0.4.13"
   resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.13.tgz#597e2f8cc3672151e1307d3e95cddbc75672314a"
   integrity sha1-WX4vjMNnIVHhMH0+lc3bx1ZyMUo=
@@ -4767,6 +4786,11 @@ commander@^2.11.0, commander@^2.18.0, commander@^2.19.0, commander@^2.20.0, comm
   version "2.20.3"
   resolved "https://registry.npm.taobao.org/commander/download/commander-2.20.3.tgz?cache=0&sync_timestamp=1573464028535&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=
+
+commander@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-4.1.0.tgz#545983a0603fe425bc672d66c9e3c89c42121a83"
+  integrity sha1-VFmDoGA/5CW8Zy1myePInEISGoM=
 
 commander@~2.1.0:
   version "2.1.0"
@@ -14500,6 +14524,11 @@ semver@^4.1.0, semver@~4.3.3:
   version "4.3.6"
   resolved "https://registry.npm.taobao.org/semver/download/semver-4.3.6.tgz?cache=0&sync_timestamp=1565627380363&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsemver%2Fdownload%2Fsemver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
   integrity sha1-MAvG4OhjdPe6YQaLWx7NV/xlMto=
+
+semver@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.npm.taobao.org/semver/download/semver-7.1.1.tgz#29104598a197d6cbe4733eeecbe968f7b43a9667"
+  integrity sha1-KRBFmKGX1svkcz7uy+lo97Q6lmc=
 
 semver@~2.2.1:
   version "2.2.1"
