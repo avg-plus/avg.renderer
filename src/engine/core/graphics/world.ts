@@ -9,7 +9,7 @@ import { DropFlakeParticle } from "./shaders/drop-flake/drop-flake";
 import { AVGNativePath } from "../native-modules/avg-native-path";
 import { GameResource } from "../resource";
 import { ScalingAdaptor } from "./scaling-adaptor";
-import ThermalDistortFilter from "./filters/thermal-distort"
+import FlameFilter from "./filters/flame"
 
 class World {
   scenes: Scene[] = [];
@@ -47,7 +47,7 @@ class World {
     });
 
     this.adaptor = new ScalingAdaptor();
-    this.filter = ThermalDistortFilter;
+    this.filter = FlameFilter;
     this.app.stage.filters = [this.filter.instance()];
 
     // Show FPSPanel
