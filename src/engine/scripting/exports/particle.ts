@@ -45,14 +45,16 @@ export class EngineAPI_Particle extends AVGExportedAPI {
       snowParams.texture = defaultSnowTexture;
     }
 
-    await DropFlakeParticle.start(
-      snowParams.texture,
-      snowParams
-    );
+    const particle = new DropFlakeParticle(snowParams.texture, snowParams);
+    particle.start();
+    // await DropFlakeParticle.start(
+    //   snowParams.texture,
+    //   snowParams
+    // );
   }
 
   public static async stop() {
-    await DropFlakeParticle.stop();
+    // await DropFlakeParticle.stop();
   }
 
   public static async rain(params: DropFlakeParams) {

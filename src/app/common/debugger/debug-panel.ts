@@ -86,73 +86,73 @@ export class DebugPanel {
         )
       })
       .onChange(v => {
-        DropFlakeParticle.start(v, DropFlakeParticle.params);
+        // DropFlakeParticle.start(v, DropFlakeParticle.params);
       });
 
-    [
-      this.particlesFolder
-        .add(DropFlakeParticle.params, "count", 1, 40000, 1)
-        .name("粒子数量"),
-      this.particlesFolder
-        .add(DropFlakeParticle.params, "alpha", 0, 1, 0.01)
-        .name("透明度"),
-      this.particlesFolder
-        .add(DropFlakeParticle.params, "depth", -80, 80, 0.1)
-        .name("镜头深度"),
-      this.particlesFolder
-        .add(DropFlakeParticle.params, "gravity", -500, 500, 0.01)
-        .name("下坠重力")
-    ].map(v => {
-      v.onChange(value => {
-        window.dispatchEvent(new Event("resize"));
-        DropFlakeParticle.update(DropFlakeParticle.params);
-      });
-    });
+    // [
+    //   this.particlesFolder
+    //     .add(DropFlakeParticle.params, "count", 1, 40000, 1)
+    //     .name("粒子数量"),
+    //   this.particlesFolder
+    //     .add(DropFlakeParticle.params, "alpha", 0, 1, 0.01)
+    //     .name("透明度"),
+    //   this.particlesFolder
+    //     .add(DropFlakeParticle.params, "depth", -80, 80, 0.1)
+    //     .name("镜头深度"),
+    //   this.particlesFolder
+    //     .add(DropFlakeParticle.params, "gravity", -500, 500, 0.01)
+    //     .name("下坠重力")
+    // ].map(v => {
+    //   v.onChange(value => {
+    //     window.dispatchEvent(new Event("resize"));
+    //     DropFlakeParticle.update(DropFlakeParticle.params);
+    //   });
+    // });
 
-    const rotationFolder = this.particlesFolder.addFolder("旋转");
+    // const rotationFolder = this.particlesFolder.addFolder("旋转");
 
-    [
-      rotationFolder
-        .add(DropFlakeParticle.params.rotation, "enabled", true)
-        .name("转转转"),
-      rotationFolder
-        .add(DropFlakeParticle.params.rotation, "randomize", true)
-        .name("随机因素"),
-      rotationFolder
-        .add(DropFlakeParticle.params.rotation, "angle", 0.1, 100, 0.1)
-        .name("旋转角度"),
-      rotationFolder
-        .add(DropFlakeParticle.params.rotation, "speed", 0.1, 100, 0.1)
-        .name("旋转速度")
-    ].map(v => {
-      v.onChange(value => {
-        window.dispatchEvent(new Event("resize"));
-        DropFlakeParticle.update(DropFlakeParticle.params);
-      });
-    });
+    // [
+    //   rotationFolder
+    //     .add(DropFlakeParticle.params.rotation, "enabled", true)
+    //     .name("转转转"),
+    //   rotationFolder
+    //     .add(DropFlakeParticle.params.rotation, "randomize", true)
+    //     .name("随机因素"),
+    //   rotationFolder
+    //     .add(DropFlakeParticle.params.rotation, "angle", 0.1, 100, 0.1)
+    //     .name("旋转角度"),
+    //   rotationFolder
+    //     .add(DropFlakeParticle.params.rotation, "speed", 0.1, 100, 0.1)
+    //     .name("旋转速度")
+    // ].map(v => {
+    //   v.onChange(value => {
+    //     window.dispatchEvent(new Event("resize"));
+    //     DropFlakeParticle.update(DropFlakeParticle.params);
+    //   });
+    // });
 
-    const windFolder = this.particlesFolder.addFolder("风力");
+    // const windFolder = this.particlesFolder.addFolder("风力");
 
-    [
-      windFolder
-        .add(DropFlakeParticle.params.wind, "enabled", true)
-        .name("吹吹吹"),
-      windFolder
-        .add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01)
-        .name("风力"),
-      windFolder
-        .add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01)
-        .name("平滑度")
-    ].map(v => {
-      v.onChange(value => {
-        window.dispatchEvent(new Event("resize"));
-        DropFlakeParticle.update(DropFlakeParticle.params);
-      });
-    });
+    // [
+    //   windFolder
+    //     .add(DropFlakeParticle.params.wind, "enabled", true)
+    //     .name("吹吹吹"),
+    //   windFolder
+    //     .add(DropFlakeParticle.params.wind, "force", -5, 5, 0.01)
+    //     .name("风力"),
+    //   windFolder
+    //     .add(DropFlakeParticle.params.wind, "easing", 0.01, 5, 0.01)
+    //     .name("平滑度")
+    // ].map(v => {
+    //   v.onChange(value => {
+    //     window.dispatchEvent(new Event("resize"));
+    //     DropFlakeParticle.update(DropFlakeParticle.params);
+    //   });
+    // });
 
     this.particlesFolder.open();
-    windFolder.open();
-    rotationFolder.open();
+    // windFolder.open();
+    // rotationFolder.open();
   }
 
   public static setSpritePanel(sprite: Sprite) {
