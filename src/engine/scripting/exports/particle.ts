@@ -16,7 +16,7 @@ export class EngineAPI_Particle extends AVGExportedAPI {
         count: 5000, // 粒子数量
         alpha: 0.6, // 透明系数
         depth: 80, // 镜头深度
-        gravity: 40, // 下坠重力
+        gravity: 140, // 下坠重力
         rotation: {
           enabled: true,
           randomize: true,
@@ -25,9 +25,9 @@ export class EngineAPI_Particle extends AVGExportedAPI {
         },
         wind: {
           enabled: true,
-          force: -0.05, // 风力
-          min: -0.2,
-          max: 0.1,
+          force: -1.05, // 风力
+          min: -10.2,
+          max: 1.1,
           easing: 0.1
         }
       },

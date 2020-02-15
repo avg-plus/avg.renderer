@@ -57,13 +57,6 @@ export class DropFlakeParticle extends ShaderProgram {
     var cNode = parent.cloneNode(false);
     parent.parentNode.replaceChild(cNode, parent);
 
-
-    // console.log("Loading Texture: ", texture);
-    // const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
-    // console.log("Texture: ", flakeTexture);
-
-    // delete DropFlakeParticle.program;
-
     const options: any = {
       depthTest: false, //打开镜头深度调试，不同深度的粒子会互相覆盖
       // texture: `data:image/png;base64,${flakeTexture}`,
@@ -102,11 +95,15 @@ export class DropFlakeParticle extends ShaderProgram {
     }
 
     this.currentForce += (this.currentDirection - wind.force) * wind.easing;
-    this.currentWindForce += wind.force * (delta * 0.2);
-
+    this.currentWindForce += wind.force * (delta * 10);
 
     this.programOptions.uniforms.wind = this.currentWindForce;
     this.programOptions.uniforms.gravity = this.params.gravity;
+
+
+    // this.programOptions.uniforms.speed = 100;
+
+    // console.log("onUpdate ", this.programOptions, this.currentWindForce);
 
     // console.log(`onUpdate: ${delta} - `, this.programOptions)
     // this.programOptions.uniforms.wind = this.currentWindForce * 2;
@@ -117,7 +114,7 @@ export class DropFlakeParticle extends ShaderProgram {
 
   }
 
-  onResize(w: number, h: number, dpi: number) {
+  onInit(w: number, h: number, dpi: number) {
 
     const position = [],
       color = [],
@@ -131,6 +128,7 @@ export class DropFlakeParticle extends ShaderProgram {
     const width = (w / h) * height;
 
     Array.from({ length: (w / h) * this.params.count }, snowflake => {
+
       position.push(
         -width + Math.random() * width * 2,
         -height + Math.random() * height * 2,
@@ -139,9 +137,9 @@ export class DropFlakeParticle extends ShaderProgram {
 
       speed.push(
         // 0, 0, 0 )
-        1 + Math.random(),
-        1 + Math.random(),
-        Math.random() * 100
+        12 + Math.random(),
+        -42 + Math.random(),
+        Math.random() * 1000
       ); // x, y, sinusoid
 
       const r = this.params.rotation;
@@ -165,6 +163,10 @@ export class DropFlakeParticle extends ShaderProgram {
 
     this.programOptions.uniforms.worldSize = [width, height, this.params.depth];
 
+
+    console.log("onResize", this.programOptions.buffers);
+
+    // 先行初始化为数组，之后再创建为 GLBufferData
     this.programOptions.buffers.position = position;
     this.programOptions.buffers.color = color;
     this.programOptions.buffers.rotation = rotation;

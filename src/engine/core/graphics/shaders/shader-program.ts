@@ -1,6 +1,24 @@
 const defaultVertex = require("./default-vert.frag").default;
 const defaultFragment = require("./default-fragment.frag").default;
 
+interface GLBufferData {
+  size: number;
+  data: any[];
+}
+
+interface GLBuffers {
+  glBuffer: any;    // For WebGL Buffer
+
+  [key: string]: any;
+
+  // position: GLBufferData;
+  // color: GLBufferData;
+  // rotation: GLBufferData;
+  // size: GLBufferData;
+  // speed: GLBufferData;
+}
+
+
 export class ShaderOptions {
   antialias = false;
   depthTest = false;
@@ -10,24 +28,23 @@ export class ShaderOptions {
   vertex: string;
   fragment: string;
   uniforms: any;
-  buffers: any;
+  buffers: GLBuffers;
   camera: any;
   texture: any;
   // onUpdate: (delta: number) => void;
   // onResize: (w: number, h: number, dpi: number) => void;
 }
 
-interface GLBuffers {
-  glBuffer: any;
-}
-
 abstract class ShaderProgram {
 
   protected programOptions: ShaderOptions;
-  protected data: Partial<{
+  protected data: {
     uniforms: any;
     buffers: any;
-  }> = {};
+  } = {
+      uniforms: {},
+      buffers: null
+    };
 
 
   gl: WebGLRenderingContext;
@@ -80,6 +97,7 @@ abstract class ShaderProgram {
       options.buffers
     );
 
+    console.log("pass in buffers: ", options.buffers)
     this.programOptions.buffers = Object.assign(
       {
         position: { size: 3, data: [] },
@@ -90,6 +108,8 @@ abstract class ShaderProgram {
       },
       options.buffers
     );
+    console.log("merged buffers: ", this.programOptions.buffers)
+
 
     this.programOptions.camera = Object.assign(
       {
@@ -182,7 +202,7 @@ abstract class ShaderProgram {
     // this.programOptions.onResize(width, height, dpi);
 
     // 调用抽象方法
-    this.onResize(width, height, dpi);
+    this.onInit(width, height, dpi);
   }
 
   private setProjection(aspect) {
@@ -343,9 +363,11 @@ abstract class ShaderProgram {
     });
   }
 
-  private createBuffers(data: any) {
+  private createBuffers(data: GLBuffers) {
     const buffers = (this.data.buffers = data);
-    const values = (this.programOptions.buffers = {});
+
+    this.programOptions.buffers = <any>{};
+    const values = this.programOptions.buffers;
 
     console.log("createBuffers", buffers);
 
@@ -408,6 +430,14 @@ abstract class ShaderProgram {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers[name].buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+  }
+
+  toggleTestBuffer() {
+    // const speedBuffer = this.createBuffer("speed", 3);
+    // this.setBuffer("speed", [1, 0, 1])
+
+    this.setUniform("speed", 100);
+
   }
 
 
@@ -510,8 +540,6 @@ abstract class ShaderProgram {
       gl.drawArrays(gl.POINTS, 0, this.count);
     }
 
-
-
     // 调用抽象方法
     this.onUpdate(delta);
 
@@ -523,7 +551,7 @@ abstract class ShaderProgram {
 
   // 子类需要重写以下抽象方法
   protected abstract onUpdate(delta: number): void;
-  protected abstract onResize(width: number, height: number, dpi: number): void;
+  protected abstract onInit(width: number, height: number, dpi: number): void;
 
 }
 
