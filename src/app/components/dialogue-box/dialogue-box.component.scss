@@ -53,7 +53,6 @@ $DIALOGUE_BOX_HEIGHT: 160px;
     @include TextStrokeNormal;
     @include H2;
 
-    // z-index: 900;
     z-index: $_LAYER_INDEX_DIALOGUE_BOX + 1;
     position: fixed;
     left: 50%;

@@ -8,6 +8,7 @@ import { APICharacter } from "../api/api-character";
 import { APIManager } from "../api-manager";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
+import { SpriteFilter } from 'engine/data/sprite-renderer';
 
 @APIExport("character", EngineAPI_Character)
 export class EngineAPI_Character extends AVGExportedAPI {
@@ -74,7 +75,26 @@ export class EngineAPI_Character extends AVGExportedAPI {
     });
   }
 
-  public static async setFilter(name: string, filterType: string, data: any) {
-    SpriteWidgetManager.setSpriteFilters(name, filterType, data);
+  // public static async setFilter(name: string, filterType: string, data: any) {
+  //   SpriteWidgetManager.setSpriteFilters(name, filterType, data);
+  // }
+
+  public static async filter(name: string, filters: SpriteFilter[]) {
+    let model = new APICharacter();
+    model.name = name;
+    model.data.renderer.filters = super.validateFilterList(filters);
+
+    let proxy = APIManager.Instance.getImpl(APICharacter.name, OP.SetCharacterFilter);
+
+    await proxy.runner(<APICharacter>model);
+  }
+
+  public static async clearFilters(name: string) {
+    let model = new APICharacter();
+    model.name = name;
+
+    let proxy = APIManager.Instance.getImpl(APICharacter.name, OP.ClearCharacterFilter);
+
+    await proxy.runner(<APICharacter>model);
   }
 }

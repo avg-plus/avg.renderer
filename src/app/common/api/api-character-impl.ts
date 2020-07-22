@@ -40,4 +40,23 @@ export class APICharacterImpl extends Impl {
       ScriptingDispatcher.dispatch(OP.HideCharacter, script, resolve);
     });
   }
+
+  @Impl.registerImpl(APICharacter, OP.SetCharacterFilter)
+  public static op_set_character_filter(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APICharacter>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.SetCharacterFilter, script, resolve);
+    });
+  }
+
+  @Impl.registerImpl(APICharacter, OP.ClearCharacterFilter)
+  public static op_clear_character_filters(scriptUnit: AVGScriptUnit): Promise<AVGScriptUnit> {
+    const script = <APICharacter>scriptUnit;
+
+    return new Promise((resolve, reject) => {
+      ScriptingDispatcher.dispatch(OP.ClearCharacterFilter, script, resolve);
+    });
+  }
+
 }

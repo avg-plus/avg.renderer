@@ -134,4 +134,24 @@ export class CharacterScriptingHandler {
   //   await SpriteWidgetManager.removeSpriteWidget(api.name, slot, !api.isAsync);
   //   scriptingContext.resolver();
   // }
+
+  public static async handleSetCharacterFilter(scriptingContext: ScriptingContext) {
+    const api = <APICharacter>scriptingContext.api;
+
+    for (let i = 0; i < api.data.renderer.filters.length; ++i) {
+      const filter = api.data.renderer.filters[i];
+
+      await SpriteWidgetManager.setSpriteFilters(api.name, filter.name, filter.data);
+    }
+
+    scriptingContext.resolver();
+  }
+
+  public static async handleClearCharacterFilter(scriptingContext: ScriptingContext) {
+    const api = <APICharacter>scriptingContext.api;
+
+    await SpriteWidgetManager.clearSpriteFilters(api.name);
+
+    scriptingContext.resolver();
+  }
 }

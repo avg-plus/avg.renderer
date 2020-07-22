@@ -70,7 +70,7 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Init
@@ -142,18 +142,22 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
             CharacterScriptingHandler.handleHideCharacter(scriptingContext);
           } else if (scriptingContext.op === OP.AnimateCharacter) {
             CharacterScriptingHandler.handleAnimateCharacter(scriptingContext);
+          } else if (scriptingContext.op === OP.SetCharacterFilter) {
+            await CharacterScriptingHandler.handleSetCharacterFilter(scriptingContext);
+          } else if (scriptingContext.op === OP.ClearCharacterFilter) {
+            await CharacterScriptingHandler.handleClearCharacterFilter(scriptingContext);
           }
         } else if (scriptingContext.api instanceof APIScene) {
           if (scriptingContext.op === OP.LoadScene) {
             await SceneHandler.handleLoadScene(scriptingContext);
           } else if (scriptingContext.op === OP.RemoveScene) {
             await SceneHandler.handleRemoveScene(scriptingContext);
-          } else if (scriptingContext.op === OP.SetSceneFilter) {
-            await SceneHandler.handleSetSceneFilter(scriptingContext);
           } else if (scriptingContext.op === OP.AnimateScene) {
             await SceneHandler.handleAnimateScene(scriptingContext);
+          } else if (scriptingContext.op === OP.SetSceneFilter) {
+            await SceneHandler.handleSetSceneFilter(scriptingContext);
           } else if (scriptingContext.op === OP.ClearSceneFilter) {
-            await SceneHandler.handleClearFilters(scriptingContext);
+            await SceneHandler.handleClearSceneFilters(scriptingContext);
           }
         } else if (scriptingContext.api instanceof APIEffect) {
           // if (scriptingContext.op === OP.PlayEffect) {

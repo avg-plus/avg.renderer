@@ -28,6 +28,8 @@ export class OP {
   public static AnimateScene = "AnimateScene";
   public static SetSceneFilter = "SetSceneFilter";
   public static ClearSceneFilter = "ClearSceneFilter";
+  public static SetCharacterFilter = "SetCharacterFilter";
+  public static ClearCharacterFilter = "ClearCharacterFilter";
 
   public static Wait = "Wait";
   public static CallScript = "CallScript";

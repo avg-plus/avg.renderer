@@ -69,17 +69,6 @@ export class SceneHandler {
     scriptingContext.resolver();
   }
 
-  public static async handleSetSceneFilter(scriptingContext: ScriptingContext) {
-    const api = <APIScene>scriptingContext.api;
-
-    for (let i = 0; i < api.data.renderer.filters.length; ++i) {
-      const filter = api.data.renderer.filters[i];
-
-      await SpriteWidgetManager.setSpriteFilters(api.name, filter.name, filter.data);
-    }
-
-    scriptingContext.resolver();
-  }
 
   public static async handleAnimateScene(scriptingContext: ScriptingContext) {
     const api = <APIScene>scriptingContext.api;
@@ -97,7 +86,19 @@ export class SceneHandler {
     scriptingContext.resolver();
   }
 
-  public static async handleClearFilters(scriptingContext: ScriptingContext) {
+  public static async handleSetSceneFilter(scriptingContext: ScriptingContext) {
+    const api = <APIScene>scriptingContext.api;
+
+    for (let i = 0; i < api.data.renderer.filters.length; ++i) {
+      const filter = api.data.renderer.filters[i];
+
+      await SpriteWidgetManager.setSpriteFilters(api.name, filter.name, filter.data);
+    }
+
+    scriptingContext.resolver();
+  }
+
+  public static async handleClearSceneFilters(scriptingContext: ScriptingContext) {
     const api = <APIScene>scriptingContext.api;
 
     await SpriteWidgetManager.clearSpriteFilters(api.name);

@@ -36,13 +36,16 @@ class World {
     this.app = new PIXI.Application({
       width,
       height,
-      antialias: true,
+      antialias: false,
       preserveDrawingBuffer: true,
       transparent: true,
       backgroundColor: 0,
       resizeTo: this.parentElement,
       resolution: 1
     });
+
+    console.log("webGLVersion", this.app.renderer.context.webGLVersion) 
+
 
     this.adaptor = new ScalingAdaptor();
 
@@ -80,7 +83,7 @@ class World {
     this.parentElement.appendChild(scene.getView());
   }
 
-  public transitionTo(scene: Scene, scene2: Sprite, effect?: number) {}
+  public transitionTo(scene: Scene, scene2: Sprite, effect?: number) { }
 }
 
 export const GameWorld = new World();

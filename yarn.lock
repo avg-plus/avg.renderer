@@ -2183,7 +2183,12 @@ adm-zip@0.4.4:
   resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.4.tgz#a61ed5ae6905c3aea58b3a657d25033091052736"
   integrity sha1-ph7VrmkFw66lizplfSUDMJEFJzY=
 
-adm-zip@^0.4.13, adm-zip@^0.4.7, adm-zip@^0.4.9:
+adm-zip@^0.4.16:
+  version "0.4.16"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.16.tgz#cf4c508fdffab02c269cbc7f471a875f05570365"
+  integrity sha512-TFi4HBKSGfIKsK5YCkKaaFG2m4PEDyViZmEwof3MTIgzimHLto6muaHVpbrljdIvIrFZzEq/p4nafOeLcYegrg==
+
+adm-zip@^0.4.7, adm-zip@^0.4.9:
   version "0.4.13"
   resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.13.tgz#597e2f8cc3672151e1307d3e95cddbc75672314a"
   integrity sha1-WX4vjMNnIVHhMH0+lc3bx1ZyMUo=
