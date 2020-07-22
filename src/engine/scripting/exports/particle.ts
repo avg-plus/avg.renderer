@@ -9,7 +9,6 @@ import { AVGNativePath } from "../../core/native-modules/avg-native-path";
 @APIExport("particle", EngineAPI_Particle)
 export class EngineAPI_Particle extends AVGExportedAPI {
   public static async snow(params: DropFlakeParams & { texture: string }) {
-
     const snowParams = Object.assign(
       {},
       {
@@ -25,15 +24,14 @@ export class EngineAPI_Particle extends AVGExportedAPI {
         },
         wind: {
           enabled: true,
-          force: -1.05, // 风力
-          min: -10.2,
+          force: 0.05, // 风力
+          min: -0.2,
           max: 1.1,
           easing: 0.1
         }
       },
       params
     );
-
 
     const defaultSnowTexture = AVGNativePath.join(
       GameResource.getEngineDataRoot(),
@@ -45,16 +43,11 @@ export class EngineAPI_Particle extends AVGExportedAPI {
       snowParams.texture = defaultSnowTexture;
     }
 
-    const particle = new DropFlakeParticle(snowParams.texture, snowParams);
-    particle.start();
-    // await DropFlakeParticle.start(
-    //   snowParams.texture,
-    //   snowParams
-    // );
+    await DropFlakeParticle.start(snowParams.texture, snowParams);
   }
 
   public static async stop() {
-    // await DropFlakeParticle.stop();
+    await DropFlakeParticle.stop();
   }
 
   public static async rain(params: DropFlakeParams) {

@@ -1,92 +1,49 @@
-const defaultVertex = require("./default-vert.frag").default;
-const defaultFragment = require("./default-fragment.frag").default;
-
-interface GLBufferData {
-  size: number;
-  data: any[];
-}
-
-interface GLBuffers {
-  glBuffer: any;    // For WebGL Buffer
-
-  [key: string]: any;
-
-  // position: GLBufferData;
-  // color: GLBufferData;
-  // rotation: GLBufferData;
-  // size: GLBufferData;
-  // speed: GLBufferData;
-}
-
-
-export class ShaderOptions {
-  antialias = false;
-  depthTest = false;
-  mousemove = false;
-  autosize = true;
-  msaa = 0;
-  vertex: string;
-  fragment: string;
-  uniforms: any;
-  buffers: GLBuffers;
-  camera: any;
-  texture: any;
-  // onUpdate: (delta: number) => void;
-  // onResize: (w: number, h: number, dpi: number) => void;
-}
-
-abstract class ShaderProgram {
-
-  protected programOptions: ShaderOptions;
-  protected data: {
-    uniforms: any;
-    buffers: any;
-  } = {
-      uniforms: {},
-      buffers: null
-    };
-
-
-  gl: WebGLRenderingContext;
-  private canvas: HTMLCanvasElement;
-  private holder: HTMLElement;
-  private program: WebGLProgram;
-  private glTexture: WebGLTexture;
-
-  private count: number = 0;
-  private width: number = 0;
-  private height: number = 0;
-  private aspect: number = 0;
-  private dpi: number = 0;
-  private msaa: number = 0;
-  private time: { start: number; old: number } = { start: 0, old: 0 };
-
-  constructor() {
-  }
-
-  protected run(options: ShaderOptions, holder: HTMLElement) {
-    this.holder = holder;
-
-    this.programOptions = Object.assign(
+class ShaderProgram {
+  constructor(holder, options = {}) {
+    options = Object.assign(
       {
         antialias: false,
         depthTest: false,
         mousemove: false,
         autosize: true,
         msaa: 0,
-        vertex: defaultVertex,
-        fragment: defaultFragment,
+        vertex: `
+        precision highp float;
+        attribute vec4 a_position;
+        attribute vec4 a_color;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform vec2 u_mousemove;
+        uniform mat4 u_projection;
+        varying vec4 v_color;
+        void main() {
+          gl_Position = u_projection * a_position;
+          gl_PointSize = (10.0 / gl_Position.w) * 100.0;
+          v_color = a_color;
+        }`,
+        fragment: `
+        precision highp float;
+        uniform sampler2D u_texture;
+        uniform int u_hasTexture;
+        varying vec4 v_color;
+        void main() {
+          if ( u_hasTexture == 1 ) {
+            gl_FragColor = v_color * texture2D(u_texture, gl_PointCoord);
+          } else {
+            gl_FragColor = v_color;
+          }
+        }`,
         uniforms: {},
         buffers: {},
         camera: {},
         texture: null,
-        // onUpdate: (delta: number) => { },
-        // onResize: (w: number, h: number, dpi: number) => { }
+        onUpdate: () => {},
+        onResize: () => {}
       },
       options
     );
 
-    this.programOptions.uniforms = Object.assign(
+    const uniforms = Object.assign(
       {
         time: { type: "float", value: 0 },
         hasTexture: { type: "int", value: 0 },
@@ -94,24 +51,18 @@ abstract class ShaderProgram {
         mousemove: { type: "vec2", value: [0, 0] },
         projection: { type: "mat4", value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }
       },
-      options.buffers
+      options.uniforms
     );
 
-    console.log("pass in buffers: ", options.buffers)
-    this.programOptions.buffers = Object.assign(
+    const buffers = Object.assign(
       {
         position: { size: 3, data: [] },
-        color: { size: 4, data: [] },
-        size: { size: 1, data: [] },
-        rotation: { size: 3, data: [] },
-        speed: { size: 3, data: [] }
+        color: { size: 4, data: [] }
       },
       options.buffers
     );
-    console.log("merged buffers: ", this.programOptions.buffers)
 
-
-    this.programOptions.camera = Object.assign(
+    const camera = Object.assign(
       {
         fov: 60,
         near: 1,
@@ -123,47 +74,41 @@ abstract class ShaderProgram {
       options.camera
     );
 
-    this.canvas = document.createElement("canvas");
-    this.gl = this.canvas.getContext("webgl", { antialias: this.programOptions.antialias });
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl", { antialias: options.antialias });
 
-    if (!this.gl) {
-      console.error("Initial GL context failed.");
-      return;
-    }
+    if (!gl) return false;
 
     this.count = 0;
-    // this.gl = gl;
-    // this.canvas = canvas;
-    // this.camera = camera;
-    // this.holder = holder;
-    // this.msaa = options.msaa;
-    // this.programOptions.onUpdate = options.onUpdate;
-    // this.programOptions.onResize = options.onResize;
-    // this.data = {};
+    this.gl = gl;
+    this.canvas = canvas;
+    this.camera = camera;
+    this.holder = holder;
+    this.msaa = options.msaa;
+    this.onUpdate = options.onUpdate;
+    this.onResize = options.onResize;
+    this.data = {};
 
-    this.holder.appendChild(this.canvas);
+    holder.appendChild(canvas);
 
+    this.createProgram(options.vertex, options.fragment);
 
-    this.createProgram(this.programOptions.vertex, this.programOptions.fragment);
-
-    this.createBuffers(this.programOptions.buffers);
-    this.createUniforms(this.programOptions.uniforms);
+    this.createBuffers(buffers);
+    this.createUniforms(uniforms);
 
     this.updateBuffers();
     this.updateUniforms();
 
-    this.createTexture(this.programOptions.texture);
+    this.createTexture(options.texture);
 
-    this.gl.enable(this.gl.BLEND);
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-    this.gl[this.programOptions.depthTest ? "enable" : "disable"](this.gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.enable(gl.CULL_FACE);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl[options.depthTest ? "enable" : "disable"](gl.DEPTH_TEST);
 
-    if (this.programOptions.autosize) window.addEventListener("resize", e => this.resize(e), false);
-    if (this.programOptions.mousemove) window.addEventListener("mousemove", e => this.mousemove(e), false);
+    if (options.autosize) window.addEventListener("resize", e => this.resize(e), false);
+    if (options.mousemove) window.addEventListener("mousemove", e => this.mousemove(e), false);
 
-    // 初始进行一次 resize
-    // this.resize = this.resize.bind(this);
     this.resize();
 
     this.update = this.update.bind(this);
@@ -171,14 +116,14 @@ abstract class ShaderProgram {
     this.update();
   }
 
-  private mousemove(e) {
+  mousemove(e) {
     let x = (e.pageX / this.width) * 2 - 1;
     let y = (e.pageY / this.height) * 2 - 1;
 
-    this.programOptions.uniforms.mousemove = [x, y];
+    this.uniforms.mousemove = [x, y];
   }
 
-  private resize(e?: UIEvent) {
+  resize(e) {
     const holder = this.holder;
     const canvas = this.canvas;
     const gl = this.gl;
@@ -196,17 +141,14 @@ abstract class ShaderProgram {
     gl.viewport(0, 0, width * dpi, height * dpi);
     gl.clearColor(0, 0, 0, 0);
 
-    this.programOptions.uniforms.resolution = [width, height];
-    this.programOptions.uniforms.projection = this.setProjection(aspect);
+    this.uniforms.resolution = [width, height];
+    this.uniforms.projection = this.setProjection(aspect);
 
-    // this.programOptions.onResize(width, height, dpi);
-
-    // 调用抽象方法
-    this.onInit(width, height, dpi);
+    this.onResize(width, height, dpi);
   }
 
-  private setProjection(aspect) {
-    const camera = this.programOptions.camera;
+  setProjection(aspect) {
+    const camera = this.camera;
 
     if (camera.perspective) {
       camera.aspect = aspect;
@@ -243,7 +185,7 @@ abstract class ShaderProgram {
     }
   }
 
-  private createShader(type, source) {
+  createShader(type, source) {
     const gl = this.gl;
     const shader = gl.createShader(type);
 
@@ -258,7 +200,7 @@ abstract class ShaderProgram {
     }
   }
 
-  private createProgram(vertex, fragment) {
+  createProgram(vertex, fragment) {
     const gl = this.gl;
 
     const vertexShader = this.createShader(gl.VERTEX_SHADER, vertex);
@@ -279,10 +221,10 @@ abstract class ShaderProgram {
     }
   }
 
-  private createUniforms(data) {
+  createUniforms(data) {
     const gl = this.gl;
     const uniforms = (this.data.uniforms = data);
-    const values = (this.programOptions.uniforms = {});
+    const values = (this.uniforms = {});
 
     Object.keys(uniforms).forEach(name => {
       const uniform = uniforms[name];
@@ -299,7 +241,7 @@ abstract class ShaderProgram {
     });
   }
 
-  private setUniform(name, value) {
+  setUniform(name, value) {
     const gl = this.gl;
     const uniform = this.data.uniforms[name];
 
@@ -315,15 +257,15 @@ abstract class ShaderProgram {
         break;
       }
       case "vec2": {
-        gl.uniform2f(uniform.location, value.x, value.y);
+        gl.uniform2f(uniform.location, ...value);
         break;
       }
       case "vec3": {
-        gl.uniform3f(uniform.location, value.x, value.y, value.z);
+        gl.uniform3f(uniform.location, ...value);
         break;
       }
       case "vec4": {
-        gl.uniform4f(uniform.location, value.x, value.y, value.z, value.w);
+        gl.uniform4f(uniform.location, ...value);
         break;
       }
       case "mat2": {
@@ -340,7 +282,6 @@ abstract class ShaderProgram {
       }
     }
 
-    // 类型映射：
     // ivec2       : uniform2i,
     // ivec3       : uniform3i,
     // ivec4       : uniform4i,
@@ -352,59 +293,40 @@ abstract class ShaderProgram {
     // bvec4       : uniform4i,
   }
 
-  private updateUniforms() {
-    // const gl = this.gl;
+  updateUniforms() {
+    const gl = this.gl;
     const uniforms = this.data.uniforms;
 
     Object.keys(uniforms).forEach(name => {
       const uniform = uniforms[name];
 
-      this.programOptions.uniforms[name] = uniform.value;
+      this.uniforms[name] = uniform.value;
     });
   }
 
-  private createBuffers(data: GLBuffers) {
+  createBuffers(data) {
+    const gl = this.gl;
     const buffers = (this.data.buffers = data);
-
-    this.programOptions.buffers = <any>{};
-    const values = this.programOptions.buffers;
-
-    console.log("createBuffers", buffers);
-
+    const values = (this.buffers = {});
 
     Object.keys(buffers).forEach(name => {
       const buffer = buffers[name];
 
       buffer.buffer = this.createBuffer("a_" + name, buffer.size);
-      // this.setBuffer(name, buffer.buffer);
+
       Object.defineProperty(values, name, {
         set: data => {
-
-          // console.log("setter ", name)
-
-          // buffers[name].data = data;
-          // this.setBuffer(name, data);
-
-          // console.log("setter ", data)
           buffers[name].data = data;
           this.setBuffer(name, data);
 
           if (name == "position") this.count = buffers.position.data.length / 3;
         },
-        get: () => {
-          console.log("getter ", name)
-          return buffers[name].data
-        }
+        get: () => buffers[name].data
       });
-
     });
-
-    // console.log("after createBuffers", values["speed"]);
-    // const getV = Object.getOwnPropertyDescriptor(values, "speed").get;
-    // console.log("GetV", getV());
   }
 
-  private createBuffer(name: string, size: number) {
+  createBuffer(name, size) {
     const gl = this.gl;
     const program = this.program;
 
@@ -418,89 +340,43 @@ abstract class ShaderProgram {
     return buffer;
   }
 
-  private setBuffer(name?: string, data?: any) {
-
+  setBuffer(name, data) {
     const gl = this.gl;
     const buffers = this.data.buffers;
 
-    if (name === null) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, null)
-      return;
-    };
+    if (name == null && !gl.bindBuffer(gl.ARRAY_BUFFER, null)) return;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers[name].buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
   }
 
-  toggleTestBuffer() {
-    // const speedBuffer = this.createBuffer("speed", 3);
-    // this.setBuffer("speed", [1, 0, 1])
+  updateBuffers() {
+    const gl = this.gl;
+    const buffers = this.buffers;
 
-    this.setUniform("speed", 100);
-
-  }
-
-
-  // private updateUniforms() {
-  //   // const gl = this.gl;
-  //   const uniforms = this.data.uniforms;
-
-  //   Object.keys(uniforms).forEach(name => {
-  //     const uniform = uniforms[name];
-
-  //     this.programOptions.uniforms[name] = uniform.value;
-  //   });
-  // }
-
-  // private updateBuffers() {
-  //   const buffers = this.data.buffers;
-  //   Object.keys(buffers).forEach(name => {
-  //     const buffer = buffers[name];
-  //     // this.programOptions.buffers[name] = buffer.data;
-  //     buffers[name] = buffers[name].buffer.data
-  //   });  // ?
-
-
-  //   this.setBuffer(null);
-  // }
-
-  private updateBuffers() {
-    const buffers = this.programOptions.buffers;
-
-    console.log("updateBuffers", buffers);
-
-    Object.keys(buffers).forEach(name => {
-      // buffers[name] = buffers[name].buffer.data;
-      // buffers[name] = buffers[name].buffer.data
-      const buffer = buffers[name];
-      buffers[name] = buffers[name].data;
-
-    });  // ?
-
-    // Object.keys(buffers).forEach(name => (buffers[name] = buffer.data));
-    // console.log("updateBuffers", buffers);
+    Object.keys(buffers).forEach(name => (buffers[name] = buffer.data));
 
     this.setBuffer(null);
   }
 
-  private createTexture(src) {
+  createTexture(src) {
     const gl = this.gl;
     const texture = gl.createTexture();
 
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
 
-    this.glTexture = texture;
+    this.texture = texture;
 
     if (src) {
-      this.programOptions.uniforms.hasTexture = 1;
+      this.uniforms.hasTexture = 1;
       this.loadTexture(src);
     }
   }
 
-  private loadTexture(src) {
+  loadTexture(src) {
     const gl = this.gl;
-    const texture = this.glTexture;
+    const texture = this.texture;
 
     const textureImage = new Image();
 
@@ -521,8 +397,7 @@ abstract class ShaderProgram {
     textureImage.src = src;
   }
 
-  private update() {
-
+  update() {
     const gl = this.gl;
 
     const now = performance.now();
@@ -530,29 +405,17 @@ abstract class ShaderProgram {
     const delta = now - this.time.old;
     this.time.old = now;
 
-    this.programOptions.uniforms.time = elapsed;
-
-    // test
-    // console.log(this.programOptions.buffers);
+    this.uniforms.time = elapsed;
 
     if (this.count > 0) {
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.clear(gl.COLORBUFFERBIT);
       gl.drawArrays(gl.POINTS, 0, this.count);
     }
 
-    // 调用抽象方法
     this.onUpdate(delta);
-
-    // console.log("this.programOptions", this.programOptions);
-
 
     requestAnimationFrame(this.update);
   }
-
-  // 子类需要重写以下抽象方法
-  protected abstract onUpdate(delta: number): void;
-  protected abstract onInit(width: number, height: number, dpi: number): void;
-
 }
 
 export { ShaderProgram };
