@@ -1,7 +1,8 @@
 import { UIBase } from "./ui";
 import * as PIXI from "pixi.js";
+import { SpriteType } from 'engine/const/sprite-type';
 
-export class Button extends PIXI.Sprite implements UIBase {
+export class Button extends UIBase {
 	public images = {
 		normal : PIXI.Texture.WHITE,
 		hover : null,
@@ -10,7 +11,7 @@ export class Button extends PIXI.Sprite implements UIBase {
 	}
 
 	constructor(options?) {
-		super(PIXI.Texture.EMPTY);
+		super(SpriteType.Character, PIXI.Texture.WHITE);
 		this.buttonMode = true;
 
 		if(options.images) {
@@ -30,25 +31,25 @@ export class Button extends PIXI.Sprite implements UIBase {
 			this.height = typeof options.height == 'undefined' ? this.images.normal.height : options.height;
 		}
 
-		this.on('mouseover', (function() {
+		this.on('pointerover', (event) => {
 			if(this.images.hover) {
 				this.texture = this.images.hover;
 			}
-		}).bind(this));
+		});
 
-		this.on('mouseout', (function() {
+		this.on('pointerout', (event) => {
 			this.texture = this.images.normal;
-		}).bind(this));
+		});
 
-		this.on('mousedown', (function() {
+		this.on('pointerdown', (event) => {
 			if(this.images.pressed) {
 				this.texture = this.images.pressed;
 			}
-		}).bind(this));
+		});
 
-		this.on('mouseup', (function() {
-			this.texture = this.images.normal;
-		}).bind(this));
+		this.on('pointerup', (event) => {
+			this.texture = this.images.hover ? this.images.hover : this.images.normal;
+		});
 	}
 
 	public disable(disabled : boolean) {
@@ -56,5 +57,9 @@ export class Button extends PIXI.Sprite implements UIBase {
 		if(disabled && this.images.disabled) {
 			this.texture = this.images.disabled;
 		}
+	}
+
+	public onClick(f) {
+		this.on('click', f);
 	}
 }

@@ -11,6 +11,7 @@ import { GameResource } from "../resource";
 import { ScalingAdaptor } from "./scaling-adaptor";
 
 import { Button } from "./ui/button";
+import { SpriteType } from 'engine/const/sprite-type';
 
 class World {
   scenes: Scene[] = [];
@@ -21,6 +22,7 @@ class World {
   worldWidth: number;
   worldHeight: number;
 
+  method : ScalingMethod;
   adaptor: ScalingAdaptor;
 
   async init(
@@ -46,33 +48,64 @@ class World {
       resolution: 1
     });
 
-    this.adaptor = new ScalingAdaptor();
+    //this.adaptor = new ScalingAdaptor();
+    this.method = ScalingMethod.AUTO;
 
     // Show FPSPanel
     // const fpsElement = document.getElementById("fps");
     this.app.ticker.add(() => {
       //   fpsElement.innerHTML = GameWorld.app.ticker.FPS.toPrecision(2) + " fps";
-      this.adaptor.beginBuffer();
+      //this.adaptor.beginBuffer();
       HookManager.triggerHook(HookEvents.GameUpdate);
-      this.adaptor.endBuffer();
+      //this.adaptor.endBuffer();
     });
 
     this._defaultScene = new Scene(this.app, this.worldWidth, this.worldHeight);
     this.addScene(this._defaultScene);
     window.onresize = () => {
-      this.adaptor.resize(this.parentElement.clientWidth, this.parentElement.clientHeight);
+      let m = this.method;
+      if (m === ScalingMethod.AUTO) {
+        if (this.parentElement.clientWidth / this.parentElement.clientHeight > this.worldWidth / this.worldHeight) {
+          m = ScalingMethod.ACCORDING_TO_HEIGHT;
+        } else {
+          m = ScalingMethod.ACCORDING_TO_WIDTH;
+        }
+      }
+
+      let edgeRatio = 0;
+      switch (m) {
+        case ScalingMethod.ACCORDING_TO_WIDTH:
+          edgeRatio = this.parentElement.clientWidth / this.worldWidth;
+          break;
+        case ScalingMethod.ACCORDING_TO_HEIGHT:
+          edgeRatio = this.parentElement.clientHeight / this.worldHeight;
+          break;
+        default:
+        // TODO: throw exception
+      }
+      this.app.stage.scale.x = this.app.stage.scale.y = edgeRatio;
+      
+      this.app.stage.x = (this.parentElement.clientWidth - this.app.stage.width) / 2.0;
+      this.app.stage.y = (this.parentElement.clientHeight - this.app.stage.height) / 2.0;
+      //this.adaptor.resize(this.parentElement.clientWidth, this.parentElement.clientHeight);
     }
 
-    this._defaultScene.addSprite("Button1", new Button({
-      x : 200,
-      y : 200,
-      width: 500,
-      height: 300,
+    let foo = new Button({
+      x : 50,
+      y : 50,
+      width: 200,
+      height: 200,
       images: {
-        normal : PIXI.Texture.WHITE,
-        hover : PIXI.Texture.EMPTY
+        normal : './data/icons/ufo-2.png',
+        hover : './data/icons/ufo-1.png'
       }
-    }));
+    });
+    this._defaultScene.addSprite("Button1", foo, 999);
+    foo.onClick(function() {
+      console.log(this);
+    });
+
+
 
     
     /*window.onresize = () => {
@@ -98,4 +131,11 @@ class World {
   public transitionTo(scene: Scene, scene2: Sprite, effect?: number) {}
 }
 
+export const enum ScalingMethod {
+  AUTO,                                       // 保证显示完全的前提下自动选择
+  ACCORDING_TO_WIDTH,                         // 按照宽度确定缩放比例
+  ACCORDING_TO_HEIGHT                         // 按照高度确定缩放比例
+}
+
 export const GameWorld = new World();
+global.GameWorld = GameWorld;
