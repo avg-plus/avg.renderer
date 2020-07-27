@@ -10,6 +10,8 @@ import { AVGNativePath } from "../native-modules/avg-native-path";
 import { GameResource } from "../resource";
 import { ScalingAdaptor } from "./scaling-adaptor";
 
+import { Button } from "./ui/button";
+
 class World {
   scenes: Scene[] = [];
   public app: PIXI.Application;
@@ -60,6 +62,19 @@ class World {
     window.onresize = () => {
       this.adaptor.resize(this.parentElement.clientWidth, this.parentElement.clientHeight);
     }
+
+    this._defaultScene.addSprite("Button1", new Button({
+      x : 200,
+      y : 200,
+      width: 500,
+      height: 300,
+      images: {
+        normal : PIXI.Texture.WHITE,
+        hover : PIXI.Texture.EMPTY
+      }
+    }));
+
+    
     /*window.onresize = () => {
       this.app.resize();
       
