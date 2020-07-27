@@ -4,3 +4,4 @@ dist
 app-builds
 package-release
 .vscode/settings.json
+yarn-error.log

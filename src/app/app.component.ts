@@ -53,20 +53,22 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.initializer.endInitilizing();
 
         // Start game
-        const entryScript = AVGNativePath.join(GameResource.getPath(ResourcePath.Scripts), EngineSettings.get(
-          "engine.env.entry_script_file"
-        ) as string);
+        const entryScript = AVGNativePath.join(
+          GameResource.getPath(ResourcePath.Scripts),
+          EngineSettings.get("engine.env.entry_script_file") as string
+        );
 
-        this.router.navigate(["main-scene", { script: entryScript }]).then(result => {
-          // if (result) {
-          //   TransitionLayerService.fadeTo(0, 0);
-          // }
-        });
+        this.router
+          .navigate(["main-scene", { script: entryScript }])
+          .then(result => {
+            // if (result) {
+            //   TransitionLayerService.fadeTo(0, 0);
+            // }
+          });
       },
       _ => {}
     );
   }
 
-  async ngAfterViewInit() {
-  }
+  async ngAfterViewInit() {}
 }

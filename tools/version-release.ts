@@ -27,6 +27,7 @@ program
   .description(
     `可选： major, premajor, minor, preminor, patch, prepatch, prerelease`
   )
+  .option("-i, --identifier [identifier]", "版本后缀", "alpha")
   .option("-o, --output-directory [output]", "输出目录");
 
 program.parse(process.argv);
@@ -43,7 +44,7 @@ if (!program.output) {
 }
 
 if (!program.buildVersion) {
-  program.buildVersion = "patch";
+  program.buildVersion = "prepatch";
 }
 
 // 创建输出目录
@@ -87,7 +88,13 @@ buildingPlatforms.forEach(platform => {
     const originalVersion = `v${packageInfo.version}`;
 
     console.log("[!] 更新版本信息 ... ");
-    const newVersion = semver.inc(packageInfo.version, program.buildVersion);
+    const newVersion = semver.inc(
+      packageInfo.version,
+      program.buildVersion,
+      program.identifier
+    );
+    // console.log("newVersion", semver.inc("0.2.3", "prepatch", "beta"));
+
     packageInfo.version = newVersion;
     fs.writeJSONSync(PackageFile, packageInfo, { spaces: 2 });
 
@@ -114,7 +121,7 @@ buildingPlatforms.forEach(platform => {
     const tempDir = path.resolve(__dirname, `${releaseDir}/.temp`);
     const outputFile = path.resolve(
       __dirname,
-      `${releaseDir}/AVGPlus-${platform}-v${packageInfo.version}_alpha.zip`
+      `${releaseDir}/AVGPlus-${platform}-v${packageInfo.version}.zip`
     );
 
     // 创建临时目录
@@ -122,11 +129,12 @@ buildingPlatforms.forEach(platform => {
     fs.mkdirpSync(tempDir);
 
     // 准备要打包的目录文件
-    fs.copySync(buildOutputDir, path.join(tempDir, "engine"));
+    fs.copySync(buildOutputDir, path.join(tempDir, "bundle"));
 
     // 生成注释
     const bundleInfo = {
       type: "engine",
+      name: `AVGPlus Engine Core (${newVersion})`,
       version: newVersion,
       platform
     };
@@ -140,7 +148,10 @@ buildingPlatforms.forEach(platform => {
     console.log(`[!] 发布文件路径：${outputFile}`);
 
     const zip2 = new AdmZip(outputFile);
-    const json  = zip2.getEntry("bundle-info.json").getData().toString("utf-8")
+    const json = zip2
+      .getEntry("bundle-info.json")
+      .getData()
+      .toString("utf-8");
     console.log("get bundle info: ", json);
 
     console.log(`\n[√] ✨ 版本 ${newVersionWithTag} 发布完成！`);
