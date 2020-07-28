@@ -8,6 +8,8 @@ export class AVGSpriteRenderer {
   public y: number = 0;
   public width: number = 0;
   public height: number = 0;
+  public size: string = "(100%,100%)";
+  public position: string = "(0%,0%)";
   public scale: number;
   public scaleX: number;
   public scaleY: number;

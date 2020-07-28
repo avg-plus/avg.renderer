@@ -3,13 +3,14 @@ import * as joi from "joi";
 import { AVGEngineError } from "../../core/engine-errors";
 import { i18n } from "../../core/i18n";
 import { AVGSpriteRenderer, SpriteFilter } from "engine/data/sprite-renderer";
+import { AVGMeasurementUnit } from "engine/core/measurement-unit";
 
 // 暂存导出的类，APIManager 加载后会取走
 export const preExportedSet = new Set();
 
 export function APIExport(name: string, t: any) {
   console.log("APIExport " + name);
-  return function (constructor: Function) {
+  return function(constructor: Function) {
     preExportedSet.add({ name, t });
   };
 }
@@ -69,38 +70,42 @@ export class AVGExportedAPI {
     animation: SpriteAnimationMacro
   ) {
     return this.APIParametersValidate(
-      joi.object().empty().optional().keys({
-        totalDuration: joi
-          .number()
-          .optional()
-          .min(1)
-          .description(
-            "时间轴总播放时长（如指定该参数，则忽略帧内的duration）"
-          ),
-        initialFrame: joi
-          .object()
-          .optional()
-          .description("初始关键帧"),
-        repeat: joi
-          .number()
-          .optional()
-          .min(-1)
-          .description(
-            "重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"
-          ),
-        onProgress: joi
-          .func()
-          .optional()
-          .description(
-            "动画播放进度。返回一个0-1区间的小数，表示播放进度的百分比。0为时间轴的开始，0.5为时间轴中间，1为结束."
-          ),
-        timeline: joi
-          .array()
-          .min(0)
-          .optional()
-          .default([])
-          .description("初始关键帧")
-      }),
+      joi
+        .object()
+        .empty()
+        .optional()
+        .keys({
+          totalDuration: joi
+            .number()
+            .optional()
+            .min(1)
+            .description(
+              "时间轴总播放时长（如指定该参数，则忽略帧内的duration）"
+            ),
+          initialFrame: joi
+            .object()
+            .optional()
+            .description("初始关键帧"),
+          repeat: joi
+            .number()
+            .optional()
+            .min(-1)
+            .description(
+              "重复次数（0 或者为空表示不重复，默认播放一次，-1为无限重复）"
+            ),
+          onProgress: joi
+            .func()
+            .optional()
+            .description(
+              "动画播放进度。返回一个0-1区间的小数，表示播放进度的百分比。0为时间轴的开始，0.5为时间轴中间，1为结束."
+            ),
+          timeline: joi
+            .array()
+            .min(0)
+            .optional()
+            .default([])
+            .description("初始关键帧")
+        }),
       animation
     );
   }
@@ -134,6 +139,14 @@ export class AVGExportedAPI {
           .number()
           .optional()
           .description("立绘高度"),
+        size: joi
+          .string()
+          .optional()
+          .description("尺寸"),
+        position: joi
+          .string()
+          .optional()
+          .description("坐标"),
         scale: joi
           .number()
           .optional()

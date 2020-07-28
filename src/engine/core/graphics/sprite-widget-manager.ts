@@ -29,12 +29,14 @@ export class SpriteWidgetManager {
     const renderer = image.renderer || new AVGSpriteRenderer();
 
     const position = TransformConverter.toActualPosition(
-      image.position || `(${renderer.x}px, ${renderer.y}px)`,
+      renderer.position || `(${renderer.x}, ${renderer.y})`,
       AnimateTargetType.Sprite
     );
 
+    console.log("image.size",image.file.filename, renderer.size);
+
     const size = TransformConverter.toActualSzie(
-      image.size || "(100%, 100%)",
+      renderer.size || "(100%, 100%)",
       AnimateTargetType.Sprite,
       sprite.texture.width,
       sprite.texture.height
@@ -54,15 +56,15 @@ export class SpriteWidgetManager {
     sprite.scale.x = renderer.scale || renderer.scaleX || 1;
     sprite.scale.y = renderer.scale || renderer.scaleY || 1;
     sprite.width =
-      Number.parseInt(size.left) || renderer.width || sprite.texture.width;
+      renderer.width || Number.parseInt(size.left) || sprite.texture.width;
     sprite.height =
-      Number.parseInt(size.right) || renderer.height || sprite.texture.height;
+      renderer.height || Number.parseInt(size.right) || sprite.texture.height;
 
     sprite.x = Number.parseInt(position.left) || renderer.x || 0;
     sprite.y = Number.parseInt(position.right) || renderer.y || 0;
     sprite.skew.x = renderer.skew || renderer.skewX || 0;
     sprite.skew.y = renderer.skew || renderer.skewY || 0;
-    sprite.angle = renderer.rotation || 0;  // 使用角度作为旋转单位
+    sprite.angle = renderer.rotation || 0; // 使用角度作为旋转单位
     sprite.distance = renderer.cameraDistance || 0;
     sprite.renderCameraDepth = renderer.renderCameraDepth || false;
     sprite.alpha = renderer.alpha;
