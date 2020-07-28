@@ -138,4 +138,4 @@ export const enum ScalingMethod {
 }
 
 export const GameWorld = new World();
-global.GameWorld = GameWorld;
+global["GameWorld"] = GameWorld;
