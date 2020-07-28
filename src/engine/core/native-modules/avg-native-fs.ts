@@ -4,8 +4,7 @@ import { PlatformService } from "../platform/platform-service";
 import { AVGNativePath } from "./avg-native-path";
 
 // const NodeFS = window.require('fs');
-import * as NodeFS from 'fs';
-
+import * as NodeFS from "fs";
 
 export class AVGNativeFS {
   private static _isFileSystemOK = false;
@@ -26,7 +25,6 @@ export class AVGNativeFS {
 
   public static async initFileSystem() {
     console.log("Init Env", process.env);
-
 
     return new Promise((resolve, reject) => {
       if (PlatformService.isDesktop()) {
@@ -116,7 +114,8 @@ export class AVGNativeFS {
   ) {
     if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       const data = this._fs.readFileSync(filename, options);
-      return data;
+
+      return data.toString();
     }
 
     const response = await axios.get(filename, {
@@ -131,7 +130,7 @@ export class AVGNativeFS {
 
     let data = response.data;
     if (options && options.encoding) {
-      data = Buffer.from(response.data, 'binary').toString(options.encoding);;
+      data = Buffer.from(response.data, "binary").toString(options.encoding);
     }
 
     return data;

@@ -115,10 +115,6 @@ export class GameInitializer implements CanActivate {
     let dataRootDirname = envData.engine_bundle_root as string;
 
     // 如果不是 HTTP URL 则使用本地路径
-    if (!AVGNativePath.isHttpURL(assetsRootDirname)) {
-      assetsRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, assetsRootDirname);
-    }
-
     if (!AVGNativePath.isHttpURL(dataRootDirname)) {
       dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname);
     }

@@ -1,5 +1,7 @@
 // import urljoin from "urljoin";
 
+import { PlatformService } from "../platform/platform-service";
+
 export class AVGNativePath {
   public static isHttpURL(url: string): boolean {
     if (!url) {
@@ -7,6 +9,20 @@ export class AVGNativePath {
     }
 
     return url.startsWith("http://") || url.startsWith("https://");
+  }
+
+  static isAbsolute(path: string) {
+    const splitDeviceRe = /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/;
+
+    if (PlatformService.runOnWindows()) {
+      const result = splitDeviceRe.exec(path),
+        device = result[1] || "",
+        isUnc = device && device.charAt(1) !== ":";
+
+      return !!result[2] || isUnc;
+    } else {
+      return path.charAt(0) === "/";
+    }
   }
 
   // 同时支持本地路径和HTTP URL
@@ -29,6 +45,10 @@ export class AVGNativePath {
 
       return fullURL;
     }
+
+    // if (this.isAbsolute() {
+
+    // }
 
     for (var i = 0, l = paths.length; i < l; i++) {
       if (!paths[i]) {
