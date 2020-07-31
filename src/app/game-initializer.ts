@@ -21,6 +21,8 @@ import { APIManager } from "engine/scripting/api-manager";
 import { randomIn, getRandomBetween } from "engine/core/utils";
 import { HTMLWidgetManager } from "./common/manager/html-widget-manager";
 import { DanmakuManager } from "engine/core/danmaku-mananger";
+import { DebugConnection } from "engine/core/debug-server/debug-server";
+import { remote } from "electron";
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -55,12 +57,18 @@ export class GameInitializer implements CanActivate {
         <div style="padding:20px; width: 100%; height: 100%; background: #292929; user-select: auto; color: white; overflow-y: scroll">
           <h2 style="color: salmon;">${error.type}</h2>
           ${"<h3 style='color: bisque;'> Error In " + error.file + "</h3>"}
-          <h4 style='color: indianred;'> [${i18n.lang.ERROR_HANDLER_ERROR}] <br>${error.desc}</h4>
+          <h4 style='color: indianred;'> [${
+            i18n.lang.ERROR_HANDLER_ERROR
+          }] <br>${error.desc}</h4>
           <br>
-          <h3 style='color: salmon;'>${i18n.lang.ERROR_HANDLER_ADDITION_INFOS}</h3>
+          <h3 style='color: salmon;'>${
+            i18n.lang.ERROR_HANDLER_ADDITION_INFOS
+          }</h3>
           ${
             error.data.file
-              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " + error.data.file + "</div>"
+              ? "<div style='color: bisque; white-space: pre; user-select: auto;'> File: " +
+                error.data.file +
+                "</div>"
               : ""
           }
           ${
@@ -94,7 +102,9 @@ export class GameInitializer implements CanActivate {
 
   // Init engine environment settings
   public async initEngineSettings() {
-    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json"));
+    const content = await AVGNativeFS.readFileSync(
+      AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json")
+    );
 
     EngineSettings.init(content);
   }
@@ -105,7 +115,9 @@ export class GameInitializer implements CanActivate {
     console.log("init resource", router.url);
 
     // Read 'engine.json' to get game project dir and engine dir
-    const content = await AVGNativeFS.readFileSync(AVGNativePath.join(AVGNativeFS.__dirname, "engine.json"));
+    const content = await AVGNativeFS.readFileSync(
+      AVGNativePath.join(AVGNativeFS.__dirname, "engine.json")
+    );
     const envData = JSON.parse(content);
 
     // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
@@ -116,7 +128,10 @@ export class GameInitializer implements CanActivate {
 
     // 如果不是 HTTP URL 则使用本地路径
     if (!AVGNativePath.isHttpURL(dataRootDirname)) {
-      dataRootDirname = AVGNativePath.join(AVGNativeFS.__dirname, dataRootDirname);
+      dataRootDirname = AVGNativePath.join(
+        AVGNativeFS.__dirname,
+        dataRootDirname
+      );
     }
 
     GameResource.init(assetsRootDirname, dataRootDirname);
@@ -124,7 +139,10 @@ export class GameInitializer implements CanActivate {
 
   // Init settings
   public async initGameSettings() {
-    const settingFile = AVGNativePath.join(GameResource.getAssetsRoot(), "game.json");
+    const settingFile = AVGNativePath.join(
+      GameResource.getAssetsRoot(),
+      "game.json"
+    );
 
     console.log(AVGNativeFS);
 
@@ -132,8 +150,18 @@ export class GameInitializer implements CanActivate {
       const settings = await AVGNativeFS.readFileSync(settingFile);
       Setting.parseFromSettings(settings);
     } catch (error) {
-      AVGEngineError.emit("初始化失败", "游戏配置文件初始化失败，请检查资源路径或者网络是否通畅");
+      AVGEngineError.emit(
+        "初始化失败",
+        "游戏配置文件初始化失败，请检查资源路径或者网络是否通畅"
+      );
       return false;
+    }
+  }
+
+  public async initDebugServer() {
+    const { debug } = remote.getGlobal("global").args;
+    if (debug) {
+      await DebugConnection.start(debug);
     }
   }
 
@@ -204,7 +232,10 @@ export class GameInitializer implements CanActivate {
       font-family: "DefaultFont";
       font-style: normal;
       font-weight: 400;
-      src: url('${AVGNativePath.join(GameResource.getAssetsRoot(), defaultFont)}');
+      src: url('${AVGNativePath.join(
+        GameResource.getAssetsRoot(),
+        defaultFont
+      )}');
     }`;
 
     // $("head").append("<style id='default-font'>" + fontStyle + "</style>");

@@ -1,15 +1,16 @@
-import { app, BrowserWindow, screen } from "electron";
+const { app, BrowserWindow } = require("electron");
+import minimist from "minimist";
+let win;
 
-let win, serve;
-
-const args = process.argv.slice(1);
-serve = args.some(val => val === "--serve");
+const args = minimist(process.argv.slice(2));
+delete args._;
+console.log("args = ", args);
 
 app.commandLine.appendSwitch("in-process-gpu");
 // app.commandLine.appendSwitch("allow-insecure-localhost", "true");
 
 function createWindow() {
-  const electronScreen = screen;
+  // const electronScreen = screen;
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -30,28 +31,20 @@ function createWindow() {
     }
   });
 
-  // win.loadURL(
-  //   format({
-  //     pathname: join(__dirname, "index.html"),
-  //     protocol: "file:",
-  //     slashes: true,
-  //   }),
-  // );
-
-  // win.loadFile("./index.html");
-
   // 隐藏窗口，等待游戏加载完成之后确认尺寸再显示窗口
   win.hide();
 
   // and load the index.html of the app.
-  win.loadURL("file://" + __dirname + "/index.html");
+  win.loadURL(`file://` + __dirname + `/index.html`);
 
-  // Open the DevTools.
-  if (serve) {
+  global.args = {
+    debug: args.debug
+  };
+
+  if (args.serve) {
     win.webContents.openDevTools();
   }
 
-  // Emitted when the window is closed.
   win.on("closed", () => {
     win = null;
     app.quit();

@@ -47,7 +47,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     await this.initializer.initLoadingService();
     await this.initializer.initAPI();
     await this.initializer.initHTMLWidgetLayer();
-    await this.initializer.initDanmaku();
+    // await this.initializer.initDanmaku();
+    await this.initializer.initDebugServer();
     this.initializer.preloadEngineAssets().then(
       v => {
         this.initializer.endInitilizing();

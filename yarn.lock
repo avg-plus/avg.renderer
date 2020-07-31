@@ -1684,6 +1684,11 @@
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz?cache=0&sync_timestamp=1572463171410&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fminimatch%2Fdownload%2F%40types%2Fminimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha1-PcoOPzOyAPx9ETnAzZbBJoyt/Z0=
 
+"@types/minimist@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.0.tgz#69a23a3ad29caf0097f06eda59b361ee2f0639f6"
+  integrity sha1-aaI6OtKcrwCX8G7aWbNh7i8GOfY=
+
 "@types/node@*":
   version "12.12.12"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.12.tgz?cache=0&sync_timestamp=1574470588950&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.12.tgz#529bc3e73dbb35dd9e90b0a1c83606a9d3264bdb"
@@ -6074,6 +6079,13 @@ ejs@^2.6.1, ejs@^2.6.2:
   version "2.7.4"
   resolved "https://registry.npm.taobao.org/ejs/download/ejs-2.7.4.tgz#48661287573dcc53e366c7a1ae52c3a120eec9ba"
   integrity sha1-SGYSh1c9zFPjZsehrlLDoSDuybo=
+
+electron-better-ipc@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/electron-better-ipc/-/electron-better-ipc-1.1.0.tgz#0419c39b57fbf03e78f07c46d5331c4d2ad85a1b"
+  integrity sha512-f+vNMAmSOWycmmW6+DCGkq5Y8Cgod9RyvgCKVmci+dxK+xF5iUAXJlriLJM5CKhxeC6b8dI52vkblXaeHsTGlA==
+  dependencies:
+    serialize-error "^5.0.0"
 
 electron-builder@^21.2.0:
   version "21.2.0"
@@ -11164,10 +11176,15 @@ minimist@1.1.x:
   resolved "https://registry.npm.taobao.org/minimist/download/minimist-1.1.3.tgz#3bedfd91a92d39016fcfaa1c681e8faa1a1efda8"
   integrity sha1-O+39kaktOQFvz6ocaB6Pqhoe/ag=
 
-minimist@1.2.3, minimist@^1.1.0, minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0:
+minimist@^1.1.0, minimist@^1.1.1, minimist@^1.1.3, minimist@^1.2.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.3.tgz#3db5c0765545ab8637be71f333a104a965a9ca3f"
   integrity sha512-+bMdgqjMN/Z77a6NlY/I3U5LlRDbnmaAk6lDveAPKwSpcPM4tKAuYsvYF8xjhOPXhOYGe/73vVLVez5PW+jqhw==
+
+minimist@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
+  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
 minimist@~0.0.1:
   version "0.0.10"

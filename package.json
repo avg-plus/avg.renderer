@@ -1,6 +1,6 @@
 {
   "name": "avg-plus",
-  "version": "0.1.68-alpha.0",
+  "version": "0.1.86-alpha.0",
   "description": "Powerful AVG Engine",
   "homepage": "http://avg-engine.com",
   "author": {
@@ -19,7 +19,7 @@
     "build:desktop": "cross-env GAME_PLATFORM=desktop NODE_ENV=production && node --max_old_space_size=15048 ./node_modules/@angular/cli/bin/ng build -c=desktop",
     "build:browser": "cross-env GAME_PLATFORM=browser NODE_ENV=production node --max_old_space_size=15048 ./node_modules/@angular/cli/bin/ng build -c=browser",
     "game": "yarn game:desktop",
-    "game:desktop": "electron ./dist/desktop-dev/main.electron.js --serve $*"
+    "game:desktop": "electron ./dist/desktop-dev/main.electron.js --serve $* --debug=127.0.0.1:8080"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -27,6 +27,7 @@
     "comment-core-library": "0.9.3",
     "core-js": "2.4.1",
     "dat.gui": "^0.7.6",
+    "electron-better-ipc": "^1.1.0",
     "escodegen": "^1.9.1",
     "esprima": "^4.0.1",
     "esutils": "^2.0.2",
@@ -78,6 +79,7 @@
     "@types/jasmine": "2.5.53",
     "@types/joi": "^14.3.3",
     "@types/jquery": "^3.3.2",
+    "@types/minimist": "^1.2.0",
     "@types/node": "7.0.7",
     "@types/pixi.js": "^4.8.8",
     "@types/semver": "^6.2.0",
@@ -131,7 +133,7 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "karma-sourcemap-loader": "0.3.7",
     "less-loader": "4.0.4",
-    "minimist": "1.2.3",
+    "minimist": "^1.2.5",
     "mkdirp": "0.5.1",
     "node-bin-setup": "^1.0.6",
     "node-sass": "^4.13.0",
