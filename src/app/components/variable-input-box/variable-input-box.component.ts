@@ -11,7 +11,7 @@ import { InputData } from "engine/data/input-data";
 export class VariableInputComponent implements OnInit, AfterViewInit {
   inputData: InputData = undefined;
   inputValue: string | number;
-  private _complete: (isOk: boolean, value: string | number) => void;
+  private _complete: (ok: boolean, value: string | number) => void;
 
   constructor(private changeDetector: ChangeDetectorRef) {}
 
@@ -19,7 +19,7 @@ export class VariableInputComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {}
 
-  public show(data: InputData, onCompleted: (isOk: boolean, value: string | number) => void) {
+  public show(data: InputData, onCompleted: (ok: boolean, value: string | number) => void) {
     this.inputData = data;
     this._complete = onCompleted;
 

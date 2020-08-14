@@ -11,6 +11,7 @@ export enum ResourcePath {
   Voice,
 
   // Graphics
+  Graphics,
   Backgrounds,
   DMaps,
   Images,
@@ -19,6 +20,7 @@ export enum ResourcePath {
   UI,
   Icons,
   Effects,
+  Emoji,
 
   // Plugins
   Plugins,
@@ -86,8 +88,13 @@ export class GameResource {
         ResourcePath.Characters,
         AVGNativePath.join(this._assetsRoot, "graphics/characters")
       ],
+      [
+        ResourcePath.Emoji,
+        AVGNativePath.join(this._assetsRoot, "graphics/emoji")
+      ],
       [ResourcePath.Scripts, AVGNativePath.join(this._assetsRoot, "scripts")],
       [ResourcePath.Audio, AVGNativePath.join(this._assetsRoot, "audio")],
+      [ResourcePath.Graphics, AVGNativePath.join(this._assetsRoot, "graphics")],
 
       // Data
       [ResourcePath.Masks, AVGNativePath.join(this._dataRoot, "masks")],
@@ -115,13 +122,10 @@ export class GameResource {
       return undefined;
     }
 
-    // if (Env.isRunStandalone()) {
-    // Run in node.js
-    // dirPath = AVGNativePath.join(this._assetsRoot, dirPath, joinPath);
     dirPath = AVGNativePath.join(dirPath, joinPath);
-
-    // }
 
     return dirPath;
   }
+
+  public static setPath(dir: ResourcePath, value: string) {}
 }

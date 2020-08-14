@@ -4,6 +4,7 @@ import { PluginInfo } from "../plugin-info";
 import { AVGInternalPlugin } from "../avg-internal-plugin";
 import { Dialogue } from "engine/data/dialogue";
 import { APIVariable } from "engine/scripting/api/api-variable";
+import { GameResource, ResourcePath } from 'engine/core/resource';
 
 // export function activate(context) {
 //   return new DialogueParserPlugin();
@@ -88,7 +89,8 @@ export class DialogueParserPlugin extends AVGInternalPlugin {
     text = text.replace(/\[\/s\]/g, `</span>`);
 
     // Grammar: [emoji=file]
-    text = text.replace(/\[emoji=([\w\-\. ]+)]/g, `<img src='assets/graphics/emoji/$1' />`);
+    const path = GameResource.getPath(ResourcePath.Emoji);
+    text = text.replace(/\[emoji=([\w\-\. ]+)]/g, `<img src='${path}$1' />`);
 
     // Grammar: [br]
     text = text.replace(/\[br]/g, `<br>`);

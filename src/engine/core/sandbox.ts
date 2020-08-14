@@ -7,8 +7,16 @@ import { SelectedDialogueChoice } from "engine/scripting/api/api-dialogue-choice
 export class Sandbox {
   public static console = console;
 
+  // 全局临时变量，进程结束后释放
   public $data = (global["$data"] = {});
-  // public $global = (global["$global"] = {});
+
+  // 存档变量，会储存到存档中
+  public $archive = (global["$archive"] = {});
+
+  // 周目变量
+  public $persistence = (global["$persistence"] = {});
+
+
   public AVGEngineError = (global["AVGEngineError"] = AVGEngineError);
   public game = global["game"];
 

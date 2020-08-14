@@ -191,11 +191,11 @@ export class MainSceneComponent implements OnInit, AfterViewInit {
           this.router.navigate(["title-view"]);
           scriptingContext.resolver();
         } else if (scriptingContext.api instanceof APIInputBox) {
-          this.inputBox.show(scriptingContext.api.data, (isOk, inputValue) => {
-            console.log(isOk, inputValue);
+          this.inputBox.show(scriptingContext.api.data, (ok, inputValue) => {
+            console.log(ok, inputValue);
 
             const result = new InputBoxResult();
-            result.isOK = isOk;
+            result.ok = ok;
             result.value = inputValue;
 
             scriptingContext.resolver(result);

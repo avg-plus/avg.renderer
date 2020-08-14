@@ -23,10 +23,12 @@ export class CharacterScriptingHandler {
 
     const image = new ScreenImage();
     image.file = ResourceData.from(api.filename);
-    image.renderer = <AVGSpriteRenderer>character.renderer;
+    image.renderer = Object.assign(new AVGSpriteRenderer(), <AVGSpriteRenderer>character.renderer);
     image.spriteType = SpriteType.Character;
     image.name = api.name;
     image.animation = character.animation;
+
+    console.log("handleShowCharacter", image);
 
     let slot = SlotManager.getSlot(HookSlots.CharacterEnterAnimation);
 
@@ -38,7 +40,10 @@ export class CharacterScriptingHandler {
     };
 
     // @ Hook 触发 CharacterBeforeEnter
-    const hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeEnter, hookContext);
+    const hookResult = await HookManager.triggerHook(
+      HookEvents.CharacterBeforeEnter,
+      hookContext
+    );
 
     // 重置数据
     if (hookResult) {
@@ -55,9 +60,19 @@ export class CharacterScriptingHandler {
 
     CharacterScriptingHandler.currentCharacter = hookContext;
     if (api.isAsync) {
-      SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, false);
+      SpriteWidgetManager.addSpriteWidget(
+        image,
+        slot,
+        LayerOrder.TopLayer,
+        false
+      );
     } else {
-      await SpriteWidgetManager.addSpriteWidget(image, slot, LayerOrder.TopLayer, true);
+      await SpriteWidgetManager.addSpriteWidget(
+        image,
+        slot,
+        LayerOrder.TopLayer,
+        true
+      );
     }
 
     // @ Hook 触发 CharacterAfterEnter
@@ -66,7 +81,9 @@ export class CharacterScriptingHandler {
     scriptingContext.resolver();
   }
 
-  public static async handleUpdateCharacter(scriptingContext: ScriptingContext) {
+  public static async handleUpdateCharacter(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APICharacter>scriptingContext.api;
     const image = new ScreenImage();
     image.file = ResourceData.from(api.filename);
@@ -91,7 +108,10 @@ export class CharacterScriptingHandler {
     };
 
     // @ Hook 触发 CharacterBeforeLeave
-    let hookResult = await HookManager.triggerHook(HookEvents.CharacterBeforeLeave, hookContext);
+    let hookResult = await HookManager.triggerHook(
+      HookEvents.CharacterBeforeLeave,
+      hookContext
+    );
     // let animation = data.animation || hookResult.animation; // 优先使用指定的animation
 
     // 跳过模式处理，忽略时间
@@ -99,7 +119,11 @@ export class CharacterScriptingHandler {
       slot.totalDuration = 0;
     }
 
-    await SpriteWidgetManager.removeSpriteWidget(api.name, hookResult.animation, !api.isAsync);
+    await SpriteWidgetManager.removeSpriteWidget(
+      api.name,
+      hookResult.animation,
+      !api.isAsync
+    );
 
     // @ Hook 触发 CharacterChanged
     await HookManager.triggerHook(HookEvents.CharacterChanged);
@@ -107,7 +131,9 @@ export class CharacterScriptingHandler {
     scriptingContext.resolver();
   }
 
-  public static async handleAnimateCharacter(scriptingContext: ScriptingContext) {
+  public static async handleAnimateCharacter(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APICharacter>scriptingContext.api;
     const animation = api.data.animation;
 
@@ -116,7 +142,11 @@ export class CharacterScriptingHandler {
       animation.totalDuration = 0;
     }
 
-    await SpriteWidgetManager.animateSpriteWidget(api.name, animation, !api.isAsync);
+    await SpriteWidgetManager.animateSpriteWidget(
+      api.name,
+      animation,
+      !api.isAsync
+    );
     scriptingContext.resolver();
   }
 
@@ -135,19 +165,27 @@ export class CharacterScriptingHandler {
   //   scriptingContext.resolver();
   // }
 
-  public static async handleSetCharacterFilter(scriptingContext: ScriptingContext) {
+  public static async handleSetCharacterFilter(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APICharacter>scriptingContext.api;
 
     for (let i = 0; i < api.data.renderer.filters.length; ++i) {
       const filter = api.data.renderer.filters[i];
 
-      await SpriteWidgetManager.setSpriteFilters(api.name, filter.name, filter.data);
+      await SpriteWidgetManager.setSpriteFilters(
+        api.name,
+        filter.name,
+        filter.data
+      );
     }
 
     scriptingContext.resolver();
   }
 
-  public static async handleClearCharacterFilter(scriptingContext: ScriptingContext) {
+  public static async handleClearCharacterFilter(
+    scriptingContext: ScriptingContext
+  ) {
     const api = <APICharacter>scriptingContext.api;
 
     await SpriteWidgetManager.clearSpriteFilters(api.name);

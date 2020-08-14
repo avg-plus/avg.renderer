@@ -22,7 +22,9 @@ import { randomIn, getRandomBetween } from "engine/core/utils";
 import { HTMLWidgetManager } from "./common/manager/html-widget-manager";
 import { DanmakuManager } from "engine/core/danmaku-mananger";
 import { DebugConnection } from "engine/core/debug-server/debug-server";
-import { remote } from "electron";
+import minimist = require("minimist");
+
+// import minimist = require("minimist");
 
 @Injectable()
 export class GameInitializer implements CanActivate {
@@ -100,6 +102,29 @@ export class GameInitializer implements CanActivate {
     DanmakuManager.initDanmaku();
   }
 
+  async initProcessArgs() {
+    // if (PlatformService.isDesktop()) {
+    //   const { remote } = require("electron");
+    //   const global = remote.getGlobal("global");
+
+    //   const args =  JSON.parse(JSON.stringify(global.args));
+    //   console.log("initProcessArgs args", args) ;
+      
+    //   if (global && global.args) {
+    //     const args = minimist(global.args, {
+    //       "--": false,
+    //       string: ["serve"]
+    //     });
+    //     if (args) {
+    //       delete args._;
+
+    //       remote.getGlobal("global").args = args;
+    //       console.log("args = ", args);
+    //     }
+    //   }
+    // }
+  }
+
   // Init engine environment settings
   public async initEngineSettings() {
     const content = await AVGNativeFS.readFileSync(
@@ -159,9 +184,23 @@ export class GameInitializer implements CanActivate {
   }
 
   public async initDebugServer() {
-    const { debug } = remote.getGlobal("global").args;
-    if (debug) {
-      await DebugConnection.start(debug);
+    if (PlatformService.isDesktop()) {
+      const { remote } = require("electron");
+
+      const global = remote.getGlobal("global");
+      console.log("main global = ", global.args);
+      if (global) {
+        const { debug, dockIcon } = global.args;
+
+        if (debug) {
+          // 调试模式则改变图标
+          if (dockIcon) {
+            remote.app.dock.setIcon(dockIcon);
+          }
+
+          await DebugConnection.start(debug);
+        }
+      }
     }
   }
 

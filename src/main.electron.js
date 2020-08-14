@@ -1,13 +1,11 @@
 const { app, BrowserWindow } = require("electron");
-import minimist from "minimist";
+const minimist = require("./libs/minimist");
+
 let win;
 
-const args = minimist(process.argv.slice(2));
-delete args._;
-console.log("args = ", args);
+process.argv = process.argv.slice(2);
 
 app.commandLine.appendSwitch("in-process-gpu");
-// app.commandLine.appendSwitch("allow-insecure-localhost", "true");
 
 function createWindow() {
   // const electronScreen = screen;
@@ -33,17 +31,19 @@ function createWindow() {
 
   // 隐藏窗口，等待游戏加载完成之后确认尺寸再显示窗口
   win.hide();
+  win.setMenu(null);
 
   // and load the index.html of the app.
   win.loadURL(`file://` + __dirname + `/index.html`);
 
-  global.args = {
-    debug: args.debug
-  };
 
-  if (args.serve) {
-    win.webContents.openDevTools();
-  }
+  global.args = minimist(process.argv);
+
+  console.log("  global.args from main: ",  global.args);
+
+  // if (global.args) {
+  //   win.webContents.openDevTools();
+  // }
 
   win.on("closed", () => {
     win = null;

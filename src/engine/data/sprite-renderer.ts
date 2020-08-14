@@ -1,3 +1,6 @@
+import { TransformConverter } from "engine/core/transform-converter";
+import { AnimateTargetType } from "engine/core/graphics/sprite-animate-director";
+
 export class SpriteFilter {
   public name: string;
   public data: any;
@@ -9,7 +12,26 @@ export class AVGSpriteRenderer {
   public width: number = 0;
   public height: number = 0;
   public size: string = "(100%,100%)";
-  public position: string = "(0%,0%)";
+  private _position: { left: string; right: string } = {
+    left: "0",
+    right: "0"
+  };
+
+  public set position(value: string) {
+    this._position = TransformConverter.toActualPosition(
+      value || `(${this.x || 0}, ${this.y || 0})`,
+      AnimateTargetType.Sprite
+    );
+
+    // 修正 X, Y
+    this.x = +this._position.left;
+    this.y = +this._position.right;
+  }
+
+  public get position() {
+    return `(${this._position.left}, ${this._position.right})`;
+  }
+
   public scale: number;
   public scaleX: number;
   public scaleY: number;

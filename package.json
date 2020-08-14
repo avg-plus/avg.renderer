@@ -1,6 +1,6 @@
 {
   "name": "avg-plus",
-  "version": "0.1.86-alpha.0",
+  "version": "0.1.101-alpha.0",
   "description": "Powerful AVG Engine",
   "homepage": "http://avg-engine.com",
   "author": {
@@ -19,12 +19,12 @@
     "build:desktop": "cross-env GAME_PLATFORM=desktop NODE_ENV=production && node --max_old_space_size=15048 ./node_modules/@angular/cli/bin/ng build -c=desktop",
     "build:browser": "cross-env GAME_PLATFORM=browser NODE_ENV=production node --max_old_space_size=15048 ./node_modules/@angular/cli/bin/ng build -c=browser",
     "game": "yarn game:desktop",
-    "game:desktop": "electron ./dist/desktop-dev/main.electron.js --serve $* --debug=127.0.0.1:8080"
+    "game:desktop": "electron ./dist/desktop-dev/main.electron.js --serve $* --debug=127.0.0.1:56100"
   },
   "dependencies": {
+    "@types/ws": "^7.2.6",
     "axios": "^0.19.0",
     "browserfs": "^1.4.3",
-    "comment-core-library": "0.9.3",
     "core-js": "2.4.1",
     "dat.gui": "^0.7.6",
     "electron-better-ipc": "^1.1.0",
@@ -47,7 +47,6 @@
     "rxjs-compat": "^6.0.0-rc.0",
     "sass.js": "^0.11.0",
     "tslib": "^1.10.0",
-    "urljoin": "^0.1.5",
     "verror": "^1.10.0",
     "zone.js": "~0.8.29"
   },
@@ -133,7 +132,6 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "karma-sourcemap-loader": "0.3.7",
     "less-loader": "4.0.4",
-    "minimist": "^1.2.5",
     "mkdirp": "0.5.1",
     "node-bin-setup": "^1.0.6",
     "node-sass": "^4.13.0",

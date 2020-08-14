@@ -1,7 +1,7 @@
 import { EngineAPI_Flow } from "engine/scripting/exports";
 import { DebugCommands } from "./commands";
 
-const WebSocket = require("ws");
+import * as WebSocket from "ws";
 
 export class DebugConnection {
   static async start(server: string) {
@@ -9,7 +9,7 @@ export class DebugConnection {
 
     socket.addEventListener("open", event => {
       // socket.send("Hello Server!");
-      socket.send({
+      this.sendMessage(socket, {
         cmd: "register",
         data: {
           PID: process.pid
@@ -20,13 +20,19 @@ export class DebugConnection {
     socket.addEventListener("message", event => {
       console.log("Message from server ", event.data);
 
-      if (!event.data || !event.data.cmd) {
+      const data = JSON.parse(event.data);
+
+      if (!data || !data.cmd) {
         console.log("error: unknown command.");
         return;
       }
 
-      this.handleMessage(event.data.cmd, event.data.data);
+      this.handleMessage(data.cmd, data.data);
     });
+  }
+
+  private static async sendMessage(socket: WebSocket, data: any) {
+    socket.send(JSON.stringify(data));
   }
 
   static async handleMessage(cmd: string, data: any) {
@@ -35,6 +41,8 @@ export class DebugConnection {
         window.location.reload();
         break;
       case DebugCommands.RunStory:
+        console.log("run story", data);
+        
         await EngineAPI_Flow.executeScript(data.script);
         break;
     }

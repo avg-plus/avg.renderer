@@ -29,6 +29,6 @@ export class ScreenWidgetHtml extends ScreenWidget {
   // }
 
   constructor() {
-    super(ScreenWidgetType.Image);
+    super(ScreenWidgetType.Html);
   }
 }

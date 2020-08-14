@@ -42,8 +42,6 @@ export class SpriteFilters {
    */
   public setFilter(type: string, data: any) {
 
-    console.log("setFilter: ", type, data);
-
     let filterObject = this.filters.get(type);
     if (!filterObject) {
       filterObject = new SpriteFilterObject();

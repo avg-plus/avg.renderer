@@ -26,7 +26,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
     model.name = super.validateImageID(id);
-    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Backgrounds).filename;
+    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Graphics).filename;
 
     if (!options || !(options instanceof Object)) {
       options = new Scene();

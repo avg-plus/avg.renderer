@@ -153,6 +153,9 @@ export class EngineAPI_Flow extends AVGExportedAPI {
 
 
   public static async executeScript(code: string) {
+
+    console.log("executeScript", code);
+    
     let model = new APICallScript();
     model.code = code;
 

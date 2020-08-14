@@ -1,12 +1,18 @@
 import { HookEvents } from "./../../../engine/plugin/hooks/hook-events";
 import { HookManager } from "./../../../engine/plugin/hooks/hook-manager";
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ChangeDetectorRef
+} from "@angular/core";
 
-import { Subject ,  Observable } from "rxjs";
+import { Subject, Observable } from "rxjs";
 
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
 import { AnimationUtils } from "../../common/animations/animation-utils";
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 
 import { Dialogue } from "engine/data/dialogue";
 import { Setting } from "engine/core/setting";
@@ -15,7 +21,10 @@ import { AVGPluginHooks } from "engine/plugin/avg-plugin";
 import { DialogueChoice } from "engine/data/dialogue-choice";
 import { Character } from "engine/data/character";
 
-import { SelectedDialogueChoice, APIDialogueChoice } from "engine/scripting/api/api-dialogue-choices";
+import {
+  SelectedDialogueChoice,
+  APIDialogueChoice
+} from "engine/scripting/api/api-dialogue-choices";
 import { EngineAPI_Audio } from "engine/scripting/exports/audio";
 import { DialogueParserPlugin } from "engine/plugin/internal/dialogue-parser-plugin";
 
@@ -36,6 +45,7 @@ export enum DialogueBoxStatus {
 })
 export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public dialogueData: Dialogue;
+  public cachedTrustedHTML: SafeHtml;
 
   public animatedText = "";
   public currentStatus = DialogueBoxStatus.None;
@@ -43,7 +53,9 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public typewriterHandle = null;
   public autoPlayDelayHandle = null;
   public subject: Subject<DialogueBoxStatus> = new Subject<DialogueBoxStatus>();
-  public choicesSubject: Subject<SelectedDialogueChoice> = new Subject<SelectedDialogueChoice>();
+  public choicesSubject: Subject<SelectedDialogueChoice> = new Subject<
+    SelectedDialogueChoice
+  >();
 
   public dialogueChoices: APIDialogueChoice;
   private isWaitingInput = false;
@@ -55,7 +67,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   public character_slot: Array<any>;
   public characters: Array<Character>;
 
-  constructor(public changeDetectorRef: ChangeDetectorRef, public sanitizer: DomSanitizer) {
+  constructor(
+    public changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer
+  ) {
     this.character_slot = new Array<any>(5);
     this.characters = new Array<Character>(5);
 
@@ -148,7 +163,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogueData.name = result.name;
     this.dialogueData.text = result.text;
 
-    AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
+    AnimationUtils.fadeTo(
+      ".dialogue-text-box",
+      this.DIALOGUE_BOX_SHOW_DURATION,
+      1
+    );
 
     if (this.currentName && this.currentName.length > 0) {
       AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_SHOW_DURATION, 1);
@@ -159,8 +178,12 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private async onTriggerPlugin() {
     // 内部插件解析文本
-    this.dialogueData.name = DialogueParserPlugin.parseContent(this.dialogueData.name);
-    this.dialogueData.text = DialogueParserPlugin.parseContent(this.dialogueData.text);
+    this.dialogueData.name = DialogueParserPlugin.parseContent(
+      this.dialogueData.name
+    );
+    this.dialogueData.text = DialogueParserPlugin.parseContent(
+      this.dialogueData.text
+    );
 
     // @ Hook 触发 DialogueShow
     return await HookManager.triggerHook(HookEvents.DialogueShow, {
@@ -170,10 +193,15 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public hideBox() {
-    AnimationUtils.fadeTo(".dialogue-text-box", this.DIALOGUE_BOX_HIDE_DURATION, 0, () => {
-      this.currentStatus = DialogueBoxStatus.Hidden;
-      this.subject.next(DialogueBoxStatus.Hidden);
-    });
+    AnimationUtils.fadeTo(
+      ".dialogue-text-box",
+      this.DIALOGUE_BOX_HIDE_DURATION,
+      0,
+      () => {
+        this.currentStatus = DialogueBoxStatus.Hidden;
+        this.subject.next(DialogueBoxStatus.Hidden);
+      }
+    );
     AnimationUtils.fadeTo(".name-box", this.DIALOGUE_BOX_HIDE_DURATION, 0);
   }
 
@@ -219,6 +247,10 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getTrustedAnimatedText() {
+    if (this.currentStatus === DialogueBoxStatus.Complete) {
+      return this.cachedTrustedHTML;
+    }
+
     return this.sanitizer.bypassSecurityTrustHtml(this.animatedText);
   }
 
@@ -247,6 +279,11 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (data) {
+      // 缓存已完成的结果
+      this.cachedTrustedHTML = this.sanitizer.bypassSecurityTrustHtml(
+        this.dialogueData.text
+      );
+
       this.startTypewriter();
     }
     console.log(`Update dialogue data:`, data);
@@ -403,7 +440,7 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public onAutoPlay() {
     console.log("Setting.AutoPlay", Setting.AutoPlay);
-    
+
     if (Setting.AutoPlay) {
       clearTimeout(this.autoPlayDelayHandle);
       this.autoPlayDelayHandle = null;

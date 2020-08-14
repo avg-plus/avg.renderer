@@ -320,8 +320,8 @@ export class Scene {
     }
 
     gsap.TweenLite.to(sprite.scale, duration / 1000, {
-      x: zoom * (sprite.scaleX > 0 ? 1 : -1),
-      y: zoom * (sprite.scaleY > 0 ? 1 : -1)
+      x: zoom * (sprite.scale.x > 0 ? 1 : -1),
+      y: zoom * (sprite.scale.y > 0 ? 1 : -1)
     });
   }
 

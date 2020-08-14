@@ -15,7 +15,7 @@ export class TransformConverter {
   static toActualPosition(
     position: AVGMeasurementUnit | string,
     target: AnimateTargetType
-  ) {
+  ): { left: string; right: string } {
     // const values: any[] = [];
 
     const result = {

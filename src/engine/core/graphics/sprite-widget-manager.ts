@@ -27,14 +27,10 @@ export class SpriteWidgetManager {
       image.file.filename
     );
     const renderer = image.renderer || new AVGSpriteRenderer();
-
     const position = TransformConverter.toActualPosition(
-      renderer.position || `(${renderer.x}, ${renderer.y})`,
+      renderer.position || `(${renderer.x || 0}, ${renderer.y || 0})`,
       AnimateTargetType.Sprite
     );
-
-    console.log("image.size",image.file.filename, renderer.size);
-
     const size = TransformConverter.toActualSzie(
       renderer.size || "(100%, 100%)",
       AnimateTargetType.Sprite,

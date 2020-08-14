@@ -16,6 +16,17 @@ export enum ResizeMode {
   Custom // 自定义大小
 }
 
+type AnimatedPropertyKeys =
+  | "scale"
+  | "scaleX"
+  | "scaleY"
+  | "skew"
+  | "skewX"
+  | "skewY"
+  | "x"
+  | "y"
+  | "angle";
+
 export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
   private _distance = 0;
   public static MAX_CAMERA_DISTANCE = 5000;
@@ -26,10 +37,14 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
   public spriteType = SpriteType.Normal;
 
   public spriteDebugger: SpriteDebugger;
-
   public spriteFilters: SpriteFilters;
 
-  constructor(type: SpriteType, texture: PIXI.Texture, width?: number, height?: number) {
+  constructor(
+    type: SpriteType,
+    texture: PIXI.Texture,
+    width?: number,
+    height?: number
+  ) {
     super(texture);
 
     this.initialX = 0;
@@ -40,6 +55,69 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
   }
 
   public renderer: AVGSpriteRenderer;
+
+  setProperty(key: AnimatedPropertyKeys, value: number) {
+    switch (key) {
+      case "x":
+        super.position.x = value;
+        break;
+      case "y":
+        super.position.y = value;
+        break;
+      case "scale":
+        super.scale.set(value, value);
+        break;
+      case "scaleX":
+        super.scale.x = value;
+        break;
+      case "scaleY":
+        super.scale.y = value;
+        break;
+      case "skew":
+        super.skew.set(value, value);
+        break;
+      case "skewX":
+        super.scale.x = value;
+        break;
+      case "skewY":
+        super.scale.y = value;
+        break;
+      case "angle":
+        super.angle = value;
+        break;
+    }
+  }
+
+  getProperty(key: AnimatedPropertyKeys) {
+    switch (key) {
+      case "x":
+        return super.position.x;
+      case "y":
+        return super.position.y;
+      case "scale":
+        return super.scale;
+      case "scaleX":
+        return super.scale.x;
+      case "scaleY":
+        return super.scale.y;
+      case "skew":
+        return super.skew;
+      case "skewX":
+        return super.scale.x;
+      case "skewY":
+        return super.scale.y;
+      case "angle":
+        return super.angle;
+    }
+  }
+
+  public get angle() {
+    return super.angle;
+  }
+
+  public set angle(value: number) {
+    super.angle = value;
+  }
 
   public get scaleX() {
     return super.scale.x;
@@ -55,6 +133,22 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
 
   public set scaleY(value: number) {
     super.scale.y = value;
+  }
+
+  public get skewX() {
+    return super.skew.x;
+  }
+
+  public set skewX(value: number) {
+    super.skew.x = value;
+  }
+
+  public get skewY() {
+    return super.skew.y;
+  }
+
+  public set skewY(value: number) {
+    super.skew.y = value;
   }
 
   // 缩放模式

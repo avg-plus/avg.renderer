@@ -5,7 +5,7 @@ class BlurFilter extends FilterBase {
   name: "BlurFilter";
 
   public instance() {
-    return new PIXI.filters.BlurFilter();
+    return new PIXI.filters.BlurFilter(0);
   }
 
   //   validate: folder => {

@@ -7,7 +7,7 @@ export enum InputType {
 }
 
 export class InputBoxResult {
-  public isOK: boolean = true;
+  public ok: boolean = true;
   public value: string | number = "";
 }
 

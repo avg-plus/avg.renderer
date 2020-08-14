@@ -75,9 +75,6 @@ export class EngineAPI_Character extends AVGExportedAPI {
     });
   }
 
-  // public static async setFilter(name: string, filterType: string, data: any) {
-  //   SpriteWidgetManager.setSpriteFilters(name, filterType, data);
-  // }
 
   public static async filter(name: string, filters: SpriteFilter[]) {
     let model = new APICharacter();
