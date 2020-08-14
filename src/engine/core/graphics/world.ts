@@ -36,7 +36,8 @@ class World {
     this.app = new PIXI.Application({
       width,
       height,
-      antialias: false,
+      forceFXAA: true,
+      antialias: true,
       preserveDrawingBuffer: true,
       transparent: true,
       backgroundColor: 0,

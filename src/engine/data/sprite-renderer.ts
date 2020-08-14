@@ -24,8 +24,8 @@ export class AVGSpriteRenderer {
     );
 
     // 修正 X, Y
-    this.x = +this._position.left;
-    this.y = +this._position.right;
+    this.x = +this._position.left
+    this.y = +this._position.right
   }
 
   public get position() {

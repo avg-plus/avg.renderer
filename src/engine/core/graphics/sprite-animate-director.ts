@@ -1,5 +1,5 @@
 import * as gsap from "gsap";
-import { Sprite } from "./sprite";
+import { Sprite, AnimatedPropertyKeys } from "./sprite";
 import { Scene } from "./scene";
 import { isNullOrUndefined } from "../utils";
 import { SpriteFilter } from "engine/data/sprite-renderer";
@@ -14,15 +14,15 @@ export enum AnimateTargetType {
 
 class MacroFrame {
   duration?: number = 0;
+  ease?: gsap.Ease;
+  [key: string]: any;
 }
 
 class SpriteMacroFrame extends MacroFrame {
-  [key: string]: any;
   filters?: SpriteFilter[] = [];
 }
 
 class CSSMacroFrame extends MacroFrame {
-  [key: string]: any;
 }
 
 class CameraMacroFrame extends MacroFrame {
@@ -198,7 +198,8 @@ export class SpriteAnimateDirector {
       let duration = (frame.duration || 1) / 1000;
 
       const { ...vars } = frame;
-      vars.ease = vars.ease || gsap.Power0.easeNone;
+
+      vars.ease = vars.ease || gsap.Power0.ease;
 
       // 把相关属性直接设置到 target(sprite)
       timeline.add(

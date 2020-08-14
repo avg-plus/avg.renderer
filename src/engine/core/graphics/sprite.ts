@@ -16,7 +16,7 @@ export enum ResizeMode {
   Custom // 自定义大小
 }
 
-type AnimatedPropertyKeys =
+export type AnimatedPropertyKeys =
   | "scale"
   | "scaleX"
   | "scaleY"

@@ -34,7 +34,6 @@
             ],
             "styles": ["src/styles.scss"],
             "scripts": [
-              "src/app/common/live2d/lib/live2d.min.js",
               "node_modules/jquery/dist/jquery.min.js"
             ]
           },
