@@ -1,12 +1,16 @@
 import * as PIXI from "pixi.js";
 import * as ExtraFilters from "pixi-filters";
 import { FilterBase } from "./filter-base";
+import { Sprite } from "../sprite";
 
 class ZoomBlurFilter extends FilterBase {
   name: "ZoomBlurFilter";
 
-  public instance() {
-    return new ExtraFilters.ZoomBlurFilter(0);
+  public instance(parent: Sprite) {
+    return new ExtraFilters.ZoomBlurFilter(0, [
+      parent.width / 2,
+      parent.height / 2
+    ]);
   }
 
   public validate(folder) {
