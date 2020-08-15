@@ -21,12 +21,19 @@ export class EngineAPI_Scene extends AVGExportedAPI {
    * @param {string} filename The background image file of scene
    * @param {Scene} [options]
    */
-  public static async load(id: string, filename: string, options: Scene): Promise<SceneHandle> {
+  public static async load(
+    id: string,
+    filename: string,
+    options: Scene
+  ): Promise<SceneHandle> {
     let model = new APIScene();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
     model.name = super.validateImageID(id);
-    model.filename = ResourceData.from(super.validateFilename(filename), ResourcePath.Graphics).filename;
+    model.filename = ResourceData.from(
+      super.validateFilename(filename),
+      ResourcePath.Backgrounds
+    ).filename;
 
     if (!options || !(options instanceof Object)) {
       options = new Scene();
@@ -34,7 +41,9 @@ export class EngineAPI_Scene extends AVGExportedAPI {
 
     model.data = options;
     model.data.renderer = super.validateRenderer(model.data.renderer);
-    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
+    model.data.animation = super.validateSpriteAnimationMacro(
+      options.animation
+    );
 
     // 跳过模式处理，忽略时间
     // if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
@@ -77,7 +86,10 @@ export class EngineAPI_Scene extends AVGExportedAPI {
   //   return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
   // }
 
-  public static async remove(name: string | string[], animation?: SpriteAnimationMacro) {
+  public static async remove(
+    name: string | string[],
+    animation?: SpriteAnimationMacro
+  ) {
     let ids = [];
     if (Array.isArray(name)) {
       ids = name;
@@ -91,11 +103,16 @@ export class EngineAPI_Scene extends AVGExportedAPI {
       model.name = super.validateImageID(v);
       model.data.animation = super.validateSpriteAnimationMacro(animation);
 
-      await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
+      await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(
+        <APIScene>model
+      );
     });
   }
 
-  public static async animate(name: string, options: Scene): Promise<SceneHandle> {
+  public static async animate(
+    name: string,
+    options: Scene
+  ): Promise<SceneHandle> {
     let model = new APIScene();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
     model.name = super.validateImageID(name);
@@ -105,7 +122,9 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     }
 
     model.data = options;
-    model.data.animation = super.validateSpriteAnimationMacro(options.animation);
+    model.data.animation = super.validateSpriteAnimationMacro(
+      options.animation
+    );
 
     // 跳过模式处理，忽略时间
     // if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
