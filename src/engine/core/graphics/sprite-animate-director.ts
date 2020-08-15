@@ -179,8 +179,8 @@ export class SpriteAnimateDirector {
         initialFrame.filters = [];
       }
 
-      // timeline.to(target, 1 / 1000, initialFrame, 0);
-      timeline.set(target, initialFrame, 0);
+      timeline.to(target, 1 / 1000, initialFrame, 0);
+      // timeline.set(target, initialFrame, 0);
       initialFrame.filters.map(v => {
         console.log("Initial filter : ", v);
         target.spriteFilters.setFilter(v.name, v.data);
@@ -229,7 +229,7 @@ export class SpriteAnimateDirector {
       }
 
       // 累加当前关键帧的时间
-      timelineCursorTime += duration / 1000;
+      timelineCursorTime += duration;
     }
 
     // 设置时间轴的总时间
