@@ -68,8 +68,6 @@ export class Scene {
         const xRadio = this.renderer.width / sprite.texture.width;
         const yRadio = this.renderer.height / sprite.texture.height;
 
-        sprite.filters = sprite.spriteFilters.getFilterList();
-
         // 拉伸图像
         switch (sprite.resizeMode) {
           case ResizeMode.Stretch: {

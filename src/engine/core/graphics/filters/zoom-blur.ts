@@ -6,7 +6,7 @@ class ZoomBlurFilter extends FilterBase {
   name: "ZoomBlurFilter";
 
   public instance() {
-    return new ExtraFilters.ZoomBlurFilter();
+    return new ExtraFilters.ZoomBlurFilter(0);
   }
 
   public validate(folder) {

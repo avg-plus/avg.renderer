@@ -45,6 +45,7 @@ class World {
       resolution: 1
     });
 
+
     console.log("webGLVersion", this.app.renderer.context.webGLVersion) 
 
 
