@@ -51,9 +51,14 @@ export class HTMLWidgetScriptingHandler {
       styles = result.text;
 
       var shadow = HTMLWidgetManager.getShadowRoot();
-      var save = $(shadow)
-        .children()
-        .detach();
+      var save = $(shadow);
+
+      const t = save.find(`#${name}`);
+      if (t) {
+        t.remove();
+      }
+
+      save.children().detach();
 
       shadow.innerHTML = `
       <style id="${name}-style">
