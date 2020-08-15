@@ -174,18 +174,18 @@ export class SpriteAnimateDirector {
 
     // 初始关键帧
     //  - 如初始关键帧为 null, 则从对象当前状态开始
-    // if (initialFrame) {
-    //   if (!initialFrame.filters) {
-    //     initialFrame.filters = [];
-    //   }
+    if (initialFrame) {
+      if (!initialFrame.filters) {
+        initialFrame.filters = [];
+      }
 
-    //   timeline.to(target, 1 / 1000, initialFrame, 0);
-    //   // timeline.set(target, initialFrame, 0);
-    //   initialFrame.filters.map(v => {
-    //     console.log("Initial filter : ", v);
-    //     target.spriteFilters.setFilter(v.name, v.data);
-    //   });
-    // }
+      // timeline.to(target, 1 / 1000, initialFrame, 0);
+      timeline.set(target, initialFrame, 0);
+      initialFrame.filters.map(v => {
+        console.log("Initial filter : ", v);
+        target.spriteFilters.setFilter(v.name, v.data);
+      });
+    }
 
     // 记录时间轴的播放位置
     // 时间轴比0大一点，防止后续序列帧的播放位置覆盖初始化帧
@@ -217,7 +217,6 @@ export class SpriteAnimateDirector {
           timeline.add(
             gsap.TweenLite.to(obj.instance, duration, {
               ease: v.data.ease || gsap.Power0.easeNone,
-              // strength:,
               ...v.data,
               onUpdate: () => {
                 // 渲染滤镜
