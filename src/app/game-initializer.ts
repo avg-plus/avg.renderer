@@ -48,7 +48,7 @@ export class GameInitializer implements CanActivate {
 
   public async initErrorHandler() {
     AVGEngineError.init(window, error => {
-      alert("错误：" + error.desc);
+      // alert("错误：" + error.desc);
 
       // if (PlatformService.isDesktop()) {
       //   // window.close();
@@ -106,10 +106,8 @@ export class GameInitializer implements CanActivate {
     // if (PlatformService.isDesktop()) {
     //   const { remote } = require("electron");
     //   const global = remote.getGlobal("global");
-
     //   const args =  JSON.parse(JSON.stringify(global.args));
     //   console.log("initProcessArgs args", args) ;
-      
     //   if (global && global.args) {
     //     const args = minimist(global.args, {
     //       "--": false,
@@ -117,7 +115,6 @@ export class GameInitializer implements CanActivate {
     //     });
     //     if (args) {
     //       delete args._;
-
     //       remote.getGlobal("global").args = args;
     //       console.log("args = ", args);
     //     }
@@ -226,24 +223,14 @@ export class GameInitializer implements CanActivate {
 
       const win = remote.getCurrentWindow();
       if (Setting.FullScreen) {
-        // win.setBounds({
-        //   width: screen.getPrimaryDisplay().bounds.width,
-        //   height: screen.getPrimaryDisplay().bounds.height,
-        //   x: 0,
-        //   y: 0
-        // });
         win.setFullScreen(Setting.FullScreen);
       } else {
         win.setContentSize(Setting.WindowWidth, Setting.WindowHeight);
         win.show();
-        // win.setBounds({
-        //   width: Setting.WindowWidth,
-        //   height: Setting.WindowHeight,
-        //   x: screen.getPrimaryDisplay().bounds.width / 2 - Setting.WindowWidth / 2,
-        //   y: screen.getPrimaryDisplay().bounds.height / 2 - Setting.WindowHeight / 2
-        // });
       }
       // this.electronService.initDebugging();
+    } else {
+      window.resizeTo(Setting.WindowWidth, Setting.WindowHeight);
     }
   }
 
@@ -310,18 +297,6 @@ export class GameInitializer implements CanActivate {
       {
         tips: "加载游戏资源...",
         files: [
-          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/se/explode.wav"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "audio/bgm/living.mp3"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/backgrounds/lab-lighting.jpg"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-normal.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/kingwl-really.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-normal.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-laugh.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/latyas-serious.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-normal.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-smile.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/space-hidden.png"),
-          // AVGNativePath.join(Resource.getAssetsRoot(), "graphics/characters/vizee-normal.png"),
         ]
       }
     ]);

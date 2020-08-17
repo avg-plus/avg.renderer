@@ -75,7 +75,7 @@ export class SceneHandler {
     const animation = api.data.animation;
 
     // 跳过模式处理，忽略时间
-    if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
+    if (Sandbox.isSkipMode && Sandbox.skipOptions.scenes === true) {
       if (animation) {
         animation.totalDuration = 0;
       }

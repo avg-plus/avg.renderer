@@ -27,5 +27,7 @@ export class AVGEngineError {
       file: AVGStory.TracingScriptFile,
       data: data || {}
     });
+
+    throw new Error("An exception is emitted");
   }
 }

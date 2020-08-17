@@ -7,7 +7,7 @@ import * as ExtraFilters from "pixi-filters";
 import { Sprite } from "./sprite";
 import { ResourceManager } from "../resource-manager";
 import { SpriteFilter } from "engine/data/sprite-renderer";
-import { FilterBase } from "./filters/filter-base";
+import { FilterBase, IFilterArgs } from "./filters/filter-base";
 
 // export enum FilterType {
 //   BlurFilter = "blur",
@@ -39,7 +39,6 @@ export class SpriteFilters {
 
   public clearFilters() {
     this.filters = [];
-    this.render();
   }
 
   public createFilter(type: string, data: any) {}
@@ -51,19 +50,19 @@ export class SpriteFilters {
    * @param {*} data
    * @memberof SpriteFilters
    */
-  public setFilter(type: string, data: any) {
+  public setFilter(type: string, data: IFilterArgs) {
     let filterObject = this.getFilter(type);
     if (!filterObject) {
       // 动态加载滤镜
       const filter = require("./filters/" + type).default as FilterBase;
 
       // 处理特殊参数，部分滤镜需要mapTexture
-      let dmap = null;
-      if (data && data.map) {
-        dmap = GameResource.getPath(ResourcePath.DMaps, data.map);
-      }
+      // let dmap = null;
+      // if (data && data.dmap) {
+      //   dmap = GameResource.getPath(ResourcePath.DMaps, data.dmap);
+      // }
 
-      const pixiFilterInstance = filter.instance(this.sprite, dmap);
+      const pixiFilterInstance = filter.instance(this.sprite, data);
       pixiFilterInstance.enabled = true;
 
       // 创建滤镜对象

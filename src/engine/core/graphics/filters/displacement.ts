@@ -1,105 +1,71 @@
 import { GameWorld } from "./../world";
 import * as PIXI from "pixi.js";
-import { FilterBase } from "./filter-base";
+import { FilterBase, IFilterArgs } from "./filter-base";
 import { Sprite } from "../sprite";
+import { ResourcePath } from "engine/core/resource";
+
+interface IDisplacementFilterArgs extends IFilterArgs {
+  dmap: {
+    file: string;
+    scaleX?: number;
+    scaleY?: number;
+  };
+  animate?: number;
+  onUpdate?: (dmapSprite: PIXI.Sprite) => void;
+}
 
 class DisplacementFilter extends FilterBase {
   name: "DisplacementFilter";
-  //   args: [displacementSprite, this.initWidth, this.initHeight],
-  public instance(parent: Sprite, mapFile: string) {
-    const texture = PIXI.Texture.from(mapFile);
+  public instance(parent: Sprite, data: IDisplacementFilterArgs) {
+    data.dmap.file = super.bindFileField(data.dmap.file, ResourcePath.DMaps);
+
+    const texture = PIXI.Texture.from(data.dmap.file);
+
     const displacementSprite = new PIXI.Sprite(texture);
-    if (!displacementSprite) {
-      return null;
-    }
-    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
 
     const filter = new PIXI.filters.DisplacementFilter(displacementSprite);
-    // filter.padding = 10;
+    filter.scale.x = data.dmap.scaleX || 10;
+    filter.scale.y = data.dmap.scaleY || 20;
 
-    displacementSprite.anchor.set(0.5, 0.5);
-    // displacementSprite.width = 1000000;
-    // displacementSprite.tileScale.x = 10;
-    // GameWorld.app.stage.addChild(displacementSprite);
+    displacementSprite.position = parent.position;
+    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+
     parent.addChild(displacementSprite);
 
-    Object.defineProperty(filter, "angle", {
-      get: function() {
-        return displacementSprite.angle;
+    // 绑定属性
+    super.bindGetSet<PIXI.filters.DisplacementFilter>(
+      "scaleX",
+      filter,
+      obj => {
+        return obj.scale.x;
       },
-      set: function(value) {
-        displacementSprite.angle = value;
+      (obj, value) => {
+        obj.scale.x = value;
       }
-    });
+    );
 
-    // GameWorld.app.ticker.add(() => {
-    //   // Offset the sprite position to make vFilterCoord update to larger value. Repeat wrapping makes sure there's still pixels on the coordinates.
-    //   // displacementSprite.angle += 2;
-    //   // Reset x to 0 when it's over width to keep values from going to very huge numbers.
-    //   displacementSprite.tilePosition.x += 1;
-    //   // displacementSprite.tileTransform.position.x += 1;
-    //   // displacementSprite.y += 1;
-    // });
-
-    // let count = 0;
-
-    // GameWorld.app.ticker.add(() => {
-    //   count += 0.005;
-
-    //   displacementSprite.tileScale.x = 2 + Math.sin(count);
-    //   displacementSprite.tileScale.y = 2 + Math.cos(count);
-
-    //   displacementSprite.tilePosition.x += 1;
-    //   displacementSprite.tilePosition.y += 1;
-    // });
-
-    // setInterval(() => {
-    //   displacementSprite.alpha = 1;
-    //   displacementSprite.tileScale.x += 0.01;
-    //   displacementSprite.tileScale.y += 0.01;
-
-    //   console.log(displacementSprite);
-    // }, 10);
-
-    // Object.defineProperty(filter, "px", {
-    //   get: function() {
-    //     console.log("get px: ", displacementSprite.position.x);
-
-    //     return displacementSprite.tilePosition.x;
-    //   },
-    //   set: function(value) {
-    //     console.log("set px: ", value);
-
-    //     displacementSprite.tilePosition.x = value;
-    //   }
-    // });
-
-    // Object.defineProperty(filter, "py", {
-    //   get: function() {
-    //     return displacementSprite.tilePosition.y;
-    //   },
-    //   set: function(value) {
-    //     displacementSprite.tilePosition.y = value;
-    //   }
-    // });
-
-    Object.defineProperty(filter, "scaleX", {
-      get: function() {
-        return this.scale.x;
+    super.bindGetSet<PIXI.filters.DisplacementFilter>(
+      "scaleY",
+      filter,
+      obj => {
+        return obj.scale.y;
       },
-      set: function(value) {
-        this.scale.x = value;
+      (obj, value) => {
+        obj.scale.y = value;
       }
-    });
+    );
 
-    Object.defineProperty(filter, "scaleY", {
-      get: function() {
-        return this.scale.y;
-      },
-      set: function(value) {
-        this.scale.y = value;
-      }
-    });
+    // 是否自动动画
+    if (data.animate) {
+      GameWorld.app.ticker.add(() => {
+        if (data.onUpdate) {
+          data.onUpdate(displacementSprite);
+        } else {
+          // 默认动画
+          displacementSprite.x += 1;
+        }
+      });
+    }
 
     return filter;
   }

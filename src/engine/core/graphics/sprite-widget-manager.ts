@@ -26,6 +26,7 @@ export class SpriteWidgetManager {
       image.name,
       image.file.filename
     );
+
     const renderer = image.renderer || new AVGSpriteRenderer();
     const position = TransformConverter.toActualPosition(
       renderer.position || `(${renderer.x || 0}, ${renderer.y || 0})`,
@@ -148,6 +149,9 @@ export class SpriteWidgetManager {
     }
 
     sprite.spriteFilters.setFilter(filterType, data);
+
+    // 渲染滤镜
+    sprite.spriteFilters.render();
   }
 
   public static async clearSpriteFilters(name: string) {
@@ -157,6 +161,9 @@ export class SpriteWidgetManager {
     }
 
     sprite.spriteFilters.clearFilters();
+
+    // 渲染滤镜
+    sprite.spriteFilters.render();
   }
 
   public static async animateSpriteWidget(

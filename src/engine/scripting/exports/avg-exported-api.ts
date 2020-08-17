@@ -104,8 +104,8 @@ export class AVGExportedAPI {
             .min(0)
             .optional()
             .default([])
-            .description("初始关键帧")
-        }),
+            .description("初始关键帧"),
+        }).unknown(true),
       animation
     );
   }
@@ -205,7 +205,7 @@ export class AVGExportedAPI {
           .optional()
           .default(false)
           .description("是否拉伸至适应屏幕")
-      }),
+      }).unknown(true),
       renderer
     );
   }

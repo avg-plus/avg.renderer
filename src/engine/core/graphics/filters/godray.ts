@@ -1,4 +1,4 @@
-import * as PIXI from "pixi.js";
+// import * as PIXI from "pixi.js";
 import * as ExtraFilters from "pixi-filters";
 import { FilterBase } from "./filter-base";
 

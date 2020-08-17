@@ -14,7 +14,7 @@ import { PIXIGif } from "./pixi-gif/pixi-gif";
 import { SpriteType } from "engine/const/sprite-type";
 import { ResourceManager } from "../resource-manager";
 import { SpriteDebugger } from "./sprite-debugger";
-import { TestFilterObj } from './filters/avg-extras/test';
+import { TestFilterObj } from "./filters/avg-extras/test";
 
 export class Scene {
   isTilingMode = false;
@@ -145,14 +145,11 @@ export class Scene {
 
     console.log("On Scene Resized: ", xRatio, yRatio);
 
-
     this.children().map(sprite => {
-
       // 计算立绘的坐标
       if (sprite.spriteType === SpriteType.Character) {
         sprite.x = sprite.initialX * xRatio;
         sprite.spriteDebugger.update();
-
       } else if (sprite.spriteType === SpriteType.Scene) {
         this.stretch(sprite);
         this.centerSprite(sprite);
