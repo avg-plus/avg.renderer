@@ -39,13 +39,6 @@ export class SpriteWidgetManager {
       sprite.texture.height
     );
 
-    // 渲染滤镜
-    if (renderer.filters) {
-      renderer.filters.map(filter => {
-        sprite.spriteFilters.setFilter(filter.name, filter.data);
-      });
-    }
-
     sprite.spriteType = image.spriteType;
     sprite.resizeMode = ResizeMode.Custom;
     sprite.renderInCamera = renderer.renderInCamera;
@@ -88,6 +81,15 @@ export class SpriteWidgetManager {
     }
 
     GameWorld.defaultScene.addSprite(image.name, sprite, layerOrder);
+
+    // 渲染滤镜
+    if (renderer.filters) {
+      renderer.filters.map(filter => {
+        sprite.spriteFilters.setFilter(filter.name, filter.data);
+      });
+
+      sprite.spriteFilters.render();
+    }
 
     // 设置初始坐标，给摄像机提供坐标参考
     sprite.initialX = renderer.x;

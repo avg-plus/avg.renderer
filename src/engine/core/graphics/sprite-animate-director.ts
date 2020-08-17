@@ -162,7 +162,7 @@ export class SpriteAnimateDirector {
     macroObject: SpriteAnimationMacro
   ) {
     let initialFrame = macroObject.initialFrame;
-    const frames = macroObject.timeline || [];
+    let frames = macroObject.timeline || [];
 
     const timeline = new gsap.TimelineMax();
     timeline.pause();
@@ -174,19 +174,23 @@ export class SpriteAnimateDirector {
 
     // 初始关键帧
     //  - 如初始关键帧为 null, 则从对象当前状态开始
+    //  - 初始帧将作为 timeline 的第一帧插入
     if (initialFrame) {
       if (!initialFrame.filters) {
         initialFrame.filters = [];
       }
 
-      timeline.to(target, 1 / 1000, initialFrame, 0);
-      // timeline.set(target, initialFrame, 0);
-      initialFrame.filters.map(v => {
-        console.log("Initial filter : ", v);
-        target.spriteFilters.setFilter(v.name, v.data);
-      });
-    }
+      // 如果 renderer 中存在滤镜，则加到初始帧中一起渲染
+      if (target.renderer.filters && target.renderer.filters.length) {
+        initialFrame.filters.push(...target.renderer.filters);
+      }
 
+      // 作为第一帧插入到时间轴最前面，并且duration为0
+      // 这样做的好处是可以把状态均摊到时间轴中，防止单独处理出问题
+      initialFrame.duration = 0;
+      frames = [initialFrame, ...frames];
+    }
+    
     // 记录时间轴的播放位置
     // 时间轴比0大一点，防止后续序列帧的播放位置覆盖初始化帧
     let timelineCursorTime = 0.00001;
