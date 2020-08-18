@@ -27,7 +27,7 @@ export type AnimatedPropertyKeys =
   | "y"
   | "angle";
 
-export class Sprite extends PIXI.TilingSprite implements IOrderingSpirte {
+export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
   private _distance = 0;
   public static MAX_CAMERA_DISTANCE = 5000;
   public static MIN_CAMERA_DISTANCE = -5000;

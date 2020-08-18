@@ -90,8 +90,11 @@ export class AVGMeasurementUnit {
 
     if (right) {
       right = right.trim();
-      this.right = new MeasurementUnitPart(right);
+    } else {
+      right = left;
     }
+
+    this.right = new MeasurementUnitPart(right);
   }
 
   public static fromString(value: string) {
