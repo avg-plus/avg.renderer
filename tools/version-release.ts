@@ -28,7 +28,10 @@ program
     `可选： major, premajor, minor, preminor, patch, prepatch, prerelease`
   )
   .option("-i, --identifier [identifier]", "版本后缀", "alpha")
-  .option("-o, --output-directory [output]", "输出目录");
+  .option("-o, --output-directory [output]", "输出目录")
+  .option("-d, --remote-dir [remoteDir]", "SFTP 上传的远程路径")
+  .option("-k, --key [sshkey]", "SFTP 使用的私钥");
+  
 
 program.parse(process.argv);
 

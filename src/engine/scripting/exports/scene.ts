@@ -2,7 +2,7 @@ import * as joi from "joi";
 
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { APIScene, SceneHandle } from "../api/api-scene";
-import { Scene } from "../../data/scene";
+import { SceneSprite } from "../../data/scene";
 import { ResourcePath } from "../../core/resource";
 import { ResourceData } from "../../data/resource-data";
 import { APIManager } from "../api-manager";
@@ -17,12 +17,12 @@ export class EngineAPI_Scene extends AVGExportedAPI {
    *
    * @export
    * @param {string} filename The background image file of scene
-   * @param {Scene} [options]
+   * @param {SceneSprite} [options]
    */
   public static async load(
     id: string,
     filename: string,
-    options?: Scene
+    options?: SceneSprite
   ): Promise<SceneHandle> {
     let model = new APIScene();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
@@ -34,7 +34,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     ).filename;
 
     if (!options || !(options instanceof Object)) {
-      options = new Scene();
+      options = new SceneSprite();
     }
 
     model.data = options;

@@ -38,6 +38,7 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
 
   public spriteDebugger: SpriteDebugger;
   public spriteFilters: SpriteFilters;
+  public renderer: AVGSpriteRenderer;
 
   constructor(
     type: SpriteType,
@@ -52,9 +53,9 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
 
     this.spriteType = this.spriteType;
     this.spriteFilters = new SpriteFilters(this);
+
   }
 
-  public renderer: AVGSpriteRenderer;
 
   setProperty(key: AnimatedPropertyKeys, value: number) {
     switch (key) {

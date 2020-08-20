@@ -1,8 +1,3 @@
-import { Avatar } from "./avatar";
-import { AVGSpriteRenderer } from "./sprite-renderer";
-import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { ScreenSprite } from "./screen-sprite";
 
-export class Character {
-  public animation?: SpriteAnimationMacro;
-  public renderer?: AVGSpriteRenderer = new AVGSpriteRenderer();
-}
+export class CharacterSprite extends ScreenSprite {}

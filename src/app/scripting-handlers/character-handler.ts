@@ -1,6 +1,6 @@
 import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
 import { APICharacter } from "engine/scripting/api/api-character";
-import { Character } from "engine/data/character";
+import { CharacterSprite } from "engine/data/character";
 import { ScreenImage } from "engine/data/screen-image";
 import { ResourceData } from "engine/data/resource-data";
 import { AVGSpriteRenderer } from "engine/data/sprite-renderer";

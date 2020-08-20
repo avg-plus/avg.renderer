@@ -24,15 +24,26 @@ export class AVGSpriteRenderer {
     );
 
     // 修正 X, Y
-    this.x = +this._position.left
-    this.y = +this._position.right
+    this.x = +this._position.left;
+    this.y = +this._position.right;
   }
 
   public get position() {
     return `(${this._position.left}, ${this._position.right})`;
   }
 
-  public scale: number;
+  private _scale: number;
+  public get scale() {
+    return this._scale;
+  }
+
+  public set scale(value: number) {
+    this.scaleX = value;
+    this.scaleY = value;
+
+    this._scale = value;
+  }
+
   public scaleX: number;
   public scaleY: number;
   public skew: number = 0;

@@ -1,5 +1,5 @@
 import { AVGScriptUnit } from "../script-unit";
-import { Scene } from "engine/data/scene";
+import { SceneSprite } from "engine/data/scene";
 
 export class SceneHandle {
   public index: number = 0;
@@ -8,5 +8,5 @@ export class SceneHandle {
 export class APIScene extends AVGScriptUnit {
   public name: string = "";
   public filename: string;
-  public data: Scene = new Scene();
+  public data: SceneSprite = new SceneSprite();
 }

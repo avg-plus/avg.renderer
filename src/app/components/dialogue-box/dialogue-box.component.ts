@@ -19,7 +19,7 @@ import { Setting } from "engine/core/setting";
 import { PluginManager } from "engine/plugin/plugin-manager";
 import { AVGPluginHooks } from "engine/plugin/avg-plugin";
 import { DialogueChoice } from "engine/data/dialogue-choice";
-import { Character } from "engine/data/character";
+import { CharacterSprite } from "engine/data/character";
 
 import {
   SelectedDialogueChoice,
@@ -65,14 +65,14 @@ export class DialogueBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly DIALOGUE_BOX_HIDE_DURATION = 250;
 
   public character_slot: Array<any>;
-  public characters: Array<Character>;
+  public characters: Array<CharacterSprite>;
 
   constructor(
     public changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer
   ) {
     this.character_slot = new Array<any>(5);
-    this.characters = new Array<Character>(5);
+    this.characters = new Array<CharacterSprite>(5);
 
     this.dialogueData = null;
   }
