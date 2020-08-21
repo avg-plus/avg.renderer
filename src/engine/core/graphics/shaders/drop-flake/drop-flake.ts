@@ -6,6 +6,8 @@ import * as $ from "jquery";
 import { ShaderProgram } from "../shader-program.js";
 import { getRandomBetween } from "engine/core/utils";
 import { AVGNativeFS } from "engine/core/native-modules/avg-native-fs";
+import { GameWorld } from "../../world";
+import { Sprite } from "../../sprite.js";
 const vertex = require("./vertex.frag").default;
 const fragment = require("./fragment.frag").default;
 
@@ -34,7 +36,7 @@ export class DropFlakeParticle {
   public static program: ShaderProgram;
 
   public static async start(
-    texture: string,
+    textureFile: string,
     params: DropFlakeParams = new DropFlakeParams(),
     enterDuration: number = 1000
   ) {
@@ -45,12 +47,14 @@ export class DropFlakeParticle {
     let currentDirection = 0;
 
     const parent = document.getElementById("avg-particle-viewport");
-    // parent.innerHTML = "";
 
     var cNode = parent.cloneNode(false);
     parent.parentNode.replaceChild(cNode, parent);
 
-    const flakeTexture = await AVGNativeFS.readFileSync(texture, { encoding: "base64" });
+    const flakeTexture = await AVGNativeFS.readFileSync(textureFile, {
+      encoding: "base64",
+      responseType: "arraybuffer"
+    });
 
     delete DropFlakeParticle.program;
 
@@ -82,39 +86,46 @@ export class DropFlakeParticle {
         const height = 110;
         const width = (w / h) * height;
 
-        Array.from({ length: (w / h) * DropFlakeParticle.params.count }, snowflake => {
-          position.push(
-            -width + Math.random() * width * 2,
-            -height + Math.random() * height * 2,
-            Math.random() * DropFlakeParticle.params.depth * 2
-          );
+        Array.from(
+          { length: (w / h) * DropFlakeParticle.params.count },
+          snowflake => {
+            position.push(
+              -width + Math.random() * width * 2,
+              -height + Math.random() * height * 2,
+              Math.random() * DropFlakeParticle.params.depth * 2
+            );
 
-          speed.push(
-            // 0, 0, 0 )
-            1 + Math.random(),
-            1 + Math.random(),
-            Math.random() * 100
-          ); // x, y, sinusoid
+            speed.push(
+              // 0, 0, 0 )
+              1 + Math.random(),
+              1 + Math.random(),
+              Math.random() * 100
+            ); // x, y, sinusoid
 
-          const r = DropFlakeParticle.params.rotation;
+            const r = DropFlakeParticle.params.rotation;
 
-          if (r.enabled) {
-            rotation.push(
-              (r.randomize ? Math.random() : 0.5) * r.angle * Math.PI,
-              (r.randomize ? Math.random() : 0.5) * r.speed,
-              0
-            ); // angle, speed, sinusoid
-            // rotation.push(0, 0, 0); // angle, speed, sinusoid
-          } else {
-            rotation.push(0, 0, 0);
+            if (r.enabled) {
+              rotation.push(
+                (r.randomize ? Math.random() : 0.5) * r.angle * Math.PI,
+                (r.randomize ? Math.random() : 0.5) * r.speed,
+                0
+              ); // angle, speed, sinusoid
+              // rotation.push(0, 0, 0); // angle, speed, sinusoid
+            } else {
+              rotation.push(0, 0, 0);
+            }
+
+            color.push(1, 1, 1, Math.random() * DropFlakeParticle.params.alpha);
+
+            size.push(5 * Math.random() * 5 * ((h * dpi) / 1000));
           }
+        );
 
-          color.push(1, 1, 1, Math.random() * DropFlakeParticle.params.alpha);
-
-          size.push(5 * Math.random() * 5 * ((h * dpi) / 1000));
-        });
-
-        this.uniforms.worldSize = [width, height, DropFlakeParticle.params.depth];
+        this.uniforms.worldSize = [
+          width,
+          height,
+          DropFlakeParticle.params.depth
+        ];
 
         this.buffers.position = position;
         this.buffers.color = color;
@@ -128,7 +139,9 @@ export class DropFlakeParticle {
 
         if (DropFlakeParticle.params.wind.enabled) {
           // wind.direction = getRandomBetween(wind.min, wind.max); //  wind.min + Math.random() * (wind.max - wind.min);
-          currentDirection = (wind.min + Math.random() * (wind.max - wind.min)) * (Math.random() > 0.5 ? -1 : 1);
+          currentDirection =
+            (wind.min + Math.random() * (wind.max - wind.min)) *
+            (Math.random() > 0.5 ? -1 : 1);
         }
 
         currentForce += (currentDirection - wind.force) * wind.easing;

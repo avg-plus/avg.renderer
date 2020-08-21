@@ -2,31 +2,30 @@ import * as PIXI from "pixi.js";
 
 import { Sprite } from "./sprite";
 import { Scene } from "./scene";
-import { DebugPanel } from "app/common/debugger/debug-panel";
 import { HookManager } from "engine/plugin/hooks/hook-manager";
 import { HookEvents } from "engine/plugin/hooks/hook-events";
-import { DropFlakeParticle } from "./shaders/drop-flake/drop-flake";
-import { AVGNativePath } from "../native-modules/avg-native-path";
-import { GameResource } from "../resource";
 import { ScalingAdaptor } from "./scaling-adaptor";
 
-class World {
-  scenes: Scene[] = [];
-  public app: PIXI.Application;
-  _defaultScene: Scene;
+export class GameWorld {
+  static scenes: Scene[] = [];
+  public static app: PIXI.Application;
+  static _defaultScene: Scene;
 
-  parentElement: HTMLElement;
-  worldWidth: number;
-  worldHeight: number;
+  static parentElement: HTMLElement;
+  static worldWidth: number;
+  static worldHeight: number;
 
-  adaptor: ScalingAdaptor;
+  static adaptor: ScalingAdaptor;
 
-  async init(
+  static init(
     parentElement: HTMLElement,
     width: number = 1920,
     height: number = 1080
   ) {
     // [16: 9] - 800x450, 1024x576, 1280x760, 1920x1080
+
+    console.log("Init game world instance ");
+    
 
     this.worldWidth = width;
     this.worldHeight = height;
@@ -44,9 +43,6 @@ class World {
       resizeTo: this.parentElement,
       resolution: 1
     });
-
-
-    console.log("webGLVersion", this.app.renderer.context.webGLVersion) 
 
 
     this.adaptor = new ScalingAdaptor();
@@ -76,16 +72,14 @@ class World {
     // DebugPanel.init();
   }
 
-  public get defaultScene() {
+  public static get defaultScene() {
     return this._defaultScene;
   }
 
-  public addScene(scene: Scene) {
+  public static addScene(scene: Scene) {
     this.scenes.push(scene);
     this.parentElement.appendChild(scene.getView());
   }
 
   public transitionTo(scene: Scene, scene2: Sprite, effect?: number) { }
 }
-
-export const GameWorld = new World();
