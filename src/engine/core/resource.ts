@@ -1,6 +1,7 @@
 import { Env } from "./env";
 import { AVGNativePath } from "./native-modules/avg-native-path";
 import { AVGNativeFS } from "./native-modules/avg-native-fs";
+import { PlatformService } from "./platform/platform-service";
 
 export enum ResourcePath {
   // Audio
@@ -113,6 +114,12 @@ export class GameResource {
   }
 
   public static getEngineDataRoot(): string {
+    if (PlatformService.isWebBrowser()) {
+      var currentLocation = window.location;
+
+      return `${currentLocation.protocol}///${currentLocation.hostname}:${currentLocation.port}/${this._dataRoot}`;
+    }
+
     return this._dataRoot;
   }
 

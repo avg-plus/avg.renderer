@@ -1,8 +1,8 @@
 export class EngineSettings {
   private static settings: any;
 
-  public static init(content: string) {
-    this.settings = JSON.parse(content);
+  public static init(content: any) {
+    this.settings = content;
   }
 
   public static isDefined(key: string): boolean {

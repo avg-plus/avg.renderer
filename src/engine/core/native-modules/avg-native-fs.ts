@@ -3,8 +3,8 @@ import { axios } from "app/common/axios-default";
 import { PlatformService } from "../platform/platform-service";
 import { AVGNativePath } from "./avg-native-path";
 
-// const NodeFS = window.require('fs');
 import * as NodeFS from "fs";
+import { ResponseType } from "axios";
 
 export class AVGNativeFS {
   private static _isFileSystemOK = false;
@@ -108,17 +108,29 @@ export class AVGNativeFS {
   public static async readFileSync(
     filename: string,
     options?: {
+      responseType?: ResponseType; // via HTTP only
       encoding?: string;
       flag?: string;
     }
   ) {
+
+    if (!options) {
+      options = {};
+      options.responseType = options.responseType || "arraybuffer";
+    }
+
     if (PlatformService.isDesktop() && !AVGNativePath.isHttpURL(filename)) {
       const data = this._fs.readFileSync(filename, options);
+
+      if(options.responseType === "json") {
+        return JSON.parse(data.toString());
+      }
 
       return data.toString();
     }
 
     const response = await axios.get(filename, {
+      responseType: options.responseType || "arraybuffer",
       transformResponse: res => {
         return res;
       }

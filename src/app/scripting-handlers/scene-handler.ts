@@ -24,8 +24,7 @@ export class SceneHandler {
     image.spriteType = SpriteType.Scene;
     image.name = api.name;
 
-    const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation);
-    // const leaveSlot = image.animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    const enterSlot = image.animation || SlotManager.getSlot(HookSlots.SceneEnterAnimation, data);
 
     // 跳过模式处理，忽略时间
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {
@@ -48,7 +47,7 @@ export class SceneHandler {
     const api = <APIScene>scriptingContext.api;
     const animation = api.data.animation;
 
-    const slot = animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation);
+    const slot = animation || SlotManager.getSlot(HookSlots.SceneLeaveAnimation, api.data);
 
     // 跳过模式处理，忽略时间
     if (Sandbox.isSkipMode && Sandbox.skipOptions.widgets === true) {

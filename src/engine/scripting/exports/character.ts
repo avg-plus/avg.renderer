@@ -1,6 +1,5 @@
 import * as joi from "joi";
 import { SpriteAnimationMacro } from "./../../core/graphics/sprite-animate-director";
-import { Character } from "engine/data/character";
 import { ResourceData } from "engine/data/resource-data";
 import { ResourcePath } from "engine/core/resource";
 import { OP } from "engine/const/op";
@@ -9,15 +8,16 @@ import { APIManager } from "../api-manager";
 import { APIExport, AVGExportedAPI } from "./avg-exported-api";
 import { SpriteWidgetManager } from "engine/core/graphics/sprite-widget-manager";
 import { SpriteFilter } from 'engine/data/sprite-renderer';
+import { CharacterSprite } from 'engine/data/character';
 
 @APIExport("character", EngineAPI_Character)
 export class EngineAPI_Character extends AVGExportedAPI {
-  public static async show(name: string, filename: string, options?: Character) {
+  public static async show(name: string, filename: string, options?: CharacterSprite) {
     let model = new APICharacter();
     model.isAsync = arguments[arguments.length - 1] === "__async_call__";
 
     if (!options || !(options instanceof Object)) {
-      options = new Character();
+      options = new CharacterSprite();
     }
 
     model.data = options;

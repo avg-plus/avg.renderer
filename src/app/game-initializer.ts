@@ -125,8 +125,10 @@ export class GameInitializer implements CanActivate {
   // Init engine environment settings
   public async initEngineSettings() {
     const content = await AVGNativeFS.readFileSync(
-      AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json")
+      AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json"),
+      { responseType: "json" }
     );
+
 
     EngineSettings.init(content);
   }
@@ -138,9 +140,11 @@ export class GameInitializer implements CanActivate {
 
     // Read 'engine.json' to get game project dir and engine dir
     const content = await AVGNativeFS.readFileSync(
-      AVGNativePath.join(AVGNativeFS.__dirname, "engine.json")
+      AVGNativePath.join(AVGNativeFS.__dirname, "engine.json"),
+      { responseType: "json" }
     );
-    const envData = JSON.parse(content);
+
+    const envData = content;
 
     // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
     // let dataRootDirname = EngineSettings.get("engine.env.data_root_dirname") as string;
@@ -169,7 +173,9 @@ export class GameInitializer implements CanActivate {
     console.log(AVGNativeFS);
 
     try {
-      const settings = await AVGNativeFS.readFileSync(settingFile);
+      const settings = await AVGNativeFS.readFileSync(settingFile, {
+        responseType: "json"
+      });
       Setting.parseFromSettings(settings);
     } catch (error) {
       AVGEngineError.emit(
@@ -296,8 +302,7 @@ export class GameInitializer implements CanActivate {
 
       {
         tips: "加载游戏资源...",
-        files: [
-        ]
+        files: []
       }
     ]);
 

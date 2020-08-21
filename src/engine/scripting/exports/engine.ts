@@ -29,7 +29,8 @@ export class EngineAPI_Engine extends AVGExportedAPI {
 
   public static async loadPlugin(name: string, filename: string) {
     const scripts = await AVGNativeFS.readFileSync(
-      AVGNativePath.join(GameResource.getPath(ResourcePath.Plugins), filename)
+      AVGNativePath.join(GameResource.getPath(ResourcePath.Plugins), filename),
+      { responseType: "text" }
     );
 
     const instance = await PluginManager.loadScripts(scripts);

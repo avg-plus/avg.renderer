@@ -22,7 +22,9 @@ export class AVGStory {
   public async loadFromFile(filename: string) {
     AVGStory.TracingScriptFile = filename;
 
-    const response = await AVGNativeFS.readFileSync(filename);
+    const response = await AVGNativeFS.readFileSync(filename, {
+      responseType: "text"
+    });
 
     this.loadFromString(response);
   }

@@ -3,42 +3,65 @@ import characterEnterAnimationSlot from "./slots/slot.character.enter";
 import sceneEnterAnimationSlot from "./slots/slot.scene.enter";
 import characterLeaveAnimationSlot from "./slots/slot.character.leave";
 import sceneLeaveAnimationSlot from "./slots/slot.scene.leave";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { ScreenSprite } from "engine/data/screen-sprite";
+
+export type SlotFunc = (target: ScreenSprite) => SpriteAnimationMacro;
 
 export class SlotData {
-  public defaultSlot: any;
-  public userSlot: any;
+  public defaultSlot: SlotFunc;
+  public userSlot: SlotFunc;
 }
 
 export class SlotManager {
-  static slots: Map<HookSlots, SlotData> = new Map<HookSlots, any>();
+  static slots: Map<HookSlots, SlotData> = new Map<HookSlots, SlotData>();
 
   public static init() {
-    this.initDefaultSlot(HookSlots.CharacterEnterAnimation, characterEnterAnimationSlot);
-    this.initDefaultSlot(HookSlots.CharacterLeaveAnimation, characterLeaveAnimationSlot);
-    this.initDefaultSlot(HookSlots.SceneEnterAnimation, sceneEnterAnimationSlot);
-    this.initDefaultSlot(HookSlots.SceneLeaveAnimation, sceneLeaveAnimationSlot);
+    this.initDefaultSlot(
+      HookSlots.CharacterEnterAnimation,
+      characterEnterAnimationSlot
+    );
+    this.initDefaultSlot(
+      HookSlots.CharacterLeaveAnimation,
+      characterLeaveAnimationSlot
+    );
+    this.initDefaultSlot(
+      HookSlots.SceneEnterAnimation,
+      sceneEnterAnimationSlot
+    );
+    this.initDefaultSlot(
+      HookSlots.SceneLeaveAnimation,
+      sceneLeaveAnimationSlot
+    );
   }
 
-  public static getSlot(slotName: HookSlots) {
-    const slot = this.slots.get(slotName);
-    let slotData = slot ? slot.userSlot || slot.defaultSlot : null;
-
-    return slotData;
-  }
-
-  private static initDefaultSlot(slotName: HookSlots, data: any) {
+  private static initDefaultSlot(
+    slotName: HookSlots,
+    func: SlotFunc
+  ) {
     const slot = {
-      defaultSlot: data,
+      defaultSlot: func,
       userSlot: null
     };
 
     this.slots.set(slotName, slot);
   }
 
-  public static setSlot(slotName: HookSlots, data: any) {
+  public static getSlot(
+    slotName: HookSlots,
+    target: ScreenSprite
+  ): SpriteAnimationMacro {
+    const slot = this.slots.get(slotName);
+
+    let slotFunc = slot ? slot.userSlot || slot.defaultSlot : null;
+
+    return slotFunc(target);
+  }
+
+  public static setSlot(slotName: HookSlots, func: SlotFunc) {
     const slot = {
       defaultSlot: null,
-      userSlot: data
+      userSlot: func
     };
 
     this.slots.set(slotName, slot);

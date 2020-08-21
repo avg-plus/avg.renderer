@@ -23,14 +23,20 @@ export class CharacterScriptingHandler {
 
     const image = new ScreenImage();
     image.file = ResourceData.from(api.filename);
-    image.renderer = Object.assign(new AVGSpriteRenderer(), <AVGSpriteRenderer>character.renderer);
+    image.renderer = Object.assign(
+      new AVGSpriteRenderer(),
+      <AVGSpriteRenderer>character.renderer
+    );
     image.spriteType = SpriteType.Character;
     image.name = api.name;
     image.animation = character.animation;
 
     console.log("handleShowCharacter", image);
 
-    let slot = SlotManager.getSlot(HookSlots.CharacterEnterAnimation);
+    let slot = SlotManager.getSlot(
+      HookSlots.CharacterEnterAnimation,
+      character
+    );
 
     const hookContext = {
       name: image.name,
@@ -100,7 +106,7 @@ export class CharacterScriptingHandler {
     const api = <APICharacter>scriptingContext.api;
     let data = api.data;
 
-    let slot = SlotManager.getSlot(HookSlots.CharacterLeaveAnimation);
+    let slot = SlotManager.getSlot(HookSlots.CharacterLeaveAnimation, data);
 
     let hookContext = {
       renderer: data.renderer,

@@ -98,9 +98,9 @@ export class Setting {
     this.settings.screen.fullscreen = value;
   }
 
-  public static parseFromSettings(settings: string) {
+  public static parseFromSettings(settings: any) {
     try {
-      Setting.settings = JSON.parse(settings);
+      Setting.settings = settings;
       console.log(`Loaded settings: `, this.settings);
     } catch (err) {
       console.error(`Load settings failed:`, err);

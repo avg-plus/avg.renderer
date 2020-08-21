@@ -1,4 +1,7 @@
 import { HookEvents } from "./hook-events";
+import { SpriteAnimationMacro } from "engine/core/graphics/sprite-animate-director";
+import { ScreenImage } from "engine/data/screen-image";
+
 
 type HookCallbackFunc = (params: any) => any;
 type HookCallbackContext = {
@@ -7,9 +10,15 @@ type HookCallbackContext = {
 };
 
 export class HookManager {
-  private static hooks: Map<HookEvents, Array<HookCallbackFunc>> = new Map<HookEvents, Array<HookCallbackFunc>>();
+  private static hooks: Map<HookEvents, Array<HookCallbackFunc>> = new Map<
+    HookEvents,
+    Array<HookCallbackFunc>
+  >();
 
-  public static async subscribeHook(event: HookEvents, cb: (data: any) => void) {
+  public static async subscribeHook(
+    event: HookEvents,
+    cb: (data: any) => void
+  ) {
     console.log(`Registered Hook: ${event}`);
 
     let hookList = this.hooks.get(event) || [];
