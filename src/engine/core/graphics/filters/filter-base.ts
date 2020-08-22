@@ -4,10 +4,8 @@ import { Filter } from "pixi.js";
 
 export interface IFilterArgs {}
 
-export class FilterBase {
-  public instance(parent?: Sprite, data?: IFilterArgs): PIXI.Filter {
-    return null;
-  }
+export abstract class FilterBase {
+  public abstract instance(parent?: Sprite, data?: IFilterArgs): PIXI.Filter;
 
   public bindFileField(file: string, resourcePath: ResourcePath) {
     return GameResource.getPath(resourcePath, file);

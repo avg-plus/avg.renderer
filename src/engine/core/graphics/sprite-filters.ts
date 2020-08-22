@@ -18,7 +18,7 @@ export class SpriteFilterObject {
   constructor(
     public type: string,
     public instance: PIXI.Filter,
-    public data: any
+    public data: IFilterArgs
   ) {}
 }
 
@@ -47,32 +47,26 @@ export class SpriteFilters {
    * 设置滤镜参数
    *
    * @param {FilterType} type
-   * @param {*} data
+   * @param {*} args
    * @memberof SpriteFilters
    */
-  public setFilter(type: string, data: IFilterArgs) {
+  public setFilter(type: string, args: IFilterArgs) {
     let filterObject = this.getFilter(type);
     if (!filterObject) {
       // 动态加载滤镜
       const filter = require("./filters/" + type).default as FilterBase;
 
-      // 处理特殊参数，部分滤镜需要mapTexture
-      // let dmap = null;
-      // if (data && data.dmap) {
-      //   dmap = GameResource.getPath(ResourcePath.DMaps, data.dmap);
-      // }
-
-      const pixiFilterInstance = filter.instance(this.sprite, data);
+      const pixiFilterInstance = filter.instance(this.sprite, args);
       pixiFilterInstance.enabled = true;
 
       // 创建滤镜对象
-      filterObject = new SpriteFilterObject(type, pixiFilterInstance, data);
+      filterObject = new SpriteFilterObject(type, pixiFilterInstance, args);
 
       // 添加滤镜
       this.filters.push(filterObject);
     }
 
-    filterObject.data = data;
+    filterObject.data = args;
     Object.assign(filterObject.instance, filterObject.data);
 
     return filterObject;

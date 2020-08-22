@@ -190,7 +190,7 @@ export class SpriteAnimateDirector {
       initialFrame.duration = 0;
       frames = [initialFrame, ...frames];
     }
-    
+
     // 记录时间轴的播放位置
     // 时间轴比0大一点，防止后续序列帧的播放位置覆盖初始化帧
     let timelineCursorTime = 0.00001;
@@ -200,11 +200,18 @@ export class SpriteAnimateDirector {
       const frame = frames[i] as SpriteMacroFrame;
       let duration = (frame.duration || 1) / 1000;
 
+      const onUpdate = () => {
+        // 渲染滤镜
+        target.spriteFilters.render();
+      };
+
       // 把相关属性直接设置到 target(sprite)
       timeline.add(
         gsap.TweenLite.to(target, duration, {
           ...frame,
-          ease: frame.ease || gsap.Power0.ease
+          ease: frame.ease || gsap.Power0.ease,
+          // 这里也需要通过调用一次 onUpdate 来渲染滤镜，否则可能会导致 filter 闪烁一下
+          onUpdate
         }),
         timelineCursorTime
       );
@@ -214,18 +221,28 @@ export class SpriteAnimateDirector {
         for (let i = 0; i < frame.filters.length; ++i) {
           const v = frame.filters[i];
 
-          // 创建一个空的滤镜
-          const obj = target.spriteFilters.setFilter(v.name, {});
+          v.data = v.data || {
+            ease: gsap.Power0.ease
+          };
+
+          // 初始化帧里是否存在相同的滤镜
+          let existedFilter = initialFrame.filters.find(initialFilter => {
+            return initialFilter.name === v.name;
+          });
+
+          let obj = null;
+          if (existedFilter) {
+            obj = target.spriteFilters.setFilter(v.name, existedFilter.data);
+          } else {
+            obj = target.spriteFilters.setFilter(v.name, null);
+          }
 
           // 两边都有同一属性的情况下才能开始过渡
           timeline.add(
             gsap.TweenLite.to(obj.instance, duration, {
               ease: v.data.ease || gsap.Power0.easeNone,
               ...v.data,
-              onUpdate: () => {
-                // 渲染滤镜
-                target.spriteFilters.render();
-              }
+              onUpdate
             }),
             timelineCursorTime
           );
@@ -240,8 +257,6 @@ export class SpriteAnimateDirector {
     if (macroObject.totalDuration !== undefined) {
       timeline.duration(macroObject.totalDuration / 1000 || 0.01);
     }
-
-    console.log("timeline", timeline);
 
     return timeline;
   }
