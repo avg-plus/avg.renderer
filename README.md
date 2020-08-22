@@ -10,6 +10,13 @@ Languages: [[English](./README.md)] [[简体中文](./docs/README.zh-cn.md)]
 
 For now, the engine project's accomplishments are not bad, but it's still at an early stage of development, and it's **not recommended** for any new formal game due to the scripting system bring many new features each day and changing quickly.
 
+## The GUI Tools
+
+The GUI tool **AVG Creator** has been released! If you just want to focus on game develoment, it does not have to build `avg.renderer`, for further questions and download the tool please visit https://avg-engine.com .
+
+
+
+
 ## Getting Started
 
 Get renderer source and run the following command in `avg.renderer` folder:
