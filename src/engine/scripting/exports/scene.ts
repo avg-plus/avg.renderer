@@ -19,7 +19,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
    * @param {string} filename The background image file of scene
    * @param {SceneSprite} [options]
    */
-  public static async load(
+  public static async show(
     id: string,
     filename: string,
     options?: SceneSprite
@@ -75,16 +75,7 @@ export class EngineAPI_Scene extends AVGExportedAPI {
     await proxy.runner(<APIScene>model);
   }
 
-  // public static async remove(name: string): Promise<SceneHandle> {
-  //   let model = new APIScene();
-  //   model.name = super.validateImageID(name);
-
-  //   // model.index = index;
-
-  //   return <SceneHandle>await APIManager.Instance.getImpl(APIScene.name, OP.RemoveScene).runner(<APIScene>model);
-  // }
-
-  public static async remove(
+  public static async hide(
     name: string | string[],
     animation?: SpriteAnimationMacro
   ) {
