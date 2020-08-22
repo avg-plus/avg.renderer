@@ -2,7 +2,8 @@ import { GameWorld } from "./../world";
 import * as PIXI from "pixi.js";
 import { FilterBase, IFilterArgs } from "./filter-base";
 import { Sprite } from "../sprite";
-import { ResourcePath } from "engine/core/resource";
+import { ResourcePath, GameResource } from "engine/core/resource";
+import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
 
 interface IDisplacementFilterArgs extends IFilterArgs {
   dmap: {
@@ -10,22 +11,34 @@ interface IDisplacementFilterArgs extends IFilterArgs {
     scaleX?: number;
     scaleY?: number;
   };
-  animate?: number;
+  animate?: boolean;
   onUpdate?: (dmapSprite: PIXI.Sprite) => void;
 }
 
 class DisplacementFilter extends FilterBase {
   name: "DisplacementFilter";
-  public instance(parent: Sprite, data: IDisplacementFilterArgs) {
-    data.dmap.file = super.bindFileField(data.dmap.file, ResourcePath.DMaps);
+  public instance(parent: Sprite, args: IDisplacementFilterArgs) {
+    if (!args || !args.dmap || !args.dmap.file) {
+      const defulatMap = AVGNativePath.join(
+        GameResource.getEngineDataRoot(),
+        "d-maps/default-dmap.jpg"
+      );
 
-    const texture = PIXI.Texture.from(data.dmap.file);
+      args = {
+        dmap: {
+          file: defulatMap
+        }
+      };
+    } else {
+      args.dmap.file = super.bindFileField(args.dmap.file, ResourcePath.DMaps);
+    }
 
+    const texture = PIXI.Texture.from(args.dmap.file);
     const displacementSprite = new PIXI.Sprite(texture);
 
     const filter = new PIXI.filters.DisplacementFilter(displacementSprite);
-    filter.scale.x = data.dmap.scaleX || 10;
-    filter.scale.y = data.dmap.scaleY || 20;
+    filter.scale.x = args.dmap.scaleX || 10;
+    filter.scale.y = args.dmap.scaleY || 20;
 
     displacementSprite.position = parent.position;
     displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
@@ -55,11 +68,12 @@ class DisplacementFilter extends FilterBase {
       }
     );
 
-    // 是否自动动画
-    if (data.animate) {
+    if (args.animate) {
+      // 是否自动动画
       GameWorld.app.ticker.add(() => {
-        if (data.onUpdate) {
-          data.onUpdate(displacementSprite);
+        if (args.onUpdate) {
+          args.onUpdate(displacementSprite);
+          parent.spriteFilters.render()
         } else {
           // 默认动画
           displacementSprite.x += 1;
