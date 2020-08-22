@@ -12,7 +12,7 @@ For now, the engine project's accomplishments are not bad, but it's still at an 
 
 ## The GUI Tools
 
-The GUI tool **AVG Creator** has been released! If you just want to focus on game develoment, it does not have to build `avg.renderer`, for further questions and download the tool please visit https://avg-engine.com .
+The GUI tool **AVGPlus Creator** has been released! If you just want to focus on game develoment, it does not have to build `avg.renderer`, for further questions and download the tool please visit https://avg-engine.com .
 
 
 
