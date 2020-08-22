@@ -65,10 +65,12 @@ export class SpriteWidgetManager {
     }
 
     if (sprite.spriteType === SpriteType.Scene) {
-      // sprite.resizeMode = ResizeMode.Stretch;
       sprite.anchor.set(0.5, 0.5);
-      sprite.center = true;
-      GameWorld.defaultScene.centerSprite(sprite);
+
+      if (!renderer.position) {
+        sprite.center = true;
+        GameWorld.defaultScene.centerSprite(sprite);
+      }
     } else if (sprite.spriteType === SpriteType.Character) {
       sprite.anchor.set(0.5, 0.5);
     } else if (sprite.spriteType === SpriteType.ImageWidget) {
