@@ -1,10 +1,11 @@
 import * as program from "commander";
 import { execSync, exec } from "child_process";
 import * as fs from "fs-extra";
-import * as os from "os";
 import * as path from "path";
 import * as AdmZip from "adm-zip";
 import * as semver from "semver";
+
+import Config from "./server-sftp-config";
 
 import * as SFTPClient from "ssh2-sftp-client";
 
@@ -33,11 +34,11 @@ program
   .option("-i, --identifier [identifier]", "版本后缀", "alpha")
   .option("-o, --output-directory [output]", "输出目录")
   .option(
-    "-d, --remote-dir [remoteDir]",
-    "SFTP 上传的远程路径",
-    "/data/avgplus/live-players"
+    "-D, --is-dev-package [isDevPackage]",
+    "是否用于测试的打包（不递增版本号）",
+    false
   )
-  .option("-k, --key [sshkey]", "SFTP 使用的私钥", "~/.ssh/id_rsa");
+  .option("-U, --upload", "是否上传到服务器", false);
 
 program.parse(process.argv);
 
@@ -76,19 +77,35 @@ if (program.platform === Platform.All) {
 
 // 更新版本信息，不放进循环内，防止多平台同时打包时多次递增版本
 let packageInfo = readPackageInfo();
-const originalVersion = `v${packageInfo.version}`;
 
-console.log("[!] 更新版本信息 ... ");
-const newVersion = semver.inc(
-  packageInfo.version,
-  program.buildVersion,
-  program.identifier
-);
+const updateVersion = () => {
+  if (program.isDevPackage) {
+    return {
+      originalVersion: packageInfo.version as string,
+      newVersion: packageInfo.version as string
+    };
+  }
 
-packageInfo.version = newVersion;
-fs.writeJSONSync(PackageFile, packageInfo, { spaces: 2 });
+  console.log("[!] 更新版本信息 ... ");
+  const newVersion = semver.inc(
+    packageInfo.version,
+    program.buildVersion,
+    program.identifier
+  );
 
-const newVersionWithTag = `v${newVersion}`;
+  packageInfo.version = newVersion;
+  fs.writeJSONSync(PackageFile, packageInfo, { spaces: 2 });
+
+  return {
+    originalVersion: packageInfo.version as string,
+    newVersion
+  };
+};
+
+const versionInfo = updateVersion();
+const newVersion = versionInfo.newVersion;
+const newVersionWithTag = `v${versionInfo.newVersion}`;
+const originalVersion = versionInfo.originalVersion;
 
 // ------------------------------------------------------------
 // 构建阶段
@@ -110,8 +127,8 @@ buildingPlatforms.forEach((platform: string) => {
   };
   preparedPlatforms.push(buildingData);
 
-  // const cmd = exec(`yarn build:${platform}`);
-  const cmd = exec(`echo `);
+  const cmd = exec(`yarn build:${platform}`);
+  // const cmd = exec(`echo `);
   cmd.stdout.on("data", data => {
     console.log(data);
   });
@@ -160,7 +177,9 @@ Promise.all(preparedPlatforms.map(v => v.awaiter)).then(async () => {
 
     // 写入默认地址
     const engineInfo = require(engineConfig);
-    engineInfo.game_assets_root = "http://localhost:2336";
+    engineInfo.URL = `https://live-player.avg-engine.com/engine/${newVersion}`;
+    engineInfo.game_assets_root =
+      "https://game-project.avg-engine.com/docs-project";
     engineInfo.version = packageInfo.version;
 
     fs.writeFileSync(engineConfig, JSON.stringify(engineInfo, null, 2), {
@@ -187,25 +206,31 @@ Promise.all(preparedPlatforms.map(v => v.awaiter)).then(async () => {
   fs.writeJSONSync(path.join(tempDir, "bundle-info.json"), bundleInfo);
 
   // 上传到 sftp
-  let sftp = new SFTPClient();
+  if (program.upload) {
+    let sftp = new SFTPClient();
 
-  // 连接服务器
-  console.log("正在连接服务器……");
+    // 连接服务器
+    console.log("正在连接服务器……");
 
-  const client = await sftp.connect({
-    host: "host.avg-engine.com",
-    port: 22,
-    username: "root",
-    privateKey: fs.readFileSync(`${os.homedir()}/.ssh/id_rsa`)
-  });
+    const client = await sftp.connect({
+      host: Config.host,
+      port: Config.port,
+      username: Config.username,
+      privateKey: Config.privateKey
+    });
 
-  console.log("[!] 正在上传文件……");
-  const src = path.join(tempDir, "/bundle/browser");
-  const dest = `/data/avg-plus/live-players/engine/${newVersion}`;
-  const result = await sftp.uploadDir(src, dest);
-  await sftp.end();
+    console.log("[!] 正在上传文件……");
+    const src = path.join(tempDir, "/bundle/browser");
+    const dest = `/data/avg-plus/live-players/engine/${newVersion}`;
+    if (await sftp.exists(dest)) {
+      await sftp.rmdir(dest, true);
+    }
+    await sftp.uploadDir(src, dest);
 
-  console.log("[√] 文件上传成功：", dest);
+    await sftp.end();
+
+    console.log("[√] 文件上传成功：", dest);
+  }
 
   // 打包 ZIP 文件
   const outputFile = path.resolve(
