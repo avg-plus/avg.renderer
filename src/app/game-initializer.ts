@@ -11,7 +11,8 @@ import { TransitionLayerService } from "./components/transition-layer/transition
 import { AVGPlusIPC } from "./common/manager/avgplus-ipc";
 import { input } from "engine/core/input";
 import { i18n } from "engine/core/i18n";
-import { EngineSettings } from "engine/core/engine-setting";
+import EngineSettings from "engine/core/engine-setting";
+import EnvSettings from "engine/core/env-setting";
 import { GameResource } from "engine/core/resource";
 import { Setting } from "engine/core/setting";
 import { PlatformService } from "engine/core/platform/platform-service";
@@ -99,38 +100,17 @@ export class GameInitializer implements CanActivate {
   }
 
   public async initDanmaku() {
-    DanmakuManager.initDanmaku();
-  }
-
-  async initProcessArgs() {
-    // if (PlatformService.isDesktop()) {
-    //   const { remote } = require("electron");
-    //   const global = remote.getGlobal("global");
-    //   const args =  JSON.parse(JSON.stringify(global.args));
-    //   console.log("initProcessArgs args", args) ;
-    //   if (global && global.args) {
-    //     const args = minimist(global.args, {
-    //       "--": false,
-    //       string: ["serve"]
-    //     });
-    //     if (args) {
-    //       delete args._;
-    //       remote.getGlobal("global").args = args;
-    //       console.log("args = ", args);
-    //     }
-    //   }
-    // }
+    // DanmakuManager.initDanmaku();
   }
 
   // Init engine environment settings
-  public async initEngineSettings() {
+  public async initEnvSettings() {
     const content = await AVGNativeFS.readFileSync(
       AVGNativePath.join(AVGNativeFS.__dirname, "/data/env.json"),
       { responseType: "json" }
     );
 
-
-    EngineSettings.init(content);
+    EnvSettings.init(content);
   }
 
   // Init resources
@@ -144,13 +124,17 @@ export class GameInitializer implements CanActivate {
       { responseType: "json" }
     );
 
-    const envData = content;
+    EngineSettings.init(content);
 
-    // let assetsRootDirname = EngineSettings.get("engine.env.assets_root_dirname") as string;
-    // let dataRootDirname = EngineSettings.get("engine.env.data_root_dirname") as string;
+    let assetsRootDirname = EngineSettings.get(
+      "game_assets_root"
+    ) as string;
+    let dataRootDirname = EngineSettings.get(
+      "engine_bundle_root"
+    ) as string;
 
-    let assetsRootDirname = envData.game_assets_root as string;
-    let dataRootDirname = envData.engine_bundle_root as string;
+    // let assetsRootDirname = envData.game_assets_root as string;
+    // let dataRootDirname = envData.engine_bundle_root as string;
 
     // 如果不是 HTTP URL 则使用本地路径
     if (!AVGNativePath.isHttpURL(dataRootDirname)) {
@@ -254,7 +238,7 @@ export class GameInitializer implements CanActivate {
   public async preloadEngineAssets() {
     // const loadingBackground = EngineSettings.get("engine.loading_screen.background") as string;
 
-    const defaultFont = EngineSettings.get("engine.default_fonts") as string;
+    const defaultFont = EnvSettings.get("engine.default_fonts") as string;
 
     // await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), loadingBackground));
     // await LoadingLayerService.asyncLoading(AVGNativePath.join(Resource.getAssetsRoot(), defaultFont));

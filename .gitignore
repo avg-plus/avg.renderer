@@ -7,3 +7,4 @@ package-release
 yarn-error.log
 doc-gen
 yarn-error.log
+server-sftp-config.ts

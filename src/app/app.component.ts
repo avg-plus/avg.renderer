@@ -7,12 +7,12 @@ import { ElectronService } from "./providers/electron.service";
 import { TransitionLayerService } from "./components/transition-layer/transition-layer.service";
 import { GameInitializer } from "./game-initializer";
 import { GameResource, ResourcePath } from "engine/core/resource";
-import { EngineSettings } from "engine/core/engine-setting";
 import { PlatformService } from "engine/core/platform/platform-service";
 import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
 
 // 初始化所有 API
 import "../engine/scripting/exports";
+import EnvSetting from 'engine/core/env-setting';
 
 @Component({
   selector: "game",
@@ -35,10 +35,9 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   async ngOnInit() {
     await this.initializer.initErrorHandler();
-    await this.initializer.initProcessArgs();
     await this.initializer.initWindowEventListener(this.router);
     await this.initializer.initFileSystem();
-    await this.initializer.initEngineSettings();
+    await this.initializer.initEnvSettings();
     await this.initializer.initResource(this.route, this.router);
     await this.initializer.initGameSettings();
     await this.initializer.initHotkeys();
@@ -57,7 +56,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         // Start game
         const entryScript = AVGNativePath.join(
           GameResource.getPath(ResourcePath.Scripts),
-          EngineSettings.get("engine.env.entry_script_file") as string
+          EnvSetting.get("engine.env.entry_script_file") as string
         );
 
         this.router

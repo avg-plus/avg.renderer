@@ -46,10 +46,6 @@ export class AVGNativePath {
       return fullURL;
     }
 
-    // if (this.isAbsolute() {
-
-    // }
-
     for (var i = 0, l = paths.length; i < l; i++) {
       if (!paths[i]) {
         continue;
@@ -75,5 +71,4 @@ export class AVGNativePath {
 
     return newParts.join("/") || (newParts.length ? "/" : ".");
   }
-  // }
 }

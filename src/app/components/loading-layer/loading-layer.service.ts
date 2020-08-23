@@ -5,10 +5,7 @@ import * as createjs from "preload-js";
 import * as $ from "jquery";
 import { AnimationUtils } from "../../common/animations/animation-utils";
 import { TransitionLayerService } from "../transition-layer/transition-layer.service";
-import { EngineSettings } from "engine/core/engine-setting";
-import { GameResource } from "engine/core/resource";
-import { EngineUtils } from "engine/core/engine-utils";
-import { AVGNativePath } from "engine/core/native-modules/avg-native-path";
+import EnvSettings  from "engine/core/env-setting";
 
 class ResourceFileGroup {
   public tips: string;
@@ -53,7 +50,8 @@ export class LoadingLayerService extends AVGService {
         }, 1);
       }
 
-      this.currentDownloadTips = "少女祈祷中..." + this.currentProgress.toFixed(1) + "%";
+      this.currentDownloadTips =
+        "少女祈祷中..." + this.currentProgress.toFixed(1) + "%";
 
       if (event.loaded >= 1) {
         this.currentProgress = 100;
@@ -140,7 +138,7 @@ export class LoadingLayerService extends AVGService {
     AnimationUtils.fadeTo(".loading-progress", 500, 1);
 
     if (!this._isLoaderInitialized) {
-      const bg = EngineSettings.get("engine.loading_screen.background") as string;
+      const bg = EnvSettings.get("engine.loading_screen.background") as string;
 
       // const style = {
       //   width: "100%",

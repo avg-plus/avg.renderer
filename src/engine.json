@@ -1,4 +1,5 @@
 {
+  "URL": "https://live-player.avg-engine.com/engine/0.1.105-alpha.0",
   "game_assets_root": "http://127.0.0.1:2336",
   "engine_bundle_root": "data"
 }

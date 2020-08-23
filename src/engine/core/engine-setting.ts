@@ -1,30 +1,5 @@
-export class EngineSettings {
-  private static settings: any;
+import { JSONSettings } from "./json-setting";
 
-  public static init(content: any) {
-    this.settings = content;
-  }
+class _EngineSettings extends JSONSettings {}
 
-  public static isDefined(key: string): boolean {
-
-    if (!this.settings || this.settings === {}) {
-      return false;
-    }
-
-    if (!this.settings[key]) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public static get(key: string): string | number | boolean {
-    if (this.isDefined(key)) {
-      return this.settings[key];
-    }
-
-    return null;
-  }
-
-
-}
+export default new _EngineSettings();
