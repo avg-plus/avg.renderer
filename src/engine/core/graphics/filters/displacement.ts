@@ -69,15 +69,34 @@ class DisplacementFilter extends FilterBase {
     );
 
     if (args.animate) {
+      const restrict = () => {
+
+        // 做一些临界值保护，防止数太大
+        const xMAX = displacementSprite.width * 1000;
+        if (displacementSprite.x >= xMAX || displacementSprite.x <= -xMAX) {
+          displacementSprite.x = 0;
+        }
+
+        const yMAX = displacementSprite.height * 1000;
+        if (displacementSprite.y >= yMAX || displacementSprite.y <= -yMAX) {
+          displacementSprite.y = 0;
+        }
+      };
+
       // 是否自动动画
       GameWorld.app.ticker.add(() => {
         if (args.onUpdate) {
           args.onUpdate(displacementSprite);
-          parent.spriteFilters.render()
+
+          restrict();
         } else {
           // 默认动画
           displacementSprite.x += 1;
+
+          restrict();
         }
+
+        parent.spriteFilters.render();
       });
     }
 
