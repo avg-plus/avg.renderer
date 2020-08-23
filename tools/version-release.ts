@@ -1,9 +1,12 @@
 import * as program from "commander";
 import { execSync, exec } from "child_process";
 import * as fs from "fs-extra";
+import * as os from "os";
 import * as path from "path";
 import * as AdmZip from "adm-zip";
 import * as semver from "semver";
+
+import * as SFTPClient from "ssh2-sftp-client";
 
 enum Platform {
   All = "all",
@@ -29,9 +32,12 @@ program
   )
   .option("-i, --identifier [identifier]", "版本后缀", "alpha")
   .option("-o, --output-directory [output]", "输出目录")
-  .option("-d, --remote-dir [remoteDir]", "SFTP 上传的远程路径")
-  .option("-k, --key [sshkey]", "SFTP 使用的私钥");
-  
+  .option(
+    "-d, --remote-dir [remoteDir]",
+    "SFTP 上传的远程路径",
+    "/data/avgplus/live-players"
+  )
+  .option("-k, --key [sshkey]", "SFTP 使用的私钥", "~/.ssh/id_rsa");
 
 program.parse(process.argv);
 
@@ -104,8 +110,8 @@ buildingPlatforms.forEach((platform: string) => {
   };
   preparedPlatforms.push(buildingData);
 
-  const cmd = exec(`yarn build:${platform}`);
-  // const cmd = exec(`echo a`);
+  // const cmd = exec(`yarn build:${platform}`);
+  const cmd = exec(`echo `);
   cmd.stdout.on("data", data => {
     console.log(data);
   });
@@ -130,7 +136,7 @@ buildingPlatforms.forEach((platform: string) => {
   });
 });
 
-Promise.all(preparedPlatforms.map(v => v.awaiter)).then(() => {
+Promise.all(preparedPlatforms.map(v => v.awaiter)).then(async () => {
   // ------------------------------------------------------------
   // 开始打包
   // ------------------------------------------------------------
@@ -138,7 +144,7 @@ Promise.all(preparedPlatforms.map(v => v.awaiter)).then(() => {
   const releaseDir = `../package-release`;
 
   // 创建临时目录
-  console.log("[!] 创建临时目录 ... ", preparedPlatforms);
+  console.log("[!] 创建临时目录 ... ");
   const tempDir = path.resolve(__dirname, `${releaseDir}/.temp`);
   fs.removeSync(tempDir);
   fs.mkdirpSync(tempDir);
@@ -179,6 +185,27 @@ Promise.all(preparedPlatforms.map(v => v.awaiter)).then(() => {
   };
 
   fs.writeJSONSync(path.join(tempDir, "bundle-info.json"), bundleInfo);
+
+  // 上传到 sftp
+  let sftp = new SFTPClient();
+
+  // 连接服务器
+  console.log("正在连接服务器……");
+
+  const client = await sftp.connect({
+    host: "host.avg-engine.com",
+    port: 22,
+    username: "root",
+    privateKey: fs.readFileSync(`${os.homedir()}/.ssh/id_rsa`)
+  });
+
+  console.log("[!] 正在上传文件……");
+  const src = path.join(tempDir, "/bundle/browser");
+  const dest = `/data/avg-plus/live-players/engine/${newVersion}`;
+  const result = await sftp.uploadDir(src, dest);
+  await sftp.end();
+
+  console.log("[√] 文件上传成功：", dest);
 
   // 打包 ZIP 文件
   const outputFile = path.resolve(
