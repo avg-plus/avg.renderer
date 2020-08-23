@@ -51,65 +51,8 @@ export class Sprite extends PIXI.Sprite implements IOrderingSpirte {
     this.initialX = 0;
     this.initialY = 0;
 
-    this.spriteType = this.spriteType;
+    this.spriteType = type;
     this.spriteFilters = new SpriteFilters(this);
-
-  }
-
-
-  setProperty(key: AnimatedPropertyKeys, value: number) {
-    switch (key) {
-      case "x":
-        super.position.x = value;
-        break;
-      case "y":
-        super.position.y = value;
-        break;
-      case "scale":
-        super.scale.set(value, value);
-        break;
-      case "scaleX":
-        super.scale.x = value;
-        break;
-      case "scaleY":
-        super.scale.y = value;
-        break;
-      case "skew":
-        super.skew.set(value, value);
-        break;
-      case "skewX":
-        super.scale.x = value;
-        break;
-      case "skewY":
-        super.scale.y = value;
-        break;
-      case "angle":
-        super.angle = value;
-        break;
-    }
-  }
-
-  getProperty(key: AnimatedPropertyKeys) {
-    switch (key) {
-      case "x":
-        return super.position.x;
-      case "y":
-        return super.position.y;
-      case "scale":
-        return super.scale;
-      case "scaleX":
-        return super.scale.x;
-      case "scaleY":
-        return super.scale.y;
-      case "skew":
-        return super.skew;
-      case "skewX":
-        return super.scale.x;
-      case "skewY":
-        return super.scale.y;
-      case "angle":
-        return super.angle;
-    }
   }
 
   public get angle() {

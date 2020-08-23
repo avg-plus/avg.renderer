@@ -226,9 +226,13 @@ export class SpriteAnimateDirector {
           };
 
           // 初始化帧里是否存在相同的滤镜
-          let existedFilter = initialFrame.filters.find(initialFilter => {
-            return initialFilter.name === v.name;
-          });
+          let existedFilter;
+          
+          if (initialFrame && initialFrame.filters) {
+            existedFilter = initialFrame.filters.find(initialFilter => {
+              return initialFilter.name === v.name;
+            });
+          }
 
           let obj = null;
           if (existedFilter) {
