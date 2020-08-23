@@ -50,7 +50,7 @@ export class AVGSpriteRenderer {
   public skewX: number = 0;
   public skewY: number = 0;
   public alpha: number = 1;
-  public rotation: number = 0;
+  public angle: number = 0;
   public renderInCamera: boolean = false;
   public renderCameraDepth: boolean = false;
   public cameraDistance: number = 0;

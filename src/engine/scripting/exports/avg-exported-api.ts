@@ -171,7 +171,7 @@ export class AVGExportedAPI {
           .number()
           .optional()
           .description("Y轴斜率"),
-        rotation: joi
+        angle: joi
           .number()
           .optional()
           .description("旋转角度"),

@@ -54,7 +54,7 @@ export class SpriteWidgetManager {
     sprite.y = Number.parseInt(position.right) || renderer.y || 0;
     sprite.skew.x = renderer.skew || renderer.skewX || 0;
     sprite.skew.y = renderer.skew || renderer.skewY || 0;
-    sprite.angle = renderer.rotation || 0; // 使用角度作为旋转单位
+    sprite.angle = renderer.angle || 0; // 使用角度作为旋转单位
     sprite.distance = renderer.cameraDistance || 0;
     sprite.renderCameraDepth = renderer.renderCameraDepth || false;
     sprite.alpha = renderer.alpha;
