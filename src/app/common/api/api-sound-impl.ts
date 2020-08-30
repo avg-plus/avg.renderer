@@ -6,6 +6,11 @@ import { APISound } from "engine/scripting/api/api-sound";
 import { AVGScriptUnit } from "engine/scripting/script-unit";
 import { Howl, Howler } from "howler";
 
+// 自动解锁浏览器的音频保护
+// The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://goo.gl/7K7WLu
+Howler.autoUnlock = true;
+Howler.autoSuspend = false;
+
 export class APISoundImpl extends Impl {
   public static tracks: {
     [track: string]: Howl;

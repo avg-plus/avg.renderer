@@ -44,9 +44,20 @@ export class AVGSpriteRenderer {
     this._scale = value;
   }
 
+  private _skew: number = 0;
+  public get skew() {
+    return this._skew;
+  }
+
+  public set skew(value: number) {
+    this.skewX = value;
+    this.skewY = value;
+
+    this._skew = value;
+  }
+
   public scaleX: number;
   public scaleY: number;
-  public skew: number = 0;
   public skewX: number = 0;
   public skewY: number = 0;
   public alpha: number = 1;
