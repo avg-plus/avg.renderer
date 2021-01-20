@@ -8478,10 +8478,10 @@ graphql@^0.9.3:
   dependencies:
     iterall "^1.0.0"
 
-gsap@^1.20.3:
-  version "1.20.6"
-  resolved "https://registry.npm.taobao.org/gsap/download/gsap-1.20.6.tgz#0f6829052e94fbfffa92be3265f24b88729c9d1d"
-  integrity sha1-D2gpBS6U+//6kr4yZfJLiHKcnR0=
+gsap@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.6.0.tgz#925f25370c698ce0f6ea563522da8f6b5ed21b0a"
+  integrity sha512-0P3syv1TmYr+A/VZ8UMFzw+s0XoaKSzzDFs8NqkXiJTXI4E/VTi0zRjPgxaPBpiUPPycgRnFjLDe0Tb4dRRf+w==
 
 gulp-util@^3.0.0:
   version "3.0.8"
