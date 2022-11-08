@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^8.2.0",
-    "@angular-devkit/build-angular": "~0.803.2",
+    "@angular-devkit/build-angular": "~14.2.8",
     "@angular-devkit/core": "^0.8.2",
     "@angular/animations": "^8.2.4",
     "@angular/cli": "^8.3.2",
@@ -120,8 +120,8 @@
     "gulp": "^3.9.1",
     "gulp-watch": "^5.0.1",
     "html-loader": "0.4.5",
-    "html-webpack-plugin": "^3.2.0",
-    "istanbul-instrumenter-loader": "2.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "istanbul-instrumenter-loader": "3.0.1",
     "jasmine-core": "2.6.4",
     "jasmine-spec-reporter": "4.1.1",
     "json-loader": "0.5.4",
@@ -146,7 +146,7 @@
     "script-loader": "0.7.0",
     "semver": "^7.1.1",
     "shelljs": "^0.7.8",
-    "source-map-loader": "0.2.1",
+    "source-map-loader": "0.2.4",
     "ssh2-sftp-client": "5.2.2",
     "style-loader": "0.18.2",
     "stylus-loader": "3.0.1",
@@ -160,7 +160,7 @@
     "webdriver-manager": "12.0.6",
     "webpack": "4.9.0",
     "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-cli": "^3.3.7",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "3.1.11"
   },
   "license": "SEE LICENSE IN LICENSE.md"
